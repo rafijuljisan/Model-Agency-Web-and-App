@@ -4,8 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-return new class extends Migration
-{
+return new class extends Migration {
     /**
      * Run the migrations.
      */
@@ -17,6 +16,13 @@ return new class extends Migration
             $table->string('email')->unique();
             $table->timestamp('email_verified_at')->nullable();
             $table->string('password');
+
+            // --- Add these 3 new lines ---
+            $table->string('phone')->unique()->nullable();
+            $table->boolean('is_verified')->default(false);
+            $table->string('role')->default('client'); // client, artist, admin
+            // -----------------------------
+
             $table->rememberToken();
             $table->timestamps();
         });
