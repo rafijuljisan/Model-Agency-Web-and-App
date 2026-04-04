@@ -28,7 +28,20 @@ class AuthenticatedSessionController extends Controller
 
         $request->session()->regenerate();
 
-        return redirect()->intended(route('dashboard', absolute: false));
+        $user = $request->user();
+
+        // 1. If they are an Admin, send them to the Admin Panel
+        if ($user->hasRole('Super-Admin') || $user->role === 'Super-Admin' || $user->role === 'super_admin') {
+            return redirect()->intended('/admin');
+        }
+
+        // 2. If they are an Artist, send them to the Artist Dashboard
+        if ($user->hasRole('Verified-Artist') || $user->role === 'Verified-Artist') {
+            return redirect()->intended('/app');
+        }
+
+        // 3. If they are a Client, send them to the public directory
+        return redirect()->intended('/artists');
     }
 
     /**

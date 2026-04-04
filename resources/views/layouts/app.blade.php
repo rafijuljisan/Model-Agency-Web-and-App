@@ -1,52 +1,881 @@
 <!DOCTYPE html>
-<html lang="{{ str_replace('_', '-', app()->getLocale()) }}">
-    <head>
-        <meta charset="utf-8">
-        <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <title>{{ $title ?? 'Verified Talent Directory' }} | Your Agency</title>
-        
-        <link rel="preconnect" href="https://fonts.bunny.net">
-        <link href="https://fonts.bunny.net/css?family=inter:400,500,600,700&display=swap" rel="stylesheet" />
+<html lang="{{ str_replace('_', '-', app()->getLocale()) }}" data-theme="light">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{ $title ?? 'Verified Talent Directory' }} | AgencyMarket</title>
 
-        @vite(['resources/css/app.css', 'resources/js/app.js'])
-        @livewireStyles
-    </head>
-    <body class="font-sans antialiased bg-gray-50 text-gray-900">
-        
-        <nav class="bg-white shadow-sm border-b border-gray-100">
-            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-                <div class="flex justify-between h-16">
-                    <div class="flex items-center">
-                        <a href="/" class="text-xl font-bold text-indigo-600 tracking-tight">
-                            AgencyMarket.
-                        </a>
-                    </div>
-                    <div class="flex items-center space-x-6">
-                        <a href="/artists" class="text-sm font-medium text-gray-700 hover:text-indigo-600">Browse Talent</a>
-                        
-                        @auth
-                            <a href="/app" class="text-sm font-medium text-gray-700 hover:text-indigo-600">Dashboard</a>
-                        @else
-                            <a href="/login" class="text-sm font-medium text-gray-700 hover:text-indigo-600">Log in</a>
-                            <a href="/register" class="inline-flex items-center justify-center px-4 py-2 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-indigo-600 hover:bg-indigo-700">
-                                Join as Professional
-                            </a>
-                        @endauth
-                    </div>
+    {{-- Fonts: Cormorant Garamond (luxury editorial display) + Jost (refined body) --}}
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,500&family=Jost:wght@300;400;500;600&display=swap" rel="stylesheet">
+
+    @vite(['resources/css/app.css', 'resources/js/app.js'])
+    @livewireStyles
+
+    <style>
+        /* ═══════════════════════════════════════════
+           DESIGN TOKENS — Light Mode (default)
+        ═══════════════════════════════════════════ */
+        :root,
+        [data-theme="light"] {
+            --bg-primary:        #faf5f5;
+            --bg-secondary:      #f2e6e6;
+            --bg-surface:        #ffffff;
+            --bg-nav:            rgba(250, 245, 245, 0.94);
+            --border:            rgba(180, 118, 118, 0.2);
+            --border-strong:     rgba(180, 158, 118, 0.42);
+            --text-primary:      #1a1414;
+            --text-secondary:    #5c4848;
+            --text-muted:        #9a8484;
+            --gold:              #c50000;
+            --gold-light:        #e24c4c;
+            --gold-bg:           rgba(184, 74, 74, 0.07);
+            --shadow-sm:         0 1px 4px rgba(60,40,10,0.07);
+            --shadow-md:         0 4px 24px rgba(60,40,10,0.09);
+            --shadow-lg:         0 16px 56px rgba(60,40,10,0.12);
+            --btn-fill-bg:       #1a1714;
+            --btn-fill-color:    #faf5f5;
+            --btn-fill-hover:    #2e2820;
+            --badge-ok-bg:       #eef6ee;
+            --badge-ok-color:    #2d6a30;
+            --ticker-bg:         #d40303;
+            --ticker-color:      #faf5f5;
+            --nav-h:             72px;
+        }
+
+        /* ═══════════════════════════════════════════
+           DESIGN TOKENS — Dark Mode
+        ═══════════════════════════════════════════ */
+        [data-theme="dark"] {
+            --bg-primary:        #0a0a0a; /* Shifted from warm-brown to pure dark */
+            --bg-secondary:      #121212;
+            --bg-surface:        #1a1a1a;
+            --bg-nav:            rgba(10, 10, 10, 0.93);
+            --border:            rgba(255, 255, 255, 0.10); /* Removed old gold RGB */
+            --border-strong:     rgba(255, 255, 255, 0.22); /* Removed old gold RGB */
+            --text-primary:      #ffffff;
+            --text-secondary:    #e0e0e0;
+            --text-muted:        #888888;
+            --gold:              #ff4444; /* Softer, highly visible red for dark mode text/icons */
+            --gold-light:        #ff8888;
+            --gold-bg:           rgba(255, 68, 68, 0.12); /* Red RGB background tint */
+            --shadow-sm:         0 1px 4px rgba(0,0,0,0.45);
+            --shadow-md:         0 4px 24px rgba(0,0,0,0.55);
+            --shadow-lg:         0 16px 56px rgba(0,0,0,0.65);
+            --btn-fill-bg:       #d40303; /* Deep red for buttons */
+            --btn-fill-color:    #ffffff; /* White text on red provides much better contrast */
+            --btn-fill-hover:    #ff1a1a; /* Brighter red on hover */
+            --badge-ok-bg:       rgba(46,106,48,0.18);
+            --badge-ok-color:    #81c784;
+            --ticker-bg:         #1a1a1a;
+            --ticker-color:      #ff4444;
+            --nav-h:             72px;
+        }
+
+        /* ═══════════════════════════════════════════
+           BASE
+        ═══════════════════════════════════════════ */
+        *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+        html { scroll-behavior: smooth; }
+
+        body {
+            font-family: 'Jost', sans-serif;
+            background-color: var(--bg-primary);
+            color: var(--text-primary);
+            font-weight: 300;
+            letter-spacing: 0.01em;
+            line-height: 1.65;
+            min-height: 100vh;
+            overflow-x: hidden;
+            transition: background-color 0.4s ease, color 0.4s ease;
+        }
+
+        /* Subtle paper grain overlay */
+        body::before {
+            content: '';
+            position: fixed;
+            inset: 0;
+            pointer-events: none;
+            z-index: 9998;
+            opacity: 0.028;
+            background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 300 300' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+        }
+
+        a { text-decoration: none; color: inherit; }
+        img { display: block; max-width: 100%; }
+        ul, ol { list-style: none; }
+
+        /* ═══════════════════════════════════════════
+           NAVIGATION
+        ═══════════════════════════════════════════ */
+        .site-nav {
+            position: fixed;
+            top: 0; left: 0; right: 0;
+            height: var(--nav-h);
+            z-index: 1000;
+            display: flex;
+            align-items: center;
+            transition: background 0.45s, box-shadow 0.45s, backdrop-filter 0.45s;
+        }
+        .site-nav.is-scrolled {
+            background: var(--bg-nav);
+            backdrop-filter: blur(22px);
+            -webkit-backdrop-filter: blur(22px);
+            box-shadow: 0 1px 0 var(--border), var(--shadow-sm);
+        }
+
+        .nav-inner {
+            width: 100%;
+            max-width: 1440px;
+            margin: 0 auto;
+            padding: 0 40px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 16px;
+        }
+
+        /* Brand */
+        .nav-brand {
+            display: flex;
+            flex-direction: column;
+            line-height: 1;
+            flex-shrink: 0;
+        }
+        .nav-brand-name {
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 1.55rem;
+            font-weight: 600;
+            letter-spacing: 0.07em;
+            text-transform: uppercase;
+            color: var(--text-primary);
+            transition: color 0.3s;
+        }
+        .nav-brand-name em {
+            color: var(--gold);
+            font-style: normal;
+        }
+        .nav-brand-sub {
+            font-size: 0.47rem;
+            font-weight: 500;
+            letter-spacing: 0.38em;
+            text-transform: uppercase;
+            color: var(--text-muted);
+            margin-top: 3px;
+            transition: color 0.3s;
+        }
+
+        /* Centre links */
+        .nav-links {
+            display: flex;
+            align-items: center;
+        }
+        .nav-links > li > a,
+        .nav-links > li > .nav-drop-btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 4px;
+            padding: 6px 15px;
+            font-size: 0.68rem;
+            font-weight: 500;
+            letter-spacing: 0.17em;
+            text-transform: uppercase;
+            color: var(--text-secondary);
+            background: none;
+            border: none;
+            cursor: pointer;
+            font-family: 'Jost', sans-serif;
+            transition: color 0.22s;
+            white-space: nowrap;
+            position: relative;
+        }
+        .nav-links > li > a::after {
+            content: '';
+            position: absolute;
+            left: 15px; right: 15px;
+            bottom: 0;
+            height: 1px;
+            background: var(--gold);
+            transform: scaleX(0);
+            transition: transform 0.28s ease;
+        }
+        .nav-links > li > a:hover,
+        .nav-links > li > .nav-drop-btn:hover {
+            color: var(--text-primary);
+        }
+        .nav-links > li > a:hover::after { transform: scaleX(1); }
+
+        .chevron {
+            width: 9px; height: 9px;
+            flex-shrink: 0;
+            transition: transform 0.25s;
+            opacity: 0.5;
+        }
+        .nav-dropdown:hover .chevron { transform: rotate(180deg); opacity: 1; }
+
+        /* Dropdown panel */
+        .nav-dropdown { position: relative; }
+        .nav-drop-panel {
+            position: absolute;
+            top: calc(100% + 8px);
+            left: 50%;
+            transform: translateX(-50%) translateY(8px);
+            background: var(--bg-surface);
+            border: 1px solid var(--border-strong);
+            box-shadow: var(--shadow-lg);
+            min-width: 196px;
+            padding: 6px 0;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.2s, transform 0.2s;
+        }
+        .nav-dropdown:hover .nav-drop-panel {
+            opacity: 1;
+            pointer-events: all;
+            transform: translateX(-50%) translateY(0);
+        }
+        .nav-drop-panel a {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 10px 18px;
+            font-size: 0.90rem;
+            font-weight: 400;
+            letter-spacing: 0.09em;
+            color: var(--text-secondary);
+            transition: background 0.18s, color 0.18s;
+        }
+        .nav-drop-panel a .dot {
+            width: 4px; height: 4px;
+            border-radius: 50%;
+            background: var(--gold);
+            opacity: 0;
+            flex-shrink: 0;
+            transition: opacity 0.18s;
+        }
+        .nav-drop-panel a:hover { background: var(--gold-bg); color: var(--gold); }
+        .nav-drop-panel a:hover .dot { opacity: 1; }
+
+        /* Right actions */
+        .nav-actions {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            flex-shrink: 0;
+        }
+
+        /* Theme toggle */
+        .theme-toggle {
+            width: 36px; height: 36px;
+            border-radius: 50%;
+            border: 1px solid var(--border-strong);
+            background: var(--bg-surface);
+            color: var(--text-muted);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: border-color 0.25s, color 0.25s, background 0.25s, transform 0.3s;
+            flex-shrink: 0;
+        }
+        .theme-toggle:hover {
+            border-color: var(--gold);
+            color: var(--gold);
+            background: var(--gold-bg);
+            transform: rotate(22deg);
+        }
+        .theme-toggle svg { width: 15px; height: 15px; }
+
+        /* Show sun in dark mode, moon in light mode */
+        .icon-sun  { display: none; }
+        .icon-moon { display: block; }
+        [data-theme="dark"] .icon-sun  { display: block; }
+        [data-theme="dark"] .icon-moon { display: none; }
+
+        /* Buttons */
+        .btn-ghost {
+            font-size: 0.68rem;
+            font-weight: 500;
+            letter-spacing: 0.15em;
+            text-transform: uppercase;
+            color: var(--text-secondary);
+            transition: color 0.22s;
+            white-space: nowrap;
+        }
+        .btn-ghost:hover { color: var(--gold); }
+
+        .btn-fill {
+            display: inline-flex;
+            align-items: center;
+            gap: 7px;
+            padding: 10px 22px;
+            background: var(--btn-fill-bg);
+            color: var(--btn-fill-color);
+            font-family: 'Jost', sans-serif;
+            font-size: 0.67rem;
+            font-weight: 500;
+            letter-spacing: 0.18em;
+            text-transform: uppercase;
+            border: none;
+            cursor: pointer;
+            transition: background 0.25s, transform 0.2s;
+            white-space: nowrap;
+        }
+        .btn-fill:hover { background: var(--btn-fill-hover); transform: translateY(-1px); }
+
+        .btn-outline {
+            display: inline-flex;
+            align-items: center;
+            gap: 7px;
+            padding: 9px 22px;
+            border: 1px solid var(--border-strong);
+            background: transparent;
+            color: var(--text-primary);
+            font-family: 'Jost', sans-serif;
+            font-size: 0.67rem;
+            font-weight: 500;
+            letter-spacing: 0.18em;
+            text-transform: uppercase;
+            cursor: pointer;
+            transition: border-color 0.25s, color 0.25s, transform 0.2s;
+            white-space: nowrap;
+        }
+        .btn-outline:hover { border-color: var(--gold); color: var(--gold); transform: translateY(-1px); }
+
+        /* Hamburger */
+        .nav-hamburger {
+            display: none;
+            flex-direction: column;
+            gap: 5px;
+            background: none;
+            border: none;
+            cursor: pointer;
+            padding: 4px;
+        }
+        .nav-hamburger span {
+            display: block;
+            width: 22px; height: 1.5px;
+            background: var(--text-primary);
+            transition: transform 0.3s, opacity 0.3s;
+        }
+
+        /* Mobile drawer */
+        .nav-drawer {
+            display: none;
+            position: fixed;
+            inset: 0;
+            z-index: 999;
+            background: var(--bg-primary);
+            padding: 96px 36px 40px;
+            flex-direction: column;
+            overflow-y: auto;
+        }
+        .nav-drawer.is-open { display: flex; }
+        .nav-drawer a {
+            display: block;
+            padding: 15px 0;
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 1.45rem;
+            font-weight: 400;
+            letter-spacing: 0.04em;
+            color: var(--text-primary);
+            border-bottom: 1px solid var(--border);
+            transition: color 0.22s, padding-left 0.22s;
+        }
+        .nav-drawer a:hover { color: var(--gold); padding-left: 8px; }
+        .drawer-actions {
+            margin-top: 28px;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+        .drawer-actions .btn-fill,
+        .drawer-actions .btn-outline { justify-content: center; }
+
+        /* ═══════════════════════════════════════════
+           ANNOUNCEMENT TICKER
+        ═══════════════════════════════════════════ */
+        .site-ticker {
+            position: fixed;
+            top: var(--nav-h);
+            left: 0; right: 0;
+            z-index: 999;
+            height: 30px;
+            background: var(--ticker-bg);
+            color: var(--ticker-color);
+            font-size: 0.58rem;
+            font-weight: 600;
+            letter-spacing: 0.24em;
+            text-transform: uppercase;
+            display: flex;
+            align-items: center;
+            overflow: hidden;
+            transition: background 0.4s, color 0.4s;
+        }
+        .ticker-track {
+            display: flex;
+            white-space: nowrap;
+            animation: ticker 32s linear infinite;
+        }
+        .ticker-track span { padding: 0 52px; }
+        .ticker-track span::before { content: '✦'; margin-right: 52px; opacity: 0.55; }
+        @keyframes ticker {
+            from { transform: translateX(0); }
+            to   { transform: translateX(-50%); }
+        }
+
+        /* ═══════════════════════════════════════════
+           MAIN CONTENT AREA
+        ═══════════════════════════════════════════ */
+        .site-main {
+            padding-top: calc(var(--nav-h) + 30px);
+            min-height: 78vh;
+        }
+
+        /* ═══════════════════════════════════════════
+           FOOTER
+        ═══════════════════════════════════════════ */
+        .site-footer {
+            background: var(--bg-secondary);
+            border-top: 1px solid var(--border);
+            margin-top: 80px;
+            transition: background 0.4s;
+        }
+        .footer-top {
+            max-width: 1440px;
+            margin: 0 auto;
+            padding: 64px 40px 0;
+            display: grid;
+            grid-template-columns: 2fr 1fr 1fr 1fr;
+            gap: 48px;
+        }
+
+        /* Footer brand */
+        .footer-brand-name {
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 1.7rem;
+            font-weight: 600;
+            letter-spacing: 0.07em;
+            text-transform: uppercase;
+            color: var(--text-primary);
+            line-height: 1;
+            margin-bottom: 4px;
+        }
+        .footer-brand-name em { color: var(--gold); font-style: normal; }
+        .footer-brand-sub {
+            font-size: 0.5rem;
+            letter-spacing: 0.36em;
+            text-transform: uppercase;
+            color: var(--text-muted);
+            margin-bottom: 18px;
+        }
+        .footer-brand-desc {
+            font-size: 1.00rem;
+            color: var(--text-secondary);
+            line-height: 1.8;
+            max-width: 290px;
+            margin-bottom: 22px;
+        }
+
+        /* Social icons */
+        .footer-socials { display: flex; gap: 8px; }
+        .social-btn {
+            width: 34px; height: 34px;
+            border: 1px solid var(--border-strong);
+            display: flex; align-items: center; justify-content: center;
+            color: var(--text-muted);
+            transition: border-color 0.22s, color 0.22s, background 0.22s;
+        }
+        .social-btn:hover { border-color: var(--gold); color: var(--gold); background: var(--gold-bg); }
+
+        /* Footer columns */
+        .footer-col-title {
+            font-size: 0.58rem;
+            font-weight: 600;
+            letter-spacing: 0.28em;
+            text-transform: uppercase;
+            color: var(--gold);
+            margin-bottom: 18px;
+        }
+        .footer-col-links { display: flex; flex-direction: column; gap: 9px; }
+        .footer-col-links a {
+            font-size: 1.00rem;
+            color: var(--text-secondary);
+            transition: color 0.22s, padding-left 0.22s;
+            display: block;
+        }
+        .footer-col-links a:hover { color: var(--gold); padding-left: 5px; }
+
+        /* Footer bottom bar */
+        .footer-bottom {
+            max-width: 1440px;
+            margin: 0 auto;
+            padding: 22px 40px;
+            border-top: 1px solid var(--border);
+            margin-top: 48px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+        .footer-copy {
+            font-size: 0.72rem;
+            color: var(--text-muted);
+            letter-spacing: 0.07em;
+        }
+        .footer-legal { display: flex; gap: 22px; }
+        .footer-legal a {
+            font-size: 0.68rem;
+            color: var(--text-muted);
+            letter-spacing: 0.07em;
+            transition: color 0.22s;
+        }
+        .footer-legal a:hover { color: var(--gold); }
+
+        /* ═══════════════════════════════════════════
+           GLOBAL UTILITY CLASSES
+        ═══════════════════════════════════════════ */
+        .badge-verified {
+            display: inline-flex;
+            align-items: center;
+            gap: 4px;
+            padding: 2px 8px;
+            background: var(--badge-ok-bg);
+            color: var(--badge-ok-color);
+            font-size: 0.58rem;
+            font-weight: 600;
+            letter-spacing: 0.12em;
+            text-transform: uppercase;
+            border-radius: 2px;
+            transition: background 0.3s, color 0.3s;
+        }
+
+        .divider-rule {
+            display: flex;
+            align-items: center;
+            gap: 14px;
+            color: var(--gold);
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 1rem;
+        }
+        .divider-rule::before,
+        .divider-rule::after {
+            content: '';
+            flex: 1;
+            height: 1px;
+            background: var(--border-strong);
+        }
+
+        @keyframes fade-up {
+            from { opacity: 0; transform: translateY(16px); }
+            to   { opacity: 1; transform: translateY(0); }
+        }
+        .anim-fade-up { animation: fade-up 0.65s ease both; }
+        .anim-d1 { animation-delay: 0.08s; }
+        .anim-d2 { animation-delay: 0.18s; }
+        .anim-d3 { animation-delay: 0.30s; }
+
+        /* ═══════════════════════════════════════════
+           RESPONSIVE
+        ═══════════════════════════════════════════ */
+        @media (max-width: 1024px) {
+            .nav-links { display: none; }
+            .nav-hamburger { display: flex; }
+            .footer-top { grid-template-columns: 1fr 1fr; }
+            
+            /* Add this to hide the top-right buttons on mobile */
+            .nav-actions .btn-ghost,
+            .nav-actions .btn-fill,
+            .nav-actions .btn-outline {
+                display: none;
+            }
+        }
+        @media (max-width: 640px) {
+            .nav-inner { padding: 0 20px; }
+            .footer-top { grid-template-columns: 1fr; padding: 40px 20px 0; }
+            .footer-bottom { padding: 18px 20px; flex-direction: column; align-items: flex-start; }
+        }
+    </style>
+</head>
+
+<body>
+
+    {{-- ══════════════════════════════════
+         NAVIGATION
+    ══════════════════════════════════ --}}
+    <nav class="site-nav" id="siteNav" aria-label="Primary navigation">
+        <div class="nav-inner">
+
+            {{-- Brand --}}
+            <a href="/" class="nav-brand" aria-label="AgencyMarket — home">
+                <span class="nav-brand-name">Agency<em>Market</em></span>
+                <span class="nav-brand-sub">Verified Talent Directory</span>
+            </a>
+
+            {{-- Desktop nav links --}}
+            <ul class="nav-links" role="list">
+                <li><a href="/artists">Browse Talent</a></li>
+
+                <li class="nav-dropdown">
+                    <button class="nav-drop-btn" type="button" aria-haspopup="listbox" aria-expanded="false">
+                        Categories
+                        <svg class="chevron" viewBox="0 0 10 6" fill="none" aria-hidden="true">
+                            <path d="M1 1l4 4 4-4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+                        </svg>
+                    </button>
+                    <ul class="nav-drop-panel" role="listbox">
+                        <li><a href="/models"><span class="dot"></span>Models</a></li>
+                        <li><a href="/actors"><span class="dot"></span>Actors</a></li>
+                        <li><a href="/photographers"><span class="dot"></span>Photographers</a></li>
+                        <li><a href="/musicians"><span class="dot"></span>Musicians</a></li>
+                        <li><a href="/creators"><span class="dot"></span>Content Creators</a></li>
+                        <li><a href="/brand-promoters"><span class="dot"></span>Brand Promoters</a></li>
+                    </ul>
+                </li>
+
+                <li><a href="/casting">Casting Calls</a></li>
+                <li><a href="/about">About</a></li>
+                <li><a href="/blog">Editorial</a></li>
+            </ul>
+
+            {{-- Right controls --}}
+            <div class="nav-actions">
+
+                {{-- Theme toggle --}}
+                <button class="theme-toggle" id="themeToggle" aria-label="Toggle dark mode">
+                    {{-- Sun: shown in dark mode --}}
+                    <svg class="icon-sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" aria-hidden="true">
+                        <circle cx="12" cy="12" r="4"/>
+                        <path d="M12 2v2M12 20v2M4.22 4.22l1.42 1.42M18.36 18.36l1.42 1.42M2 12h2M20 12h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42"/>
+                    </svg>
+                    {{-- Moon: shown in light mode --}}
+                    <svg class="icon-moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" aria-hidden="true">
+                        <path d="M21 12.79A9 9 0 1111.21 3a7 7 0 109.79 9.79z"/>
+                    </svg>
+                </button>
+
+                @auth
+                    <a href="/app" class="btn-outline">Dashboard</a>
+                @else
+                    <a href="/login" class="btn-ghost">Sign In</a>
+                    <a href="/register" class="btn-fill">
+                        Join as Talent
+                        <svg width="9" height="9" viewBox="0 0 9 9" fill="none" aria-hidden="true">
+                            <path d="M1 4.5h7M4.5 1l3.5 3.5L4.5 8" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/>
+                        </svg>
+                    </a>
+                @endauth
+
+                {{-- Hamburger (mobile) --}}
+                <button class="nav-hamburger" id="navHamburger" aria-label="Open menu" aria-expanded="false">
+                    <span></span>
+                    <span></span>
+                    <span></span>
+                </button>
+            </div>
+        </div>
+    </nav>
+
+    {{-- ══════════════════════════════════
+         MOBILE DRAWER
+    ══════════════════════════════════ --}}
+    <div class="nav-drawer" id="navDrawer" role="dialog" aria-label="Mobile menu" aria-hidden="true">
+        <a href="/artists">Browse Talent</a>
+        <a href="/models">Models</a>
+        <a href="/actors">Actors</a>
+        <a href="/photographers">Photographers</a>
+        <a href="/musicians">Musicians</a>
+        <a href="/creators">Content Creators</a>
+        <a href="/brand-promoters">Brand Promoters</a>
+        <a href="/casting">Casting Calls</a>
+        <a href="/about">About</a>
+        <a href="/blog">Editorial</a>
+        <div class="drawer-actions">
+            @auth
+                <a href="/app" class="btn-fill">Dashboard</a>
+            @else
+                <a href="/login" class="btn-outline">Sign In</a>
+                <a href="/register" class="btn-fill">Join as Talent</a>
+            @endauth
+        </div>
+    </div>
+
+    {{-- ══════════════════════════════════
+         ANNOUNCEMENT TICKER
+    ══════════════════════════════════ --}}
+    <div class="site-ticker" aria-live="polite" aria-label="Site announcements">
+        <div class="ticker-track" aria-hidden="true">
+            <span>New Casting Calls Posted Daily</span>
+            <span>Models &amp; Actors — Create Your Free Verified Profile</span>
+            <span>Brands Are Actively Hiring Talent</span>
+            <span>Bangladesh's Premier Creative Talent Platform</span>
+            {{-- duplicate for seamless loop --}}
+            <span>New Casting Calls Posted Daily</span>
+            <span>Models &amp; Actors — Create Your Free Verified Profile</span>
+            <span>Brands Are Actively Hiring Talent</span>
+            <span>Bangladesh's Premier Creative Talent Platform</span>
+        </div>
+    </div>
+
+    {{-- ══════════════════════════════════
+         PAGE CONTENT SLOT
+    ══════════════════════════════════ --}}
+    <main class="site-main" id="main-content">
+        {{ $slot }}
+    </main>
+
+    {{-- ══════════════════════════════════
+         FOOTER
+    ══════════════════════════════════ --}}
+    <footer class="site-footer" aria-label="Site footer">
+        <div class="footer-top">
+
+            {{-- Brand column --}}
+            <div>
+                <div class="footer-brand-name">Agency<em>Market</em></div>
+                <div class="footer-brand-sub">Verified Talent Directory</div>
+                <p class="footer-brand-desc">
+                    Bangladesh's leading creative talent platform — connecting models, actors, photographers, content creators, and brand promoters with brands and production houses.
+                </p>
+                <div class="footer-socials">
+                    <a href="#" class="social-btn" aria-label="Facebook">
+                        <svg width="13" height="13" viewBox="0 0 24 24" fill="currentColor"><path d="M18 2h-3a5 5 0 00-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 011-1h3z"/></svg>
+                    </a>
+                    <a href="#" class="social-btn" aria-label="Instagram">
+                        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="2" width="20" height="20" rx="5"/><path d="M16 11.37A4 4 0 1112.63 8 4 4 0 0116 11.37z"/><line x1="17.5" y1="6.5" x2="17.51" y2="6.5"/></svg>
+                    </a>
+                    <a href="#" class="social-btn" aria-label="YouTube">
+                        <svg width="13" height="13" viewBox="0 0 24 24" fill="currentColor"><path d="M22.54 6.42a2.78 2.78 0 00-1.95-1.96C18.88 4 12 4 12 4s-6.88 0-8.59.46A2.78 2.78 0 001.46 6.42 29 29 0 001 12a29 29 0 00.46 5.58 2.78 2.78 0 001.95 1.96C5.12 20 12 20 12 20s6.88 0 8.59-.46a2.78 2.78 0 001.95-1.96A29 29 0 0023 12a29 29 0 00-.46-5.58z"/><polygon points="9.75 15.02 15.5 12 9.75 8.98 9.75 15.02" fill="var(--bg-secondary)"/></svg>
+                    </a>
+                    <a href="#" class="social-btn" aria-label="LinkedIn">
+                        <svg width="13" height="13" viewBox="0 0 24 24" fill="currentColor"><path d="M16 8a6 6 0 016 6v7h-4v-7a2 2 0 00-2-2 2 2 0 00-2 2v7h-4v-7a6 6 0 016-6zM2 9h4v12H2zM4 6a2 2 0 100-4 2 2 0 000 4z"/></svg>
+                    </a>
                 </div>
             </div>
-        </nav>
 
-        <main>
-            {{ $slot }}
-        </main>
-
-        <footer class="bg-white mt-12 border-t border-gray-200">
-            <div class="max-w-7xl mx-auto py-8 px-4 sm:px-6 lg:px-8 text-center text-sm text-gray-500">
-                &copy; {{ date('Y') }} AgencyMarket. All rights reserved.
+            {{-- Talent --}}
+            <div>
+                <div class="footer-col-title">Talent</div>
+                <ul class="footer-col-links">
+                    <li><a href="/models">Models</a></li>
+                    <li><a href="/actors">Actors</a></li>
+                    <li><a href="/photographers">Photographers</a></li>
+                    <li><a href="/musicians">Musicians</a></li>
+                    <li><a href="/creators">Content Creators</a></li>
+                    <li><a href="/brand-promoters">Brand Promoters</a></li>
+                </ul>
             </div>
-        </footer>
 
-        @livewireScripts
-    </body>
+            {{-- Platform --}}
+            <div>
+                <div class="footer-col-title">Platform</div>
+                <ul class="footer-col-links">
+                    <li><a href="/casting">Casting Calls</a></li>
+                    <li><a href="/register">Join as Talent</a></li>
+                    <li><a href="/hire">Hire Talent</a></li>
+                    <li><a href="/pricing">Pricing Plans</a></li>
+                    <li><a href="/blog">Editorial</a></li>
+                    <li><a href="/about">About Us</a></li>
+                </ul>
+            </div>
+
+            {{-- Support --}}
+            <div>
+                <div class="footer-col-title">Support</div>
+                <ul class="footer-col-links">
+                    <li><a href="/help">Help Center</a></li>
+                    <li><a href="/contact">Contact Us</a></li>
+                    <li><a href="/privacy">Privacy Policy</a></li>
+                    <li><a href="/terms">Terms of Service</a></li>
+                    <li><a href="/legal">Legal &amp; Copyright</a></li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="footer-bottom">
+            <span class="footer-copy">
+                &copy; {{ date('Y') }} AgencyMarket. All rights reserved. &nbsp;&middot;&nbsp; Dhaka, Bangladesh
+            </span>
+            <ul class="footer-legal">
+                <li><a href="/privacy">Privacy</a></li>
+                <li><a href="/terms">Terms</a></li>
+                <li><a href="/legal">Legal</a></li>
+                <li><a href="/sitemap">Sitemap</a></li>
+            </ul>
+        </div>
+    </footer>
+
+    @livewireScripts
+
+    <script>
+    /* ──────────────────────────────────────
+       THEME TOGGLE — light default, persisted
+    ────────────────────────────────────── */
+    (function () {
+        const html    = document.documentElement;
+        const btn     = document.getElementById('themeToggle');
+        const KEY     = 'am_theme';
+
+        function apply(theme) {
+            html.setAttribute('data-theme', theme);
+            localStorage.setItem(KEY, theme);
+            btn.setAttribute('aria-label', theme === 'dark' ? 'Switch to light mode' : 'Switch to dark mode');
+        }
+
+        // Restore saved preference; default = light
+        apply(localStorage.getItem(KEY) || 'light');
+
+        btn.addEventListener('click', function () {
+            apply(html.getAttribute('data-theme') === 'dark' ? 'light' : 'dark');
+        });
+    })();
+
+    /* ──────────────────────────────────────
+       NAV — frosted glass on scroll
+    ────────────────────────────────────── */
+    (function () {
+        const nav = document.getElementById('siteNav');
+        function tick() {
+            nav.classList.toggle('is-scrolled', window.scrollY > 24);
+        }
+        window.addEventListener('scroll', tick, { passive: true });
+        tick();
+    })();
+
+    /* ──────────────────────────────────────
+       MOBILE DRAWER
+    ────────────────────────────────────── */
+    (function () {
+        const hamburger = document.getElementById('navHamburger');
+        const drawer    = document.getElementById('navDrawer');
+        const spans     = hamburger.querySelectorAll('span');
+        let open = false;
+
+        function toggle() {
+            open = !open;
+            drawer.classList.toggle('is-open', open);
+            hamburger.setAttribute('aria-expanded', open);
+            drawer.setAttribute('aria-hidden', !open);
+            document.body.style.overflow = open ? 'hidden' : '';
+
+            if (open) {
+                spans[0].style.transform = 'translateY(6.5px) rotate(45deg)';
+                spans[1].style.opacity   = '0';
+                spans[2].style.transform = 'translateY(-6.5px) rotate(-45deg)';
+            } else {
+                spans[0].style.transform = '';
+                spans[1].style.opacity   = '';
+                spans[2].style.transform = '';
+            }
+        }
+
+        hamburger.addEventListener('click', toggle);
+        drawer.querySelectorAll('a').forEach(function (a) {
+            a.addEventListener('click', function () { if (open) toggle(); });
+        });
+    })();
+    </script>
+</body>
 </html>

@@ -16,6 +16,7 @@ class SubscriptionForm
                 Select::make('user_id')
                     ->relationship('user', 'name')
                     ->required()
+                    ->preload()
                     ->searchable(),
                 
                 TextInput::make('trx_id')

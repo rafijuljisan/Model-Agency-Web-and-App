@@ -13,6 +13,8 @@ use Filament\Schemas\Schema;
 use Filament\Notifications\Notification;
 use Filament\Pages\Page;
 use Illuminate\Support\Facades\Auth;
+use Filament\Forms\Components\DatePicker;
+use Filament\Forms\Components\TagsInput;
 
 class MyProfile extends Page implements HasForms
 {
@@ -29,7 +31,7 @@ class MyProfile extends Page implements HasForms
     {
         // Load the artist's existing profile data
         $profile = Auth::user()->profile;
-        
+
         if ($profile) {
             $this->form->fill($profile->toArray());
         } else {
@@ -68,15 +70,70 @@ class MyProfile extends Page implements HasForms
                 TextInput::make('height')
                     ->label('Height (Optional)')
                     ->placeholder('e.g. 5.9 ft'),
-                
+
                 TextInput::make('weight')
                     ->label('Weight (Optional)')
                     ->placeholder('e.g. 70 kg'),
 
+                Select::make('gender')
+                    ->options([
+                        'Male' => 'Male',
+                        'Female' => 'Female',
+                        'Other' => 'Other',
+                    ]),
+
+                DatePicker::make('date_of_birth')
+                    ->label('Date of Birth')
+                    ->maxDate(now()->subYears(13)) // Minimum age 13
+                    ->required(),
+
+                TextInput::make('height_cm')
+                    ->label('Height (in CM)')
+                    ->numeric()
+                    ->placeholder('e.g., 165'),
+
+                TagsInput::make('languages')
+                    ->label('Languages Spoken')
+                    ->placeholder('Type a language and press Enter (e.g. Bengali, English)')
+                    ->suggestions(['Bengali', 'English', 'Hindi', 'Urdu', 'Russian']), // A nod to your Russian learning!
+
+                // Hierarchical Location
+                Select::make('country')
+                    ->options(['Bangladesh' => 'Bangladesh'])
+                    ->default('Bangladesh')
+                    ->required(),
+
+                TextInput::make('district')
+                    ->label('District')
+                    ->placeholder('Start typing to search or add new...')
+                    ->datalist(
+                        // This dynamically fetches every unique district already saved in the database
+                        Profile::query()
+                            ->whereNotNull('district')
+                            ->distinct()
+                            ->orderBy('district')
+                            ->pluck('district')
+                            ->toArray()
+                    )
+                    ->required(),
+
+                TextInput::make('upazila')
+                    ->label('Thana / Upazila')
+                    ->placeholder('Start typing to search or add new...')
+                    ->datalist(
+                        // This dynamically fetches every unique upazila already saved in the database
+                        Profile::query()
+                            ->whereNotNull('upazila')
+                            ->distinct()
+                            ->orderBy('upazila')
+                            ->pluck('upazila')
+                            ->toArray()
+                    ),
                 SpatieMediaLibraryFileUpload::make('portfolio')
                     ->label('Portfolio Gallery (Upload your best work)')
                     ->collection('portfolio') // Saves to the public portfolio collection
                     ->multiple()
+                    ->disk('public') // Ensure these are publicly accessible for the directory
                     ->reorderable()
                     ->maxFiles(10)
                     ->image()

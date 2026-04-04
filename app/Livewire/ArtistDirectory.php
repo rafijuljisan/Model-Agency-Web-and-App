@@ -2,53 +2,71 @@
 
 namespace App\Livewire;
 
-use App\Models\User;
 use Livewire\Component;
 use Livewire\WithPagination;
+use App\Models\User;
+use Carbon\Carbon;
 
 class ArtistDirectory extends Component
 {
     use WithPagination;
 
+    // Existing filters
     public $search = '';
     public $category = '';
-    public $location = '';
+    
+    // NEW Advanced Filters
+    public $gender = '';
+    public $minAge = null;
+    public $maxAge = null;
+    public $minHeight = null;
+    public $maxHeight = null;
+    public $district = '';
+    public $language = '';
 
-    public function updated($property)
+    // Reset pagination when a filter changes
+    public function updating($property)
     {
-        if (in_array($property, ['search', 'category', 'location'])) {
-            $this->resetPage();
-        }
+        $this->resetPage();
     }
 
     public function render()
     {
         $query = User::role('Verified-Artist')
             ->with(['profile', 'media'])
-            ->whereHas('subscriptions', function ($q) {
-                $q->where('status', 'active');
-            });
+            ->whereHas('subscriptions', fn($q) => $q->where('status', 'active'));
 
+        // 1. Basic Search
         if ($this->search) {
             $query->where('name', 'like', '%' . $this->search . '%');
         }
 
-        if ($this->category) {
-            $query->whereHas('profile', function ($q) {
-                $q->where('category', $this->category);
-            });
-        }
+        // 2. Complex Profile Filters
+        $query->whereHas('profile', function ($q) {
+            if ($this->category) $q->where('category', $this->category);
+            if ($this->gender) $q->where('gender', $this->gender);
+            if ($this->district) $q->where('district', $this->district);
+            
+            if ($this->minAge) {
+                $q->whereDate('date_of_birth', '<=', now()->subYears($this->minAge));
+            }
+            if ($this->maxAge) {
+                $q->whereDate('date_of_birth', '>=', now()->subYears($this->maxAge + 1));
+            }
 
-        if ($this->location) {
-            $query->whereHas('profile', function ($q) {
-                $q->where('location', $this->location);
-            });
-        }
+            if ($this->minHeight) $q->where('height_cm', '>=', $this->minHeight);
+            if ($this->maxHeight) $q->where('height_cm', '<=', $this->maxHeight);
+
+            if ($this->language) {
+                $q->whereJsonContains('languages', $this->language);
+            }
+        });
 
         $artists = $query->latest()->paginate(12);
-        
+
+        // Fetch dynamic categories and districts for the sidebar
         $categories = \App\Models\Profile::whereNotNull('category')->distinct()->pluck('category');
-        $locations = \App\Models\Profile::whereNotNull('location')->distinct()->pluck('location');
+        $locations = \App\Models\Profile::whereNotNull('district')->distinct()->pluck('district');
 
         return view('livewire.artist-directory', [
             'artists' => $artists,

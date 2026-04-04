@@ -1,94 +1,731 @@
-<div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
-    <div class="flex flex-col md:flex-row gap-8">
-        
-        <div class="w-full md:w-1/4 flex-shrink-0">
-            <div class="bg-white p-6 rounded-xl shadow-sm border border-gray-100 sticky top-6">
-                <h2 class="text-lg font-bold text-gray-900 mb-6">Filter Talent</h2>
+<div>
+    <style>
+        /* ═══════════════════════════════════════════
+   ARTIST DIRECTORY PAGE
+═══════════════════════════════════════════ */
 
-                <div class="mb-6">
-                    <label class="block text-sm font-medium text-gray-700 mb-2">Search Name</label>
-                    <input wire:model.live.debounce.300ms="search" type="text" placeholder="e.g. Artist Name" 
-                        class="w-full rounded-lg border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 text-sm">
-                </div>
+        /* Page hero banner */
+        .directory-hero {
+            background: var(--bg-secondary);
+            border-bottom: 1px solid var(--border);
+            padding: 56px 0 48px;
+            position: relative;
+            overflow: hidden;
+            transition: background 0.4s;
+        }
 
-                <div class="mb-6">
-                    <label class="block text-sm font-medium text-gray-700 mb-2">Category</label>
-                    <select wire:model.live="category" class="w-full rounded-lg border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 text-sm">
-                        <option value="">All Categories</option>
-                        @foreach($categories as $cat)
-                            <option value="{{ $cat }}">{{ ucfirst($cat) }}</option>
-                        @endforeach
-                    </select>
-                </div>
+        .directory-hero::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background-image:
+                repeating-linear-gradient(90deg,
+                    transparent,
+                    transparent 60px,
+                    var(--border) 60px,
+                    var(--border) 61px),
+                repeating-linear-gradient(0deg,
+                    transparent,
+                    transparent 60px,
+                    var(--border) 60px,
+                    var(--border) 61px);
+            opacity: 0.35;
+        }
 
-                <div>
-                    <label class="block text-sm font-medium text-gray-700 mb-2">Location</label>
-                    <select wire:model.live="location" class="w-full rounded-lg border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 text-sm">
-                        <option value="">Anywhere</option>
-                        @foreach($locations as $loc)
-                            <option value="{{ $loc }}">{{ ucfirst($loc) }}</option>
-                        @endforeach
-                    </select>
-                </div>
-            </div>
+        .directory-hero::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            bottom: 0;
+            right: 0;
+            width: 40%;
+            background: linear-gradient(to left, var(--gold-bg), transparent);
+        }
+
+        .directory-hero-inner {
+            position: relative;
+            z-index: 2;
+            max-width: 1440px;
+            margin: 0 auto;
+            padding: 0 40px;
+        }
+
+        .directory-hero-eyebrow {
+            font-size: 0.58rem;
+            font-weight: 600;
+            letter-spacing: 0.32em;
+            text-transform: uppercase;
+            color: var(--gold);
+            margin-bottom: 12px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .directory-hero-eyebrow::before {
+            content: '';
+            width: 24px;
+            height: 1px;
+            background: var(--gold);
+        }
+
+        .directory-hero-title {
+            font-family: 'Cormorant Garamond', serif;
+            font-size: clamp(2rem, 4vw, 3.2rem);
+            font-weight: 300;
+            color: var(--text-primary);
+            line-height: 1.15;
+            margin-bottom: 10px;
+        }
+
+        .directory-hero-title strong {
+            font-weight: 600;
+        }
+
+        .directory-hero-sub {
+            font-size: 0.88rem;
+            color: var(--text-muted);
+            letter-spacing: 0.06em;
+        }
+
+        /* Page body */
+        .directory-page {
+            max-width: 1440px;
+            margin: 0 auto;
+            padding: 40px 40px 80px;
+            display: grid;
+            grid-template-columns: 280px 1fr;
+            gap: 32px;
+            align-items: start;
+        }
+
+        /* ── Filter sidebar ── */
+        .filter-sidebar {
+            position: sticky;
+            top: calc(var(--nav-h) + 30px + 16px);
+        }
+
+        .filter-panel {
+            background: var(--bg-surface);
+            border: 1px solid var(--border);
+            padding: 28px;
+            transition: background 0.4s, border-color 0.4s;
+        }
+
+        .filter-panel-title {
+            font-size: 0.6rem;
+            font-weight: 600;
+            letter-spacing: 0.28em;
+            text-transform: uppercase;
+            color: var(--gold);
+            margin-bottom: 24px;
+            padding-bottom: 16px;
+            border-bottom: 1px solid var(--border);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .filter-clear-btn {
+            font-size: 0.58rem;
+            font-weight: 500;
+            letter-spacing: 0.14em;
+            text-transform: uppercase;
+            color: var(--text-muted);
+            background: none;
+            border: none;
+            cursor: pointer;
+            font-family: 'Jost', sans-serif;
+            transition: color 0.22s;
+            padding: 0;
+        }
+
+        .filter-clear-btn:hover {
+            color: var(--gold);
+        }
+
+        .filter-group {
+            margin-bottom: 24px;
+            padding-bottom: 24px;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .filter-group:last-child {
+            margin-bottom: 0;
+            padding-bottom: 0;
+            border-bottom: none;
+        }
+
+        .filter-label {
+            font-size: 0.62rem;
+            font-weight: 600;
+            letter-spacing: 0.2em;
+            text-transform: uppercase;
+            color: var(--text-secondary);
+            margin-bottom: 10px;
+            display: block;
+        }
+
+        /* Input/select styles */
+        .filter-input,
+        .filter-select {
+            width: 100%;
+            padding: 10px 14px;
+            background: var(--bg-primary);
+            border: 1px solid var(--border-strong);
+            color: var(--text-primary);
+            font-family: 'Jost', sans-serif;
+            font-size: 0.82rem;
+            font-weight: 300;
+            outline: none;
+            transition: border-color 0.22s, background 0.4s, color 0.4s;
+            appearance: none;
+            -webkit-appearance: none;
+        }
+
+        .filter-input::placeholder {
+            color: var(--text-muted);
+        }
+
+        .filter-input:focus,
+        .filter-select:focus {
+            border-color: var(--gold);
+        }
+
+        /* Custom select arrow */
+        .filter-select-wrap {
+            position: relative;
+        }
+
+        .filter-select-wrap::after {
+            content: '';
+            position: absolute;
+            right: 14px;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 0;
+            height: 0;
+            border-left: 4px solid transparent;
+            border-right: 4px solid transparent;
+            border-top: 5px solid var(--text-muted);
+            pointer-events: none;
+        }
+
+        .filter-select {
+            cursor: pointer;
+            padding-right: 36px;
+        }
+
+        /* Category pills filter */
+        .filter-pills {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 6px;
+        }
+
+        .filter-pill {
+            padding: 5px 12px;
+            border: 1px solid var(--border-strong);
+            background: transparent;
+            color: var(--text-secondary);
+            font-family: 'Jost', sans-serif;
+            font-size: 0.65rem;
+            font-weight: 500;
+            letter-spacing: 0.12em;
+            text-transform: uppercase;
+            cursor: pointer;
+            transition: border-color 0.22s, color 0.22s, background 0.22s;
+        }
+
+        .filter-pill:hover,
+        .filter-pill.is-active {
+            border-color: var(--gold);
+            color: var(--gold);
+            background: var(--gold-bg);
+        }
+
+        /* ── Directory main area ── */
+        .directory-main {}
+
+        /* Toolbar */
+        .directory-toolbar {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 20px;
+            flex-wrap: wrap;
+            gap: 12px;
+        }
+
+        .directory-count {
+            font-size: 0.72rem;
+            color: var(--text-muted);
+            letter-spacing: 0.1em;
+        }
+
+        .directory-count strong {
+            color: var(--text-primary);
+            font-weight: 600;
+        }
+
+        /* Loading indicator */
+        .loading-bar {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 0.7rem;
+            font-weight: 500;
+            letter-spacing: 0.12em;
+            text-transform: uppercase;
+            color: var(--gold);
+            padding: 12px 0;
+        }
+
+        .loading-bar svg {
+            animation: spin 0.8s linear infinite;
+            flex-shrink: 0;
+        }
+
+        @keyframes spin {
+            to {
+                transform: rotate(360deg);
+            }
+        }
+
+        /* Artist grid */
+        .artist-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 2px;
+            transition: opacity 0.25s;
+        }
+
+        .artist-grid.is-loading {
+            opacity: 0.45;
+            pointer-events: none;
+        }
+
+        /* Artist card */
+        .artist-card {
+            position: relative;
+            overflow: hidden;
+            background: var(--bg-secondary);
+            display: block;
+            text-decoration: none;
+            cursor: pointer;
+        }
+
+        .artist-card-media {
+            aspect-ratio: 3/4;
+            overflow: hidden;
+            position: relative;
+            background: var(--bg-secondary);
+        }
+
+        .artist-card-media img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: transform 0.55s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+        }
+
+        .artist-card:hover .artist-card-media img {
+            transform: scale(1.06);
+        }
+
+        .artist-card-placeholder {
+            width: 100%;
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            color: var(--text-muted);
+        }
+
+        .artist-card-placeholder svg {
+            opacity: 0.28;
+        }
+
+        .artist-card-placeholder span {
+            font-size: 0.58rem;
+            letter-spacing: 0.18em;
+            text-transform: uppercase;
+            opacity: 0.5;
+        }
+
+        /* Verified badge */
+        .artist-card-verified {
+            position: absolute;
+            top: 10px;
+            left: 10px;
+            background: rgba(255, 255, 255, 0.92);
+            backdrop-filter: blur(6px);
+            padding: 3px 8px;
+            display: flex;
+            align-items: center;
+            gap: 4px;
+            font-size: 0.56rem;
+            font-weight: 700;
+            letter-spacing: 0.14em;
+            text-transform: uppercase;
+            color: #1a1714;
+            z-index: 2;
+        }
+
+        [data-theme="dark"] .artist-card-verified {
+            background: rgba(26, 23, 20, 0.88);
+            color: var(--bone, #f0ebe2);
+        }
+
+        /* Info bottom overlay */
+        .artist-card-info {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            padding: 32px 16px 16px;
+            background: linear-gradient(to top, rgba(10, 8, 4, 0.92) 0%, rgba(10, 8, 4, 0.5) 55%, transparent 100%);
+            transform: translateY(3px);
+            transition: transform 0.3s ease;
+        }
+
+        .artist-card:hover .artist-card-info {
+            transform: translateY(0);
+        }
+
+        .artist-card-cat {
+            font-size: 0.56rem;
+            font-weight: 500;
+            letter-spacing: 0.2em;
+            text-transform: uppercase;
+            color: rgba(201, 169, 110, 0.9);
+            margin-bottom: 3px;
+        }
+
+        .artist-card-name {
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 1.1rem;
+            font-weight: 400;
+            color: #fff;
+            letter-spacing: 0.02em;
+            line-height: 1.2;
+        }
+
+        .artist-card-meta {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-top: 8px;
+        }
+
+        .artist-card-location {
+            display: flex;
+            align-items: center;
+            gap: 4px;
+            font-size: 0.62rem;
+            color: rgba(255, 255, 255, 0.55);
+        }
+
+        .artist-card-rate {
+            font-size: 0.62rem;
+            font-weight: 600;
+            color: rgba(201, 169, 110, 0.85);
+            letter-spacing: 0.06em;
+        }
+
+        .artist-card-cta {
+            font-size: 0.58rem;
+            font-weight: 600;
+            letter-spacing: 0.2em;
+            text-transform: uppercase;
+            color: rgba(255, 255, 255, 0.65);
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            margin-top: 8px;
+            opacity: 0;
+            transform: translateY(3px);
+            transition: opacity 0.28s, transform 0.28s;
+        }
+
+        .artist-card:hover .artist-card-cta {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        /* Empty state */
+        .artist-empty {
+            grid-column: 1 / -1;
+            padding: 80px 20px;
+            text-align: center;
+            border: 1px dashed var(--border-strong);
+            background: var(--bg-surface);
+            transition: background 0.4s;
+        }
+
+        .artist-empty-icon {
+            margin: 0 auto 18px;
+            opacity: 0.2;
+        }
+
+        .artist-empty-title {
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 1.6rem;
+            font-weight: 300;
+            color: var(--text-secondary);
+            margin-bottom: 8px;
+        }
+
+        .artist-empty-sub {
+            font-size: 0.8rem;
+            color: var(--text-muted);
+            letter-spacing: 0.08em;
+        }
+
+        /* Pagination */
+        .pagination-wrap {
+            margin-top: 40px;
+            padding-top: 28px;
+            border-top: 1px solid var(--border);
+        }
+
+        /* ── Responsive ── */
+        @media (max-width: 1100px) {
+            .artist-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+
+            .directory-page {
+                grid-template-columns: 240px 1fr;
+                gap: 24px;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .directory-page {
+                grid-template-columns: 1fr;
+                padding: 24px 20px 60px;
+            }
+
+            .filter-sidebar {
+                position: static;
+            }
+
+            .directory-hero-inner {
+                padding: 0 20px;
+            }
+
+            .artist-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+
+        @media (max-width: 480px) {
+            .artist-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+
+    {{-- ══════════════════════════════════
+    PAGE HERO
+    ══════════════════════════════════ --}}
+    <div class="directory-hero">
+        <div class="directory-hero-inner">
+            <div class="directory-hero-eyebrow">Verified Talent Directory</div>
+            <h1 class="directory-hero-title">
+                Find Your <strong>Perfect Talent.</strong>
+            </h1>
+            <p class="directory-hero-sub">
+                Browse {{ $artists->total() ?? '' }} verified professionals — models, actors, photographers &amp; more.
+            </p>
         </div>
+    </div>
 
-        <div class="w-full md:w-3/4">
-            
-            <div wire:loading class="w-full text-center py-4">
-                <span class="text-sm text-gray-500 flex items-center justify-center gap-2">
-                    <svg class="animate-spin h-4 w-4 text-indigo-600" fill="none" viewBox="0 0 24 24"><circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle><path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path></svg>
-                    Searching...
-                </span>
+    {{-- ══════════════════════════════════
+    DIRECTORY BODY
+    ══════════════════════════════════ --}}
+    <div class="directory-page">
+
+        {{-- ── Filter Sidebar ── --}}
+        <aside class="filter-sidebar" aria-label="Filter talent">
+            <div class="filter-panel">
+                <div class="filter-panel-title">
+                    Filter
+                    <button class="filter-clear-btn"
+                        wire:click="$set('search', ''); $set('category', ''); $set('gender', ''); $set('minAge', null); $set('maxAge', null); $set('minHeight', null); $set('maxHeight', null); $set('district', '')">
+                        Clear all
+                    </button>
+                </div>
+
+                {{-- Search --}}
+                <div class="filter-group">
+                    <label class="filter-label" for="filter-search">Search Name</label>
+                    <input id="filter-search" class="filter-input" type="text" placeholder="e.g. Artist name…"
+                        wire:model.live.debounce.300ms="search" autocomplete="off">
+                </div>
+
+                {{-- Category --}}
+                <div class="filter-group">
+                    <span class="filter-label">Category</span>
+                    <div class="filter-pills">
+                        <button class="filter-pill {{ empty($category) ? 'is-active' : '' }}"
+                            wire:click="$set('category', '')">All</button>
+                        @foreach($categories as $cat)
+                            <button class="filter-pill {{ $category === $cat ? 'is-active' : '' }}"
+                                wire:click="$set('category', '{{ $cat }}')">{{ ucfirst($cat) }}</button>
+                        @endforeach
+                    </div>
+                </div>
+
+                {{-- Gender --}}
+                <div class="filter-group">
+                    <label class="filter-label" for="filter-gender">Gender</label>
+                    <div class="filter-select-wrap">
+                        <select id="filter-gender" class="filter-select" wire:model.live="gender">
+                            <option value="">Any Gender</option>
+                            <option value="Male">Male</option>
+                            <option value="Female">Female</option>
+                            <option value="Other">Other</option>
+                        </select>
+                    </div>
+                </div>
+
+                {{-- Age Range --}}
+                <div class="filter-group">
+                    <span class="filter-label">Age Range (Years)</span>
+                    <div style="display: flex; gap: 8px;">
+                        <input class="filter-input" type="number" placeholder="Min age"
+                            wire:model.live.debounce.500ms="minAge" min="13">
+                        <input class="filter-input" type="number" placeholder="Max age"
+                            wire:model.live.debounce.500ms="maxAge">
+                    </div>
+                </div>
+
+                {{-- Height Range --}}
+                <div class="filter-group">
+                    <span class="filter-label">Height Range (CM)</span>
+                    <div style="display: flex; gap: 8px;">
+                        <input class="filter-input" type="number" placeholder="Min cm"
+                            wire:model.live.debounce.500ms="minHeight">
+                        <input class="filter-input" type="number" placeholder="Max cm"
+                            wire:model.live.debounce.500ms="maxHeight">
+                    </div>
+                </div>
+
+                {{-- District Location --}}
+                <div class="filter-group">
+                    <label class="filter-label" for="filter-district">District</label>
+                    <div class="filter-select-wrap">
+                        <select id="filter-district" class="filter-select" wire:model.live="district">
+                            <option value="">All of Bangladesh</option>
+                            {{-- Note: Make sure your Livewire component passes $locations or $districts here! --}}
+                            @foreach($locations as $loc)
+                                <option value="{{ $loc }}">{{ ucfirst($loc) }}</option>
+                            @endforeach
+                        </select>
+                    </div>
+                </div>
+
+            </div>
+        </aside>
+
+        {{-- ── Main results ── --}}
+        <div class="directory-main">
+
+            {{-- Toolbar --}}
+            <div class="directory-toolbar">
+                <div class="directory-count">
+                    Showing <strong>{{ $artists->count() }}</strong> of <strong>{{ $artists->total() }}</strong> talents
+                </div>
             </div>
 
-            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6" wire:loading.class="opacity-50">
+            {{-- Loading --}}
+            <div wire:loading class="loading-bar">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                    aria-hidden="true">
+                    <circle cx="12" cy="12" r="10" opacity="0.25" />
+                    <path d="M12 2a10 10 0 0110 10" stroke-linecap="round" />
+                </svg>
+                Searching…
+            </div>
+
+            {{-- Grid --}}
+            <div class="artist-grid" wire:loading.class="is-loading">
                 @forelse($artists as $artist)
-                    <a href="/artist/{{ $artist->id }}" class="group bg-white rounded-xl shadow-sm hover:shadow-md transition-all duration-200 border border-gray-100 overflow-hidden flex flex-col">
-                        
-                        <div class="aspect-[4/5] w-full bg-gray-200 overflow-hidden relative">
+                    <a href="/artist/{{ $artist->id }}" class="artist-card" aria-label="View {{ $artist->name }}'s profile">
+
+                        <div class="artist-card-verified" aria-label="Verified">
+                            <svg width="8" height="8" viewBox="0 0 24 24" fill="#2a7d4f" aria-hidden="true">
+                                <path
+                                    d="M12 2L3 7v5c0 5.55 3.84 10.74 9 12 5.16-1.26 9-6.45 9-12V7L12 2zm-2 15l-4-4 1.41-1.41L10 14.17l6.59-6.59L18 9l-8 8z" />
+                            </svg>
+                            Verified
+                        </div>
+
+                        <div class="artist-card-media">
                             @if($artist->hasMedia('portfolio'))
-                                <img src="{{ $artist->getFirstMediaUrl('portfolio') }}" alt="{{ $artist->name }}" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500">
+                                <img src="{{ $artist->getFirstMediaUrl('portfolio') }}" alt="{{ $artist->name }}"
+                                    loading="lazy">
                             @else
-                                <div class="w-full h-full flex items-center justify-center text-gray-400">
-                                    <svg class="w-12 h-12" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"></path></svg>
+                                <div class="artist-card-placeholder">
+                                    <svg width="36" height="36" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                        stroke-width="1" aria-hidden="true">
+                                        <circle cx="12" cy="8" r="4" />
+                                        <path d="M4 20c0-4 3.58-7 8-7s8 3 8 7" />
+                                    </svg>
+                                    <span>No Photo</span>
                                 </div>
                             @endif
-                            
-                            <div class="absolute top-3 right-3 bg-white/90 backdrop-blur-sm px-2 py-1 rounded-full flex items-center gap-1 shadow-sm">
-                                <svg class="w-4 h-4 text-blue-500" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"/></svg>
-                                <span class="text-xs font-bold text-gray-900">Verified</span>
+                        </div>
+
+                        <div class="artist-card-info">
+                            <div class="artist-card-cat">{{ ucfirst($artist->profile->category ?? 'Professional') }}</div>
+                            <div class="artist-card-name">{{ $artist->name }}</div>
+                            <div class="artist-card-meta">
+                                <div class="artist-card-location">
+                                    <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                        stroke-width="1.5" aria-hidden="true">
+                                        <path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7z" />
+                                        <circle cx="12" cy="9" r="2.5" />
+                                    </svg>
+                                    {{ ucfirst($artist->profile->location ?? 'Bangladesh') }}
+                                </div>
+                                @if($artist->profile->hourly_rate)
+                                    <div class="artist-card-rate">{{ $artist->profile->hourly_rate }} BDT/hr</div>
+                                @endif
+                            </div>
+                            <div class="artist-card-cta">
+                                View Profile
+                                <svg width="9" height="9" viewBox="0 0 10 10" fill="none">
+                                    <path d="M1 5h8M5 1l4 4-4 4" stroke="currentColor" stroke-width="1.4"
+                                        stroke-linecap="round" stroke-linejoin="round" />
+                                </svg>
                             </div>
                         </div>
 
-                        <div class="p-4 flex flex-col flex-grow">
-                            <h3 class="text-lg font-bold text-gray-900 line-clamp-1">{{ $artist->name }}</h3>
-                            <p class="text-sm text-indigo-600 font-medium mb-2">{{ ucfirst($artist->profile->category ?? 'Professional') }}</p>
-                            
-                            <div class="flex items-center text-xs text-gray-500 mb-4 mt-auto">
-                                <svg class="w-4 h-4 mr-1 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"></path><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"></path></svg>
-                                {{ ucfirst($artist->profile->location ?? 'Anywhere') }}
-                            </div>
-                            
-                            <div class="border-t border-gray-100 pt-3 flex justify-between items-center">
-                                <span class="text-xs text-gray-500">Starting at</span>
-                                <span class="font-bold text-gray-900">{{ $artist->profile->hourly_rate ?? 'Negotiable' }} BDT<span class="text-xs text-gray-500 font-normal">/hr</span></span>
-                            </div>
-                        </div>
                     </a>
                 @empty
-                    <div class="col-span-full py-12 text-center bg-white rounded-xl border border-gray-100">
-                        <svg class="mx-auto h-12 w-12 text-gray-300 mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path></svg>
-                        <h3 class="text-lg font-medium text-gray-900">No artists found</h3>
-                        <p class="mt-1 text-sm text-gray-500">Try adjusting your filters or search term.</p>
+                    <div class="artist-empty">
+                        <svg class="artist-empty-icon" width="52" height="52" viewBox="0 0 24 24" fill="none"
+                            stroke="currentColor" stroke-width="1" aria-hidden="true">
+                            <circle cx="11" cy="11" r="8" />
+                            <path d="m21 21-4.35-4.35" />
+                        </svg>
+                        <div class="artist-empty-title">No Talent Found</div>
+                        <div class="artist-empty-sub">Try adjusting your search filters.</div>
                     </div>
                 @endforelse
             </div>
 
-            <div class="mt-8">
+            {{-- Pagination --}}
+            <div class="pagination-wrap">
                 {{ $artists->links(data: ['scrollTo' => false]) }}
             </div>
-            
+
         </div>
     </div>
+
 </div>

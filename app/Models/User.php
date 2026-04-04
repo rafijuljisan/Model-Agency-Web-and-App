@@ -27,6 +27,9 @@ class User extends Authenticatable implements HasMedia, FilamentUser
         'name',
         'email',
         'password',
+        'phone',         // Added this!
+        'is_verified',   // Added this!
+        'role',          // Added this!
     ];
 
     /**
@@ -38,20 +41,25 @@ class User extends Authenticatable implements HasMedia, FilamentUser
         'password',
         'remember_token',
     ];
+
+    /**
+     * Determine who can access which Filament panels.
+     */
     public function canAccessPanel(Panel $panel): bool
     {
         // 1. Admin Panel: Only Super-Admins
         if ($panel->getId() === 'admin') {
-            return $this->hasRole('Super-Admin');
+            return $this->hasRole('Super-Admin') || $this->role === 'Super-Admin';
         }
         
-        // 2. Artist Panel: Anyone who is logged in can access their dashboard
+        // 2. Artist Panel: Only Verified Artists
         if ($panel->getId() === 'artist') {
-            return true; // We will restrict specific pages later based on payment
+            return $this->hasRole('Verified-Artist') || $this->role === 'Verified-Artist';
         }
 
         return false;
     }
+
     /**
      * Get the attributes that should be cast.
      *
@@ -62,8 +70,10 @@ class User extends Authenticatable implements HasMedia, FilamentUser
         return [
             'email_verified_at' => 'datetime',
             'password' => 'hashed',
+            'is_verified' => 'boolean', // Tells Laravel to treat this as true/false
         ];
     }
+
     public function profile()
     {
         return $this->hasOne(Profile::class);
