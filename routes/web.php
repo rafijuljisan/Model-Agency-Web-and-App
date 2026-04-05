@@ -32,6 +32,9 @@ Route::get('/', function () {
 });
 
 // 2. The Searchable Talent Directory (Livewire Component)
+Route::get('/videos', App\Livewire\VideoGallery::class)->name('videos.index');
+Route::get('/contact', App\Livewire\ContactPage::class)->name('contact');
+Route::get('/casting', App\Livewire\CastingPage::class)->name('casting');
 Route::get('/artists', ArtistDirectory::class)->name('artists.index');
 Route::get('/artist/{id}', ArtistProfile::class)->name('artist.show');
 Route::get('/pricing', [PaymentController::class, 'show'])->name('packages.index');

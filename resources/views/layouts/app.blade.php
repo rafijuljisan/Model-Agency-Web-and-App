@@ -107,11 +107,67 @@
         ul, ol { list-style: none; }
 
         /* ═══════════════════════════════════════════
+           TOPBAR (Contact & License)
+        ═══════════════════════════════════════════ */
+        .site-topbar {
+            position: absolute;
+            top: 0; left: 0; right: 0;
+            height: 36px;
+            background: var(--bg-secondary);
+            border-bottom: 1px solid var(--border);
+            z-index: 1001;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            
+            /* --- UPDATED FONT SIZE --- */
+            font-size: 0.75rem; /* Increased from 0.65rem */
+            
+            font-weight: 500;
+            letter-spacing: 0.12em;
+            text-transform: uppercase;
+            color: var(--text-secondary);
+            transition: background 0.4s, color 0.4s, border-color 0.4s;
+        }
+        .topbar-inner {
+            width: 100%; max-width: 1440px; padding: 0 40px;
+            display: flex; justify-content: space-between; align-items: center;
+        }
+        .site-topbar a { transition: color 0.2s; display: inline-flex; align-items: center; gap: 6px; }
+        .site-topbar a:hover { color: var(--gold); }
+        .topbar-left { display: flex; gap: 24px; align-items: center; }
+        .topbar-right { display: flex; gap: 16px; align-items: center; }
+        .topbar-right svg { 
+            width: 15px; 
+            height: 15px; 
+            transition: transform 0.2s ease; /* Optional: adds a smooth effect */
+        }
+
+        /* Optional: Makes them pop slightly when you hover over them */
+        .site-topbar a:hover svg {
+            transform: scale(1.15);
+        }
+
+        /* Push existing fixed elements down by 36px */
+        .site-nav { top: 36px; }
+        .site-ticker { top: calc(var(--nav-h) + 36px); }
+        .site-main { padding-top: calc(var(--nav-h) + 36px + 36px); }
+        .nav-drawer { padding-top: calc(var(--nav-h) + 36px + 24px); }
+
+        @media (max-width: 768px) {
+            .topbar-inner { padding: 0 20px; }
+            .topbar-right { display: none; }
+            
+            /* --- UPDATED MOBILE FONT SIZE --- */
+            .topbar-left { width: 100%; justify-content: space-between; font-size: 0.65rem; gap: 10px; } /* Increased from 0.55rem */
+        }
+        /* ═══════════════════════════════════════════
            NAVIGATION
         ═══════════════════════════════════════════ */
         .site-nav {
             position: fixed;
-            top: 0; left: 0; right: 0;
+            /* REMOVED top: 36px; */
+            left: 0; right: 0;
             height: var(--nav-h);
             z-index: 1000;
             display: flex;
@@ -408,7 +464,7 @@
             inset: 0;
             z-index: 999;
             background: var(--bg-primary);
-            padding: 96px 36px 40px;
+            padding: 130px 36px 40px; /* Increased top padding from 96px to 130px */
             flex-direction: column;
             overflow-y: auto;
         }
@@ -439,20 +495,17 @@
         ═══════════════════════════════════════════ */
         .site-ticker {
             position: fixed;
-            top: var(--nav-h);
+            /* REMOVED top: calc... */
             left: 0; right: 0;
             z-index: 999;
-            height: 36px; /* Slightly taller to fit the bigger font */
+            height: 36px; 
             background: var(--ticker-bg);
             color: var(--ticker-color);
-            
-            /* --- UPDATED CLEAR FONT SETTINGS --- */
             font-family: 'Jost', sans-serif;
-            font-size: 0.80rem;     /* Increased from 0.58rem for better visibility */
-            font-weight: 500;       /* Made slightly lighter so it's crisp, not bulky */
-            letter-spacing: 0.08em; /* Brought the letters closer together */
+            font-size: 0.80rem;    
+            font-weight: 500;       
+            letter-spacing: 0.08em; 
             text-transform: uppercase;
-            
             display: flex;
             align-items: center;
             overflow: hidden;
@@ -476,7 +529,8 @@
            MAIN CONTENT AREA
         ═══════════════════════════════════════════ */
         .site-main {
-            padding-top: calc(var(--nav-h) + 30px);
+            /* Accounts for Nav Height (72px) + Topbar (36px) + Ticker (36px) */
+            padding-top: calc(var(--nav-h) + 72px); 
             min-height: 78vh;
         }
 
@@ -650,6 +704,42 @@
 <body>
 
     {{-- ══════════════════════════════════
+         TOPBAR (Contact, License, Socials)
+    ══════════════════════════════════ --}}
+    @php
+        $settings = \App\Models\Setting::first();
+    @endphp
+    <div class="site-topbar" aria-label="Top contact bar">
+        <div class="topbar-inner">
+            <div class="topbar-left">
+                @if($settings->contact_phone)
+                    <a href="tel:{{ $settings->contact_phone }}" aria-label="Call us">
+                        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 16.92v3a2 2 0 01-2.18 2 19.79 19.79 0 01-8.63-3.07A19.5 19.5 0 013.07 9.81 19.79 19.79 0 01.05 2.18 2 2 0 012 0h3a2 2 0 012 1.72c.127.96.361 1.903.7 2.81a2 2 0 01-.45 2.11L6.09 7.91a16 16 0 006 6l1.27-1.27a2 2 0 012.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0122 14.92z"/></svg>
+                        Call Us: {{ $settings->contact_phone }}
+                    </a>
+                @endif
+                @if($settings->license_number)
+                    <span>Lic. No: {{ $settings->license_number }}</span>
+                @endif
+            </div>
+
+            <div class="topbar-right">
+                @if($settings->facebook_url)
+                    <a href="{{ $settings->facebook_url }}" target="_blank" rel="noopener" aria-label="Facebook"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M18 2h-3a5 5 0 00-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 011-1h3z"/></svg></a>
+                @endif
+                @if($settings->instagram_url)
+                    <a href="{{ $settings->instagram_url }}" target="_blank" rel="noopener" aria-label="Instagram"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="2" width="20" height="20" rx="5"/><path d="M16 11.37A4 4 0 1112.63 8 4 4 0 0116 11.37z"/><line x1="17.5" y1="6.5" x2="17.51" y2="6.5"/></svg></a>
+                @endif
+                @if($settings->youtube_url)
+                    <a href="{{ $settings->youtube_url }}" target="_blank" rel="noopener" aria-label="YouTube"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M22.54 6.42a2.78 2.78 0 00-1.95-1.96C18.88 4 12 4 12 4s-6.88 0-8.59.46A2.78 2.78 0 001.46 6.42 29 29 0 001 12a29 29 0 00.46 5.58 2.78 2.78 0 001.95 1.96C5.12 20 12 20 12 20s6.88 0 8.59-.46a2.78 2.78 0 001.95-1.96A29 29 0 0023 12a29 29 0 00-.46-5.58z"/><polygon points="9.75 15.02 15.5 12 9.75 8.98 9.75 15.02" fill="var(--bg-secondary)"/></svg></a>
+                @endif
+                @if($settings->linkedin_url)
+                    <a href="{{ $settings->linkedin_url }}" target="_blank" rel="noopener" aria-label="LinkedIn"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M16 8a6 6 0 016 6v7h-4v-7a2 2 0 00-2-2 2 2 0 00-2 2v7h-4v-7a6 6 0 016-6zM2 9h4v12H2zM4 6a2 2 0 100-4 2 2 0 000 4z"/></svg></a>
+                @endif
+            </div>
+        </div>
+    </div>
+    {{-- ══════════════════════════════════
          NAVIGATION
     ══════════════════════════════════ --}}
     <nav class="site-nav" id="siteNav" aria-label="Primary navigation">
@@ -657,7 +747,7 @@
 
                     @php
                         // Fetch the settings (assuming you have a Setting model holding the first row)
-                        $settings = \App\Models\Setting::first();
+                        // $settings = \App\Models\Setting::first();
                         
                         $siteName = $settings->site_name ?? 'AgencyMarket';
                         $siteSub  = $settings->site_description ?? 'Verified Talent Directory';
@@ -699,6 +789,8 @@
 
                 <li><a href="/casting">Casting Calls</a></li>
                 <li><a href="/about">About</a></li>
+                <li><a href="/contact">Contact</a></li>
+                <li><a href="/videos">Videos</a></li>
                 <li><a href="/editorial">Editorial</a></li>
             </ul>
 
@@ -753,6 +845,8 @@
         <a href="/brand-promoters">Brand Promoters</a>
         <a href="/casting">Casting Calls</a>
         <a href="/about">About</a>
+        <a href="/contact">Contact</a>
+        <a href="/videos">Videos</a>
         <a href="/editorial">Editorial</a>
         <div class="drawer-actions">
             @auth
@@ -873,6 +967,8 @@
                     <li><a href="/pricing">Pricing Plans</a></li>
                     <li><a href="/editorial">Editorial</a></li>
                     <li><a href="/about">About Us</a></li>
+                    <li><a href="/contact">Contact Us</a></li>
+                    <li><a href="/videos">Videos</a></li>
                 </ul>
             </div>
 
@@ -928,15 +1024,31 @@
     })();
 
     /* ──────────────────────────────────────
-       NAV — frosted glass on scroll
+       NAV & TICKER — Smooth scroll tracking
     ────────────────────────────────────── */
     (function () {
         const nav = document.getElementById('siteNav');
+        const ticker = document.querySelector('.site-ticker');
+        
         function tick() {
-            nav.classList.toggle('is-scrolled', window.scrollY > 24);
+            const scrollY = window.scrollY;
+            
+            // 1. Toggle frosted glass effect when scrolled past 10px
+            nav.classList.toggle('is-scrolled', scrollY > 10);
+            
+            // 2. Smoothly slide the nav and ticker up as the topbar scrolls away
+            // 36 is the height of the topbar
+            const navTop = Math.max(0, 36 - scrollY); 
+            nav.style.top = navTop + 'px';
+            
+            if(ticker) {
+                // Ticker sits exactly below the nav (nav is 72px tall)
+                ticker.style.top = (navTop + 72) + 'px';
+            }
         }
+        
         window.addEventListener('scroll', tick, { passive: true });
-        tick();
+        tick(); // Run once on load to set initial positions
     })();
 
     /* ──────────────────────────────────────

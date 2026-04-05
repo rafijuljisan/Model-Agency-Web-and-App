@@ -28,6 +28,9 @@ class SettingForm
                             ->columns(2)
                             ->schema([
                                 TextInput::make('site_name')->required(),
+                                TextInput::make('license_number')
+                                    ->label('Government License Number')
+                                    ->placeholder('e.g. 03-090585'),
                                 Textarea::make('site_description')->columnSpanFull(),
                                 FileUpload::make('logo')
                                     ->image()
@@ -40,16 +43,37 @@ class SettingForm
                             ]),
 
                         // TAB 2: CONTACT & SOCIALS
-                        Tabs\Tab::make('Contact & Socials')
-                            ->icon('heroicon-o-globe-alt')
+                        // TAB 2: CONTACT & SOCIALS
+                        Tabs\Tab::make('Contact & Location')
+                            ->icon('heroicon-o-map-pin')
                             ->columns(2)
                             ->schema([
+                                // Core Contact
                                 TextInput::make('contact_email')->email(),
                                 TextInput::make('contact_phone')->tel(),
+                                
+                                // Physical Location
+                                Textarea::make('contact_address')
+                                    ->label('Office Address')
+                                    ->rows(3)
+                                    ->columnSpanFull(),
+                                TextInput::make('business_hours')
+                                    ->label('Business Hours')
+                                    ->placeholder('e.g., Mon - Fri: 10:00 AM - 6:00 PM')
+                                    ->columnSpanFull(),
+                                
+                                // Map
+                                Textarea::make('google_map_embed_url')
+                                    ->label('Google Maps Embed URL (src only)')
+                                    ->helperText('Go to Google Maps > Share > Embed a map > Copy ONLY the link inside the src="..." attribute.')
+                                    ->rows(2)
+                                    ->columnSpanFull(),
+
+                                // Socials
                                 TextInput::make('facebook_url')->url()->label('Facebook URL'),
                                 TextInput::make('instagram_url')->url()->label('Instagram URL'),
-                                TextInput::make('youtube_url')->url()->label('YouTube URL'),   // <-- ADDED
-                                TextInput::make('linkedin_url')->url()->label('LinkedIn URL'), // <-- ADDED
+                                TextInput::make('youtube_url')->url()->label('YouTube URL'),
+                                TextInput::make('linkedin_url')->url()->label('LinkedIn URL'),
                             ]),
                         Tabs\Tab::make('About Page')
                             ->icon('heroicon-o-identification')
