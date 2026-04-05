@@ -60,40 +60,64 @@
 }
 
 /* Cover text */
+/* Cover text container */
 .profile-cover-inner {
     position: absolute;
     inset: 0;
     z-index: 2;
     display: flex;
     flex-direction: column;
-    justify-content: flex-end;
-    padding: 0 48px 32px;
+    justify-content: center; /* CHANGED: Vertically centers the text instead of pushing it to the bottom */
+    padding: 0 48px;         /* CHANGED: Removed the bottom padding since it is centered */
     max-width: 1440px;
     margin: 0 auto;
     left: 0; right: 0;
 }
+
+/* "Talent Profile" Eyebrow */
 .profile-cover-eyebrow {
-    font-size: 0.55rem;
+    font-size: 0.75rem; /* INCREASED font size */
     font-weight: 600;
     letter-spacing: 0.32em;
     text-transform: uppercase;
     color: var(--gold);
-    margin-bottom: 6px;
+    margin-bottom: 12px; /* INCREASED spacing below */
     display: flex;
     align-items: center;
-    gap: 10px;
+    gap: 12px;
 }
 .profile-cover-eyebrow::before {
     content: '';
-    width: 24px; height: 1px;
+    width: 32px; /* Slightly longer line */
+    height: 1px;
     background: var(--gold);
 }
+
+/* Category & Status Title */
 .profile-cover-title {
     font-family: 'Cormorant Garamond', serif;
-    font-size: 1.1rem;
-    font-weight: 300;
-    color: var(--text-muted);
-    letter-spacing: 0.08em;
+    font-size: 2.2rem; /* MASSIVELY INCREASED font size */
+    font-weight: 400;  /* Slightly bolder for better readability */
+    color: var(--text-primary); /* Changed to primary text color for better contrast against the pattern */
+    letter-spacing: 0.05em;
+    line-height: 1.2;
+}
+/* ═══════════════════════════════════════════
+   RESPONSIVE DESIGN FOR PROFILE COVER
+═══════════════════════════════════════════ */
+@media (max-width: 768px) {
+    .profile-cover {
+        height: 220px; /* Reduce banner height slightly on smaller screens */
+    }
+    .profile-cover-inner {
+        padding: 0 24px; /* Less horizontal padding on mobile */
+    }
+    .profile-cover-eyebrow {
+        font-size: 0.65rem;
+    }
+    .profile-cover-title {
+        font-size: 1.6rem; /* Scale down the title for mobile so it fits on one line */
+    }
 }
 
 /* Main layout */
@@ -112,23 +136,23 @@
     transition: background 0.4s;
 }
 .profile-header-inner {
-    padding: 0 40px 36px;
+    padding: 0 48px 32px;
     display: flex;
-    align-items: flex-end;
+    align-items: flex-end; /* Anchors everything nicely to the bottom */
     justify-content: space-between;
-    flex-wrap: wrap;
-    gap: 20px;
+    gap: 28px;
 }
 
 /* Avatar */
 .profile-avatar-wrap {
     position: relative;
-    margin-top: -56px;
+    margin-top: -64px; /* Pulls avatar into the cover banner */
     flex-shrink: 0;
 }
 .profile-avatar {
-    width: 112px; height: 112px;
-    border: 3px solid var(--bg-surface);
+    width: 140px; height: 140px; /* Made slightly larger for editorial look */
+    border: 4px solid var(--bg-surface);
+    border-radius: 50%; /* Changed to a circle for a premium feel */
     overflow: hidden;
     background: var(--bg-secondary);
     box-shadow: var(--shadow-md);
@@ -147,8 +171,8 @@
 }
 .profile-verified-badge {
     position: absolute;
-    bottom: -4px; right: -4px;
-    width: 28px; height: 28px;
+    bottom: 4px; right: 4px;
+    width: 32px; height: 32px;
     background: var(--bg-surface);
     border: 2px solid var(--bg-surface);
     border-radius: 50%;
@@ -162,39 +186,58 @@
 .profile-identity {
     flex: 1;
     min-width: 0;
+    margin-bottom: 4px; /* Visually centers text with the right-side button */
 }
 .profile-name-row {
     display: flex;
     align-items: center;
-    gap: 12px;
+    gap: 16px;
     flex-wrap: wrap;
-    margin-bottom: 4px;
+    margin-bottom: 8px;
 }
 .profile-name {
     font-family: 'Cormorant Garamond', serif;
-    font-size: 2.2rem;
-    font-weight: 600;
+    font-size: 2.8rem; /* Dramatically increased for editorial hierarchy */
+    font-weight: 500;
     color: var(--text-primary);
-    letter-spacing: 0.01em;
-    line-height: 1.1;
+    line-height: 1;
+    margin: 0;
+}
+.profile-badges {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    flex-wrap: wrap;
 }
 .profile-category {
-    font-size: 0.62rem;
+    font-size: 0.65rem;
     font-weight: 600;
-    letter-spacing: 0.22em;
+    letter-spacing: 0.15em;
     text-transform: uppercase;
     color: var(--gold);
     border: 1px solid var(--border-strong);
-    padding: 3px 10px;
-    background: var(--gold-bg);
+    padding: 5px 12px;
+    border-radius: 2px;
+}
+.badge-verified {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 5px 12px;
+    background: var(--badge-ok-bg);
+    color: var(--badge-ok-color);
+    font-size: 0.65rem;
+    font-weight: 600;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    border-radius: 2px;
 }
 .profile-location {
     display: flex;
     align-items: center;
-    gap: 5px;
-    font-size: 0.78rem;
+    gap: 6px;
+    font-size: 0.85rem;
     color: var(--text-muted);
-    margin-top: 6px;
 }
 
 /* Profile actions */
@@ -203,6 +246,44 @@
     align-items: center;
     gap: 10px;
     flex-shrink: 0;
+    margin-bottom: 8px; /* Aligns button with the text block */
+}
+
+/* ═══════════════════════════════════════════
+   RESPONSIVE PROFILE HEADER
+═══════════════════════════════════════════ */
+@media (max-width: 768px) {
+    .profile-header-inner {
+        flex-direction: column;
+        align-items: center; /* Stacks everything in the center */
+        text-align: center;
+        padding: 0 20px 32px;
+        gap: 20px;
+    }
+    .profile-identity {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        margin-bottom: 0;
+    }
+    .profile-name-row {
+        flex-direction: column; /* Stacks name on top of badges */
+        justify-content: center;
+        gap: 12px;
+    }
+    .profile-badges {
+        justify-content: center;
+    }
+    .profile-actions {
+        width: 100%;
+        margin-bottom: 0;
+        margin-top: 8px;
+    }
+    .profile-actions .btn-fill,
+    .profile-actions .btn-outline {
+        width: 100%;
+        justify-content: center; /* Makes buttons full-width on mobile */
+    }
 }
 
 /* Body layout */
@@ -473,16 +554,18 @@
             <div class="profile-identity">
                 <div class="profile-name-row">
                     <h1 class="profile-name">{{ $artist->name }}</h1>
-                    <span class="profile-category">{{ ucfirst($artist->profile->category ?? 'Professional') }}</span>
-                    <span class="badge-verified">
-                        <svg width="8" height="8" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
-                            <path d="M12 2L3 7v5c0 5.55 3.84 10.74 9 12 5.16-1.26 9-6.45 9-12V7L12 2zm-2 15l-4-4 1.41-1.41L10 14.17l6.59-6.59L18 9l-8 8z"/>
-                        </svg>
-                        NID Verified
-                    </span>
+                    <div class="profile-badges">
+                        <span class="profile-category">{{ ucfirst($artist->profile->category ?? 'Professional') }}</span>
+                        <span class="badge-verified">
+                            <svg width="10" height="10" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+                                <path d="M12 2L3 7v5c0 5.55 3.84 10.74 9 12 5.16-1.26 9-6.45 9-12V7L12 2zm-2 15l-4-4 1.41-1.41L10 14.17l6.59-6.59L18 9l-8 8z"/>
+                            </svg>
+                            NID Verified
+                        </span>
+                    </div>
                 </div>
                 <div class="profile-location">
-                    <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true">
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true">
                         <path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7z"/>
                         <circle cx="12" cy="9" r="2.5"/>
                     </svg>
@@ -490,14 +573,12 @@
                 </div>
             </div>
 
-            {{-- Actions (desktop) --}}
+            {{-- Actions --}}
             <div class="profile-actions">
-
-                {{-- Edit button — only visible to the profile owner --}}
                 @auth
                     @if(auth()->id() === $artist->id)
                         <a href="{{ route('account.dashboard') }}" class="btn-outline">
-                            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7">
+                            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7">
                                 <path d="M11 4H4a2 2 0 00-2 2v14a2 2 0 002 2h14a2 2 0 002-2v-7"/>
                                 <path d="M18.5 2.5a2.121 2.121 0 013 3L12 15l-4 1 1-4 9.5-9.5z"/>
                             </svg>
@@ -506,13 +587,11 @@
                     @endif
                 @endauth
 
-                {{-- Contact button — visible to everyone else --}}
                 @if(!auth()->check() || auth()->id() !== $artist->id)
                     <button wire:click="revealContact" class="btn-fill">
-                        Contact
+                        Contact Talent
                     </button>
                 @endif
-
             </div>
         </div>
     </div>

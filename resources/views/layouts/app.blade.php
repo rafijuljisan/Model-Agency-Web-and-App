@@ -26,7 +26,7 @@
             --border:            rgba(180, 118, 118, 0.2);
             --border-strong:     rgba(180, 158, 118, 0.42);
             --text-primary:      #1a1414;
-            --text-secondary:    #5c4848;
+            --text-secondary:    #000000;
             --text-muted:        #9a8484;
             --gold:              #c50000;
             --gold-light:        #e24c4c;
@@ -137,6 +137,34 @@
         }
 
         /* Brand */
+        /* ── Dynamic Logo ── */
+        .nav-brand-logo {
+            height: 52px; /* Base size within the 72px navbar */
+            width: auto;
+            object-fit: contain;
+            display: block;
+            
+            /* The Overlap Magic */
+            transform: scale(1.45); /* Visually scales it to ~75px to break the boundary */
+            transform-origin: left center; /* Keeps it locked to the left edge */
+            
+            /* Adds a soft shadow so the overlapping part pops off the red ticker */
+            filter: drop-shadow(0 4px 8px rgba(0,0,0,0.12)); 
+            
+            transition: transform 0.3s ease;
+        }
+
+        [data-theme="dark"] .nav-brand-logo {
+            filter: drop-shadow(0 4px 8px rgba(0,0,0,0.4)); 
+        }
+
+        /* Mobile adjustments for the overlapping logo */
+        @media (max-width: 768px) {
+            .nav-brand-logo {
+                height: 42px;
+                transform: scale(1.25); /* A slightly smaller overlap on mobile */
+            }
+        }
         .nav-brand {
             display: flex;
             flex-direction: column;
@@ -167,6 +195,7 @@
         }
 
         /* Centre links */
+        /* Centre links */
         .nav-links {
             display: flex;
             align-items: center;
@@ -177,7 +206,10 @@
             align-items: center;
             gap: 4px;
             padding: 6px 15px;
-            font-size: 0.68rem;
+            
+            /* --- UPDATED FONT SIZE --- */
+            font-size: 0.85rem; /* Increased from 0.68rem */
+            
             font-weight: 500;
             letter-spacing: 0.17em;
             text-transform: uppercase;
@@ -240,7 +272,10 @@
             align-items: center;
             gap: 10px;
             padding: 10px 18px;
-            font-size: 0.90rem;
+            
+            /* --- UPDATED FONT SIZE --- */
+            font-size: 1.00rem; /* Increased from 0.90rem */
+            
             font-weight: 400;
             letter-spacing: 0.09em;
             color: var(--text-secondary);
@@ -294,8 +329,11 @@
         [data-theme="dark"] .icon-moon { display: none; }
 
         /* Buttons */
+        /* Buttons */
         .btn-ghost {
-            font-size: 0.68rem;
+            /* --- UPDATED FONT SIZE --- */
+            font-size: 0.80rem; /* Increased from 0.68rem */
+            
             font-weight: 500;
             letter-spacing: 0.15em;
             text-transform: uppercase;
@@ -313,7 +351,10 @@
             background: var(--btn-fill-bg);
             color: var(--btn-fill-color);
             font-family: 'Jost', sans-serif;
-            font-size: 0.67rem;
+            
+            /* --- UPDATED FONT SIZE --- */
+            font-size: 0.80rem; /* Increased from 0.67rem */
+            
             font-weight: 500;
             letter-spacing: 0.18em;
             text-transform: uppercase;
@@ -401,13 +442,17 @@
             top: var(--nav-h);
             left: 0; right: 0;
             z-index: 999;
-            height: 30px;
+            height: 36px; /* Slightly taller to fit the bigger font */
             background: var(--ticker-bg);
             color: var(--ticker-color);
-            font-size: 0.58rem;
-            font-weight: 600;
-            letter-spacing: 0.24em;
+            
+            /* --- UPDATED CLEAR FONT SETTINGS --- */
+            font-family: 'Jost', sans-serif;
+            font-size: 0.80rem;     /* Increased from 0.58rem for better visibility */
+            font-weight: 500;       /* Made slightly lighter so it's crisp, not bulky */
+            letter-spacing: 0.08em; /* Brought the letters closer together */
             text-transform: uppercase;
+            
             display: flex;
             align-items: center;
             overflow: hidden;
@@ -416,7 +461,9 @@
         .ticker-track {
             display: flex;
             white-space: nowrap;
-            animation: ticker 32s linear infinite;
+            /* --- SLOWER SPEED --- */
+            /* Increased from 32s to 60s. (Higher number = slower speed) */
+            animation: ticker 60s linear infinite; 
         }
         .ticker-track span { padding: 0 52px; }
         .ticker-track span::before { content: '✦'; margin-right: 52px; opacity: 0.55; }
@@ -606,13 +653,28 @@
          NAVIGATION
     ══════════════════════════════════ --}}
     <nav class="site-nav" id="siteNav" aria-label="Primary navigation">
-        <div class="nav-inner">
+                <div class="nav-inner">
 
-            {{-- Brand --}}
-            <a href="/" class="nav-brand" aria-label="AgencyMarket — home">
-                <span class="nav-brand-name">Agency<em>Market</em></span>
-                <span class="nav-brand-sub">Verified Talent Directory</span>
-            </a>
+                    @php
+                        // Fetch the settings (assuming you have a Setting model holding the first row)
+                        $settings = \App\Models\Setting::first();
+                        
+                        $siteName = $settings->site_name ?? 'AgencyMarket';
+                        $siteSub  = $settings->site_description ?? 'Verified Talent Directory';
+                        $logo     = $settings->logo ? asset('storage/' . $settings->logo) : null;
+                    @endphp
+
+                    {{-- Brand --}}
+                    <a href="/" class="nav-brand" aria-label="{{ $siteName }} — home">
+                        @if($logo)
+                            {{-- Show uploaded logo --}}
+                            <img src="{{ $logo }}" alt="{{ $siteName }} Logo" class="nav-brand-logo">
+                        @else
+                            {{-- Fallback to text styling if no logo is uploaded --}}
+                            <span class="nav-brand-name">{{ $siteName }}</span>
+                            <span class="nav-brand-sub">{{ $siteSub }}</span>
+                        @endif
+                    </a>
 
             {{-- Desktop nav links --}}
             <ul class="nav-links" role="list">
@@ -637,7 +699,7 @@
 
                 <li><a href="/casting">Casting Calls</a></li>
                 <li><a href="/about">About</a></li>
-                <li><a href="/blog">Editorial</a></li>
+                <li><a href="/editorial">Editorial</a></li>
             </ul>
 
             {{-- Right controls --}}
@@ -691,7 +753,7 @@
         <a href="/brand-promoters">Brand Promoters</a>
         <a href="/casting">Casting Calls</a>
         <a href="/about">About</a>
-        <a href="/blog">Editorial</a>
+        <a href="/editorial">Editorial</a>
         <div class="drawer-actions">
             @auth
                 <a href="/account" class="btn-fill">Dashboard</a>
@@ -703,19 +765,41 @@
     </div>
 
     {{-- ══════════════════════════════════
-         ANNOUNCEMENT TICKER
+         ANNOUNCEMENT TICKER (Dynamic)
     ══════════════════════════════════ --}}
     <div class="site-ticker" aria-live="polite" aria-label="Site announcements">
         <div class="ticker-track" aria-hidden="true">
-            <span>New Casting Calls Posted Daily</span>
-            <span>Models &amp; Actors — Create Your Free Verified Profile</span>
-            <span>Brands Are Actively Hiring Talent</span>
-            <span>Bangladesh's Premier Creative Talent Platform</span>
-            {{-- duplicate for seamless loop --}}
-            <span>New Casting Calls Posted Daily</span>
-            <span>Models &amp; Actors — Create Your Free Verified Profile</span>
-            <span>Brands Are Actively Hiring Talent</span>
-            <span>Bangladesh's Premier Creative Talent Platform</span>
+            @php
+                // Fetch the latest 8 published editorials
+                $tickerEditorials = \App\Models\Editorial::where('is_published', true)
+                                        ->latest('published_at')
+                                        ->take(8)
+                                        ->get();
+
+                // Fallback text if no editorials exist yet
+                if ($tickerEditorials->isEmpty()) {
+                    $tickerEditorials = collect([
+                        (object)['title' => 'Welcome to AgencyMarket'],
+                        (object)['title' => 'New Casting Calls Posted Daily'],
+                        (object)['title' => 'Models & Actors — Create Your Free Verified Profile']
+                    ]);
+                }
+            @endphp
+
+            {{-- First set of titles --}}
+            @foreach($tickerEditorials as $editorial)
+                <span>
+                    {{-- Optional: Make it clickable if you have an editorial show route --}}
+                    {{-- <a href="/editorial/{{ $editorial->slug }}" class="hover:text-white"> --}}
+                        {{ $editorial->title }}
+                    {{-- </a> --}}
+                </span>
+            @endforeach
+
+            {{-- Exact duplicate set of titles (Required for the seamless CSS marquee loop!) --}}
+            @foreach($tickerEditorials as $editorial)
+                <span>{{ $editorial->title }}</span>
+            @endforeach
         </div>
     </div>
 
@@ -740,18 +824,29 @@
                     Bangladesh's leading creative talent platform — connecting models, actors, photographers, content creators, and brand promoters with brands and production houses.
                 </p>
                 <div class="footer-socials">
-                    <a href="#" class="social-btn" aria-label="Facebook">
-                        <svg width="13" height="13" viewBox="0 0 24 24" fill="currentColor"><path d="M18 2h-3a5 5 0 00-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 011-1h3z"/></svg>
-                    </a>
-                    <a href="#" class="social-btn" aria-label="Instagram">
-                        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="2" width="20" height="20" rx="5"/><path d="M16 11.37A4 4 0 1112.63 8 4 4 0 0116 11.37z"/><line x1="17.5" y1="6.5" x2="17.51" y2="6.5"/></svg>
-                    </a>
-                    <a href="#" class="social-btn" aria-label="YouTube">
-                        <svg width="13" height="13" viewBox="0 0 24 24" fill="currentColor"><path d="M22.54 6.42a2.78 2.78 0 00-1.95-1.96C18.88 4 12 4 12 4s-6.88 0-8.59.46A2.78 2.78 0 001.46 6.42 29 29 0 001 12a29 29 0 00.46 5.58 2.78 2.78 0 001.95 1.96C5.12 20 12 20 12 20s6.88 0 8.59-.46a2.78 2.78 0 001.95-1.96A29 29 0 0023 12a29 29 0 00-.46-5.58z"/><polygon points="9.75 15.02 15.5 12 9.75 8.98 9.75 15.02" fill="var(--bg-secondary)"/></svg>
-                    </a>
-                    <a href="#" class="social-btn" aria-label="LinkedIn">
-                        <svg width="13" height="13" viewBox="0 0 24 24" fill="currentColor"><path d="M16 8a6 6 0 016 6v7h-4v-7a2 2 0 00-2-2 2 2 0 00-2 2v7h-4v-7a6 6 0 016-6zM2 9h4v12H2zM4 6a2 2 0 100-4 2 2 0 000 4z"/></svg>
-                    </a>
+                    @if($settings->facebook_url)
+                        <a href="{{ $settings->facebook_url }}" target="_blank" rel="noopener noreferrer" class="social-btn" aria-label="Facebook">
+                            <svg width="13" height="13" viewBox="0 0 24 24" fill="currentColor"><path d="M18 2h-3a5 5 0 00-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 011-1h3z"/></svg>
+                        </a>
+                    @endif
+
+                    @if($settings->instagram_url)
+                        <a href="{{ $settings->instagram_url }}" target="_blank" rel="noopener noreferrer" class="social-btn" aria-label="Instagram">
+                            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="2" width="20" height="20" rx="5"/><path d="M16 11.37A4 4 0 1112.63 8 4 4 0 0116 11.37z"/><line x1="17.5" y1="6.5" x2="17.51" y2="6.5"/></svg>
+                        </a>
+                    @endif
+
+                    @if($settings->youtube_url)
+                        <a href="{{ $settings->youtube_url }}" target="_blank" rel="noopener noreferrer" class="social-btn" aria-label="YouTube">
+                            <svg width="13" height="13" viewBox="0 0 24 24" fill="currentColor"><path d="M22.54 6.42a2.78 2.78 0 00-1.95-1.96C18.88 4 12 4 12 4s-6.88 0-8.59.46A2.78 2.78 0 001.46 6.42 29 29 0 001 12a29 29 0 00.46 5.58 2.78 2.78 0 001.95 1.96C5.12 20 12 20 12 20s6.88 0 8.59-.46a2.78 2.78 0 001.95-1.96A29 29 0 0023 12a29 29 0 00-.46-5.58z"/><polygon points="9.75 15.02 15.5 12 9.75 8.98 9.75 15.02" fill="var(--bg-secondary)"/></svg>
+                        </a>
+                    @endif
+
+                    @if($settings->linkedin_url)
+                        <a href="{{ $settings->linkedin_url }}" target="_blank" rel="noopener noreferrer" class="social-btn" aria-label="LinkedIn">
+                            <svg width="13" height="13" viewBox="0 0 24 24" fill="currentColor"><path d="M16 8a6 6 0 016 6v7h-4v-7a2 2 0 00-2-2 2 2 0 00-2 2v7h-4v-7a6 6 0 016-6zM2 9h4v12H2zM4 6a2 2 0 100-4 2 2 0 000 4z"/></svg>
+                        </a>
+                    @endif
                 </div>
             </div>
 
@@ -776,7 +871,7 @@
                     <li><a href="/register">Join as Talent</a></li>
                     <li><a href="/hire">Hire Talent</a></li>
                     <li><a href="/pricing">Pricing Plans</a></li>
-                    <li><a href="/blog">Editorial</a></li>
+                    <li><a href="/editorial">Editorial</a></li>
                     <li><a href="/about">About Us</a></li>
                 </ul>
             </div>
