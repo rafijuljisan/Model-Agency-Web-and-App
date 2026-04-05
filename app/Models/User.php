@@ -23,14 +23,7 @@ class User extends Authenticatable implements HasMedia, FilamentUser
      *
      * @var list<string>
      */
-    protected $fillable = [
-        'name',
-        'email',
-        'password',
-        'phone',         // Added this!
-        'is_verified',   // Added this!
-        'role',          // Added this!
-    ];
+    protected $guarded = [];
 
     /**
      * The attributes that should be hidden for serialization.

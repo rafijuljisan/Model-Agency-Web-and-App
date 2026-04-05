@@ -18,7 +18,7 @@
     border-bottom: 1px solid var(--border);
 }
 .form-page-eyebrow {
-    font-size: 0.58rem;
+    font-size: 0.875rem;
     font-weight: 600;
     letter-spacing: 0.32em;
     text-transform: uppercase;
@@ -35,14 +35,14 @@
 }
 .form-page-title {
     font-family: 'Cormorant Garamond', serif;
-    font-size: 2.4rem;
+    font-size: 2.8rem;
     font-weight: 300;
     color: var(--text-primary);
     line-height: 1.1;
 }
 .form-page-title strong { font-weight: 600; }
 .form-page-sub {
-    font-size: 0.82rem;
+    font-size: 1rem;
     color: var(--text-muted);
     margin-top: 6px;
     letter-spacing: 0.04em;
@@ -64,11 +64,11 @@
     flex-shrink: 0;
 }
 .form-step-dot {
-    width: 28px; height: 28px;
+    width: 32px; height: 32px;
     border: 1px solid var(--border-strong);
     background: var(--bg-surface);
     color: var(--text-muted);
-    font-size: 0.6rem;
+    font-size: 0.875rem;
     font-weight: 600;
     letter-spacing: 0.05em;
     display: flex;
@@ -88,7 +88,7 @@
     color: var(--gold);
 }
 .form-step-label {
-    font-size: 0.6rem;
+    font-size: 0.875rem;
     font-weight: 500;
     letter-spacing: 0.16em;
     text-transform: uppercase;
@@ -131,13 +131,13 @@
 }
 .form-section-title {
     font-family: 'Cormorant Garamond', serif;
-    font-size: 1.15rem;
+    font-size: 1.4rem;
     font-weight: 600;
     color: var(--text-primary);
     letter-spacing: 0.02em;
 }
 .form-section-desc {
-    font-size: 0.72rem;
+    font-size: 0.9rem;
     color: var(--text-muted);
     margin-left: auto;
     letter-spacing: 0.06em;
@@ -160,7 +160,7 @@
     display: flex;
     align-items: center;
     gap: 5px;
-    font-size: 0.62rem;
+    font-size: 0.875rem;
     font-weight: 600;
     letter-spacing: 0.18em;
     text-transform: uppercase;
@@ -169,7 +169,7 @@
 }
 .form-field-label .required {
     color: var(--gold);
-    font-size: 0.7rem;
+    font-size: 0.875rem;
 }
 
 /* Inputs */
@@ -177,12 +177,12 @@
 .form-select,
 .form-textarea {
     width: 100%;
-    padding: 11px 14px;
+    padding: 12px 16px;
     background: var(--bg-primary);
     border: 1px solid var(--border-strong);
     color: var(--text-primary);
     font-family: 'Jost', sans-serif;
-    font-size: 0.88rem;
+    font-size: 1rem;
     font-weight: 300;
     outline: none;
     transition: border-color 0.25s, background 0.4s, color 0.4s, box-shadow 0.25s;
@@ -230,7 +230,7 @@
 
 /* Hint text */
 .form-hint {
-    font-size: 0.68rem;
+    font-size: 0.85rem;
     color: var(--text-muted);
     margin-top: 5px;
     letter-spacing: 0.04em;
@@ -274,7 +274,7 @@
     color: var(--gold);
 }
 .upload-zone-title {
-    font-size: 0.75rem;
+    font-size: 1rem;
     font-weight: 600;
     letter-spacing: 0.14em;
     text-transform: uppercase;
@@ -282,7 +282,7 @@
     margin-bottom: 4px;
 }
 .upload-zone-sub {
-    font-size: 0.7rem;
+    font-size: 0.875rem;
     color: var(--text-muted);
 }
 .upload-zone-sub span {
@@ -293,7 +293,7 @@
     display: flex;
     align-items: center;
     gap: 7px;
-    font-size: 0.68rem;
+    font-size: 0.875rem;
     font-weight: 500;
     letter-spacing: 0.12em;
     text-transform: uppercase;
@@ -377,7 +377,7 @@
     transition: background 0.4s;
 }
 .form-submit-status {
-    font-size: 0.72rem;
+    font-size: 0.9rem;
     color: var(--text-muted);
     letter-spacing: 0.06em;
 }
@@ -392,7 +392,7 @@
     border: 1px solid;
     border-color: var(--badge-ok-color);
     color: var(--badge-ok-color);
-    font-size: 0.78rem;
+    font-size: 1rem;
     font-weight: 500;
     letter-spacing: 0.06em;
     margin-bottom: 24px;
@@ -453,7 +453,7 @@
 
 <div class="form-page">
 
-    {{-- Error flash --}}
+        {{-- Error flash --}}
     @if(session()->has('error'))
         <div class="form-flash" style="border-color: #c0392b; color: #c0392b; background: rgba(192,57,43,0.07);">
             <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
@@ -462,6 +462,156 @@
             {{ session('error') }}
         </div>
     @endif
+    {{-- ═════════════════════════════════════════
+         GATE 1: PAYMENT FAILED
+    ═════════════════════════════════════════ --}}
+    @if($currentStep === 'payment_failed')
+        <div class="text-center py-20 anim-fade-up">
+            <div style="width: 80px; height: 80px; border-radius: 50%; background: rgba(220, 38, 38, 0.1); display: flex; align-items: center; justify-content: center; margin: 0 auto 24px;">
+                <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="#dc2626" stroke-width="1.5">
+                    <circle cx="12" cy="12" r="10"/><line x1="15" y1="9" x2="9" y2="15"/><line x1="9" y1="9" x2="15" y2="15"/>
+                </svg>
+            </div>
+            <h2 class="form-page-title mb-4">Payment <strong>Failed</strong></h2>
+            <p class="form-page-sub mx-auto mb-8" style="max-width: 480px; font-size: 1rem;">
+                We could not verify your payment. Please double-check your Transaction ID (TrxID) and mobile number, and submit the form again.<br><br>
+                If you are certain you paid successfully, please contact our support team.
+            </p>
+            <div style="display: flex; gap: 16px; justify-content: center;">
+                <a href="/contact" class="btn-outline">Contact Support</a>
+                <a href="{{ route('packages.index') }}" class="btn-fill">
+                    Submit Payment Again
+                    <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="margin-left:8px;"><line x1="5" y1="12" x2="19" y2="12"></line><polyline points="12 5 19 12 12 19"></polyline></svg>
+                </a>
+            </div>
+        </div>
+
+    {{-- ═════════════════════════════════════════
+         GATE 2: PAYMENT EXPIRED
+    ═════════════════════════════════════════ --}}
+    @elseif($currentStep === 'payment_expired')
+        <div class="text-center py-20 anim-fade-up">
+            <div style="width: 80px; height: 80px; border-radius: 50%; background: var(--bg-secondary); display: flex; align-items: center; justify-content: center; margin: 0 auto 24px;">
+                <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                    <circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/>
+                </svg>
+            </div>
+            <h2 class="form-page-title mb-4">Subscription <strong>Expired</strong></h2>
+            <p class="form-page-sub mx-auto mb-8" style="max-width: 480px; font-size: 1rem;">
+                Your verified talent subscription has expired. Please renew your package to restore your public profile and keep receiving casting calls.
+            </p>
+            <a href="{{ route('packages.index') }}" class="btn-fill" style="display: inline-flex;">
+                Renew Subscription
+                <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="margin-left:8px;"><path d="M21.5 2v6h-6M21.34 15.57a10 10 0 1 1-.92-10.26l3.08 2.69"/></svg>
+            </a>
+        </div>
+
+    {{-- ═════════════════════════════════════════
+         GATE 3: PAYMENT PENDING (Change your existing @if to @elseif)
+    ═════════════════════════════════════════ --}}
+    @elseif($currentStep === 'payment_pending')
+        <div class="text-center py-20 anim-fade-up">
+        <div class="text-center py-20 anim-fade-up">
+            <svg class="mx-auto h-16 w-16 text-yellow-500 mb-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>
+            <h2 class="form-page-title mb-2">Payment <strong>Pending Verification</strong></h2>
+            <p class="form-page-sub mx-auto">Our accounts team is currently verifying your transaction ID. This usually takes a few hours. Please check back soon!</p>
+        </div>
+
+    {{-- ═════════════════════════════════════════
+         GATE 3: DOCUMENT UPLOAD
+    ═════════════════════════════════════════ --}}
+    @elseif($currentStep === 'document_upload')
+        <div class="form-section anim-fade-up">
+            <div class="form-section-header">
+                <div class="form-section-title">Step 2: Identity & Academic Verification</div>
+            </div>
+            <div class="form-section-body">
+                <p style="color: var(--text-muted); font-size: 0.9rem; margin-bottom: 24px; line-height: 1.6;">
+                    To maintain the highest quality of talent, we require both a National ID and an Academic/Acting Certificate. Please upload the required documents below.
+                </p>
+                
+                <form wire:submit.prevent="submitDocuments" class="space-y-6">
+                    
+                    {{-- NID Upload Box --}}
+                    @if(Auth::user()->verification_status === 'unverified')
+                        <div style="padding: 20px; background: var(--bg-secondary); border: 1px solid var(--border); border-radius: 6px; margin-bottom: 20px;">
+                            <h3 style="font-weight: 600; color: var(--text-primary); margin-bottom: 12px; font-size: 0.95rem;">1. National ID (NID)</h3>
+                            @if(Auth::user()->nid_path)
+                                <p style="font-size: 0.75rem; color: #dc2626; margin-bottom: 12px; font-weight: 600;">Your previous NID was rejected. Please upload a clearer, original copy.</p>
+                            @endif
+                            <label class="upload-zone">
+                                <input type="file" wire:model="nidImage" accept="image/*" required>
+                                <svg class="upload-zone-icon" width="36" height="36" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1"><path d="M4 22h14a2 2 0 002-2V7.5L14.5 2H6a2 2 0 00-2 2v4"/><polyline points="14 2 14 8 20 8"/><path d="M2 15h10"/><path d="M2 18h10"/><path d="M2 12h10"/></svg>
+                                <div class="upload-zone-title">Upload NID (Front & Back merged or clear photo)</div>
+                            </label>
+                            @error('nidImage') <span style="color: #dc2626; font-size: 0.7rem; margin-top: 6px; display: block;">{{ $message }}</span> @enderror
+                            <div wire:loading wire:target="nidImage" style="color: var(--gold); font-size: 0.7rem; font-weight: 700; text-transform: uppercase; margin-top: 8px;">Uploading Preview...</div>
+                        </div>
+                    @else
+                        <div style="padding: 16px 20px; background: rgba(22, 163, 74, 0.05); border: 1px solid rgba(22, 163, 74, 0.2); border-radius: 6px; display: flex; align-items: center; gap: 12px; margin-bottom: 20px;">
+                            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#16a34a" stroke-width="2"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path><polyline points="22 4 12 14.01 9 11.01"></polyline></svg>
+                            <span style="font-size: 0.85rem; font-weight: 600; color: #16a34a;">National ID Verified</span>
+                        </div>
+                    @endif
+
+                    {{-- Academic Upload Box --}}
+                    @if(Auth::user()->academic_verification_status === 'unverified')
+                        <div style="padding: 20px; background: var(--bg-secondary); border: 1px solid var(--border); border-radius: 6px; margin-bottom: 24px;">
+                            <h3 style="font-weight: 600; color: var(--text-primary); margin-bottom: 12px; font-size: 0.95rem;">2. Academic / Training Certificate</h3>
+                            @if(Auth::user()->academic_certificate_path)
+                                <p style="font-size: 0.75rem; color: #dc2626; margin-bottom: 12px; font-weight: 600;">Your previous certificate was rejected. Please upload a valid original document.</p>
+                            @endif
+                            <label class="upload-zone">
+                                <input type="file" wire:model="academicImage" accept="image/*" required>
+                                <svg class="upload-zone-icon" width="36" height="36" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1"><path d="M22 10v6M2 10l10-5 10 5-10 5z"/><path d="M6 12v5c3 3 9 3 12 0v-5"/></svg>
+                                <div class="upload-zone-title">Upload Certificate or Portfolio Document</div>
+                            </label>
+                            @error('academicImage') <span style="color: #dc2626; font-size: 0.7rem; margin-top: 6px; display: block;">{{ $message }}</span> @enderror
+                            <div wire:loading wire:target="academicImage" style="color: var(--gold); font-size: 0.7rem; font-weight: 700; text-transform: uppercase; margin-top: 8px;">Uploading Preview...</div>
+                        </div>
+                    @else
+                        <div style="padding: 16px 20px; background: rgba(22, 163, 74, 0.05); border: 1px solid rgba(22, 163, 74, 0.2); border-radius: 6px; display: flex; align-items: center; gap: 12px; margin-bottom: 24px;">
+                            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#16a34a" stroke-width="2"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path><polyline points="22 4 12 14.01 9 11.01"></polyline></svg>
+                            <span style="font-size: 0.85rem; font-weight: 600; color: #16a34a;">Academic Certificate Verified</span>
+                        </div>
+                    @endif
+
+                    <button type="submit" class="btn-fill w-full justify-center">Submit Documents</button>
+                </form>
+            </div>
+        </div>
+
+    {{-- ═════════════════════════════════════════
+         GATE 4: DOCUMENTS PENDING
+    ═════════════════════════════════════════ --}}
+    @elseif($currentStep === 'document_pending')
+        <div class="text-center py-20 anim-fade-up max-w-lg mx-auto">
+            <svg class="mx-auto h-16 w-16 text-blue-500 mb-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z" /></svg>
+            <h2 class="form-page-title mb-2">Documents <strong>Under Review</strong></h2>
+            <p class="form-page-sub mx-auto mb-8" style="color: var(--text-secondary);">Our team is reviewing your uploaded documents. Your profile will unlock once both are approved.</p>
+            
+            <div style="background: var(--bg-surface); border: 1px solid var(--border); border-radius: 8px; padding: 20px; text-align: left; box-shadow: var(--shadow-sm);">
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px; padding-bottom: 16px; border-bottom: 1px solid var(--border);">
+                    <span style="font-size: 0.85rem; font-weight: 600; color: var(--text-primary);">National ID</span>
+                    <span style="font-size: 0.7rem; padding: 4px 10px; border-radius: 999px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.05em; 
+                        {{ Auth::user()->verification_status === 'verified' ? 'background: rgba(22,163,74,0.1); color: #16a34a;' : 'background: rgba(234,179,8,0.1); color: #eab308;' }}">
+                        {{ Auth::user()->verification_status }}
+                    </span>
+                </div>
+                <div style="display: flex; justify-content: space-between; align-items: center;">
+                    <span style="font-size: 0.85rem; font-weight: 600; color: var(--text-primary);">Academic Certificate</span>
+                    <span style="font-size: 0.7rem; padding: 4px 10px; border-radius: 999px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.05em; 
+                        {{ Auth::user()->academic_verification_status === 'verified' ? 'background: rgba(22,163,74,0.1); color: #16a34a;' : 'background: rgba(234,179,8,0.1); color: #eab308;' }}">
+                        {{ Auth::user()->academic_verification_status }}
+                    </span>
+                </div>
+            </div>
+        </div>
+
+        {{-- ═════════════════════════════════════════
+         GATE 5: FULL PROFILE ACCESS (APPROVED)
+    ═════════════════════════════════════════ --}}
+    @elseif($currentStep === 'profile')
     {{-- Page header --}}
     <div class="form-page-header anim-fade-up">
         <div class="form-page-eyebrow">Your Profile</div>
@@ -755,12 +905,14 @@
                             </svg>
                             Saving…
                         </span>
+                        
                     </button>
 
                 </div>
             </div>
 
     </form>
+    @endif
 </div>
 
 </div>

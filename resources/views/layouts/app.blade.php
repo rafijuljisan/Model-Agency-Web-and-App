@@ -27,7 +27,7 @@
             --border-strong:     rgba(180, 158, 118, 0.42);
             --text-primary:      #1a1414;
             --text-secondary:    #000000;
-            --text-muted:        #9a8484;
+            --text-muted:        #4d4545;
             --gold:              #c50000;
             --gold-light:        #e24c4c;
             --gold-bg:           rgba(184, 74, 74, 0.07);
@@ -56,8 +56,8 @@
             --border-strong:     rgba(255, 255, 255, 0.22); /* Removed old gold RGB */
             --text-primary:      #ffffff;
             --text-secondary:    #e0e0e0;
-            --text-muted:        #888888;
-            --gold:              #ff4444; /* Softer, highly visible red for dark mode text/icons */
+            --text-muted:        #e4e3e3;
+            --gold:              #ff0000; /* Softer, highly visible red for dark mode text/icons */
             --gold-light:        #ff8888;
             --gold-bg:           rgba(255, 68, 68, 0.12); /* Red RGB background tint */
             --shadow-sm:         0 1px 4px rgba(0,0,0,0.45);
@@ -159,7 +159,7 @@
             .topbar-right { display: none; }
             
             /* --- UPDATED MOBILE FONT SIZE --- */
-            .topbar-left { width: 100%; justify-content: space-between; font-size: 0.65rem; gap: 10px; } /* Increased from 0.55rem */
+            .topbar-left { width: 100%; justify-content: space-between; font-size: 0.75rem; gap: 10px; } /* Increased from 0.55rem */
         }
         /* ═══════════════════════════════════════════
            NAVIGATION
@@ -241,7 +241,7 @@
             font-style: normal;
         }
         .nav-brand-sub {
-            font-size: 0.47rem;
+            font-size: 0.65rem;
             font-weight: 500;
             letter-spacing: 0.38em;
             text-transform: uppercase;
@@ -388,7 +388,7 @@
         /* Buttons */
         .btn-ghost {
             /* --- UPDATED FONT SIZE --- */
-            font-size: 0.80rem; /* Increased from 0.68rem */
+            font-size: 0.875rem; /* Increased from 0.68rem */
             
             font-weight: 500;
             letter-spacing: 0.15em;
@@ -409,7 +409,7 @@
             font-family: 'Jost', sans-serif;
             
             /* --- UPDATED FONT SIZE --- */
-            font-size: 0.80rem; /* Increased from 0.67rem */
+            font-size: 0.875rem; /* Increased from 0.67rem */
             
             font-weight: 500;
             letter-spacing: 0.18em;
@@ -430,7 +430,7 @@
             background: transparent;
             color: var(--text-primary);
             font-family: 'Jost', sans-serif;
-            font-size: 0.67rem;
+            font-size: 0.875rem;
             font-weight: 500;
             letter-spacing: 0.18em;
             text-transform: uppercase;
@@ -502,7 +502,7 @@
             background: var(--ticker-bg);
             color: var(--ticker-color);
             font-family: 'Jost', sans-serif;
-            font-size: 0.80rem;    
+            font-size: 0.90rem;    
             font-weight: 500;       
             letter-spacing: 0.08em; 
             text-transform: uppercase;
@@ -565,7 +565,7 @@
         }
         .footer-brand-name em { color: var(--gold); font-style: normal; }
         .footer-brand-sub {
-            font-size: 0.5rem;
+            font-size: 0.75rem;
             letter-spacing: 0.36em;
             text-transform: uppercase;
             color: var(--text-muted);
@@ -592,7 +592,7 @@
 
         /* Footer columns */
         .footer-col-title {
-            font-size: 0.58rem;
+            font-size: 0.85rem;
             font-weight: 600;
             letter-spacing: 0.28em;
             text-transform: uppercase;
@@ -622,13 +622,13 @@
             gap: 10px;
         }
         .footer-copy {
-            font-size: 0.72rem;
+            font-size: 0.85rem;
             color: var(--text-muted);
             letter-spacing: 0.07em;
         }
         .footer-legal { display: flex; gap: 22px; }
         .footer-legal a {
-            font-size: 0.68rem;
+            font-size: 0.85rem;
             color: var(--text-muted);
             letter-spacing: 0.07em;
             transition: color 0.22s;
@@ -645,7 +645,7 @@
             padding: 2px 8px;
             background: var(--badge-ok-bg);
             color: var(--badge-ok-color);
-            font-size: 0.58rem;
+            font-size: 0.75rem;
             font-weight: 600;
             letter-spacing: 0.12em;
             text-transform: uppercase;
@@ -988,6 +988,13 @@
         <div class="footer-bottom">
             <span class="footer-copy">
                 &copy; {{ date('Y') }} AgencyMarket. All rights reserved. &nbsp;&middot;&nbsp; Dhaka, Bangladesh
+            </span>
+
+            <span class="footer-copy" style="font-size: 0.875rem;">
+                Developed by 
+                <a href="https://jisan.openwindowbd.com" target="_blank" rel="noopener" style="color: var(--text-secondary); letter-spacing: 0.1em;">
+                    Jisan Sheikh
+                </a>
             </span>
             <ul class="footer-legal">
                 <li><a href="/privacy">Privacy</a></li>

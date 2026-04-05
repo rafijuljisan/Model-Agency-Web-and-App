@@ -8,150 +8,178 @@ use App\Models\Profile;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Log;
 use Livewire\Attributes\Layout;
+use App\Models\User;
+use Illuminate\Support\Facades\Notification;
+use App\Notifications\AdminAlertNotification;
 
 #[Layout('layouts.app')]
 class ArtistAccount extends Component
 {
     use WithFileUploads;
 
+    // ── State Machine ──
+    // Available steps: 'payment_pending', 'nid_upload', 'nid_pending', 'profile'
+    public string $currentStep = 'profile'; 
+
+    // ── NID Fields ──
+    public $nidImage;
+    public $academicImage;
+
     // ── Core User Fields ──
-    public string $name     = '';
-    public string $email    = '';
-    public string $phone    = '';
+    public string $name = '';
+    public string $email = '';
+    public string $phone = '';
 
     // ── Profile Fields ──
-    public string $category      = '';
-    public string $gender        = '';
+    public string $category = '';
+    public string $gender = '';
     public string $date_of_birth = '';
-    public        $height_cm     = '';
-    public        $hourly_rate   = '';
-    public string $languages     = '';
-    public string $country       = 'Bangladesh';
-    public string $district      = '';
-    public string $upazila       = '';
-    public string $bio           = '';
+    public $height_cm = '';
+    public $hourly_rate = '';
+    public string $languages = '';
+    public string $country = 'Bangladesh';
+    public string $district = '';
+    public string $upazila = '';
+    public string $bio = '';
 
     // ── Media ──
-    public array $newPhotos      = [];
-    public       $portfolioImages = [];
-
-    // ── UI State ──
+    public array $newPhotos = [];
+    public $portfolioImages = [];
     public bool $saved = false;
 
-    // ─────────────────────────────────────────
-    // MOUNT — load existing data
-    // ─────────────────────────────────────────
-    public function mount(): void
+    public function mount()
     {
         /** @var \App\Models\User $user */
         $user = Auth::user();
 
-        $this->name  = $user->name  ?? '';
+        // 1. CHECK SUBSCRIPTION STATUS
+        $subscription = $user->subscriptions()->latest()->first();
+
+        if (!$subscription) {
+            // If they've never even tried to buy a package, send them to pricing.
+            return redirect()->route('packages.index'); 
+            
+        } elseif ($subscription->status === 'failed') {
+            $this->currentStep = 'payment_failed'; // Show the failed screen
+            
+        } elseif ($subscription->status === 'expired') {
+            $this->currentStep = 'payment_expired'; // Show the expired screen
+            
+        } elseif ($subscription->status === 'pending') {
+            $this->currentStep = 'payment_pending';
+            
+        } elseif ($user->verification_status === 'unverified') {
+            $this->currentStep = 'nid_upload';
+            
+        } elseif ($user->verification_status === 'pending') {
+            $this->currentStep = 'nid_pending';
+            
+        } elseif ($user->verification_status === 'unverified' || $user->academic_verification_status === 'unverified') {
+            $this->currentStep = 'document_upload'; // Catch-all for any missing/rejected doc
+            
+        } elseif ($user->verification_status === 'pending' || $user->academic_verification_status === 'pending') {
+            $this->currentStep = 'document_pending'; // Catch-all if waiting on admin
+            
+        } else {
+            // Everything is approved! Give them full access.
+            $this->currentStep = 'profile';
+            $this->loadProfileData($user);
+        }
+    }
+
+    // ── STEP 2 ACTION: SUBMIT NID (Payment step removed) ──
+    // ── STEP 2 ACTION: SUBMIT NID ──
+    // ── STEP 2 ACTION: SUBMIT DOCUMENTS ──
+    public function submitDocuments()
+    {
+        /** @var \App\Models\User $user */
+        $user = Auth::user();
+        $rules = [];
+        $updates = [];
+
+        // Only validate the inputs that are actually required right now
+        if ($user->verification_status === 'unverified') {
+            $rules['nidImage'] = 'required|image|mimes:jpg,jpeg,png,webp|max:5120';
+        }
+        if ($user->academic_verification_status === 'unverified') {
+            $rules['academicImage'] = 'required|image|mimes:jpg,jpeg,png,webp|max:5120';
+        }
+
+        $this->validate($rules);
+
+        // Process NID if uploaded
+        if ($this->nidImage) {
+            $updates['nid_path'] = $this->nidImage->store('nids', 'private');
+            $updates['verification_status'] = 'pending';
+        }
+
+        // Process Academic Certificate if uploaded
+        if ($this->academicImage) {
+            $updates['academic_certificate_path'] = $this->academicImage->store('academic_certificates', 'private');
+            $updates['academic_verification_status'] = 'pending';
+        }
+
+        // Save to database
+        if (!empty($updates)) {
+            $user->update($updates);
+            
+            // ── TRIGGER ADMIN EMAIL ──
+            $admins = User::role('Super-Admin')->get();
+            Notification::send($admins, new AdminAlertNotification(
+                'New Documents Uploaded',
+                "{$user->name} has uploaded new verification documents.",
+                'Review Documents',
+                url('/admin/users') // Link to Filament users page
+            ));
+        }
+
+        $this->currentStep = 'document_pending';
+    }
+
+    // ── PROFILE LOADING & SAVING LOGIC ──
+    private function loadProfileData($user)
+    {
+        $this->name  = $user->name ?? '';
         $this->email = $user->email ?? '';
         $this->phone = $user->phone ?? '';
 
         $profile = $user->profile;
         if ($profile) {
-            $this->category      = $profile->category      ?? '';
-            $this->gender        = $profile->gender        ?? '';
-            $this->date_of_birth = $profile->date_of_birth instanceof \Carbon\Carbon
-                ? $profile->date_of_birth->format('Y-m-d')
-                : (is_string($profile->date_of_birth) ? $profile->date_of_birth : '');
-            $this->height_cm     = $profile->height_cm    ?? '';
-            $this->hourly_rate   = $profile->hourly_rate  ?? '';
-            $this->country       = $profile->country      ?? 'Bangladesh';
-            $this->district      = $profile->district     ?? '';
-            $this->upazila       = $profile->upazila      ?? '';
-            $this->bio           = $profile->bio           ?? '';
-            $this->languages     = $profile->languages
-                                    ? implode(', ', (array) $profile->languages)
-                                    : '';
+            $this->category      = $profile->category ?? '';
+            $this->gender        = $profile->gender ?? '';
+            $this->date_of_birth = $profile->date_of_birth instanceof \Carbon\Carbon 
+                                    ? $profile->date_of_birth->format('Y-m-d') 
+                                    : (is_string($profile->date_of_birth) ? $profile->date_of_birth : '');
+            $this->height_cm     = $profile->height_cm ?? '';
+            $this->hourly_rate   = $profile->hourly_rate ?? '';
+            $this->country       = $profile->country ?? 'Bangladesh';
+            $this->district      = $profile->district ?? '';
+            $this->upazila       = $profile->upazila ?? '';
+            $this->bio           = $profile->bio ?? '';
+            $this->languages     = $profile->languages ? implode(', ', (array) $profile->languages) : '';
         }
 
         $this->portfolioImages = $user->getMedia('portfolio');
     }
 
-    // ─────────────────────────────────────────
-    // VALIDATION RULES
-    // ─────────────────────────────────────────
-    protected function rules(): array
-    {
-        $userId = Auth::id();
-
-        return [
-            'name'          => 'required|string|max:255',
-            'email'         => "required|email|max:255|unique:users,email,{$userId}",
-            'phone'         => "nullable|string|max:20|unique:users,phone,{$userId}",
-            'category'      => 'required|string',
-            'gender'        => 'nullable|string',
-            'date_of_birth' => 'nullable|date',
-            'height_cm'     => 'nullable|numeric|min:50|max:300',
-            'hourly_rate'   => 'nullable|numeric|min:0',
-            'languages'     => 'nullable|string|max:255',
-            'country'       => 'nullable|string|max:100',
-            'district'      => 'nullable|string|max:100',
-            'upazila'       => 'nullable|string|max:100',
-            'bio'           => 'nullable|string|max:2000',
-            'newPhotos'     => 'nullable|array|max:10',
-            'newPhotos.*'   => 'image|mimes:jpg,jpeg,png,webp|max:5120',
-        ];
-    }
-
-    protected function messages(): array
-    {
-        return [
-            'name.required'        => 'Full name is required.',
-            'email.required'       => 'Email address is required.',
-            'email.unique'         => 'This email is already taken.',
-            'phone.unique'         => 'This phone number is already registered.',
-            'category.required'    => 'Please select your talent category.',
-            'newPhotos.*.image'    => 'Each file must be a valid image.',
-            'newPhotos.*.max'      => 'Each image must be under 5MB.',
-            'newPhotos.max'        => 'You can upload a maximum of 10 photos.',
-            'height_cm.numeric'    => 'Height must be a number.',
-            'hourly_rate.numeric'  => 'Rate must be a number.',
-        ];
-    }
-
-    // ─────────────────────────────────────────
-    // REAL-TIME VALIDATION
-    // ─────────────────────────────────────────
-    public function updated(string $field): void
-    {
-        $this->validateOnly($field);
-    }
-
-    // ─────────────────────────────────────────
-    // SAVE PROFILE
-    // ─────────────────────────────────────────
     public function saveProfile(): void
-{
-    /** @var \App\Models\User $user */
-    $user = Auth::user();
-
-    // TEMPORARY DEBUGGING: Catch validation explicitly
-    try {
-        $this->validate();
-    } catch (\Illuminate\Validation\ValidationException $e) {
-        dd($e->errors()); // This will pause execution and show you exactly what is failing!
-    }
+    {
+        /** @var \App\Models\User $user */
+        $user = Auth::user();
 
         try {
             $this->validate();
 
-            // 1. Update core user
             $user->update([
                 'name'  => trim($this->name),
                 'email' => trim($this->email),
                 'phone' => trim($this->phone) ?: null,
             ]);
 
-            // 2. Parse languages into array
             $languagesArray = $this->languages
                 ? array_values(array_filter(array_map('trim', explode(',', $this->languages))))
                 : null;
 
-            // 3. Save/update profile
             Profile::updateOrCreate(
                 ['user_id' => $user->id],
                 [
@@ -164,13 +192,11 @@ class ArtistAccount extends Component
                     'country'       => $this->country       ?: null,
                     'district'      => $this->district      ?: null,
                     'upazila'       => $this->upazila       ?: null,
-                    'bio'           => $this->bio            ?: null,
+                    'bio'           => $this->bio           ?: null,
                 ]
             );
 
-            // 4. Handle portfolio uploads
             if (!empty($this->newPhotos)) {
-                // Enforce max 10 total across existing + new
                 $existingCount = $user->getMedia('portfolio')->count();
                 $allowedNew    = max(0, 10 - $existingCount);
                 $photosToAdd   = array_slice($this->newPhotos, 0, $allowedNew);
@@ -184,31 +210,22 @@ class ArtistAccount extends Component
                          )
                          ->toMediaCollection('portfolio', 'public');
                 }
-
                 $this->newPhotos = [];
             }
 
-            // 5. Refresh portfolio thumbnail list
             $this->portfolioImages = $user->fresh()->getMedia('portfolio');
-
-            // 6. Mark as saved
             $this->saved = true;
             session()->flash('message', 'Profile saved successfully!');
             $this->dispatch('profile-saved');
 
         } catch (\Illuminate\Validation\ValidationException $e) {
-            // Let Livewire handle field-level errors normally
             throw $e;
-
         } catch (\Exception $e) {
             Log::error('saveProfile failed for user ' . Auth::id() . ': ' . $e->getMessage());
             session()->flash('error', 'Something went wrong while saving. Please try again.');
         }
     }
 
-    // ─────────────────────────────────────────
-    // DELETE PHOTO
-    // ─────────────────────────────────────────
     public function deletePhoto(int $mediaId): void
     {
         /** @var \App\Models\User $user */
@@ -230,20 +247,34 @@ class ArtistAccount extends Component
         }
     }
 
-    // ─────────────────────────────────────────
-    // RENDER
-    // ─────────────────────────────────────────
     public function render()
     {
         /** @var \App\Models\User $user */
         $user = Auth::user();
-        $hasActiveSub = $user->subscriptions()->where('status', 'active')->exists();
-
         return view('livewire.artist-account', [
-            'user'            => $user,
-            'isVerified'      => $user->hasRole('Verified-Artist') && $hasActiveSub,
-            'hasActiveSub'    => $hasActiveSub,
-            'portfolioImages' => $this->portfolioImages,
-        ]); // <-- REMOVED the chained layout method here
+            'user' => $user,
+        ]);
+    }
+
+    protected function rules(): array
+    {
+        $userId = Auth::id();
+        return [
+            'name'          => 'required|string|max:255',
+            'email'         => "required|email|max:255|unique:users,email,{$userId}",
+            'phone'         => "nullable|string|max:20|unique:users,phone,{$userId}",
+            'category'      => 'required|string',
+            'gender'        => 'nullable|string',
+            'date_of_birth' => 'nullable|date',
+            'height_cm'     => 'nullable|numeric|min:50|max:300',
+            'hourly_rate'   => 'nullable|numeric|min:0',
+            'languages'     => 'nullable|string|max:255',
+            'country'       => 'nullable|string|max:100',
+            'district'      => 'nullable|string|max:100',
+            'upazila'       => 'nullable|string|max:100',
+            'bio'           => 'nullable|string|max:2000',
+            'newPhotos'     => 'nullable|array|max:10',
+            'newPhotos.*'   => 'image|mimes:jpg,jpeg,png,webp|max:5120',
+        ];
     }
 }

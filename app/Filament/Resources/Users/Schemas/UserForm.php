@@ -13,6 +13,7 @@ use Filament\Schemas\Components\Group; // <-- Add this!
 use Filament\Schemas\Schema;
 use Illuminate\Support\Facades\Hash;
 use Filament\Forms\Components\SpatieMediaLibraryFileUpload;
+use Filament\Forms\Components\FileUpload;
 
 class UserForm
 {
@@ -60,7 +61,7 @@ class UserForm
                     ->schema([
                         // Wrap the profile fields in a Group to force the relationship hydration!
                         Group::make()
-                            ->relationship('profile') 
+                            ->relationship('profile')
                             ->columns(2)
                             ->schema([
                                 Select::make('category')
@@ -115,14 +116,46 @@ class UserForm
                     ->schema([
                         SpatieMediaLibraryFileUpload::make('portfolio')
                             ->label('Manage Portfolio Images')
-                            ->collection('portfolio') 
+                            ->collection('portfolio')
                             ->multiple()
                             ->disk('public')
                             ->reorderable()
                             ->maxFiles(10)
                             ->image()
-                            ->imageEditor(), 
+                            ->imageEditor(),
                     ]),
+                // ── UPDATED SECTION FOR NID ──
+                Section::make('Verification Documents')
+                    ->description('Private documents used for user verification.')
+                    ->schema([
+                        FileUpload::make('nid_path') // <-- Uses native FileUpload now
+                            ->label('National ID (NID)')
+                            ->disk('public') // Store in public for easy access by admin, but with a unique directory to prevent guessing
+                            ->directory('nids')
+                            ->visibility('private')
+                            ->downloadable() // Adds a secure download button for Admin
+                            ->image()
+                            ->imageEditor()
+                            ->deletable(false), // Prevents admin from accidentally deleting their ID
+                        TextInput::make('verification_status')
+                            ->label('NID Verification Status')
+                            ->default('unverified')
+                            ->hidden(),
+                        FileUpload::make('academic_certificate_path') // <-- New field for Academic Certificate
+                            ->label('Academic Certificate')
+                            ->disk('public')
+                            ->directory('academic_certificates')
+                            ->visibility('private')
+                            ->downloadable()
+                            ->image()
+                            ->imageEditor()
+                            ->deletable(false),
+                        TextInput::make('academic_verification_status')
+                            ->label('Academic Verification Status')
+                            ->default('unverified')
+                            ->hidden(),
+                    ]),
+
             ]);
     }
 }

@@ -19,6 +19,11 @@ class SubscriptionForm
                     ->preload()
                     ->searchable(),
 
+                Select::make('package_id')
+                    ->relationship('package', 'name') // Assumes you have a package() relationship on Subscription
+                    ->required()
+                    ->preload(),
+
                 TextInput::make('trx_id')
                     ->label('Transaction ID')
                     ->required()

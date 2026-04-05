@@ -13,16 +13,16 @@ class PaymentController extends Controller
     public function show()
     {
         return view('packages', [
-            'packages' => Package::where('is_active', true)->get(), // ← active only
-            'settings' => \App\Models\Setting::first(),
+            'packages' => Package::where('is_active', true)->get(), // active only
+            'settings' => Setting::first(),
         ]);
     }
 
     public function store(Request $request)
     {
         $request->validate([
-            'package_id' => 'required|exists:packages,id',
-            'trx_id' => 'required|string|unique:subscriptions,trx_id',
+            'package_id'     => 'required|exists:packages,id',
+            'trx_id'         => 'required|string|unique:subscriptions,trx_id',
             'sender_number'  => 'required|string|max:20',
             'payment_method' => 'required|string',
         ]);
@@ -30,14 +30,17 @@ class PaymentController extends Controller
         $package = Package::findOrFail($request->package_id);
 
         Subscription::create([
-            'user_id' => Auth::id(),
-            'trx_id' => $request->trx_id,
-            'sender_number'  => $request->sender_number,
-            'amount' => $package->price,
-            'status' => 'pending',
+            'user_id'        => Auth::id(),
+            'package_id'     => $package->id,          // <-- ADDED THIS!
+            'trx_id'         => $request->trx_id,
+            'sender_number'  => $request->sender_number, // Sender number saved!
+            'amount'         => $package->price,
+            'status'         => 'pending',
             'payment_method' => $request->payment_method,
-            'starts_at' => now(),
-            'expires_at' => now()->addMonths($package->duration_months),
+            // Note: You might want to update these dates when an Admin actually approves it,
+            // but setting them now works fine too!
+            'starts_at'      => now(),
+            'expires_at'     => now()->addMonths($package->duration_months),
         ]);
 
         return redirect()

@@ -9,17 +9,22 @@ class Subscription extends Model
 {
     use HasFactory;
 
-    // This tells Laravel: "Allow me to save any column I want to this table"
     protected $guarded = [];
 
-    // Make sure Laravel treats these as date objects automatically
     protected $casts = [
         'starts_at' => 'datetime',
         'expires_at' => 'datetime',
     ];
 
+    // Your existing user relationship
     public function user()
     {
         return $this->belongsTo(User::class);
+    }
+
+    // ── ADD THIS NEW RELATIONSHIP ──
+    public function package()
+    {
+        return $this->belongsTo(Package::class);
     }
 }
