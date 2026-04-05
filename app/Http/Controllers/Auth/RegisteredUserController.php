@@ -46,6 +46,10 @@ class RegisteredUserController extends Controller
 
         Auth::login($user);
 
-        return redirect(route('dashboard', absolute: false));
+        // REMOVE THIS:
+        // return redirect(route('dashboard', absolute: false));
+        
+        // ADD THIS:
+        return redirect('/packages')->with('success', 'Account created! Please select a package to continue.');
     }
 }

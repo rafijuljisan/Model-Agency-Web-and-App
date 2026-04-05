@@ -18,17 +18,23 @@ class SubscriptionForm
                     ->required()
                     ->preload()
                     ->searchable(),
-                
+
                 TextInput::make('trx_id')
                     ->label('Transaction ID')
                     ->required()
                     ->maxLength(255),
-                
+                TextInput::make('sender_number')       // ← add after trx_id
+                    ->label('Sender Mobile Number')
+                    ->required()
+                    ->tel()
+                    ->placeholder('e.g. 01XXXXXXXXX')
+                    ->maxLength(20),
+
                 TextInput::make('amount')
                     ->required()
                     ->numeric()
                     ->default(1200),
-                
+
                 Select::make('payment_method')
                     ->options([
                         'bKash' => 'bKash',
@@ -36,7 +42,7 @@ class SubscriptionForm
                         'Rocket' => 'Rocket',
                     ])
                     ->required(),
-                
+
                 Select::make('status')
                     ->options([
                         'pending' => 'Pending',
@@ -46,10 +52,10 @@ class SubscriptionForm
                     ])
                     ->required()
                     ->default('pending'),
-                
+
                 DateTimePicker::make('starts_at')
                     ->label('Subscription Start Date'),
-                
+
                 DateTimePicker::make('expires_at')
                     ->label('Subscription Expiry Date'),
             ]);

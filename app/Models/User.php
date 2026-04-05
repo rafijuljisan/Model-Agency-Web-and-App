@@ -76,7 +76,7 @@ class User extends Authenticatable implements HasMedia, FilamentUser
 
     public function profile()
     {
-        return $this->hasOne(Profile::class);
+        return $this->hasOne(Profile::class, 'user_id', 'id');
     }
 
     public function subscriptions()

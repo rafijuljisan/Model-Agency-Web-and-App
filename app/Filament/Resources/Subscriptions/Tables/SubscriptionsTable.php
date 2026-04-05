@@ -32,6 +32,11 @@ class SubscriptionsTable
                     ->searchable()
                     ->copyable(),
 
+                TextColumn::make('sender_number')
+                    ->label('Mobile Number')
+                    ->searchable()
+                    ->copyable(),
+
                 TextColumn::make('status')
                     ->badge()
                     ->color(fn (string $state): string => match ($state) {

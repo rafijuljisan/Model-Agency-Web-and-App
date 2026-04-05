@@ -657,7 +657,7 @@
                 </button>
 
                 @auth
-                    <a href="/app" class="btn-outline">Dashboard</a>
+                    <a href="/account" class="btn-outline">Dashboard</a>
                 @else
                     <a href="/login" class="btn-ghost">Sign In</a>
                     <a href="/register" class="btn-fill">
@@ -694,7 +694,7 @@
         <a href="/blog">Editorial</a>
         <div class="drawer-actions">
             @auth
-                <a href="/app" class="btn-fill">Dashboard</a>
+                <a href="/account" class="btn-fill">Dashboard</a>
             @else
                 <a href="/login" class="btn-outline">Sign In</a>
                 <a href="/register" class="btn-fill">Join as Talent</a>

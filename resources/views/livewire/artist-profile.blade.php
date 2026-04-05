@@ -492,16 +492,27 @@
 
             {{-- Actions (desktop) --}}
             <div class="profile-actions">
-                <button
-                    wire:click="revealContact"
-                    class="btn-fill"
-                    aria-label="Reveal contact information"
-                >
-                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" aria-hidden="true">
-                        <path d="M22 16.92v3a2 2 0 01-2.18 2 19.79 19.79 0 01-8.63-3.07A19.5 19.5 0 013.07 9.81 19.79 19.79 0 01.05 2.18 2 2 0 012 0h3a2 2 0 012 1.72c.127.96.361 1.903.7 2.81a2 2 0 01-.45 2.11L6.09 7.91a16 16 0 006 6l1.27-1.27a2 2 0 012.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0122 14.92z"/>
-                    </svg>
-                    Contact
-                </button>
+
+                {{-- Edit button — only visible to the profile owner --}}
+                @auth
+                    @if(auth()->id() === $artist->id)
+                        <a href="{{ route('account.dashboard') }}" class="btn-outline">
+                            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7">
+                                <path d="M11 4H4a2 2 0 00-2 2v14a2 2 0 002 2h14a2 2 0 002-2v-7"/>
+                                <path d="M18.5 2.5a2.121 2.121 0 013 3L12 15l-4 1 1-4 9.5-9.5z"/>
+                            </svg>
+                            Edit Profile
+                        </a>
+                    @endif
+                @endauth
+
+                {{-- Contact button — visible to everyone else --}}
+                @if(!auth()->check() || auth()->id() !== $artist->id)
+                    <button wire:click="revealContact" class="btn-fill">
+                        Contact
+                    </button>
+                @endif
+
             </div>
         </div>
     </div>

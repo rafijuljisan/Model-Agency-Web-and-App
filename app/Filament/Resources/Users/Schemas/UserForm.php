@@ -3,12 +3,13 @@
 namespace App\Filament\Resources\Users\Schemas;
 
 use Filament\Forms\Components\DatePicker;
-use Filament\Schemas\Components\Section;
+use Filament\Schemas\Components\Section; // Kept exactly as you require
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\TagsInput;
 use Filament\Forms\Components\Textarea;
 use Filament\Forms\Components\TextInput;
 use Filament\Forms\Components\Toggle;
+use Filament\Schemas\Components\Group; // <-- Add this!
 use Filament\Schemas\Schema;
 use Illuminate\Support\Facades\Hash;
 use Filament\Forms\Components\SpatieMediaLibraryFileUpload;
@@ -54,57 +55,62 @@ class UserForm
                             ->columnSpanFull(),
                     ]),
 
-                // 2. Profile Details (Linked to the 'profiles' table automatically!)
+                // 2. Profile Details
                 Section::make('Public Profile Information')
-                    ->relationship('profile') // Links directly to the profile table
-                    ->columns(2)
                     ->schema([
-                        Select::make('category')
-                            ->options([
-                                'Model' => 'Model',
-                                'Photographer' => 'Photographer',
-                                'Video Editor' => 'Video Editor',
-                                'Cinematographer' => 'Cinematographer',
-                                'Actor' => 'Actor',
-                            ]),
+                        // Wrap the profile fields in a Group to force the relationship hydration!
+                        Group::make()
+                            ->relationship('profile') 
+                            ->columns(2)
+                            ->schema([
+                                Select::make('category')
+                                    ->options([
+                                        'Model' => 'Model',
+                                        'Photographer' => 'Photographer',
+                                        'Video Editor' => 'Video Editor',
+                                        'Cinematographer' => 'Cinematographer',
+                                        'Actor' => 'Actor',
+                                    ]),
 
-                        Select::make('gender')
-                            ->options([
-                                'Male' => 'Male',
-                                'Female' => 'Female',
-                                'Other' => 'Other',
-                            ]),
+                                Select::make('gender')
+                                    ->options([
+                                        'Male' => 'Male',
+                                        'Female' => 'Female',
+                                        'Other' => 'Other',
+                                    ]),
 
-                        DatePicker::make('date_of_birth')
-                            ->label('Date of Birth'),
+                                DatePicker::make('date_of_birth')
+                                    ->label('Date of Birth'),
 
-                        TextInput::make('height_cm')
-                            ->label('Height (cm)')
-                            ->numeric(),
+                                TextInput::make('height_cm')
+                                    ->label('Height (cm)')
+                                    ->numeric(),
 
-                        TextInput::make('hourly_rate')
-                            ->label('Starting Rate (BDT)')
-                            ->numeric()
-                            ->prefix('৳'),
+                                TextInput::make('hourly_rate')
+                                    ->label('Starting Rate (BDT)')
+                                    ->numeric()
+                                    ->prefix('৳'),
 
-                        TagsInput::make('languages')
-                            ->label('Languages Spoken'),
+                                TagsInput::make('languages')
+                                    ->label('Languages Spoken'),
 
-                        TextInput::make('country')
-                            ->default('Bangladesh'),
+                                TextInput::make('country')
+                                    ->default('Bangladesh'),
 
-                        TextInput::make('district')
-                            ->label('District'),
+                                TextInput::make('district')
+                                    ->label('District'),
 
-                        TextInput::make('upazila')
-                            ->label('Thana / Upazila'),
+                                TextInput::make('upazila')
+                                    ->label('Thana / Upazila'),
 
-                        Textarea::make('bio')
-                            ->label('About Me (Bio)')
-                            ->columnSpanFull()
-                            ->rows(4),
+                                Textarea::make('bio')
+                                    ->label('About Me (Bio)')
+                                    ->columnSpanFull()
+                                    ->rows(4),
+                            ])
                     ]),
-                    // 3. Media & Portfolio (Attached directly to User Model!)
+
+                // 3. Media & Portfolio (Attached directly to User Model)
                 Section::make('Artist Portfolio Gallery')
                     ->schema([
                         SpatieMediaLibraryFileUpload::make('portfolio')
