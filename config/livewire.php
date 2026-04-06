@@ -193,9 +193,10 @@ return [
     */
 
     'navigate' => [
-        'show_progress_bar' => true,
-        'progress_bar_color' => '#2299dd',
-    ],
+    'enabled' => false,
+    'show_progress_bar' => true,
+    'progress_bar_color' => '#2299dd',
+],
 
     /*
     |---------------------------------------------------------------------------
