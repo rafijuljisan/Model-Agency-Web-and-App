@@ -49,6 +49,13 @@ class ArtistAccount extends Component
     public $portfolioImages = [];
     public $newAvatar = null;
     public bool $saved = false;
+    // ── Social Links ──
+    public string $facebook_url = '';
+    public string $instagram_url = '';
+    public string $youtube_url = '';
+    public string $tiktok_url = '';
+    public string $linkedin_url = '';
+    public string $portfolio_url = '';
 
     public function mount()
     {
@@ -182,6 +189,12 @@ class ArtistAccount extends Component
             $this->upazila = $profile->upazila ?? '';
             $this->bio = $profile->bio ?? '';
             $this->languages = $profile->languages ? implode(', ', (array) $profile->languages) : '';
+            $this->facebook_url = $profile->facebook_url ?? '';
+            $this->instagram_url = $profile->instagram_url ?? '';
+            $this->youtube_url = $profile->youtube_url ?? '';
+            $this->tiktok_url = $profile->tiktok_url ?? '';
+            $this->linkedin_url = $profile->linkedin_url ?? '';
+            $this->portfolio_url = $profile->portfolio_url ?? '';
         }
 
         $this->portfolioImages = $user->getMedia('portfolio');
@@ -218,6 +231,12 @@ class ArtistAccount extends Component
                     'district' => $this->district ?: null,
                     'upazila' => $this->upazila ?: null,
                     'bio' => $this->bio ?: null,
+                    'facebook_url' => $this->facebook_url ?: null,
+                    'instagram_url' => $this->instagram_url ?: null,
+                    'youtube_url' => $this->youtube_url ?: null,
+                    'tiktok_url' => $this->tiktok_url ?: null,
+                    'linkedin_url' => $this->linkedin_url ?: null,
+                    'portfolio_url' => $this->portfolio_url ?: null,
                 ]
             );
 
@@ -306,6 +325,12 @@ class ArtistAccount extends Component
             'district' => 'nullable|string|max:100',
             'upazila' => 'nullable|string|max:100',
             'bio' => 'nullable|string|max:2000',
+            'facebook_url' => 'nullable|url|max:255',
+            'instagram_url' => 'nullable|url|max:255',
+            'youtube_url' => 'nullable|url|max:255',
+            'tiktok_url' => 'nullable|url|max:255',
+            'linkedin_url' => 'nullable|url|max:255',
+            'portfolio_url' => 'nullable|url|max:255',
             'newPhotos' => 'nullable|array|max:10',
             'newPhotos.*' => 'image|mimes:jpg,jpeg,png,webp|max:5120',
         ];

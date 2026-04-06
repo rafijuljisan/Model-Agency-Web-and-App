@@ -78,49 +78,49 @@ class UserForm
                             ->columns(2)
                             ->schema([
                                 Select::make('categories')
-    ->label('Talent Categories & Skills')
-    ->options(function (?\Illuminate\Database\Eloquent\Model $record) {
-        // 1. Get ALL categories (active and inactive)
-        $options = \App\Models\Category::orderBy('group')
-            ->orderBy('name')
-            ->pluck('name', 'name')
-            ->toArray();
+                                    ->label('Talent Categories & Skills')
+                                    ->options(function (?\Illuminate\Database\Eloquent\Model $record) {
+                                        // 1. Get ALL categories (active and inactive)
+                                        $options = \App\Models\Category::orderBy('group')
+                                            ->orderBy('name')
+                                            ->pluck('name', 'name')
+                                            ->toArray();
 
-        // 2. Determine the saved categories. 
-        // Inside relationship('profile'), $record IS the Profile model.
-        $savedCategories = [];
-        
-        if ($record) {
-            // Check if we are interacting with the Profile model directly
-            if (isset($record->categories) && is_array($record->categories)) {
-                $savedCategories = $record->categories;
-            } 
-            // Fallback just in case Filament passes the User model
-            elseif (isset($record->profile->categories) && is_array($record->profile->categories)) {
-                $savedCategories = $record->profile->categories;
-            }
-        }
+                                        // 2. Determine the saved categories. 
+                                        // Inside relationship('profile'), $record IS the Profile model.
+                                        $savedCategories = [];
 
-        // 3. Inject any missing legacy categories into the options list
-        foreach ($savedCategories as $category) {
-            if (!array_key_exists($category, $options)) {
-                $options[$category] = $category . ' (Archived/Deleted)';
-            }
-        }
+                                        if ($record) {
+                                            // Check if we are interacting with the Profile model directly
+                                            if (isset($record->categories) && is_array($record->categories)) {
+                                                $savedCategories = $record->categories;
+                                            }
+                                            // Fallback just in case Filament passes the User model
+                                            elseif (isset($record->profile->categories) && is_array($record->profile->categories)) {
+                                                $savedCategories = $record->profile->categories;
+                                            }
+                                        }
 
-        return $options;
-    })
-    ->multiple()
-    ->searchable()
-    ->preload()
-    ->columnSpanFull()
-    ->helperText('Select all areas where this talent has professional experience.'),
+                                        // 3. Inject any missing legacy categories into the options list
+                                        foreach ($savedCategories as $category) {
+                                            if (!array_key_exists($category, $options)) {
+                                                $options[$category] = $category . ' (Archived/Deleted)';
+                                            }
+                                        }
+
+                                        return $options;
+                                    })
+                                    ->multiple()
+                                    ->searchable()
+                                    ->preload()
+                                    ->columnSpanFull()
+                                    ->helperText('Select all areas where this talent has professional experience.'),
 
                                 Select::make('gender')
                                     ->options([
-                                        'Male'   => 'Male',
+                                        'Male' => 'Male',
                                         'Female' => 'Female',
-                                        'Other'  => 'Other',
+                                        'Other' => 'Other',
                                     ]),
 
                                 DatePicker::make('date_of_birth')
@@ -151,6 +151,38 @@ class UserForm
                                     ->label('About Me (Bio)')
                                     ->columnSpanFull()
                                     ->rows(4),
+                                TextInput::make('facebook_url')
+                                    ->label('Facebook URL')
+                                    ->url()
+                                    ->placeholder('https://facebook.com/...')
+                                    ->prefixIcon('heroicon-o-globe-alt'),
+
+                                TextInput::make('instagram_url')
+                                    ->label('Instagram URL')
+                                    ->url()
+                                    ->placeholder('https://instagram.com/...'),
+
+                                TextInput::make('youtube_url')
+                                    ->label('YouTube URL')
+                                    ->url()
+                                    ->placeholder('https://youtube.com/...'),
+
+                                TextInput::make('tiktok_url')
+                                    ->label('TikTok URL')
+                                    ->url()
+                                    ->placeholder('https://tiktok.com/...'),
+
+                                TextInput::make('linkedin_url')
+                                    ->label('LinkedIn URL')
+                                    ->url()
+                                    ->placeholder('https://linkedin.com/in/...'),
+
+                                TextInput::make('portfolio_url')
+                                    ->label('Portfolio Website')
+                                    ->url()
+                                    ->placeholder('https://yourportfolio.com')
+                                    ->columnSpanFull()
+                                    ->helperText('External portfolio, Behance, or personal website'),
                             ]),
                     ]),
 
@@ -199,9 +231,9 @@ class UserForm
                             ->label('NID Verification Status')
                             ->options([
                                 'unverified' => 'Unverified',
-                                'pending'    => 'Pending Review',
-                                'verified'   => 'Verified',
-                                'rejected'   => 'Rejected',
+                                'pending' => 'Pending Review',
+                                'verified' => 'Verified',
+                                'rejected' => 'Rejected',
                             ])
                             ->default('unverified')
                             ->native(false),
@@ -210,9 +242,9 @@ class UserForm
                             ->label('Academic Verification Status')
                             ->options([
                                 'unverified' => 'Unverified',
-                                'pending'    => 'Pending Review',
-                                'verified'   => 'Verified',
-                                'rejected'   => 'Rejected',
+                                'pending' => 'Pending Review',
+                                'verified' => 'Verified',
+                                'rejected' => 'Rejected',
                             ])
                             ->default('unverified')
                             ->native(false),
