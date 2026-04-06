@@ -76,7 +76,7 @@
 
 /* "Talent Profile" Eyebrow */
 .profile-cover-eyebrow {
-    font-size: 0.75rem; /* INCREASED font size */
+    font-size: 0.875rem; /* INCREASED font size */
     font-weight: 600;
     letter-spacing: 0.32em;
     text-transform: uppercase;
@@ -210,7 +210,7 @@
     flex-wrap: wrap;
 }
 .profile-category {
-    font-size: 0.65rem;
+    font-size: 0.875rem;
     font-weight: 600;
     letter-spacing: 0.15em;
     text-transform: uppercase;
@@ -226,7 +226,7 @@
     padding: 5px 12px;
     background: var(--badge-ok-bg);
     color: var(--badge-ok-color);
-    font-size: 0.65rem;
+    font-size: 0.875rem;
     font-weight: 600;
     letter-spacing: 0.12em;
     text-transform: uppercase;
@@ -236,7 +236,7 @@
     display: flex;
     align-items: center;
     gap: 6px;
-    font-size: 0.85rem;
+    font-size: 1rem;
     color: var(--text-muted);
 }
 
@@ -305,7 +305,7 @@
 .profile-section:last-child { margin-bottom: 0; }
 .profile-section-title {
     font-family: 'Cormorant Garamond', serif;
-    font-size: 1.3rem;
+    font-size: 1.5rem;
     font-weight: 600;
     color: var(--text-primary);
     margin-bottom: 20px;
@@ -325,9 +325,9 @@
 
 /* Bio text */
 .profile-bio {
-    font-size: 0.9rem;
+    font-size: 1.05rem; /* Increased from 0.9rem for excellent readability */
     color: var(--text-secondary);
-    line-height: 1.9;
+    line-height: 1.8; /* Slightly adjusted for larger text */
 }
 
 /* Portfolio grid */
@@ -371,7 +371,7 @@
 }
 .portfolio-empty-icon { margin: 0 auto 14px; opacity: 0.3; }
 .portfolio-empty-label {
-    font-size: 0.78rem;
+    font-size: 1rem;
     letter-spacing: 0.1em;
     text-transform: uppercase;
 }
@@ -390,7 +390,7 @@
 .sidebar-card:last-child { margin-bottom: 0; position: static; }
 
 .sidebar-card-title {
-    font-size: 0.6rem;
+    font-size: 0.875rem;
     font-weight: 600;
     letter-spacing: 0.28em;
     text-transform: uppercase;
@@ -410,7 +410,7 @@
     border-bottom: 1px solid var(--border);
 }
 .rate-label {
-    font-size: 0.72rem;
+    font-size: 0.875rem;
     color: var(--text-muted);
     letter-spacing: 0.08em;
 }
@@ -436,7 +436,7 @@
     text-align: center;
 }
 .contact-reveal-label {
-    font-size: 0.58rem;
+    font-size: 0.875rem;
     font-weight: 600;
     letter-spacing: 0.28em;
     text-transform: uppercase;
@@ -451,12 +451,12 @@
     line-height: 1.2;
 }
 .contact-reveal-email {
-    font-size: 0.78rem;
+    font-size: 1rem;
     color: var(--text-muted);
     margin-top: 6px;
 }
 .contact-guest-note {
-    font-size: 0.7rem;
+    font-size: 0.9rem;
     color: var(--text-muted);
     text-align: center;
     margin-top: 12px;
@@ -478,18 +478,19 @@
 }
 .attr-row:last-child { border-bottom: none; padding-bottom: 0; }
 .attr-key {
-    font-size: 0.7rem;
+    font-size: 0.875rem;
     font-weight: 500;
     letter-spacing: 0.1em;
     text-transform: uppercase;
     color: var(--text-muted);
 }
 .attr-val {
-    font-size: 0.88rem;
+    /* Note: Your original CSS had font-size declared twice here. 
+       We will clean it up to just use 1.1rem */
+    font-size: 1.1rem; 
     font-weight: 500;
     color: var(--text-primary);
     font-family: 'Cormorant Garamond', serif;
-    font-size: 1rem;
 }
 
 /* ── Responsive ── */
@@ -505,6 +506,69 @@
     .portfolio-grid { grid-template-columns: repeat(2, 1fr); }
     .profile-section { padding: 24px 20px; }
     .sidebar-card { padding: 20px; }
+}
+/* ═══════════════════════════════════════════
+   LIGHTBOX GALLERY
+═══════════════════════════════════════════ */
+.lightbox-overlay {
+    position: fixed;
+    inset: 0;
+    z-index: 99999;
+    background: rgba(8, 6, 4, 0.95);
+    backdrop-filter: blur(5px);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    opacity: 0;
+    visibility: hidden;
+    transition: opacity 0.3s ease, visibility 0.3s ease;
+}
+
+.lightbox-overlay.is-open {
+    opacity: 1;
+    visibility: visible;
+}
+
+.lightbox-img {
+    max-width: 90vw;
+    max-height: 85vh;
+    object-fit: contain;
+    box-shadow: 0 20px 50px rgba(0,0,0,0.5);
+    border: 1px solid rgba(255,255,255,0.1);
+    transform: scale(0.95);
+    transition: transform 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+}
+
+.lightbox-overlay.is-open .lightbox-img {
+    transform: scale(1);
+}
+
+.lightbox-close {
+    position: absolute;
+    top: 24px;
+    right: 32px;
+    width: 44px;
+    height: 44px;
+    background: rgba(255,255,255,0.1);
+    border: 1px solid rgba(255,255,255,0.2);
+    border-radius: 50%;
+    color: #fff;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: background 0.2s, transform 0.2s;
+}
+
+.lightbox-close:hover {
+    background: var(--gold);
+    border-color: var(--gold);
+    transform: scale(1.05);
+}
+
+@media (max-width: 768px) {
+    .lightbox-close { top: 16px; right: 16px; width: 36px; height: 36px; }
+    .lightbox-img { max-width: 95vw; max-height: 90vh; }
 }
 </style>
 
@@ -533,8 +597,8 @@
             {{-- Avatar --}}
             <div class="profile-avatar-wrap">
                 <div class="profile-avatar">
-                    @if($artist->hasMedia('portfolio'))
-                        <img src="{{ $artist->getFirstMediaUrl('portfolio') }}" alt="{{ $artist->name }}">
+                    @if($artist->hasMedia('avatar'))
+                        <img src="{{ $artist->getFirstMediaUrl('avatar') }}" alt="{{ $artist->name }}">
                     @else
                         <div class="profile-avatar-placeholder">
                             <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1" aria-hidden="true">
@@ -569,7 +633,7 @@
                             <svg width="10" height="10" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
                                 <path d="M12 2L3 7v5c0 5.55 3.84 10.74 9 12 5.16-1.26 9-6.45 9-12V7L12 2zm-2 15l-4-4 1.41-1.41L10 14.17l6.59-6.59L18 9l-8 8z"/>
                             </svg>
-                            NID Verified
+                            Verified
                         </span>
                     </div>
                 </div>
@@ -635,13 +699,15 @@
             </div>
             @endif
             {{-- Portfolio --}}
-            <div class="profile-section anim-fade-up anim-d2">
+            {{-- NEW: Added Alpine x-data here --}}
+            <div class="profile-section anim-fade-up anim-d2" x-data="{ lightboxOpen: false, activeImg: '' }">
                 <h2 class="profile-section-title">Portfolio</h2>
 
                 @if($artist->hasMedia('portfolio'))
                     <div class="portfolio-grid">
                         @foreach($artist->getMedia('portfolio') as $media)
-                            <div class="portfolio-item">
+                            {{-- NEW: Added @click to trigger Alpine state --}}
+                            <div class="portfolio-item" @click="lightboxOpen = true; activeImg = '{{ $media->getUrl() }}'">
                                 <img src="{{ $media->getUrl() }}" alt="Portfolio image" loading="lazy">
                                 <div class="portfolio-item-overlay">
                                     <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
@@ -661,6 +727,35 @@
                         </div>
                     </div>
                 @endif
+
+                {{-- ── FULL SCREEN LIGHTBOX MODAL ── --}}
+                {{-- x-teleport moves this directly to the <body> so it doesn't get trapped inside other divs --}}
+                <template x-teleport="body">
+                    <div 
+                        class="lightbox-overlay" 
+                        :class="lightboxOpen ? 'is-open' : ''"
+                        x-show="lightboxOpen"
+                        @keydown.escape.window="lightboxOpen = false"
+                        style="display: none;"
+                    >
+                        {{-- Close Button --}}
+                        <button class="lightbox-close" @click="lightboxOpen = false" aria-label="Close gallery">
+                            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <line x1="18" y1="6" x2="6" y2="18"></line>
+                                <line x1="6" y1="6" x2="18" y2="18"></line>
+                            </svg>
+                        </button>
+
+                        {{-- Main Image (Clicking outside the image closes it) --}}
+                        <img 
+                            :src="activeImg" 
+                            class="lightbox-img" 
+                            @click.outside="lightboxOpen = false" 
+                            alt="Full screen portfolio view"
+                        >
+                    </div>
+                </template>
+
             </div>
 
         </div>

@@ -7,6 +7,7 @@ use Livewire\WithPagination;
 use App\Models\User;
 use Carbon\Carbon;
 use Livewire\Attributes\Title;
+use Livewire\Attributes\Url;
 
 #[Title('Browse Verified Talent')]
 class ArtistDirectory extends Component
@@ -15,7 +16,11 @@ class ArtistDirectory extends Component
 
     // Existing filters
     public $search = '';
+
+    #[Url] // <-- ADD THIS
     public $category = '';
+    #[Url]
+    public $group = '';
     
     // NEW Advanced Filters
     public $gender = '';
@@ -23,7 +28,9 @@ class ArtistDirectory extends Component
     public $maxAge = null;
     public $minHeight = null;
     public $maxHeight = null;
+    #[Url]
     public $district = '';
+    #[Url]
     public $upazila = '';
     public $language = '';
     public $showMobileFilters = false;
@@ -53,6 +60,21 @@ class ArtistDirectory extends Component
 
         // 2. Complex Profile Filters
         $query->whereHas('profile', function ($q) {
+            
+            // ── NEW: Handle Mega Menu Group Clicks ──
+            if ($this->group) {
+                // Find all sub-categories belonging to this group
+                $categoryNames = \App\Models\Category::where('group', $this->group)->pluck('name')->toArray();
+                
+                if (!empty($categoryNames)) {
+                    $q->where(function($subQ) use ($categoryNames) {
+                        foreach($categoryNames as $catName) {
+                            // If they have ANY of the skills in this group, show them
+                            $subQ->orWhereJsonContains('categories', $catName);
+                        }
+                    });
+                }
+            }
             // ── BUG FIXED: Uses whereJsonContains for the new array! ──
             if ($this->category) $q->whereJsonContains('categories', $this->category);
             

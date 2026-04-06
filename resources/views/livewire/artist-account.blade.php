@@ -449,6 +449,13 @@
         width: 100%;
     }
 }
+.form-section {
+    background: var(--bg-surface);
+    border: 1px solid var(--border);
+    margin-bottom: 24px;
+    transition: background 0.4s, border-color 0.4s;
+    overflow: visible; /* ← ADD THIS */
+}
 </style>
 
 <div class="form-page">
@@ -654,6 +661,93 @@
 
     <form wire:submit="saveProfile" novalidate>
 
+        {{-- ── AVATAR UPLOAD SECTION ── --}}
+<div class="form-section anim-fade-up" x-data="{ menuOpen: false }">
+    <div class="form-section-header">
+        <div class="form-section-title">Profile Picture</div>
+    </div>
+    
+    <div class="form-section-body">
+        <div style="display: flex; align-items: flex-start; gap: 32px; flex-wrap: wrap;">
+            
+            {{-- Left: Avatar + inline menu --}}
+            <div style="display: flex; flex-direction: column; align-items: center; gap: 12px;">
+                
+                {{-- Avatar Circle --}}
+                <div style="width: 130px; height: 130px; border-radius: 50%; padding: 4px; border: 2px dashed var(--border-strong); position: relative;">
+                    <div style="width: 100%; height: 100%; border-radius: 50%; overflow: hidden; background: var(--bg-secondary);">
+                        @if ($newAvatar)
+                            <img src="{{ $newAvatar->temporaryUrl() }}" style="width: 100%; height: 100%; object-fit: cover;">
+                        @elseif(auth()->user()->getFirstMediaUrl('avatar'))
+                            <img src="{{ auth()->user()->getFirstMediaUrl('avatar') }}" style="width: 100%; height: 100%; object-fit: cover;">
+                        @else
+                            <div style="width: 100%; height: 100%; display: flex; align-items: center; justify-content: center; color: var(--text-muted);">
+                                <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1">
+                                    <circle cx="12" cy="8" r="4"/><path d="M4 20c0-4 3.58-7 8-7s8 3 8 7"/>
+                                </svg>
+                            </div>
+                        @endif
+                    </div>
+                    {{-- Edit Badge --}}
+                    <button type="button" @click="menuOpen = !menuOpen"
+                        style="position: absolute; bottom: 0; right: 4px; background: var(--bg-surface); border: 1px solid var(--border-strong); border-radius: 50%; width: 32px; height: 32px; display: flex; align-items: center; justify-content: center; color: var(--text-primary); box-shadow: 0 4px 12px rgba(0,0,0,0.1); cursor: pointer;">
+                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M12 20h9M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"/>
+                        </svg>
+                    </button>
+                </div>
+
+                {{-- Inline Menu (not absolutely positioned) --}}
+                <div x-show="menuOpen" x-transition style="width: 200px; background: var(--bg-surface); border: 1px solid var(--border-strong); border-radius: 6px; box-shadow: 0 8px 24px rgba(0,0,0,0.12); overflow: hidden;">
+                    
+                    <a href="{{ route('artist.show', auth()->id()) }}" target="_blank"
+                        style="display: block; padding: 12px 16px; font-size: 0.85rem; color: var(--text-primary); text-decoration: none; border-bottom: 1px solid var(--border);"
+                        onmouseover="this.style.background='var(--bg-secondary)'" onmouseout="this.style.background=''">
+                        👁 View Public Profile
+                    </a>
+
+                    <label style="display: block; padding: 12px 16px; font-size: 0.85rem; color: var(--text-primary); cursor: pointer; border-bottom: 1px solid var(--border);"
+                        onmouseover="this.style.background='var(--bg-secondary)'" onmouseout="this.style.background=''">
+                        📷 Upload New Photo
+                        <input type="file" wire:model="newAvatar" accept="image/*" style="display: none;">
+                    </label>
+
+                    @if(auth()->user()->getMedia('avatar')->count() > 0)
+                        <button type="button" wire:click="deleteAvatar"
+                            onclick="return confirm('Remove your profile picture?')"
+                            style="width: 100%; text-align: left; padding: 12px 16px; font-size: 0.85rem; color: #dc2626; background: none; border: none; cursor: pointer;"
+                            onmouseover="this.style.background='rgba(220,38,38,0.05)'" onmouseout="this.style.background=''">
+                            🗑 Remove Photo
+                        </button>
+                    @endif
+                </div>
+
+            </div>
+
+            {{-- Right: Status messages --}}
+            <div style="flex: 1; min-width: 200px; padding-top: 8px;">
+                @if($newAvatar)
+                    <div style="background: rgba(201,169,110,0.1); border: 1px solid rgba(201,169,110,0.3); padding: 16px; border-radius: 6px;">
+                        <h4 style="font-size: 0.9rem; font-weight: 600; color: var(--gold); margin-bottom: 8px;">Unsaved Photo</h4>
+                        <p style="font-size: 0.8rem; color: var(--text-secondary); margin-bottom: 12px;">Click save to update your profile picture.</p>
+                        <button type="button" wire:click="updateAvatar" class="btn-fill" style="font-size: 0.8rem; padding: 8px 16px;">
+                            <span wire:loading.remove wire:target="updateAvatar">Save Profile Picture</span>
+                            <span wire:loading wire:target="updateAvatar">Saving...</span>
+                        </button>
+                    </div>
+                @else
+                    <p style="font-size: 0.9rem; color: var(--text-muted); line-height: 1.6;">
+                        Click the <strong>pencil icon</strong> on your avatar to upload a new photo, view your public profile, or remove your current picture.
+                    </p>
+                @endif
+                <div wire:loading wire:target="newAvatar" style="font-size: 0.8rem; color: var(--gold); margin-top: 8px;">Preparing image...</div>
+                @error('newAvatar') <div style="color: #ff4a4a; font-size: 0.8rem; margin-top: 8px;">{{ $message }}</div> @enderror
+                @if(session()->has('success')) <div style="color: #2a7d4f; font-size: 0.8rem; margin-top: 8px;">{{ session('success') }}</div> @endif
+            </div>
+
+        </div>
+    </div>
+</div>
         {{-- ── Section 01: Professional Details ── --}}
         <div class="form-section anim-fade-up anim-d1">
             <div class="form-section-header">
@@ -914,12 +1008,7 @@
                             </svg>
                         </span>
                         
-                        <span wire:loading style="display:flex;align-items:center;gap:8px;">
-                            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="animation:spin 0.8s linear infinite" aria-hidden="true">
-                                <circle cx="12" cy="12" r="10" opacity="0.25"/><path d="M12 2a10 10 0 0110 10" stroke-linecap="round"/>
-                            </svg>
-                            Saving…
-                        </span>
+                        
                         
                     </button>
 

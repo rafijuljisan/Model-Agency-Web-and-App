@@ -112,7 +112,7 @@
         }
 
         .hero-sub {
-            font-size: 1rem;
+            font-size: 1.2rem;
             font-weight: 300;
             color: var(--text-secondary);
             line-height: 1.8;
@@ -138,14 +138,14 @@
         .hero-stat {}
         .hero-stat-num {
             font-family: 'Cormorant Garamond', serif;
-            font-size: 2rem;
+            font-size: 3rem;
             font-weight: 600;
             color: var(--text-primary);
             line-height: 1;
         }
         .hero-stat-num span { color: var(--gold); }
         .hero-stat-label {
-            font-size: 0.65rem;
+            font-size: 0.7rem;
             font-weight: 500;
             letter-spacing: 0.18em;
             text-transform: uppercase;
@@ -279,7 +279,7 @@
         .category-item:hover .cat-label { color: var(--text-primary); }
         .cat-icon { color: var(--text-muted); transition: color 0.22s; flex-shrink: 0; }
         .cat-label {
-            font-size: 0.65rem;
+            font-size: 0.8rem;
             font-weight: 600;
             letter-spacing: 0.18em;
             text-transform: uppercase;
@@ -308,7 +308,7 @@
         }
         .section-header-left {}
         .section-eyebrow {
-            font-size: 0.58rem;
+            font-size: 0.7rem;
             font-weight: 600;
             letter-spacing: 0.32em;
             text-transform: uppercase;
@@ -505,13 +505,13 @@
         }
         .trust-card-title {
             font-family: 'Cormorant Garamond', serif;
-            font-size: 1.4rem;
+            font-size: 1.6rem;
             font-weight: 600;
             color: var(--text-primary);
             margin-bottom: 12px;
         }
         .trust-card-desc {
-            font-size: 0.85rem;
+            font-size: 1rem;
             color: var(--text-secondary);
             line-height: 1.8;
         }
@@ -560,7 +560,7 @@
             margin: 0 auto;
         }
         .cta-eyebrow {
-            font-size: 0.6rem;
+            font-size: 0.9rem;
             font-weight: 600;
             letter-spacing: 0.32em;
             text-transform: uppercase;
@@ -587,7 +587,7 @@
         }
         .cta-headline strong { font-weight: 600; }
         .cta-sub {
-            font-size: 0.95rem;
+            font-size: 1.2rem;
             color: var(--text-secondary);
             line-height: 1.8;
             margin-bottom: 36px;
@@ -755,34 +755,46 @@
     <nav class="categories-strip" aria-label="Browse by category">
         <div class="categories-inner">
 
-            <a href="/models" class="category-item">
-                <svg class="cat-icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="12" cy="8" r="4"/><path d="M4 20c0-4 3.58-7 8-7s8 3 8 7"/></svg>
+            <a href="/artists?group=Artist" class="category-item">
+                <svg class="cat-icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                    <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/>
+                </svg>
+                <span class="cat-label">Artists</span>
+            </a>
+
+            <a href="/artists?group=Model" class="category-item">
+                <svg class="cat-icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                    <circle cx="12" cy="8" r="4"/><path d="M4 20c0-4 3.58-7 8-7s8 3 8 7"/>
+                </svg>
                 <span class="cat-label">Models</span>
             </a>
 
-            <a href="/actors" class="category-item">
-                <svg class="cat-icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M3 18l9-15 9 15H3z"/><path d="M12 8v6M9 14h6"/></svg>
-                <span class="cat-label">Actors</span>
+            <a href="/artists?group=Brand+Promotor" class="category-item">
+                <svg class="cat-icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                    <path d="M11 5L6 9H2v6h4l5 4V5z"/><path d="M19.07 4.93a10 10 0 010 14.14M15.54 8.46a5 5 0 010 7.07"/>
+                </svg>
+                <span class="cat-label">Brand Promotors</span>
             </a>
 
-            <a href="/photographers" class="category-item">
-                <svg class="cat-icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M23 19a2 2 0 01-2 2H3a2 2 0 01-2-2V8a2 2 0 012-2h4l2-3h6l2 3h4a2 2 0 012 2z"/><circle cx="12" cy="13" r="4"/></svg>
-                <span class="cat-label">Photographers</span>
+            <a href="/artists?group=Celebrity" class="category-item">
+                <svg class="cat-icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                    <path d="M2 4l3 12h14l3-12-6 7-4-7-4 7-6-7zm3 16h14"/>
+                </svg>
+                <span class="cat-label">Celebrities</span>
             </a>
 
-            <a href="/musicians" class="category-item">
-                <svg class="cat-icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M9 18V5l12-2v13"/><circle cx="6" cy="18" r="3"/><circle cx="18" cy="16" r="3"/></svg>
-                <span class="cat-label">Musicians</span>
+            <a href="/artists?group=Technician" class="category-item">
+                <svg class="cat-icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                    <path d="M23 19a2 2 0 01-2 2H3a2 2 0 01-2-2V8a2 2 0 012-2h4l2-3h6l2 3h4a2 2 0 012 2z"/><circle cx="12" cy="13" r="4"/>
+                </svg>
+                <span class="cat-label">Technicians</span>
             </a>
 
-            <a href="/creators" class="category-item">
-                <svg class="cat-icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M15 10l4.553-2.069A1 1 0 0121 8.845v6.31a1 1 0 01-1.447.894L15 14M3 8a2 2 0 012-2h8a2 2 0 012 2v8a2 2 0 01-2 2H5a2 2 0 01-2-2V8z"/></svg>
-                <span class="cat-label">Creators</span>
-            </a>
-
-            <a href="/brand-promoters" class="category-item">
-                <svg class="cat-icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
-                <span class="cat-label">Brand Promoters</span>
+            <a href="/artists?group=Director" class="category-item">
+                <svg class="cat-icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                    <rect x="2" y="6" width="20" height="12" rx="2" ry="2"/><line x1="2" y1="10" x2="22" y2="10"/><line x1="7" y1="6" x2="7" y2="10"/><line x1="12" y1="6" x2="12" y2="10"/><line x1="17" y1="6" x2="17" y2="10"/>
+                </svg>
+                <span class="cat-label">Directors</span>
             </a>
 
         </div>

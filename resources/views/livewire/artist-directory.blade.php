@@ -654,7 +654,7 @@
                     
                     <div style="display: flex; gap: 12px; align-items: center;">
                         <button class="filter-clear-btn"
-                            wire:click="$set('search', ''); $set('category', ''); $set('gender', ''); $set('minAge', null); $set('maxAge', null); $set('minHeight', null); $set('maxHeight', null); $set('district', ''); $set('upazila', '')"
+                            wire:click="$set('search', ''); $set('category', '');$set('group', ''); $set('gender', ''); $set('minAge', null); $set('maxAge', null); $set('minHeight', null); $set('maxHeight', null); $set('district', ''); $set('upazila', '')"
                             Clear all
                         </button>
 
