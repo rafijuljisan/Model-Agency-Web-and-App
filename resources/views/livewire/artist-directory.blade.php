@@ -491,6 +491,99 @@
             border-top: 1px solid var(--border);
         }
 
+        /* ═══════════════════════════════════════════
+           MOBILE SLIDE-OUT FILTER DRAWER
+        ═══════════════════════════════════════════ */
+        
+        /* Hide mobile buttons on desktop */
+        .mobile-filter-toggle {
+            display: none; 
+            align-items: center;
+            gap: 8px;
+            padding: 8px 16px;
+            background: var(--bg-surface);
+            border: 1px solid var(--border-strong);
+            color: var(--text-primary);
+            font-family: 'Jost', sans-serif;
+            font-size: 0.85rem;
+            font-weight: 600;
+            letter-spacing: 0.1em;
+            text-transform: uppercase;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .mobile-filter-close {
+            display: none; 
+            background: none;
+            border: none;
+            color: var(--text-primary);
+            cursor: pointer;
+            padding: 4px;
+        }
+
+        .mobile-filter-overlay {
+            display: none; 
+        }
+
+        /* ── Responsive Mobile drawer logic ── */
+        @media (max-width: 768px) {
+            .mobile-filter-toggle {
+                display: flex; /* Show the 'Filters' button on mobile */
+            }
+            .mobile-filter-close {
+                display: block; /* Show close 'X' icon in panel */
+            }
+
+            /* Convert sidebar to a fixed hidden drawer */
+            .filter-sidebar {
+                position: fixed !important; /* Override standard positioning */
+                top: 0 !important;
+                left: 0;
+                width: 100%;
+                height: 100vh;
+                z-index: 9999;
+                pointer-events: none; /* Let clicks pass through when closed */
+                display: flex;
+                justify-content: flex-end; /* Slide in from the right */
+            }
+
+            /* The semi-transparent dark background */
+            .mobile-filter-overlay {
+                position: absolute;
+                inset: 0;
+                background: rgba(0, 0, 0, 0.5);
+                opacity: 0;
+                transition: opacity 0.3s;
+            }
+
+            /* The actual filter panel container */
+            .filter-panel {
+                position: relative;
+                width: 320px; 
+                max-width: 85vw;
+                height: 100vh;
+                overflow-y: auto;
+                background: var(--bg-surface);
+                transform: translateX(100%); /* Hidden off-screen to the right */
+                transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+                box-shadow: -4px 0 24px rgba(0,0,0,0.1);
+                border-left: 1px solid var(--border);
+                margin-top: 0; /* Remove top spacing on mobile */
+            }
+
+            /* ── Active State (When drawer is open) ── */
+            .filter-sidebar.is-open {
+                pointer-events: all;
+            }
+            .filter-sidebar.is-open .mobile-filter-overlay {
+                display: block;
+                opacity: 1;
+            }
+            .filter-sidebar.is-open .filter-panel {
+                transform: translateX(0); /* Slide into view */
+            }
+        }
         /* ── Responsive ── */
         @media (max-width: 1100px) {
             .artist-grid {
@@ -550,14 +643,29 @@
     <div class="directory-page">
 
         {{-- ── Filter Sidebar ── --}}
-        <aside class="filter-sidebar" aria-label="Filter talent">
+        <aside class="filter-sidebar {{ $showMobileFilters ? 'is-open' : '' }}" aria-label="Filter talent">
+            
+            {{-- NEW: Mobile Overlay Background --}}
+            <div class="mobile-filter-overlay" wire:click="$set('showMobileFilters', false)"></div>
+
             <div class="filter-panel">
                 <div class="filter-panel-title">
                     Filter
-                    <button class="filter-clear-btn"
-                        wire:click="$set('search', ''); $set('category', ''); $set('gender', ''); $set('minAge', null); $set('maxAge', null); $set('minHeight', null); $set('maxHeight', null); $set('district', '')">
-                        Clear all
-                    </button>
+                    
+                    <div style="display: flex; gap: 12px; align-items: center;">
+                        <button class="filter-clear-btn"
+                            wire:click="$set('search', ''); $set('category', ''); $set('gender', ''); $set('minAge', null); $set('maxAge', null); $set('minHeight', null); $set('maxHeight', null); $set('district', ''); $set('upazila', '')"
+                            Clear all
+                        </button>
+
+                        {{-- NEW: Mobile Close Button --}}
+                        <button class="mobile-filter-close" wire:click="$set('showMobileFilters', false)">
+                            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <line x1="18" y1="6" x2="6" y2="18"></line>
+                                <line x1="6" y1="6" x2="18" y2="18"></line>
+                            </svg>
+                        </button>
+                    </div>
                 </div>
 
                 {{-- Search --}}
@@ -569,14 +677,20 @@
 
                 {{-- Category --}}
                 <div class="filter-group">
-                    <span class="filter-label">Category</span>
-                    <div class="filter-pills">
-                        <button class="filter-pill {{ empty($category) ? 'is-active' : '' }}"
-                            wire:click="$set('category', '')">All</button>
-                        @foreach($categories as $cat)
-                            <button class="filter-pill {{ $category === $cat ? 'is-active' : '' }}"
-                                wire:click="$set('category', '{{ $cat }}')">{{ ucfirst($cat) }}</button>
-                        @endforeach
+                    <label class="filter-label" for="filter-category">Category</label>
+                    <div class="filter-select-wrap">
+                        <select id="filter-category" class="filter-select" wire:model.live="category">
+                            <option value="">All Categories</option>
+                            @foreach($categories as $groupName => $cats)
+                                <optgroup label="{{ $groupName }}" style="color: var(--gold); font-weight: 600; text-transform: uppercase;">
+                                    @foreach($cats as $cat)
+                                        <option value="{{ $cat->name }}" style="color: var(--text-primary); font-weight: 300; text-transform: none;">
+                                            {{ $cat->name }}
+                                        </option>
+                                    @endforeach
+                                </optgroup>
+                            @endforeach
+                        </select>
                     </div>
                 </div>
 
@@ -628,6 +742,20 @@
                         </select>
                     </div>
                 </div>
+                {{-- Thana / Upazila Location (Only shows if District is selected) --}}
+                @if($district)
+                    <div class="filter-group anim-fade-up">
+                        <label class="filter-label" for="filter-upazila">Thana / Upazila</label>
+                        <div class="filter-select-wrap">
+                            <select id="filter-upazila" class="filter-select" wire:model.live="upazila">
+                                <option value="">All of {{ ucfirst($district) }}</option>
+                                @foreach($upazilas as $upa)
+                                    <option value="{{ $upa }}">{{ ucfirst($upa) }}</option>
+                                @endforeach
+                            </select>
+                        </div>
+                    </div>
+                @endif
 
             </div>
         </aside>
@@ -640,6 +768,22 @@
                 <div class="directory-count">
                     Showing <strong>{{ $artists->count() }}</strong> of <strong>{{ $artists->total() }}</strong> talents
                 </div>
+
+                {{-- NEW: Mobile Filter Toggle Button --}}
+                <button class="mobile-filter-toggle" wire:click="$toggle('showMobileFilters')">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <line x1="4" y1="21" x2="4" y2="14"></line>
+                        <line x1="4" y1="10" x2="4" y2="3"></line>
+                        <line x1="12" y1="21" x2="12" y2="12"></line>
+                        <line x1="12" y1="8" x2="12" y2="3"></line>
+                        <line x1="20" y1="21" x2="20" y2="16"></line>
+                        <line x1="20" y1="12" x2="20" y2="3"></line>
+                        <line x1="1" y1="14" x2="7" y2="14"></line>
+                        <line x1="9" y1="8" x2="15" y2="8"></line>
+                        <line x1="17" y1="16" x2="23" y2="16"></line>
+                    </svg>
+                    Filters
+                </button>
             </div>
 
             {{-- Loading --}}
@@ -682,7 +826,7 @@
                         </div>
 
                         <div class="artist-card-info">
-                            <div class="artist-card-cat">{{ ucfirst($artist->profile->category ?? 'Professional') }}</div>
+                            <div class="artist-card-cat">{{ $artist->profile?->categories[0] ?? 'Professional' }}</div>
                             <div class="artist-card-name">{{ $artist->name }}</div>
                             <div class="artist-card-meta">
                                 <div class="artist-card-location">
@@ -691,7 +835,7 @@
                                         <path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7z" />
                                         <circle cx="12" cy="9" r="2.5" />
                                     </svg>
-                                    {{ ucfirst($artist->profile->location ?? 'Bangladesh') }}
+                                    {{ implode(', ', array_filter([$artist->profile?->upazila, $artist->profile?->district, $artist->profile?->country])) ?: 'Location not specified' }}
                                 </div>
                                 @if($artist->profile->hourly_rate)
                                     <div class="artist-card-rate">{{ $artist->profile->hourly_rate }} BDT/hr</div>

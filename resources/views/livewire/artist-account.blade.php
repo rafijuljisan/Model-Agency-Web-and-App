@@ -668,22 +668,37 @@
             <div class="form-section-body">
                 <div class="form-grid-2">
 
-                    <div class="form-field">
-                        <label class="form-field-label" for="f-category">
-                            Category <span class="required">*</span>
+                    <div class="form-grid-full">
+                        <label class="form-field-label">
+                            Talent Categories & Skills <span class="required">*</span>
                         </label>
-                        <div class="form-select-wrap">
-                            <select id="f-category" class="form-select" wire:model.defer="category" required>
-                                <option value="">Select a category…</option>
-                                <option value="Model">Model</option>
-                                <option value="Actor">Actor</option>
-                                <option value="Photographer">Photographer</option>
-                                <option value="Cinematographer">Cinematographer</option>
-                                <option value="Video Editor">Video Editor</option>
-                                <option value="Content Creator">Content Creator</option>
-                                <option value="Brand Promoter">Brand Promoter</option>
-                                <option value="Musician">Musician</option>
-                            </select>
+                        <div class="form-hint mb-4">Select all areas where you have professional experience.</div>
+                        
+                        @error('categories') <span style="color: #dc2626; font-size: 0.75rem; display: block; margin-bottom: 16px;">{{ $message }}</span> @enderror
+
+                        <div style="display: grid; gap: 24px;">
+                            @foreach($groupedCategories as $groupName => $cats)
+                                <div style="background: var(--bg-primary); border: 1px solid var(--border); border-radius: 6px; padding: 16px;">
+                                    <h4 style="font-size: 0.85rem; font-weight: 600; color: var(--gold); text-transform: uppercase; letter-spacing: 0.1em; margin-bottom: 12px; border-bottom: 1px solid var(--border-strong); padding-bottom: 8px;">
+                                        {{ $groupName }}
+                                    </h4>
+                                    <div style="display: grid; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); gap: 12px;">
+                                        
+                                        @foreach($cats as $cat)
+                                            <label style="display: flex; align-items: flex-start; gap: 8px; cursor: pointer; font-size: 0.9rem; color: var(--text-primary); transition: color 0.2s;">
+                                                <input 
+                                                    type="checkbox" 
+                                                    wire:model.defer="categories" 
+                                                    value="{{ $cat->name }}"
+                                                    style="margin-top: 4px; accent-color: var(--gold); width: 16px; height: 16px; cursor: pointer;"
+                                                >
+                                                <span style="line-height: 1.4;">{{ $cat->name }}</span>
+                                            </label>
+                                        @endforeach
+
+                                    </div>
+                                </div>
+                            @endforeach
                         </div>
                     </div>
 

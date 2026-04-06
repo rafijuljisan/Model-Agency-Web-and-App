@@ -517,7 +517,7 @@
     <div class="profile-cover-inner">
         <div class="profile-cover-eyebrow">Talent Profile</div>
         <div class="profile-cover-title">
-            {{ ucfirst($artist->profile->category ?? 'Professional') }} &nbsp;·&nbsp; Verified Member
+            {{ $artist->profile?->categories[0] ?? 'Professional' }} &nbsp;·&nbsp; Verified Member
         </div>
     </div>
 </div>
@@ -555,7 +555,16 @@
                 <div class="profile-name-row">
                     <h1 class="profile-name">{{ $artist->name }}</h1>
                     <div class="profile-badges">
-                        <span class="profile-category">{{ ucfirst($artist->profile->category ?? 'Professional') }}</span>
+                        @if(!empty($artist->profile?->categories))
+                            @foreach(array_slice($artist->profile->categories, 0, 2) as $cat)
+                                <span class="profile-category">{{ $cat }}</span>
+                            @endforeach
+                            @if(count($artist->profile->categories) > 2)
+                                <span class="profile-category">+{{ count($artist->profile->categories) - 2 }} more</span>
+                            @endif
+                        @else
+                            <span class="profile-category">Professional</span>
+                        @endif
                         <span class="badge-verified">
                             <svg width="10" height="10" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
                                 <path d="M12 2L3 7v5c0 5.55 3.84 10.74 9 12 5.16-1.26 9-6.45 9-12V7L12 2zm-2 15l-4-4 1.41-1.41L10 14.17l6.59-6.59L18 9l-8 8z"/>
@@ -569,7 +578,7 @@
                         <path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7z"/>
                         <circle cx="12" cy="9" r="2.5"/>
                     </svg>
-                    {{ ucfirst($artist->profile->location ?? 'Location not specified') }}
+                    {{ implode(', ', array_filter([$artist->profile?->upazila, $artist->profile?->district, $artist->profile?->country])) ?: 'Location not specified' }}
                 </div>
             </div>
 
@@ -612,6 +621,19 @@
                 </div>
             </div>
 
+            {{-- Skills & Expertise --}}
+            @if(!empty($artist->profile?->categories))
+            <div class="profile-section anim-fade-up anim-d1">
+                <h2 class="profile-section-title">Skills & Expertise</h2>
+                <div style="display: flex; flex-wrap: wrap; gap: 10px;">
+                    @foreach($artist->profile->categories as $category)
+                        <span style="background: var(--bg-secondary); border: 1px solid var(--border-strong); padding: 8px 16px; border-radius: 999px; font-size: 0.85rem; color: var(--text-primary); font-weight: 500;">
+                            {{ $category }}
+                        </span>
+                    @endforeach
+                </div>
+            </div>
+            @endif
             {{-- Portfolio --}}
             <div class="profile-section anim-fade-up anim-d2">
                 <h2 class="profile-section-title">Portfolio</h2>
@@ -690,32 +712,38 @@
             </div>
 
             {{-- Physical Attributes --}}
-            @if($artist->profile->height || $artist->profile->weight || $artist->profile->eye_color ?? null || $artist->profile->hair_color ?? null)
+            {{-- Personal Details --}}
+            @if($artist->profile?->gender || $artist->profile?->date_of_birth || $artist->profile?->height_cm || !empty($artist->profile?->languages))
                 <div class="sidebar-card anim-fade-up anim-d2" style="position:static;">
-                    <div class="sidebar-card-title">Physical Attributes</div>
+                    <div class="sidebar-card-title">Personal Details</div>
                     <div>
-                        @if($artist->profile->height)
+                        @if($artist->profile?->gender)
+                            <div class="attr-row">
+                                <span class="attr-key">Gender</span>
+                                <span class="attr-val">{{ $artist->profile->gender }}</span>
+                            </div>
+                        @endif
+
+                        @if($artist->profile?->date_of_birth)
+                            <div class="attr-row">
+                                <span class="attr-key">Age</span>
+                                <span class="attr-val">{{ \Carbon\Carbon::parse($artist->profile->date_of_birth)->age }} Years</span>
+                            </div>
+                        @endif
+
+                        @if($artist->profile?->height_cm)
                             <div class="attr-row">
                                 <span class="attr-key">Height</span>
-                                <span class="attr-val">{{ $artist->profile->height }}</span>
+                                <span class="attr-val">{{ $artist->profile->height_cm }} cm</span>
                             </div>
                         @endif
-                        @if($artist->profile->weight)
-                            <div class="attr-row">
-                                <span class="attr-key">Weight</span>
-                                <span class="attr-val">{{ $artist->profile->weight }}</span>
-                            </div>
-                        @endif
-                        @if($artist->profile->eye_color ?? null)
-                            <div class="attr-row">
-                                <span class="attr-key">Eyes</span>
-                                <span class="attr-val">{{ ucfirst($artist->profile->eye_color) }}</span>
-                            </div>
-                        @endif
-                        @if($artist->profile->hair_color ?? null)
-                            <div class="attr-row">
-                                <span class="attr-key">Hair</span>
-                                <span class="attr-val">{{ ucfirst($artist->profile->hair_color) }}</span>
+
+                        @if(!empty($artist->profile?->languages))
+                            <div class="attr-row" style="align-items: flex-start;">
+                                <span class="attr-key" style="margin-top: 4px;">Languages</span>
+                                <span class="attr-val" style="text-align: right; line-height: 1.4;">
+                                    {{ implode(', ', (array) $artist->profile->languages) }}
+                                </span>
                             </div>
                         @endif
                     </div>

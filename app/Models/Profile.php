@@ -13,6 +13,10 @@ class Profile extends Model implements HasMedia
     use InteractsWithMedia, HasFactory;
     protected $guarded = []; // Allows saving data without mass-assignment errors
 
+    protected $casts = [
+        'languages' => 'array',
+        'categories' => 'array', // <-- ADD THIS
+    ];
     /**
      * Get the attributes that should be cast.
      *

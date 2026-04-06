@@ -31,7 +31,7 @@ class ArtistAccount extends Component
     public string $phone = '';
 
     // ── Profile Fields ──
-    public string $category = '';
+    // public string $category = '';
     public string $gender = '';
     public string $date_of_birth = '';
     public $height_cm = '';
@@ -41,6 +41,8 @@ class ArtistAccount extends Component
     public string $district = '';
     public string $upazila = '';
     public string $bio = '';
+    public array $categories = []; // Replaces the old string $category
+    public $groupedCategories;     // To hold the DB results
 
     // ── Media ──
     public array $newPhotos = [];
@@ -141,7 +143,7 @@ class ArtistAccount extends Component
 
         $profile = $user->profile;
         if ($profile) {
-            $this->category      = $profile->category ?? '';
+            $this->categories = $profile->categories ?? [];
             $this->gender        = $profile->gender ?? '';
             $this->date_of_birth = $profile->date_of_birth instanceof \Carbon\Carbon 
                                     ? $profile->date_of_birth->format('Y-m-d') 
@@ -179,7 +181,7 @@ class ArtistAccount extends Component
             Profile::updateOrCreate(
                 ['user_id' => $user->id],
                 [
-                    'category'      => $this->category,
+                    'categories'    => $this->categories,
                     'gender'        => $this->gender        ?: null,
                     'date_of_birth' => $this->date_of_birth ?: null,
                     'height_cm'     => $this->height_cm     ?: null,
@@ -247,8 +249,15 @@ class ArtistAccount extends Component
     {
         /** @var \App\Models\User $user */
         $user = Auth::user();
+        
+        // Fetch all active categories and group them by the 'group' column
+        $this->groupedCategories = \App\Models\Category::where('is_active', true)
+            ->get()
+            ->groupBy('group');
+
         return view('livewire.artist-account', [
             'user' => $user,
+            'groupedCategories' => $this->groupedCategories,
         ]);
     }
 
@@ -259,7 +268,7 @@ class ArtistAccount extends Component
             'name'          => 'required|string|max:255',
             'email'         => "required|email|max:255|unique:users,email,{$userId}",
             'phone'         => "nullable|string|max:20|unique:users,phone,{$userId}",
-            'category'      => 'required|string',
+            'categories' => 'required|array|min:1',
             'gender'        => 'nullable|string',
             'date_of_birth' => 'nullable|date',
             'height_cm'     => 'nullable|numeric|min:50|max:300',
