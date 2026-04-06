@@ -646,6 +646,179 @@
             .section-inner { padding: 0 20px; }
             .cta-banner { padding: 64px 20px; }
         }
+        /* ── Clients Section ── */
+        .clients-section {
+            padding: 80px 0;
+            background: var(--bg-surface);
+            border-top: 1px solid var(--border);
+            border-bottom: 1px solid var(--border);
+            text-align: center;
+        }
+        .clients-grid {
+            display: flex;
+            flex-wrap: wrap;
+            align-items: center;
+            justify-content: center;
+            gap: 48px 64px;
+            margin-top: 40px;
+        }
+        .client-logo {
+            max-width: 140px;
+            max-height: 70px;
+            filter: grayscale(100%) opacity(0.5);
+            transition: filter 0.4s ease, transform 0.4s ease;
+            cursor: pointer;
+        }
+        .client-logo:hover {
+            filter: grayscale(0%) opacity(1);
+            transform: scale(1.05);
+        }
+
+        /* ── Testimonials Section ── */
+        .testi-section {
+            padding: 100px 0;
+            background: var(--bg-secondary);
+        }
+        .testi-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 32px;
+            margin-top: 48px;
+        }
+        .testi-card {
+            background: var(--bg-surface);
+            border: 1px solid var(--border);
+            padding: 48px;
+            position: relative;
+            transition: transform 0.4s;
+        }
+        .testi-card:hover {
+            transform: translateY(-4px);
+        }
+        .testi-quote-icon {
+            position: absolute;
+            top: 32px; right: 32px;
+            color: var(--gold);
+            opacity: 0.15;
+            width: 64px; height: 64px;
+            pointer-events: none;
+        }
+        .testi-text {
+            font-size: 1.15rem;
+            line-height: 1.8;
+            color: var(--text-primary);
+            font-style: italic;
+            margin-bottom: 32px;
+            position: relative;
+            z-index: 2;
+        }
+        .testi-author {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            border-top: 1px solid var(--border-strong);
+            padding-top: 24px;
+        }
+        .testi-avatar {
+            width: 56px; height: 56px;
+            border-radius: 50%;
+            object-fit: cover;
+            border: 2px solid var(--gold-bg);
+        }
+        .testi-author-info {}
+        .testi-name {
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 1.25rem;
+            font-weight: 600;
+            color: var(--text-primary);
+            line-height: 1.2;
+        }
+        .testi-role {
+            font-size: 0.7rem;
+            font-weight: 600;
+            letter-spacing: 0.15em;
+            text-transform: uppercase;
+            color: var(--gold);
+            margin-top: 4px;
+        }
+
+        /* ── Team Section ── */
+        .team-section {
+            padding: 100px 0;
+            background: var(--bg-primary);
+        }
+        .team-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 32px;
+        }
+        .team-card {
+            text-align: center;
+            background: var(--bg-surface);
+            border: 1px solid var(--border);
+            padding: 40px 24px;
+            transition: border-color 0.4s;
+        }
+        .team-card:hover {
+            border-color: var(--gold);
+        }
+        .team-avatar-wrap {
+            width: 140px; height: 140px;
+            margin: 0 auto 24px;
+            border-radius: 50%;
+            padding: 4px;
+            border: 1px dashed var(--border-strong);
+        }
+        .team-avatar {
+            width: 100%; height: 100%;
+            border-radius: 50%;
+            object-fit: cover;
+        }
+        .team-name {
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 1.8rem;
+            font-weight: 500;
+            color: var(--text-primary);
+            margin-bottom: 6px;
+        }
+        .team-role {
+            font-size: 0.75rem;
+            font-weight: 600;
+            letter-spacing: 0.15em;
+            text-transform: uppercase;
+            color: var(--gold);
+            margin-bottom: 20px;
+        }
+        .team-socials {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 12px;
+        }
+        .team-social-link {
+            width: 36px; height: 36px;
+            border-radius: 50%;
+            background: var(--bg-secondary);
+            color: var(--text-muted);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.3s;
+        }
+        .team-social-link:hover {
+            background: var(--gold);
+            color: #fff;
+        }
+
+        /* Responsive Additions */
+        @media (max-width: 1024px) {
+            .testi-grid { grid-template-columns: 1fr; }
+            .team-grid { grid-template-columns: repeat(2, 1fr); }
+        }
+        @media (max-width: 640px) {
+            .team-grid { grid-template-columns: 1fr; }
+            .clients-grid { gap: 32px; flex-direction: column; }
+        }
     </style>
 
     {{-- ══════════════════════════════════════════
@@ -890,6 +1063,126 @@
         </div>
     </section>
 
+    {{-- ══════════════════════════════════════════
+         OUR CLIENTS
+    ══════════════════════════════════════════ --}}
+    @if($clients->count() > 0)
+    <section class="clients-section anim-fade-up" aria-label="Our Clients">
+        <div class="section-inner">
+            <div class="section-eyebrow" style="justify-content:center;">Trusted By</div>
+            <h2 class="section-title">Our <strong>Partners & Clients</strong></h2>
+            
+            <div class="clients-grid">
+                @foreach($clients as $client)
+                    @if($client->website_url)
+                        <a href="{{ $client->website_url }}" target="_blank" rel="noopener">
+                            <img src="{{ Storage::url($client->logo) }}" alt="{{ $client->name }}" class="client-logo">
+                        </a>
+                    @else
+                        <img src="{{ Storage::url($client->logo) }}" alt="{{ $client->name }}" class="client-logo">
+                    @endif
+                @endforeach
+            </div>
+        </div>
+    </section>
+    @endif
+
+    {{-- ══════════════════════════════════════════
+         TESTIMONIALS
+    ══════════════════════════════════════════ --}}
+    @if($testimonials->count() > 0)
+    <section class="testi-section anim-fade-up">
+        <div class="section-inner">
+            <div class="section-header">
+                <div class="section-header-left">
+                    <div class="section-eyebrow">Success Stories</div>
+                    <h2 class="section-title">What Our <strong>Models Say</strong></h2>
+                </div>
+            </div>
+
+            <div class="testi-grid">
+                @foreach($testimonials as $testi)
+                    <div class="testi-card">
+                        <svg class="testi-quote-icon" viewBox="0 0 24 24" fill="currentColor">
+                            <path d="M14.017 21v-7.391c0-5.704 3.731-9.57 8.983-10.609l.995 2.151c-2.432.917-3.995 3.638-3.995 5.849h4v10h-9.983zm-14.017 0v-7.391c0-5.704 3.748-9.57 9-10.609l.996 2.151c-2.433.917-3.996 3.638-3.996 5.849h3.983v10h-9.983z"/>
+                        </svg>
+                        <p class="testi-text">"{{ $testi->quote }}"</p>
+                        <div class="testi-author">
+                            @if($testi->image)
+                                <img src="{{ Storage::url($testi->image) }}" alt="{{ $testi->name }}" class="testi-avatar">
+                            @else
+                                <div class="testi-avatar" style="background: var(--bg-primary); display: flex; align-items:center; justify-content:center; color: var(--gold);">
+                                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path><circle cx="12" cy="7" r="4"></circle></svg>
+                                </div>
+                            @endif
+                            <div class="testi-author-info">
+                                <div class="testi-name">{{ $testi->name }}</div>
+                                <div class="testi-role">{{ $testi->designation }}</div>
+                            </div>
+                        </div>
+                    </div>
+                @endforeach
+            </div>
+        </div>
+    </section>
+    @endif
+
+    {{-- ══════════════════════════════════════════
+         LEADERSHIP TEAM
+    ══════════════════════════════════════════ --}}
+    @if($teamMembers->count() > 0)
+    <section class="team-section anim-fade-up">
+        <div class="section-inner">
+            <div class="section-header">
+                <div class="section-header-left">
+                    <div class="section-eyebrow">Agency Directory</div>
+                    <h2 class="section-title">Leadership <strong>Team</strong></h2>
+                </div>
+            </div>
+
+            <div class="team-grid">
+                @foreach($teamMembers as $member)
+                    <div class="team-card">
+                        <div class="team-avatar-wrap">
+                            @if($member->image)
+                                <img src="{{ Storage::url($member->image) }}" alt="{{ $member->name }}" class="team-avatar">
+                            @else
+                                <div class="team-avatar" style="background: var(--bg-secondary); display:flex; align-items:center; justify-content:center; color:var(--text-muted);">
+                                    <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path><circle cx="12" cy="7" r="4"></circle></svg>
+                                </div>
+                            @endif
+                        </div>
+                        <h3 class="team-name">{{ $member->name }}</h3>
+                        <div class="team-role">{{ $member->designation }}</div>
+                        
+                        <div class="team-socials">
+                            @if($member->facebook_url)
+                                <a href="{{ $member->facebook_url }}" target="_blank" class="team-social-link">
+                                    <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M18 2h-3a5 5 0 00-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 011-1h3z"/></svg>
+                                </a>
+                            @endif
+                            @if($member->twitter_url)
+                                <a href="{{ $member->twitter_url }}" target="_blank" class="team-social-link">
+                                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M23 3a10.9 10.9 0 01-3.14 1.53 4.48 4.48 0 00-7.86 3v1A10.66 10.66 0 013 4s-4 9 5 13a11.64 11.64 0 01-7 2c9 5 20 0 20-11.5a4.5 4.5 0 00-.08-.83A7.72 7.72 0 0023 3z"/></svg>
+                                </a>
+                            @endif
+                            @if($member->instagram_url)
+                                <a href="{{ $member->instagram_url }}" target="_blank" class="team-social-link">
+                                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="2" width="20" height="20" rx="5"/><path d="M16 11.37A4 4 0 1112.63 8 4 4 0 0116 11.37z"/><line x1="17.5" y1="6.5" x2="17.51" y2="6.5"/></svg>
+                                </a>
+                            @endif
+                            @if($member->linkedin_url)
+                                <a href="{{ $member->linkedin_url }}" target="_blank" class="team-social-link">
+                                    <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M16 8a6 6 0 016 6v7h-4v-7a2 2 0 00-2-2 2 2 0 00-2 2v7h-4v-7a6 6 0 016-6zM2 9h4v12H2zM4 6a2 2 0 100-4 2 2 0 000 4z"/></svg>
+                                </a>
+                            @endif
+                        </div>
+                    </div>
+                @endforeach
+            </div>
+        </div>
+    </section>
+    @endif
     {{-- ══════════════════════════════════════════
          WHY TRUST US
     ══════════════════════════════════════════ --}}

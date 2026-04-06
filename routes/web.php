@@ -14,9 +14,8 @@ use App\Livewire\ArtistProfile;
 */
 
 // 1. The Homepage
-// 1. The Homepage
 Route::get('/', function () {
-    $featuredArtists = User::role('Verified-Artist')
+    $featuredArtists = App\Models\User::role('Verified-Artist')
         ->with([
             'profile',
             'media' => fn($q) => $q->whereIn('collection_name', ['avatar', 'portfolio']),
@@ -31,9 +30,12 @@ Route::get('/', function () {
         ->take(8)
         ->get();
 
-    return view('welcome', [
-        'featuredArtists' => $featuredArtists
-    ]);
+    // Fetch the new dynamic content
+    $clients = App\Models\Client::where('is_active', true)->orderBy('sort_order')->get();
+    $testimonials = App\Models\Testimonial::where('is_active', true)->orderBy('sort_order')->get();
+    $teamMembers = App\Models\TeamMember::where('is_active', true)->orderBy('sort_order')->get();
+
+    return view('welcome', compact('featuredArtists', 'clients', 'testimonials', 'teamMembers'));
 });
 
 // 2. Standard Pages & Livewire Components

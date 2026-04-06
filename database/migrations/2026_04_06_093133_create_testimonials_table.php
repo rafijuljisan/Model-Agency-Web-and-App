@@ -10,12 +10,18 @@ return new class extends Migration
      * Run the migrations.
      */
     public function up(): void
-    {
-        Schema::create('testimonials', function (Blueprint $table) {
-            $table->id();
-            $table->timestamps();
-        });
-    }
+{
+    Schema::create('testimonials', function (Blueprint $table) {
+        $table->id();
+        $table->string('name');
+        $table->string('designation')->nullable(); // e.g., Child Model & Actor
+        $table->text('quote');
+        $table->string('image')->nullable(); // The avatar of the person speaking
+        $table->boolean('is_active')->default(true);
+        $table->integer('sort_order')->default(0);
+        $table->timestamps();
+    });
+}
 
     /**
      * Reverse the migrations.
