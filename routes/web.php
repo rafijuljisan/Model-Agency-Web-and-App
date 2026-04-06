@@ -37,7 +37,16 @@ Route::get('/', function () {
 
     return view('welcome', compact('featuredArtists', 'clients', 'testimonials', 'teamMembers'));
 });
+// SEO Routes (public, no auth)
+Route::get('/sitemap.xml', [App\Http\Controllers\SitemapController::class, 'index'])
+    ->name('sitemap');
 
+Route::get('/robots.txt', function () {
+    $settings = \App\Models\Setting::first();
+    $content = $settings?->robots_txt 
+        ?? "User-agent: *\nAllow: /\nDisallow: /admin/\nSitemap: " . url('/sitemap.xml');
+    return response($content, 200)->header('Content-Type', 'text/plain');
+});
 // 2. Standard Pages & Livewire Components
 Route::get('/videos', App\Livewire\VideoGallery::class)->name('videos.index');
 Route::get('/contact', App\Livewire\ContactPage::class)->name('contact');

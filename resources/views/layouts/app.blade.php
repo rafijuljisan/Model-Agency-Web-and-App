@@ -6,6 +6,72 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>{{ $title ?? 'Verified Talent Directory' }} | Dhaka Model Agency</title>
 
+    @php $seo = \App\Models\Setting::first(); @endphp
+
+    {{-- ── SEO: Basic Meta Tags ── --}}
+    <meta name="description" content="{{ $seo?->meta_description ?? 'Verified talent directory — Bangladesh' }}">
+    <meta name="keywords" content="{{ $seo?->meta_keywords }}">
+    <meta name="robots" content="index, follow">
+    <link rel="canonical" href="{{ url()->current() }}">
+
+    {{-- ── SEO: Open Graph (Facebook, WhatsApp) ── --}}
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="{{ url()->current() }}">
+    <meta property="og:title" content="{{ $title ?? $seo?->meta_title ?? config('app.name') }}">
+    <meta property="og:description" content="{{ $seo?->meta_description }}">
+    <meta property="og:image" content="{{ $seo?->og_image ? asset('storage/' . $seo->og_image) : '' }}">
+    <meta property="og:site_name" content="{{ $seo?->site_name ?? config('app.name') }}">
+
+    {{-- ── SEO: Twitter Card ── --}}
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="{{ $title ?? $seo?->meta_title ?? config('app.name') }}">
+    <meta name="twitter:description" content="{{ $seo?->meta_description }}">
+    <meta name="twitter:image" content="{{ $seo?->og_image ? asset('storage/' . $seo->og_image) : '' }}">
+
+    {{-- ── Google Search Console Verification ── --}}
+    @if($seo?->google_search_console_id)
+        <meta name="google-site-verification" content="{{ $seo->google_search_console_id }}">
+    @endif
+
+    {{-- ── Google Tag Manager (head) ── --}}
+    @if($seo?->google_tag_manager_id)
+        <script>(function (w, d, s, l, i) {
+                w[l] = w[l] || []; w[l].push({
+                    'gtm.start':
+                        new Date().getTime(), event: 'gtm.js'
+                }); var f = d.getElementsByTagName(s)[0],
+                    j = d.createElement(s), dl = l != 'dataLayer' ? '&l=' + l : ''; j.async = true; j.src =
+                        'https://www.googletagmanager.com/gtm.js?id=' + i + dl; f.parentNode.insertBefore(j, f);
+            })(window, document, 'script', 'dataLayer', '{{ $seo->google_tag_manager_id }}');</script>
+    @endif
+
+    {{-- ── Google Analytics 4 ── --}}
+    @if($seo?->google_analytics_id)
+        <script async src="https://www.googletagmanager.com/gtag/js?id={{ $seo->google_analytics_id }}"></script>
+        <script>
+            window.dataLayer = window.dataLayer || [];
+            function gtag() { dataLayer.push(arguments); }
+            gtag('js', new Date());
+            gtag('config', '{{ $seo->google_analytics_id }}');
+        </script>
+    @endif
+
+    {{-- ── Facebook Pixel ── --}}
+    @if($seo?->facebook_pixel_id)
+        <script>
+            !function (f, b, e, v, n, t, s) {
+                if (f.fbq) return; n = f.fbq = function () {
+                    n.callMethod ?
+                    n.callMethod.apply(n, arguments) : n.queue.push(arguments)
+                }; if (!f._fbq) f._fbq = n;
+                n.push = n; n.loaded = !0; n.version = '2.0'; n.queue = []; t = b.createElement(e); t.async = !0;
+                t.src = v; s = b.getElementsByTagName(e)[0]; s.parentNode.insertBefore(t, s)
+            }(window,
+                document, 'script', 'https://connect.facebook.net/en_US/fbevents.js');
+            fbq('init', '{{ $seo->facebook_pixel_id }}');
+            fbq('track', 'PageView');
+        </script>
+    @endif
     {{-- Fonts: Cormorant Garamond (luxury editorial display) + Jost (refined body) --}}
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -345,7 +411,6 @@
         }
 
         /* Centre links */
-        /* Centre links */
         .nav-links {
             display: flex;
             align-items: center;
@@ -416,7 +481,8 @@
 
         .nav-drop-panel {
             position: absolute;
-            top: 100%;              /* ← Remove the gap */
+            top: 100%;
+            /* ← Remove the gap */
             left: 50%;
             transform: translateX(-50%) translateY(8px);
             background: var(--bg-surface);
@@ -427,9 +493,10 @@
             opacity: 0;
             pointer-events: none;
             transition: opacity 0.2s, transform 0.2s;
-            
+
             /* ── Bridge: fills the invisible gap so mouse doesn't lose hover ── */
-            padding-top: 8px;       /* ← Replaces the top gap with internal padding */
+            padding-top: 8px;
+            /* ← Replaces the top gap with internal padding */
             margin-top: 0;
         }
 
@@ -440,9 +507,11 @@
             top: 100%;
             left: 0;
             right: 0;
-            height: 12px;   /* Covers any remaining gap */
+            height: 12px;
+            /* Covers any remaining gap */
             background: transparent;
         }
+
         .nav-dropdown:hover .nav-drop-panel {
             opacity: 1;
             pointer-events: all;
@@ -537,7 +606,6 @@
             display: none;
         }
 
-        /* Buttons */
         /* Buttons */
         .btn-ghost {
             /* --- UPDATED FONT SIZE --- */
@@ -981,11 +1049,9 @@
         .nav-drop-panel.mega-menu-modern {
             width: 640px;
             max-width: 90vw;
-            left: 50%;
+            /* Removed redundant left, padding-top, and margin-top */
             transform: translateX(-50%) translateY(10px);
             padding: 0;
-            padding-top: 8px;    /* ← Add this */
-            margin-top: 0;       /* ← Ensure no margin gap */
             cursor: default;
             overflow: hidden;
             border-radius: 4px;
@@ -1086,9 +1152,40 @@
             }
         }
     </style>
+    {{-- ── Schema.org Structured Data ── --}}
+@if($seo)
+<script type="application/ld+json">
+{
+    "@context": "https://schema.org",
+    "@type": "{{ $seo->schema_org_type ?? 'Organization' }}",
+    "name": "{{ $seo->site_name ?? config('app.name') }}",
+    "description": "{{ $seo->meta_description }}",
+    "url": "{{ url('/') }}",
+    "telephone": "{{ $seo->contact_phone }}",
+    "email": "{{ $seo->contact_email }}",
+    "address": {
+        "@type": "PostalAddress",
+        "addressLocality": "Dhaka",
+        "addressCountry": "BD"
+    },
+    "sameAs": @json(array_values(array_filter([
+        $seo->facebook_url,
+        $seo->instagram_url,
+        $seo->youtube_url,
+        $seo->linkedin_url
+    ])))
+}
+</script>
+@endif
 </head>
 
 <body>
+
+    {{-- ── Google Tag Manager (noscript) ── --}}
+    @if($seo?->google_tag_manager_id)
+        <noscript><iframe src="https://www.googletagmanager.com/ns.html?id={{ $seo->google_tag_manager_id }}"
+        height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
+    @endif
 
     {{-- ══════════════════════════════════
     TOPBAR (Contact, License, Socials)
@@ -1270,13 +1367,14 @@
     </nav>
 
     {{-- ══════════════════════════════════
-         MOBILE DRAWER
+    MOBILE DRAWER
     ══════════════════════════════════ --}}
     <div class="nav-drawer" id="navDrawer" role="dialog" aria-label="Mobile menu" aria-hidden="true">
         <a href="/artists" style="font-weight: 600;">Browse All Talent</a>
-        
+
         {{-- ── NEW: 6 High-Level Category Groups ── --}}
-        <div style="font-size: 0.65rem; font-weight: 700; letter-spacing: 0.15em; text-transform: uppercase; color: var(--gold); margin: 16px 0 4px 20px; opacity: 0.8;">
+        <div
+            style="font-size: 0.65rem; font-weight: 700; letter-spacing: 0.15em; text-transform: uppercase; color: var(--gold); margin: 16px 0 4px 20px; opacity: 0.8;">
             Categories
         </div>
         <a href="/artists?group=Artist" style="padding-left: 28px; font-size: 0.95rem;">Artists</a>
@@ -1294,12 +1392,13 @@
         <a href="/contact">Contact</a>
         <a href="/videos">Videos</a>
         <a href="/editorial">Editorial</a>
-        
+
         <div class="drawer-actions">
             @auth
                 <a href="/account" class="btn-fill" style="width: 100%; justify-content: center;">Dashboard</a>
             @else
-                <a href="/login" class="btn-outline" style="width: 100%; justify-content: center; margin-bottom: 10px;">Sign In</a>
+                <a href="/login" class="btn-outline" style="width: 100%; justify-content: center; margin-bottom: 10px;">Sign
+                    In</a>
                 <a href="/register" class="btn-fill" style="width: 100%; justify-content: center;">Join as Talent</a>
             @endauth
         </div>

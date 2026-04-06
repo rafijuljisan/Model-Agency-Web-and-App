@@ -51,7 +51,7 @@ class SettingForm
                                 // Core Contact
                                 TextInput::make('contact_email')->email(),
                                 TextInput::make('contact_phone')->tel(),
-                                
+
                                 // Physical Location
                                 Textarea::make('contact_address')
                                     ->label('Office Address')
@@ -61,7 +61,7 @@ class SettingForm
                                     ->label('Business Hours')
                                     ->placeholder('e.g., Mon - Fri: 10:00 AM - 6:00 PM')
                                     ->columnSpanFull(),
-                                
+
                                 // Map
                                 Textarea::make('google_map_embed_url')
                                     ->label('Google Maps Embed URL (src only)')
@@ -141,6 +141,85 @@ class SettingForm
                                     'Send Money' => 'Personal (Send Money)',
                                     'Payment' => 'Merchant (Payment)',
                                 ]),
+                            ]),
+                        Tabs\Tab::make('SEO & Analytics')
+                            ->icon('heroicon-o-magnifying-glass')
+                            ->columns(2)
+                            ->schema([
+
+                                // ── Basic SEO ──
+                                TextInput::make('meta_title')
+                                    ->label('Default Meta Title')
+                                    ->placeholder('e.g. AgencyMarket — Verified Talent Directory Bangladesh')
+                                    ->helperText('Recommended: 50–60 characters')
+                                    ->maxLength(60)
+                                    ->columnSpanFull(),
+
+                                Textarea::make('meta_description')
+                                    ->label('Default Meta Description')
+                                    ->placeholder('A short description of your site for search engines...')
+                                    ->helperText('Recommended: 150–160 characters')
+                                    ->rows(3)
+                                    ->maxLength(160)
+                                    ->columnSpanFull(),
+
+                                TextInput::make('meta_keywords')
+                                    ->label('Meta Keywords')
+                                    ->placeholder('model, actor, talent, bangladesh, dhaka')
+                                    ->helperText('Comma-separated keywords (less important for modern SEO)')
+                                    ->columnSpanFull(),
+
+                                FileUpload::make('og_image')
+                                    ->label('Default Social Share Image (OG Image)')
+                                    ->helperText('Recommended size: 1200×630px. Used when sharing on Facebook, WhatsApp etc.')
+                                    ->image()
+                                    ->disk('public')
+                                    ->directory('settings/seo')
+                                    ->columnSpanFull(),
+
+                                // ── Analytics & Tracking ──
+                                TextInput::make('google_analytics_id')
+                                    ->label('Google Analytics 4 ID')
+                                    ->placeholder('G-XXXXXXXXXX')
+                                    ->helperText('Find this in Google Analytics → Admin → Data Streams'),
+
+                                TextInput::make('google_tag_manager_id')
+                                    ->label('Google Tag Manager ID')
+                                    ->placeholder('GTM-XXXXXXX'),
+
+                                TextInput::make('google_search_console_id')
+                                    ->label('Google Search Console Verification')
+                                    ->placeholder('Paste the content="..." value from the meta tag')
+                                    ->helperText('In Search Console → Settings → Ownership verification → HTML tag → copy only the content value'),
+
+                                TextInput::make('facebook_pixel_id')
+                                    ->label('Facebook Pixel ID')
+                                    ->placeholder('e.g. 1234567890123456'),
+
+                                // ── Sitemap & Robots ──
+                                \Filament\Forms\Components\Toggle::make('sitemap_enabled')
+                                    ->label('Enable Sitemap (/sitemap.xml)')
+                                    ->default(true)
+                                    ->columnSpanFull(),
+
+                                Textarea::make('robots_txt')
+                                    ->label('robots.txt Content')
+                                    ->helperText('Controls which pages search engines can crawl. Leave blank for default.')
+                                    ->rows(6)
+                                    ->placeholder("User-agent: *\nAllow: /\nDisallow: /admin/\nSitemap: https://yourdomain.com/sitemap.xml")
+                                    ->columnSpanFull(),
+
+                                // ── Schema.org ──
+                                \Filament\Forms\Components\Select::make('schema_org_type')
+                                    ->label('Business Schema Type')
+                                    ->options([
+                                        'Organization' => 'Organization',
+                                        'LocalBusiness' => 'Local Business',
+                                        'EntertainmentBusiness' => 'Entertainment Business',
+                                        'EmploymentAgency' => 'Employment / Talent Agency',
+                                    ])
+                                    ->default('Organization')
+                                    ->helperText('Used for structured data — helps Google understand your business type'),
                             ]),
                     ]),
             ]);
