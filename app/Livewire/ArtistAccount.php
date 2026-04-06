@@ -60,19 +60,15 @@ class ArtistAccount extends Component
             return redirect()->route('packages.index'); 
             
         } elseif ($subscription->status === 'failed') {
-            $this->currentStep = 'payment_failed'; // Show the failed screen
+            $this->currentStep = 'payment_failed'; 
             
         } elseif ($subscription->status === 'expired') {
-            $this->currentStep = 'payment_expired'; // Show the expired screen
+            $this->currentStep = 'payment_expired'; 
             
         } elseif ($subscription->status === 'pending') {
             $this->currentStep = 'payment_pending';
             
-        } elseif ($user->verification_status === 'unverified') {
-            $this->currentStep = 'nid_upload';
-            
-        } elseif ($user->verification_status === 'pending') {
-            $this->currentStep = 'nid_pending';
+        // ── BUG FIXED HERE: Deleted the old nid_upload and nid_pending blocks! ──
             
         } elseif ($user->verification_status === 'unverified' || $user->academic_verification_status === 'unverified') {
             $this->currentStep = 'document_upload'; // Catch-all for any missing/rejected doc

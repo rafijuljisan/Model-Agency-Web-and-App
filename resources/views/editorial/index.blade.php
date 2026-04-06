@@ -22,7 +22,7 @@
         .editorial-meta { font-size: 0.7rem; font-weight: 600; letter-spacing: 0.15em; text-transform: uppercase; color: var(--gold); margin-bottom: 12px; }
         .editorial-card-title { font-family: 'Cormorant Garamond', serif; font-size: 1.8rem; color: var(--text-primary); line-height: 1.2; margin-bottom: 12px; transition: color 0.3s; }
         .editorial-card:hover .editorial-card-title { color: var(--gold); }
-        .editorial-excerpt { font-size: 0.9rem; color: var(--text-secondary); line-height: 1.6; display: -webkit-box; -webkit-line-clamp: 3; -webkit-box-orient: vertical; overflow: hidden; }
+        .editorial-excerpt { font-size: 1.2rem; color: var(--text-secondary); line-height: 1.6; display: -webkit-box; -webkit-line-clamp: 3; -webkit-box-orient: vertical; overflow: hidden; }
 
         /* Make the first item feature-sized */
         .editorial-card.featured { grid-column: span 2; flex-direction: row; gap: 40px; align-items: center; }

@@ -599,7 +599,34 @@
             gap: 14px;
             flex-wrap: wrap;
         }
+        /* verified-tag container */
+        .verified-tag {
+            display: inline-flex;
+            align-items: center;
+            gap: 4px; /* Spacing between icon and text */
+            padding: 2px 6px;
+            background: rgba(42, 125, 79, 0.05); /* Subtle background tint */
+            color: #2a7d4f; /* Muted green from your code */
+            border-radius: 4px; /* Slightly rounded corners */
+            font-size: 0.75rem; /* Smaller, legible text */
+            font-weight: 500;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            vertical-align: middle;
+        }
 
+        /* verified-tag icon */
+        .verified-tag-icon {
+            width: 12px; /* Set consistent size for the icon */
+            height: 12px;
+            fill: currentColor; /* Use the parent text color */
+            flex-shrink: 0;
+        }
+
+        /* verified-tag text */
+        .verified-tag-text {
+            color: #2a7d4f;
+        }
         /* ── Responsive ── */
         @media (max-width: 1024px) {
             .talent-grid { grid-template-columns: repeat(2, 1fr); }
@@ -778,13 +805,25 @@
 
             <div class="talent-grid">
                 @forelse($featuredArtists as $artist)
-                    <a href="/artist/{{ $artist->id }}" class="talent-card">
+    <a href="/artist/{{ $artist->id }}" class="talent-card">
 
+                        {{-- OLD STATIC HTML (REPLACE THIS) --}}
+                        {{--
                         <div class="talent-card-verified">
                             <svg width="9" height="9" viewBox="0 0 24 24" fill="#2a7d4f" aria-hidden="true">
                                 <path d="M12 2L3 7v5c0 5.55 3.84 10.74 9 12 5.16-1.26 9-6.45 9-12V7L12 2zm-2 15l-4-4 1.41-1.41L10 14.17l6.59-6.59L18 9l-8 8z"/>
                             </svg>
                             Verified
+                        </div>
+                        --}}
+
+                        {{-- NEW UPDATED HTML STRUCTURE --}}
+                        <div class="verified-tag">
+                            {{-- Updated SVG for cleaner, consistent look within the tag --}}
+                            <svg class="verified-tag-icon" viewBox="0 0 24 24" aria-hidden="true">
+                                <path d="M12 2L3 7v5c0 5.55 3.84 10.74 9 12 5.16-1.26 9-6.45 9-12V7L12 2zm-2 15l-4-4 1.41-1.41L10 14.17l6.59-6.59L18 9l-8 8z"/>
+                            </svg>
+                            <span class="verified-tag-text">Verified</span>
                         </div>
 
                         <div class="talent-card-media">
@@ -805,7 +844,8 @@
                         </div>
 
                         <div class="talent-card-overlay">
-                            <div class="talent-card-cat">{{ ucfirst($artist->profile->category ?? 'Professional') }}</div>
+                            {{-- ADDED ?-> TO PREVENT CRASHES IF PROFILE IS EMPTY --}}
+                            <div class="talent-card-cat">{{ ucfirst($artist->profile?->category ?? 'Professional') }}</div>
                             <div class="talent-card-name">{{ $artist->name }}</div>
                             <div class="talent-card-cta">
                                 View Profile

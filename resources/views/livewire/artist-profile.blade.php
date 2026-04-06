@@ -653,8 +653,11 @@
                 <div class="rate-row">
                     <span class="rate-label">Starting Rate</span>
                     <div class="rate-value">
-                        {{ $artist->profile->hourly_rate ?? 'Negotiable' }}
-                        @if($artist->profile->hourly_rate)
+                        {{-- Added ? before -> --}}
+                        {{ $artist->profile?->hourly_rate ?? 'Negotiable' }}
+                        
+                        {{-- Added ? before -> --}}
+                        @if($artist->profile?->hourly_rate)
                             <sup>BDT/hr</sup>
                         @endif
                     </div>

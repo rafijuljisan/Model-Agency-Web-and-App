@@ -63,7 +63,7 @@
         /* Typography for Rich Text (Prose) */
         .prose {
             color: var(--text-secondary);
-            font-size: 1.05rem;
+            font-size: 1.2rem;
             line-height: 1.8;
             font-weight: 300;
         }
@@ -118,7 +118,7 @@
         }
         .mv-text {
             color: var(--text-secondary);
-            font-size: 0.95rem;
+            font-size: 1.1rem;
             line-height: 1.7;
             font-style: italic;
         }

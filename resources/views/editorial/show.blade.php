@@ -18,7 +18,7 @@
         .video-wrapper iframe { position: absolute; top: 0; left: 0; width: 100%; height: 100%; border: 0; }
 
         /* Article Prose */
-        .prose { color: var(--text-secondary); font-size: 1.1rem; line-height: 1.8; font-weight: 300; margin-bottom: 60px; }
+        .prose { color: var(--text-secondary); font-size: 1.2rem; line-height: 1.8; font-weight: 300; margin-bottom: 60px; }
         .prose p { margin-bottom: 24px; }
         .prose h2, .prose h3 { font-family: 'Cormorant Garamond', serif; color: var(--text-primary); margin-top: 40px; margin-bottom: 20px; }
         .prose h2 { font-size: 2.2rem; }

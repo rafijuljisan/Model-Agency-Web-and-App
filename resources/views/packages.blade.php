@@ -6,10 +6,11 @@
 ═══════════════════════════════════════════ */
 
 /* Page hero */
+/* Page hero */
 .pricing-hero {
     background: var(--bg-secondary);
     border-bottom: 1px solid var(--border);
-    padding: 64px 40px 56px;
+    padding: 80px 40px 72px; /* Slightly increased padding to balance larger text */
     text-align: center;
     position: relative;
     overflow: hidden;
@@ -25,12 +26,12 @@
     pointer-events: none;
 }
 .pricing-hero-eyebrow {
-    font-size: 0.58rem;
+    font-size: 0.875rem; /* Increased from 0.58rem */
     font-weight: 600;
-    letter-spacing: 0.32em;
+    letter-spacing: 0.2em; /* Reduced spacing slightly for cleaner look */
     text-transform: uppercase;
     color: var(--gold);
-    margin-bottom: 12px;
+    margin-bottom: 16px;
     display: flex;
     align-items: center;
     justify-content: center;
@@ -39,12 +40,12 @@
 .pricing-hero-eyebrow::before,
 .pricing-hero-eyebrow::after {
     content: '';
-    width: 28px; height: 1px;
+    width: 32px; height: 1px;
     background: var(--gold);
 }
 .pricing-hero-title {
     font-family: 'Cormorant Garamond', serif;
-    font-size: clamp(2rem, 4vw, 3.2rem);
+    font-size: clamp(2.5rem, 5vw, 4rem); /* Increased scaling for better impact */
     font-weight: 300;
     color: var(--text-primary);
     line-height: 1.15;
@@ -52,11 +53,15 @@
 }
 .pricing-hero-title strong { font-weight: 600; }
 .pricing-hero-sub {
-    font-size: 0.88rem;
+    font-size: 1.125rem; /* Increased from 0.88rem */
     color: var(--text-muted);
-    margin-top: 10px;
-    letter-spacing: 0.04em;
+    margin-top: 16px;
+    letter-spacing: 0.02em;
     position: relative;
+    max-width: 600px;
+    margin-left: auto;
+    margin-right: auto;
+    line-height: 1.6;
 }
 
 /* Page body */
@@ -134,58 +139,59 @@
 }
 
 /* Popular badge */
+/* Popular badge */
 .package-popular {
     position: absolute;
     top: -1px; left: 32px;
     background: var(--gold);
     color: #faf8f5;
-    font-size: 0.52rem;
+    font-size: 0.75rem; /* Increased from 0.52rem */
     font-weight: 700;
-    letter-spacing: 0.22em;
+    letter-spacing: 0.15em;
     text-transform: uppercase;
-    padding: 3px 10px;
+    padding: 4px 12px;
 }
 
 .package-name {
     font-family: 'Cormorant Garamond', serif;
-    font-size: 1.4rem;
+    font-size: 1.75rem; /* Increased from 1.4rem */
     font-weight: 600;
     color: var(--text-primary);
     margin-bottom: 4px;
     letter-spacing: 0.02em;
 }
 .package-duration {
-    font-size: 0.62rem;
+    font-size: 0.875rem; /* Increased from 0.62rem */
     font-weight: 500;
-    letter-spacing: 0.18em;
+    letter-spacing: 0.1em;
     text-transform: uppercase;
     color: var(--text-muted);
-    margin-bottom: 20px;
+    margin-bottom: 24px;
 }
 .package-price-row {
     display: flex;
     align-items: baseline;
-    gap: 4px;
+    gap: 6px;
     margin-bottom: 4px;
 }
 .package-currency {
     font-family: 'Cormorant Garamond', serif;
-    font-size: 1.2rem;
+    font-size: 1.5rem; /* Increased from 1.2rem */
     font-weight: 400;
     color: var(--gold);
 }
 .package-price {
     font-family: 'Cormorant Garamond', serif;
-    font-size: 3rem;
+    font-size: 3.5rem; /* Increased from 3rem */
     font-weight: 600;
     color: var(--text-primary);
     line-height: 1;
 }
 .package-price-sub {
-    font-size: 0.65rem;
+    font-size: 0.875rem; /* Increased from 0.65rem */
     color: var(--text-muted);
-    letter-spacing: 0.1em;
-    margin-bottom: 24px;
+    letter-spacing: 0.05em;
+    margin-bottom: 28px;
 }
 
 /* Feature list */
@@ -193,20 +199,22 @@
     list-style: none;
     display: flex;
     flex-direction: column;
-    gap: 9px;
+    gap: 12px;
 }
 .package-feature {
     display: flex;
     align-items: flex-start;
-    gap: 10px;
-    font-size: 0.8rem;
+    gap: 12px;
+    font-size: 1rem; /* Increased from 0.8rem for standard readability */
     color: var(--text-secondary);
     line-height: 1.5;
 }
 .package-feature-check {
     color: var(--gold);
     flex-shrink: 0;
-    margin-top: 1px;
+    margin-top: 3px;
+    width: 18px; /* Slightly larger checkmark */
+    height: 18px;
 }
 
 /* ── Payment section ── */
@@ -234,91 +242,85 @@
 }
 .payment-section-title {
     font-family: 'Cormorant Garamond', serif;
-    font-size: 1.15rem;
+    font-size: 1.5rem; /* Increased from 1.15rem */
     font-weight: 600;
     color: var(--text-primary);
 }
-.payment-section-body {
-    padding: 28px 32px;
-}
-
-/* Payment instruction banner */
-.payment-instruction {
-    background: var(--gold-bg);
-    border: 1px solid var(--border-strong);
-    padding: 16px 20px;
-    margin-bottom: 24px;
-    display: flex;
-    align-items: flex-start;
-    gap: 12px;
-}
-.payment-instruction-icon {
-    color: var(--gold);
-    flex-shrink: 0;
-    margin-top: 1px;
-}
 .payment-instruction-text {
-    font-size: 0.82rem;
+    font-size: 1rem; /* Increased from 0.82rem */
     color: var(--text-secondary);
-    line-height: 1.7;
+    line-height: 1.6;
 }
-.payment-instruction-text strong { color: var(--text-primary); font-weight: 600; }
 .payment-instruction-number {
     font-family: 'Cormorant Garamond', serif;
-    font-size: 1.4rem;
+    font-size: 1.75rem; /* Increased from 1.4rem */
     font-weight: 600;
     color: var(--gold);
     display: block;
     margin-top: 4px;
-    letter-spacing: 0.04em;
+    letter-spacing: 0.02em;
 }
 
-/* Payment method tabs */
+/* ── Payment method tabs ── */
 .payment-methods {
-    display: flex;
-    gap: 8px;
+    display: grid;
+    grid-template-columns: repeat(3, 1fr); /* Puts them neatly side-by-side */
+    gap: 16px;
     margin-bottom: 24px;
 }
+
+.payment-method-label {
+    display: block;
+    cursor: pointer;
+    position: relative;
+}
+
+/* CRITICAL FIX: Completely hide the default browser radio dot */
+.payment-method-label input[type="radio"] {
+    position: absolute;
+    opacity: 0;
+    width: 0;
+    height: 0;
+    pointer-events: none;
+}
+
+/* The actual box that the user clicks */
 .payment-method-tab {
-    flex: 1;
-    padding: 12px 16px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 16px 12px;
     border: 1.5px solid var(--border-strong);
     background: var(--bg-primary);
     color: var(--text-secondary);
     font-family: 'Jost', sans-serif;
-    font-size: 0.72rem;
+    font-size: 0.875rem;
     font-weight: 600;
-    letter-spacing: 0.14em;
+    letter-spacing: 0.1em;
     text-transform: uppercase;
-    cursor: pointer;
-    text-align: center;
-    transition: border-color 0.22s, color 0.22s, background 0.22s;
-    position: relative;
-    border-radius: 0;
+    border-radius: 6px;
+    transition: all 0.25s ease;
+    user-select: none;
 }
 
-/* Selected method via hidden radio */
-.payment-method-label { flex: 1; }
-.payment-method-label input { position: absolute; opacity: 0; width: 0; height: 0; }
-.payment-method-label input:checked ~ .payment-method-tab {
+/* Subtle hover effect */
+.payment-method-label:hover .payment-method-tab {
+    border-color: var(--gold);
+}
+
+/* Selected state (Turns the box gold/red when clicked) */
+.payment-method-label input[type="radio"]:checked ~ .payment-method-tab {
     border-color: var(--gold);
     color: var(--gold);
     background: var(--gold-bg);
 }
 
 /* Fields */
-.pay-grid-2 {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 16px;
-    margin-bottom: 24px;
-}
-.pay-field {}
 .pay-label {
     display: block;
-    font-size: 0.62rem;
+    font-size: 0.875rem; /* Increased from 0.62rem */
     font-weight: 600;
-    letter-spacing: 0.18em;
+    letter-spacing: 0.1em;
     text-transform: uppercase;
     color: var(--text-secondary);
     margin-bottom: 8px;
@@ -326,93 +328,50 @@
 .pay-input,
 .pay-select {
     width: 100%;
-    padding: 11px 14px;
+    padding: 12px 16px;
     background: var(--bg-primary);
     border: 1px solid var(--border-strong);
     color: var(--text-primary);
     font-family: 'Jost', sans-serif;
-    font-size: 0.88rem;
-    font-weight: 300;
+    font-size: 1rem; /* Increased from 0.88rem - STOPS IOS ZOOM BUG */
+    font-weight: 400; /* Increased from 300 to match cleaner inputs */
     outline: none;
     appearance: none;
     -webkit-appearance: none;
     border-radius: 0;
     transition: border-color 0.22s, background 0.4s, color 0.4s, box-shadow 0.22s;
 }
-.pay-input::placeholder { color: var(--text-muted); opacity: 0.7; }
-.pay-input:focus,
-.pay-select:focus {
-    border-color: var(--gold);
-    box-shadow: 0 0 0 3px var(--gold-bg);
-}
-.pay-select-wrap { position: relative; }
-.pay-select-wrap::after {
-    content: '';
-    position: absolute;
-    right: 14px; top: 50%;
-    transform: translateY(-50%);
-    border-left: 4px solid transparent;
-    border-right: 4px solid transparent;
-    border-top: 5px solid var(--text-muted);
-    pointer-events: none;
-}
-.pay-select { padding-right: 36px; cursor: pointer; }
 .pay-hint {
-    font-size: 0.66rem;
+    font-size: 0.85rem; /* Increased from 0.66rem */
     color: var(--text-muted);
-    margin-top: 5px;
-    letter-spacing: 0.04em;
+    margin-top: 6px;
+    letter-spacing: 0.02em;
 }
 
 /* Order summary strip */
-.order-summary {
-    background: var(--bg-secondary);
-    border: 1px solid var(--border);
-    padding: 20px 24px;
-    margin-bottom: 24px;
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    flex-wrap: wrap;
-    gap: 12px;
-    transition: background 0.4s;
-}
 .order-summary-label {
-    font-size: 0.62rem;
+    font-size: 0.875rem; /* Increased from 0.62rem */
     font-weight: 600;
-    letter-spacing: 0.2em;
+    letter-spacing: 0.1em;
     text-transform: uppercase;
     color: var(--text-muted);
 }
 .order-summary-note {
-    font-size: 0.78rem;
+    font-size: 1rem; /* Increased from 0.78rem */
     color: var(--text-secondary);
-    margin-top: 2px;
-}
-.order-summary-amount {
-    font-family: 'Cormorant Garamond', serif;
-    font-size: 2rem;
-    font-weight: 600;
-    color: var(--text-primary);
-    line-height: 1;
-}
-.order-summary-amount sup {
-    font-size: 0.9rem;
-    font-weight: 400;
-    color: var(--gold);
-    margin-right: 3px;
+    margin-top: 4px;
 }
 
 /* Submit button */
 .pay-submit {
     width: 100%;
-    padding: 16px 32px;
+    padding: 18px 32px;
     background: var(--btn-fill-bg);
     color: var(--btn-fill-color);
     font-family: 'Jost', sans-serif;
-    font-size: 0.75rem;
+    font-size: 1rem; /* Increased from 0.75rem */
     font-weight: 600;
-    letter-spacing: 0.22em;
+    letter-spacing: 0.15em;
     text-transform: uppercase;
     border: none;
     cursor: pointer;
@@ -422,21 +381,15 @@
     gap: 10px;
     transition: background 0.25s, transform 0.2s;
 }
-.pay-submit:hover {
-    background: var(--btn-fill-hover);
-    transform: translateY(-1px);
-}
-
-/* Secure note */
 .secure-note {
     display: flex;
     align-items: center;
     justify-content: center;
-    gap: 7px;
-    margin-top: 14px;
-    font-size: 0.66rem;
+    gap: 8px;
+    margin-top: 16px;
+    font-size: 0.85rem; /* Increased from 0.66rem */
     color: var(--text-muted);
-    letter-spacing: 0.1em;
+    letter-spacing: 0.05em;
 }
 
 /* Responsive */
@@ -448,6 +401,9 @@
     .payment-section-body { padding: 20px; }
     .payment-section-header { padding: 16px 20px; }
     .package-card { padding: 24px 20px; }
+    .payment-methods {
+        grid-template-columns: 1fr; /* Forces them to stack vertically on small screens */
+    }
 }
 </style>
 
@@ -543,21 +499,21 @@
 <div class="payment-methods">
     @if($settings?->bkash_number)
         <label class="payment-method-label">
-            <input type="radio" name="payment_method" value="bKash" checked>
+            <input type="radio" name="payment_method" value="bKash" required>
             <div class="payment-method-tab">bKash</div>
         </label>
     @endif
 
     @if($settings?->nagad_number)
         <label class="payment-method-label">
-            <input type="radio" name="payment_method" value="Nagad">
+            <input type="radio" name="payment_method" value="Nagad" required>
             <div class="payment-method-tab">Nagad</div>
         </label>
     @endif
 
     @if($settings?->rocket_number)
         <label class="payment-method-label">
-            <input type="radio" name="payment_method" value="Rocket">
+            <input type="radio" name="payment_method" value="Rocket" required>
             <div class="payment-method-tab">Rocket</div>
         </label>
     @endif
