@@ -4,7 +4,7 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>{{ $title ?? 'Verified Talent Directory' }} | AgencyMarket</title>
+    <title>{{ $title ?? 'Verified Talent Directory' }} | Dhaka Model Agency</title>
 
     {{-- Fonts: Cormorant Garamond (luxury editorial display) + Jost (refined body) --}}
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -416,7 +416,7 @@
 
         .nav-drop-panel {
             position: absolute;
-            top: calc(100% + 8px);
+            top: 100%;              /* ← Remove the gap */
             left: 50%;
             transform: translateX(-50%) translateY(8px);
             background: var(--bg-surface);
@@ -427,8 +427,22 @@
             opacity: 0;
             pointer-events: none;
             transition: opacity 0.2s, transform 0.2s;
+            
+            /* ── Bridge: fills the invisible gap so mouse doesn't lose hover ── */
+            padding-top: 8px;       /* ← Replaces the top gap with internal padding */
+            margin-top: 0;
         }
 
+        /* ── Invisible bridge between button and panel ── */
+        .nav-dropdown::after {
+            content: '';
+            position: absolute;
+            top: 100%;
+            left: 0;
+            right: 0;
+            height: 12px;   /* Covers any remaining gap */
+            background: transparent;
+        }
         .nav-dropdown:hover .nav-drop-panel {
             opacity: 1;
             pointer-events: all;
@@ -970,7 +984,8 @@
             left: 50%;
             transform: translateX(-50%) translateY(10px);
             padding: 0;
-            /* Let internal elements handle padding */
+            padding-top: 8px;    /* ← Add this */
+            margin-top: 0;       /* ← Ensure no margin gap */
             cursor: default;
             overflow: hidden;
             border-radius: 4px;
@@ -1141,7 +1156,7 @@
                 // Fetch the settings (assuming you have a Setting model holding the first row)
                 // $settings = \App\Models\Setting::first();
 
-                $siteName = $settings->site_name ?? 'AgencyMarket';
+                $siteName = $settings->site_name ?? 'Dhaka Model Agency';
                 $siteSub = $settings->site_description ?? 'Verified Talent Directory';
                 $logo = $settings->logo ? asset('storage/' . $settings->logo) : null;
             @endphp
@@ -1305,7 +1320,7 @@
                 // Fallback text if no editorials exist yet
                 if ($tickerEditorials->isEmpty()) {
                     $tickerEditorials = collect([
-                        (object) ['title' => 'Welcome to AgencyMarket'],
+                        (object) ['title' => 'Welcome to Dhaka Model Agency'],
                         (object) ['title' => 'New Casting Calls Posted Daily'],
                         (object) ['title' => 'Models & Actors — Create Your Free Verified Profile']
                     ]);
@@ -1438,7 +1453,7 @@
 
         <div class="footer-bottom">
             <span class="footer-copy">
-                &copy; {{ date('Y') }} AgencyMarket. All rights reserved. &nbsp;&middot;&nbsp; Dhaka, Bangladesh
+                &copy; {{ date('Y') }} Dhaka Model Agency. All rights reserved. &nbsp;&middot;&nbsp; Dhaka, Bangladesh
             </span>
 
             <span class="footer-copy" style="font-size: 0.875rem;">

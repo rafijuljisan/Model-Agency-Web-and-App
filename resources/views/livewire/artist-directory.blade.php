@@ -810,9 +810,10 @@
                         </div>
 
                         <div class="artist-card-media">
-                            @if($artist->hasMedia('portfolio'))
-                                <img src="{{ $artist->getFirstMediaUrl('portfolio') }}" alt="{{ $artist->name }}"
-                                    loading="lazy">
+                            @if($artist->hasMedia('avatar'))
+                                <img src="{{ $artist->getFirstMediaUrl('avatar') }}" alt="{{ $artist->name }}" loading="lazy">
+                            @elseif($artist->hasMedia('portfolio'))
+                                <img src="{{ $artist->getFirstMediaUrl('portfolio') }}" alt="{{ $artist->name }}" loading="lazy">
                             @else
                                 <div class="artist-card-placeholder">
                                     <svg width="36" height="36" viewBox="0 0 24 24" fill="none" stroke="currentColor"

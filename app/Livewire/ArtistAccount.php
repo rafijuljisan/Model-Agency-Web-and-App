@@ -296,6 +296,7 @@ class ArtistAccount extends Component
             'email' => "required|email|max:255|unique:users,email,{$userId}",
             'phone' => "nullable|string|max:20|unique:users,phone,{$userId}",
             'categories' => 'required|array|min:1',
+            'categories.*' => 'string',
             'gender' => 'nullable|string',
             'date_of_birth' => 'nullable|date',
             'height_cm' => 'nullable|numeric|min:50|max:300',

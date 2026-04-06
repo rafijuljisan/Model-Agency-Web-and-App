@@ -839,12 +839,10 @@
                         </div>
 
                         <div class="talent-card-media">
-                            @if($artist->hasMedia('portfolio'))
-                                <img
-                                    src="{{ $artist->getFirstMediaUrl('portfolio') }}"
-                                    alt="{{ $artist->name }}"
-                                    loading="lazy"
-                                >
+                            @if($artist->hasMedia('avatar'))
+                                <img src="{{ $artist->getFirstMediaUrl('avatar') }}" alt="{{ $artist->name }}" loading="lazy">
+                            @elseif($artist->hasMedia('portfolio'))
+                                <img src="{{ $artist->getFirstMediaUrl('portfolio') }}" alt="{{ $artist->name }}" loading="lazy">
                             @else
                                 <div class="talent-card-placeholder">
                                     <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1" aria-hidden="true">

@@ -570,6 +570,82 @@
     .lightbox-close { top: 16px; right: 16px; width: 36px; height: 36px; }
     .lightbox-img { max-width: 95vw; max-height: 90vh; }
 }
+/* ── AGENCY CONTACT MODAL ── */
+.agency-modal-overlay {
+    position: fixed;
+    inset: 0;
+    z-index: 99999;
+    background: rgba(8, 6, 4, 0.85);
+    backdrop-filter: blur(5px);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 20px;
+}
+.agency-modal-card {
+    background: var(--bg-surface);
+    border: 1px solid var(--border-strong);
+    padding: 40px;
+    max-width: 460px;
+    width: 100%;
+    position: relative;
+    text-align: center;
+    box-shadow: 0 20px 50px rgba(0,0,0,0.5);
+    animation: modal-pop 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+}
+@keyframes modal-pop {
+    0% { opacity: 0; transform: scale(0.95) translateY(10px); }
+    100% { opacity: 1; transform: scale(1) translateY(0); }
+}
+.agency-modal-close {
+    position: absolute;
+    top: 16px; right: 16px;
+    background: none; border: none;
+    color: var(--text-muted); cursor: pointer;
+    transition: color 0.2s;
+    display: flex; align-items: center; justify-content: center;
+}
+.agency-modal-close:hover { color: var(--gold); }
+.agency-modal-icon {
+    width: 48px; height: 48px;
+    margin: 0 auto 20px;
+    color: var(--gold);
+    background: var(--gold-bg);
+    border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+}
+.agency-modal-title {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 2rem;
+    color: var(--text-primary);
+    margin-bottom: 12px;
+    line-height: 1.2;
+}
+.agency-modal-desc {
+    font-size: 0.95rem;
+    color: var(--text-secondary);
+    margin-bottom: 24px;
+    line-height: 1.6;
+}
+.agency-modal-contact-box {
+    background: var(--bg-secondary);
+    border: 1px solid var(--border);
+    padding: 20px;
+    margin-bottom: 24px;
+}
+.agency-modal-contact-item {
+    font-size: 1.1rem;
+    color: var(--text-primary);
+    margin-bottom: 12px;
+    font-weight: 500;
+}
+.agency-modal-contact-item:last-child { margin-bottom: 0; }
+.agency-modal-contact-item a { 
+    color: var(--text-primary); 
+    text-decoration: none; 
+    transition: color 0.2s; 
+}
+.agency-modal-contact-item a:hover { color: var(--gold); }
 </style>
 
 {{-- ══════════════════════════════════════
@@ -782,27 +858,25 @@
 
                 @if($showContact)
                     <div class="contact-reveal">
-                        <div class="contact-reveal-label">Contact Information</div>
+                        <div class="contact-reveal-label">Artist Private Info</div>
                         <div class="contact-reveal-phone">{{ $artist->phone ?? 'Not provided' }}</div>
                         <div class="contact-reveal-email">{{ $artist->email }}</div>
+                        <div style="font-size: 0.75rem; color: #dc2626; margin-top: 8px; text-transform: uppercase; font-weight: 600;">
+                            Visible to Admin Only
+                        </div>
                     </div>
                 @else
                     <button
                         wire:click="revealContact"
                         class="btn-fill"
                         style="width:100%; justify-content:center;"
-                        aria-label="Unlock contact details"
+                        aria-label="Contact Talent"
                     >
-                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" aria-hidden="true">
+                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" aria-hidden="true" style="margin-right: 6px;">
                             <rect x="3" y="11" width="18" height="11" rx="1"/><path d="M7 11V7a5 5 0 0110 0v4"/>
                         </svg>
-                        Reveal Contact Info
+                        Contact Talent
                     </button>
-                    @guest
-                        <p class="contact-guest-note">
-                            You must be <a href="/login">signed in</a> as a client to view contact details.
-                        </p>
-                    @endguest
                 @endif
             </div>
 
@@ -848,5 +922,52 @@
         </div>
     </div>
 </div>
+{{-- ── AGENCY CONTACT MODAL ── --}}
+    @if($showAgencyModal)
+        <div class="agency-modal-overlay">
+            <div class="agency-modal-card">
+                <button class="agency-modal-close" wire:click="closeAgencyModal" aria-label="Close modal">
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line>
+                    </svg>
+                </button>
 
+                <div class="agency-modal-icon">
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7">
+                        <path d="M22 16.92v3a2 2 0 01-2.18 2 19.79 19.79 0 01-8.63-3.07A19.5 19.5 0 013.07 9.81 19.79 19.79 0 01.05 2.18 2 2 0 012 0h3a2 2 0 012 1.72c.127.96.361 1.903.7 2.81a2 2 0 01-.45 2.11L6.09 7.91a16 16 0 006 6l1.27-1.27a2 2 0 012.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0122 14.92z"/>
+                    </svg>
+                </div>
+
+                <h3 class="agency-modal-title">Book This Talent</h3>
+                <p class="agency-modal-desc">
+                    To maintain privacy and ensure secure bookings, all inquiries for <strong>{{ $artist->name }}</strong> are handled directly through our agency. Please contact us below to discuss rates and availability.
+                </p>
+
+                <div class="agency-modal-contact-box">
+                    @if($settings?->contact_phone)
+                        <div class="agency-modal-contact-item">
+                            <a href="tel:{{ $settings->contact_phone }}">{{ $settings->contact_phone }}</a>
+                        </div>
+                    @endif
+                    
+                    @if($settings?->contact_email)
+                        <div class="agency-modal-contact-item">
+                            <a href="mailto:{{ $settings->contact_email }}">{{ $settings->contact_email }}</a>
+                        </div>
+                    @endif
+
+                    @if(!$settings?->contact_phone && !$settings?->contact_email)
+                        <div class="agency-modal-contact-item" style="color: var(--text-muted); font-size: 0.9rem;">
+                            Contact details are currently unavailable. Please check the Contact page.
+                        </div>
+                    @endif
+                </div>
+
+                <button class="btn-outline" wire:click="closeAgencyModal" style="width: 100%; justify-content: center;">
+                    Close
+                </button>
+            </div>
+        </div>
+    @endif
+    
 </div>

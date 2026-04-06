@@ -48,7 +48,7 @@ class ArtistDirectory extends Component
     public function render()
     {
         $query = User::role('Verified-Artist')
-            ->with(['profile', 'media'])
+            ->with(['profile', 'media' => fn($q) => $q->whereIn('collection_name', ['avatar', 'portfolio'])])
             ->where('verification_status', 'verified')          // MUST be verified
             ->where('academic_verification_status', 'verified') // MUST be verified
             ->whereHas('subscriptions', fn($q) => $q->where('status', 'active'));

@@ -17,14 +17,13 @@ use App\Livewire\ArtistProfile;
 // 1. The Homepage
 Route::get('/', function () {
     $featuredArtists = User::role('Verified-Artist')
-        ->with(['profile', 'media'])
-        
-        // ── ADD THESE 3 LINES TO BULLETPROOF YOUR HOMEPAGE ──
-        ->where('verification_status', 'verified')          // Must have approved NID
-        ->where('academic_verification_status', 'verified') // Must have approved Certificate
-        ->whereHas('profile')                               // Must have completed the Profile step
-        // ────────────────────────────────────────────────────
-        
+        ->with([
+            'profile',
+            'media' => fn($q) => $q->whereIn('collection_name', ['avatar', 'portfolio']),
+        ])
+        ->where('verification_status', 'verified')
+        ->where('academic_verification_status', 'verified')
+        ->whereHas('profile')
         ->whereHas('subscriptions', function ($q) {
             $q->where('status', 'active');
         })
