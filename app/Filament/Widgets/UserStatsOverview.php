@@ -6,6 +6,10 @@ use App\Models\Subscription;
 use App\Models\User;
 use Filament\Widgets\StatsOverviewWidget as BaseWidget;
 use Filament\Widgets\StatsOverviewWidget\Stat;
+use App\Models\CastingCall; // adjust namespace if needed
+use App\Models\Editorial;
+use App\Models\Video;
+
 
 class UserStatsOverview extends BaseWidget
 {
@@ -22,8 +26,8 @@ class UserStatsOverview extends BaseWidget
 
         // 3. Count how many people uploaded NIDs but aren't verified yet
         $pendingCount = User::whereHas('media', function ($query) {
-                $query->where('collection_name', 'verification_documents');
-            })
+            $query->where('collection_name', 'verification_documents');
+        })
             ->where('is_verified', false)
             ->count();
 
@@ -44,6 +48,37 @@ class UserStatsOverview extends BaseWidget
                 ->descriptionIcon('heroicon-m-banknotes')
                 ->color('primary')
                 ->chart([1000, 2400, 1200, 3600, 4800, 6000]),
+            // In UserStatsOverview.php — add these inside getStats()
+
+            Stat::make('Total Members', User::count())
+                ->description('All registered accounts')
+                ->descriptionIcon('heroicon-m-users')
+                ->color('gray'),
+
+            Stat::make('Active Subscriptions', Subscription::where('status', 'active')->count())
+                ->description('Currently paying members')
+                ->descriptionIcon('heroicon-m-credit-card')
+                ->color('success'),
+
+            Stat::make('Expiring Soon', Subscription::where('status', 'active')
+                ->where('expires_at', '<=', now()->addDays(7))->count())
+                ->description('Expire within 7 days')
+                ->descriptionIcon('heroicon-m-exclamation-triangle')
+                ->color('danger'),
+                            Stat::make('Open Casting Calls', CastingCall::where('status', 'Open')->where('is_active', true)->count())
+                ->description('Live on the public board')
+                ->descriptionIcon('heroicon-m-megaphone')
+                ->color('success'),
+
+            Stat::make('Published Editorials', Editorial::where('is_published', true)->count())
+                ->description('Blog & news posts')
+                ->descriptionIcon('heroicon-m-newspaper')
+                ->color('primary'),
+
+            Stat::make('Published Videos', Video::where('is_active', true)->count())
+                ->description('In the video gallery')
+                ->descriptionIcon('heroicon-m-video-camera')
+                ->color('info'),
         ];
     }
 }

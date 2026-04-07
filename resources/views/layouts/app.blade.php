@@ -1510,7 +1510,7 @@
 
             {{-- Brand column --}}
             <div>
-                <div class="footer-brand-name">Agency<em>Market</em></div>
+                <div class="footer-brand-name">Dhaka Model<em>Agency</em></div>
                 <div class="footer-brand-sub">Verified Talent Directory</div>
                 <p class="footer-brand-desc">
                     Bangladesh's leading creative talent platform — connecting models, actors, photographers, content
