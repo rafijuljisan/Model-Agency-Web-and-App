@@ -743,6 +743,12 @@
             <h1 class="ap-name">{{ $artist->name }}</h1>
 
             <div class="ap-tags">
+                {{-- NEW: Member ID Badge --}}
+                @if($artist->member_id)
+                    <span class="ap-tag" style="color: var(--text-primary); background: var(--bg-secondary); border-color: var(--border-strong);">
+                        ID: {{ $artist->member_id }}
+                    </span>
+                @endif
                 @if(!empty($artist->profile?->categories))
                     @foreach(array_slice($artist->profile->categories, 0, 3) as $cat)
                         <span class="ap-tag">{{ $cat }}</span>

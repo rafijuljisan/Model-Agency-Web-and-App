@@ -940,7 +940,14 @@
             @elseif($currentStep === 'profile')
                 {{-- Page header --}}
                 <div class="form-page-header anim-fade-up">
-                    <div class="form-page-eyebrow">Your Profile</div>
+                    <div class="form-page-eyebrow" style="display: flex; justify-content: space-between; width: 100%;">
+                        <span>Your Profile</span>
+                        @if(Auth::user()->member_id)
+                            <span style="color: var(--text-muted); text-transform: none; letter-spacing: normal;">
+                                Member ID: <strong style="color: var(--text-primary);">{{ Auth::user()->member_id }}</strong>
+                            </span>
+                        @endif
+                    </div>
                     <h1 class="form-page-title">Build Your <strong>Talent Profile</strong></h1>
                     <p class="form-page-sub">Complete your profile to appear in the verified talent directory and attract
                         clients.</p>

@@ -39,6 +39,12 @@ class UserForm
                             ->columnSpanFull()
                             ->helperText('Square image recommended. Max 3MB.'),
 
+                        TextInput::make('member_id')
+                            ->label('Member ID')
+                            ->disabled() // Prevent manual editing to maintain sequential integrity
+                            ->dehydrated(false) // Prevents saving the disabled field
+                            ->helperText('Auto-generated (e.g., DMA-261001)'),
+                            
                         TextInput::make('name')
                             ->required()
                             ->maxLength(255),

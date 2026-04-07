@@ -25,6 +25,35 @@ class User extends Authenticatable implements HasMedia, FilamentUser
      */
     protected $guarded = [];
 
+    // 2. Add the boot method to auto-generate the ID
+    protected static function boot()
+    {
+        parent::boot();
+
+        static::creating(function ($user) {
+            if (empty($user->member_id)) {
+                $year = date('y'); // Gets the last two digits of the year (e.g., '26')
+                $prefix = 'DMA-' . $year;
+
+                // Find the latest user created this year
+                $lastUser = self::where('member_id', 'like', $prefix . '%')
+                                ->orderBy('member_id', 'desc')
+                                ->first();
+
+                if ($lastUser) {
+                    // Extract the last 4 digits and increment by 1
+                    $lastSerial = (int) substr($lastUser->member_id, -4);
+                    $newSerial = $lastSerial + 1;
+                } else {
+                    // If no users exist for this year, start at 1001
+                    $newSerial = 1001;
+                }
+
+                // Format: DMA-261001
+                $user->member_id = $prefix . str_pad($newSerial, 4, '0', STR_PAD_LEFT);
+            }
+        });
+    }
     /**
      * The attributes that should be hidden for serialization.
      *
