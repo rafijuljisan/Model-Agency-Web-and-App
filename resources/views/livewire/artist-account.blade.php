@@ -1243,6 +1243,173 @@
                         </div>
                     </div>
 
+                    {{-- ── Section: Measurements & Appearance ── --}}
+                    <div class="form-section anim-fade-up anim-d2">
+                        <div class="form-section-header">
+                            <div class="form-section-icon">
+                                <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7">
+                                    <path d="M8 3v18M5 6h3M5 10h3M5 14h3M5 18h3M16 3l4 4-4 4M20 7H8"/>
+                                </svg>
+                            </div>
+                            <div class="form-section-title">Measurements & Appearance</div>
+                            <div class="form-section-desc">For casting accuracy</div>
+                        </div>
+                        <div class="form-section-body">
+                            <div class="form-grid-2">
+
+                                <div class="form-field">
+                                    <label class="form-field-label">Height (cm)</label>
+                                    <input type="number" class="form-input" wire:model.defer="height_cm" placeholder="e.g. 170">
+                                </div>
+
+                                <div class="form-field">
+                                    <label class="form-field-label">Weight (kg)</label>
+                                    <input type="number" class="form-input" wire:model.defer="weight_kg" placeholder="e.g. 65">
+                                </div>
+
+                                <div class="form-field">
+                                    <label class="form-field-label">Chest / Bust (inches)</label>
+                                    <input type="number" class="form-input" wire:model.defer="chest_bust_inches" placeholder="e.g. 36">
+                                </div>
+
+                                <div class="form-field">
+                                    <label class="form-field-label">Waist (inches)</label>
+                                    <input type="number" class="form-input" wire:model.defer="waist_inches" placeholder="e.g. 30">
+                                </div>
+
+                                <div class="form-field">
+                                    <label class="form-field-label">Hips (inches)</label>
+                                    <input type="number" class="form-input" wire:model.defer="hips_inches" placeholder="e.g. 38">
+                                </div>
+
+                                <div class="form-field">
+                                    <label class="form-field-label">Shoulder (inches) — Male</label>
+                                    <input type="number" class="form-input" wire:model.defer="shoulder_inches" placeholder="e.g. 18">
+                                </div>
+
+                                <div class="form-field">
+                                    <label class="form-field-label">Shoe Size</label>
+                                    <input type="text" class="form-input" wire:model.defer="shoe_size" placeholder="e.g. EU 42 / UK 8">
+                                </div>
+
+                                <div class="form-field">
+                                    <label class="form-field-label">Dress Size</label>
+                                    <div class="form-select-wrap">
+                                        <select class="form-select" wire:model.defer="dress_size">
+                                            <option value="">Select size</option>
+                                            <option value="XS">XS</option>
+                                            <option value="S">S</option>
+                                            <option value="M">M</option>
+                                            <option value="L">L</option>
+                                            <option value="XL">XL</option>
+                                            <option value="XXL">XXL</option>
+                                        </select>
+                                    </div>
+                                </div>
+
+                                <div class="form-field">
+                                    <label class="form-field-label">Skin Tone</label>
+                                    <div class="form-select-wrap">
+                                        <select class="form-select" wire:model.defer="skin_tone">
+                                            <option value="">Select</option>
+                                            <option value="Fair">Fair</option>
+                                            <option value="Medium">Medium</option>
+                                            <option value="Dusky">Dusky</option>
+                                            <option value="Deep">Deep</option>
+                                        </select>
+                                    </div>
+                                </div>
+
+                                <div class="form-field">
+                                    <label class="form-field-label">Eye Color</label>
+                                    <input type="text" class="form-input" wire:model.defer="eye_color" placeholder="e.g. Brown">
+                                </div>
+
+                                <div class="form-field">
+                                    <label class="form-field-label">Hair Color</label>
+                                    <input type="text" class="form-input" wire:model.defer="hair_color" placeholder="e.g. Black">
+                                </div>
+
+                                <div class="form-field">
+                                    <label class="form-field-label">Hair Length</label>
+                                    <div class="form-select-wrap">
+                                        <select class="form-select" wire:model.defer="hair_length">
+                                            <option value="">Select</option>
+                                            <option value="Bald">Bald</option>
+                                            <option value="Short">Short</option>
+                                            <option value="Medium">Medium</option>
+                                            <option value="Long">Long</option>
+                                        </select>
+                                    </div>
+                                </div>
+
+                            </div>
+                        </div>
+                    </div>
+
+                    {{-- ── Section: Experience & Availability ── --}}
+                    <div class="form-section anim-fade-up anim-d2">
+                        <div class="form-section-header">
+                            <div class="form-section-icon">
+                                <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7">
+                                    <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/>
+                                </svg>
+                            </div>
+                            <div class="form-section-title">Experience & Availability</div>
+                        </div>
+                        <div class="form-section-body">
+                            <div class="form-grid-2">
+
+                                <div class="form-field">
+                                    <label class="form-field-label">Experience Level</label>
+                                    <div class="form-select-wrap">
+                                        <select class="form-select" wire:model.defer="experience_level">
+                                            <option value="">Select level</option>
+                                            <option value="Fresher">Fresher (No Experience)</option>
+                                            <option value="1-3 Years">1–3 Years</option>
+                                            <option value="Professional">Professional (3+ Years)</option>
+                                        </select>
+                                    </div>
+                                </div>
+
+                                <div class="form-field">
+                                    <label class="form-field-label">Availability</label>
+                                    <div class="form-select-wrap">
+                                        <select class="form-select" wire:model.defer="availability">
+                                            <option value="">Select</option>
+                                            <option value="Full-time">Full-time</option>
+                                            <option value="Part-time">Part-time</option>
+                                            <option value="Weekends">Weekends Only</option>
+                                            <option value="Flexible">Flexible</option>
+                                        </select>
+                                    </div>
+                                </div>
+
+                                <div class="form-field form-grid-full">
+                                    <label class="form-field-label">Special Skills</label>
+                                    <input type="text" class="form-input" wire:model.defer="special_skills_input"
+                                        placeholder="e.g. Driving, Swimming, Dancing, Horse Riding">
+                                    <div class="form-hint">Separate skills with commas</div>
+                                </div>
+
+                                <div class="form-field form-grid-full">
+                                    <label class="form-field-label">Intro Video / Showreel URL</label>
+                                    <input type="url" class="form-input" wire:model.defer="showreel_url"
+                                        placeholder="https://youtube.com/watch?v=...">
+                                    <div class="form-hint">YouTube or Vimeo link to your demo reel</div>
+                                </div>
+
+                                <div class="form-field form-grid-full">
+                                    <label style="display:flex; align-items:center; gap:12px; cursor:pointer;">
+                                        <input type="checkbox" wire:model.defer="willing_to_travel"
+                                            style="width:18px; height:18px; accent-color:var(--gold); cursor:pointer;">
+                                        <span class="form-field-label" style="margin:0;">Willing to Travel for Projects</span>
+                                    </label>
+                                </div>
+
+                            </div>
+                        </div>
+                    </div>
                     {{-- ── Section 02: Location ── --}}
                     <div class="form-section anim-fade-up anim-d2">
                         <div class="form-section-header">
@@ -1318,38 +1485,67 @@
                         <div class="form-section-body">
                             <div class="form-grid-2">
 
+                                {{-- Facebook --}}
                                 <div class="form-field">
                                     <label class="form-field-label" for="f-facebook">
-                                        <svg width="13" height="13" viewBox="0 0 24 24" fill="currentColor"
-                                            style="color:var(--gold)">
+                                        <svg width="13" height="13" viewBox="0 0 24 24" fill="currentColor" style="color:var(--gold)">
                                             <path d="M18 2h-3a5 5 0 00-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 011-1h3z" />
                                         </svg>
-                                        Facebook
+                                        Facebook URL
                                     </label>
                                     <input id="f-facebook" type="url" class="form-input" wire:model.defer="facebook_url"
                                         placeholder="https://facebook.com/yourpage">
                                 </div>
 
                                 <div class="form-field">
+                                    <label class="form-field-label" for="f-fb-followers">Facebook Followers</label>
+                                    <input id="f-fb-followers" type="number" class="form-input" wire:model.defer="facebook_followers" 
+                                        placeholder="e.g. 10000" min="0">
+                                </div>
+
+                                {{-- Instagram --}}
+                                <div class="form-field">
                                     <label class="form-field-label" for="f-instagram">
-                                        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor"
-                                            stroke-width="2" style="color:var(--gold)">
+                                        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="color:var(--gold)">
                                             <rect x="2" y="2" width="20" height="20" rx="5" />
                                             <path d="M16 11.37A4 4 0 1112.63 8 4 4 0 0116 11.37z" />
                                             <line x1="17.5" y1="6.5" x2="17.51" y2="6.5" />
                                         </svg>
-                                        Instagram
+                                        Instagram URL
                                     </label>
                                     <input id="f-instagram" type="url" class="form-input" wire:model.defer="instagram_url"
                                         placeholder="https://instagram.com/yourusername">
                                 </div>
 
                                 <div class="form-field">
+                                    <label class="form-field-label" for="f-ig-followers">Instagram Followers</label>
+                                    <input id="f-ig-followers" type="number" class="form-input" wire:model.defer="instagram_followers" 
+                                        placeholder="e.g. 25000" min="0">
+                                </div>
+
+                                {{-- TikTok --}}
+                                <div class="form-field">
+                                    <label class="form-field-label" for="f-tiktok">
+                                        <svg width="13" height="13" viewBox="0 0 24 24" fill="currentColor" style="color:var(--gold)">
+                                            <path d="M19.59 6.69a4.83 4.83 0 01-3.77-4.25V2h-3.45v13.67a2.89 2.89 0 01-2.88 2.5 2.89 2.89 0 01-2.89-2.89 2.89 2.89 0 012.89-2.89c.28 0 .54.04.79.1V9.01a6.34 6.34 0 00-.79-.05 6.34 6.34 0 00-6.34 6.34 6.34 6.34 0 006.34 6.34 6.34 6.34 0 006.33-6.34V8.69a8.17 8.17 0 004.78 1.52V6.76a4.85 4.85 0 01-1.01-.07z" />
+                                        </svg>
+                                        TikTok URL
+                                    </label>
+                                    <input id="f-tiktok" type="url" class="form-input" wire:model.defer="tiktok_url"
+                                        placeholder="https://tiktok.com/@yourusername">
+                                </div>
+
+                                <div class="form-field">
+                                    <label class="form-field-label" for="f-tk-followers">TikTok Followers</label>
+                                    <input id="f-tk-followers" type="number" class="form-input" wire:model.defer="tiktok_followers" 
+                                        placeholder="e.g. 50000" min="0">
+                                </div>
+
+                                {{-- YouTube & LinkedIn --}}
+                                <div class="form-field">
                                     <label class="form-field-label" for="f-youtube">
-                                        <svg width="13" height="13" viewBox="0 0 24 24" fill="currentColor"
-                                            style="color:var(--gold)">
-                                            <path
-                                                d="M22.54 6.42a2.78 2.78 0 00-1.95-1.96C18.88 4 12 4 12 4s-6.88 0-8.59.46A2.78 2.78 0 001.46 6.42 29 29 0 001 12a29 29 0 00.46 5.58 2.78 2.78 0 001.95 1.96C5.12 20 12 20 12 20s6.88 0 8.59-.46a2.78 2.78 0 001.95-1.96A29 29 0 0023 12a29 29 0 00-.46-5.58z" />
+                                        <svg width="13" height="13" viewBox="0 0 24 24" fill="currentColor" style="color:var(--gold)">
+                                            <path d="M22.54 6.42a2.78 2.78 0 00-1.95-1.96C18.88 4 12 4 12 4s-6.88 0-8.59.46A2.78 2.78 0 001.46 6.42 29 29 0 001 12a29 29 0 00.46 5.58 2.78 2.78 0 001.95 1.96C5.12 20 12 20 12 20s6.88 0 8.59-.46a2.78 2.78 0 001.95-1.96A29 29 0 0023 12a29 29 0 00-.46-5.58z" />
                                             <polygon points="9.75 15.02 15.5 12 9.75 8.98 9.75 15.02" fill="white" />
                                         </svg>
                                         YouTube
@@ -1359,24 +1555,9 @@
                                 </div>
 
                                 <div class="form-field">
-                                    <label class="form-field-label" for="f-tiktok">
-                                        <svg width="13" height="13" viewBox="0 0 24 24" fill="currentColor"
-                                            style="color:var(--gold)">
-                                            <path
-                                                d="M19.59 6.69a4.83 4.83 0 01-3.77-4.25V2h-3.45v13.67a2.89 2.89 0 01-2.88 2.5 2.89 2.89 0 01-2.89-2.89 2.89 2.89 0 012.89-2.89c.28 0 .54.04.79.1V9.01a6.34 6.34 0 00-.79-.05 6.34 6.34 0 00-6.34 6.34 6.34 6.34 0 006.34 6.34 6.34 6.34 0 006.33-6.34V8.69a8.17 8.17 0 004.78 1.52V6.76a4.85 4.85 0 01-1.01-.07z" />
-                                        </svg>
-                                        TikTok
-                                    </label>
-                                    <input id="f-tiktok" type="url" class="form-input" wire:model.defer="tiktok_url"
-                                        placeholder="https://tiktok.com/@yourusername">
-                                </div>
-
-                                <div class="form-field">
                                     <label class="form-field-label" for="f-linkedin">
-                                        <svg width="13" height="13" viewBox="0 0 24 24" fill="currentColor"
-                                            style="color:var(--gold)">
-                                            <path
-                                                d="M16 8a6 6 0 016 6v7h-4v-7a2 2 0 00-2-2 2 2 0 00-2 2v7h-4v-7a6 6 0 016-6zM2 9h4v12H2zM4 6a2 2 0 100-4 2 2 0 000 4z" />
+                                        <svg width="13" height="13" viewBox="0 0 24 24" fill="currentColor" style="color:var(--gold)">
+                                            <path d="M16 8a6 6 0 016 6v7h-4v-7a2 2 0 00-2-2 2 2 0 00-2 2v7h-4v-7a6 6 0 016-6zM2 9h4v12H2zM4 6a2 2 0 100-4 2 2 0 000 4z" />
                                         </svg>
                                         LinkedIn
                                     </label>
@@ -1384,10 +1565,10 @@
                                         placeholder="https://linkedin.com/in/yourprofile">
                                 </div>
 
-                                <div class="form-field">
+                                {{-- Portfolio Website (Full Width) --}}
+                                <div class="form-field form-grid-full">
                                     <label class="form-field-label" for="f-portfolio">
-                                        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor"
-                                            stroke-width="2" style="color:var(--gold)">
+                                        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="color:var(--gold)">
                                             <path d="M10 13a5 5 0 007.54.54l3-3a5 5 0 00-7.07-7.07l-1.72 1.71" />
                                             <path d="M14 11a5 5 0 00-7.54-.54l-3 3a5 5 0 007.07 7.07l1.71-1.71" />
                                         </svg>

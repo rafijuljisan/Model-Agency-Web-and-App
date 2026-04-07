@@ -858,6 +858,13 @@
             </div>
             <div class="ap-stat-label">Age</div>
         </div>
+        <div class="ap-stat">
+            <div class="ap-stat-num">
+                <?php echo e($artist->profile?->experience_level ?? '—'); ?>
+
+            </div>
+            <div class="ap-stat-label">Experience</div>
+        </div>
     </div>
 
     
@@ -912,6 +919,45 @@
                         </div>
                     </div>
                 </div>
+                
+                <?php if(\Livewire\Mechanisms\ExtendBlade\ExtendBlade::isRenderingLivewireComponent()): ?><!--[if BLOCK]><![endif]--><?php endif; ?><?php if($artist->profile?->showreel_url): ?>
+                <div class="ap-card">
+                    <div class="ap-card-head">
+                        <div class="ap-card-head-icon">
+                            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <polygon points="23 7 16 12 23 17 23 7"/><rect x="1" y="5" width="15" height="14" rx="2"/>
+                            </svg>
+                        </div>
+                        <div class="ap-card-title">Showreel / Intro Video</div>
+                    </div>
+                    <div class="ap-card-body">
+                        <a href="<?php echo e($artist->profile->showreel_url); ?>" target="_blank" class="btn-outline" style="font-size:0.8rem;">
+                            ▶ Watch on YouTube / Vimeo
+                        </a>
+                    </div>
+                </div>
+                <?php endif; ?><?php if(\Livewire\Mechanisms\ExtendBlade\ExtendBlade::isRenderingLivewireComponent()): ?><!--[if ENDBLOCK]><![endif]--><?php endif; ?>
+
+                
+                <?php if(\Livewire\Mechanisms\ExtendBlade\ExtendBlade::isRenderingLivewireComponent()): ?><!--[if BLOCK]><![endif]--><?php endif; ?><?php if(!empty($artist->profile?->special_skills)): ?>
+                <div class="ap-card">
+                    <div class="ap-card-head">
+                        <div class="ap-card-head-icon">
+                            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"/>
+                            </svg>
+                        </div>
+                        <div class="ap-card-title">Special Skills</div>
+                    </div>
+                    <div class="ap-card-body">
+                        <div class="ap-skills">
+                            <?php if(\Livewire\Mechanisms\ExtendBlade\ExtendBlade::isRenderingLivewireComponent()): ?><!--[if BLOCK]><![endif]--><?php \Livewire\Features\SupportCompiledWireKeys\SupportCompiledWireKeys::openLoop(); ?><?php endif; ?><?php $__currentLoopData = $artist->profile->special_skills; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $skill): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?><?php if(\Livewire\Mechanisms\ExtendBlade\ExtendBlade::isRenderingLivewireComponent()): ?><?php \Livewire\Features\SupportCompiledWireKeys\SupportCompiledWireKeys::startLoopIteration(); ?><?php endif; ?>
+                                <span class="ap-skill"><?php echo e($skill); ?></span>
+                            <?php if(\Livewire\Mechanisms\ExtendBlade\ExtendBlade::isRenderingLivewireComponent()): ?><?php \Livewire\Features\SupportCompiledWireKeys\SupportCompiledWireKeys::endLoop(); ?><?php endif; ?><?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?><?php if(\Livewire\Mechanisms\ExtendBlade\ExtendBlade::isRenderingLivewireComponent()): ?><!--[if ENDBLOCK]><![endif]--><?php \Livewire\Features\SupportCompiledWireKeys\SupportCompiledWireKeys::closeLoop(); ?><?php endif; ?>
+                        </div>
+                    </div>
+                </div>
+                <?php endif; ?><?php if(\Livewire\Mechanisms\ExtendBlade\ExtendBlade::isRenderingLivewireComponent()): ?><!--[if ENDBLOCK]><![endif]--><?php endif; ?>
                 <div class="ap-card">
                     <div class="ap-card-head">
                         <div class="ap-card-head-icon">
@@ -929,6 +975,12 @@
                                 <a href="<?php echo e($artist->profile->facebook_url); ?>" target="_blank" rel="noopener noreferrer" class="ap-social-btn">
                                     <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M18 2h-3a5 5 0 00-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 011-1h3z"/></svg>
                                     Facebook
+                                    <?php if(\Livewire\Mechanisms\ExtendBlade\ExtendBlade::isRenderingLivewireComponent()): ?><!--[if BLOCK]><![endif]--><?php endif; ?><?php if($artist->profile->facebook_followers): ?>
+                                        <span style="font-size:0.7rem; opacity:0.7;">
+                                            · <?php echo e(number_format($artist->profile->facebook_followers)); ?>
+
+                                        </span>
+                                    <?php endif; ?><?php if(\Livewire\Mechanisms\ExtendBlade\ExtendBlade::isRenderingLivewireComponent()): ?><!--[if ENDBLOCK]><![endif]--><?php endif; ?>
                                 </a>
                             <?php endif; ?><?php if(\Livewire\Mechanisms\ExtendBlade\ExtendBlade::isRenderingLivewireComponent()): ?><!--[if ENDBLOCK]><![endif]--><?php endif; ?>
 
@@ -936,6 +988,12 @@
                                 <a href="<?php echo e($artist->profile->instagram_url); ?>" target="_blank" rel="noopener noreferrer" class="ap-social-btn">
                                     <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="2" width="20" height="20" rx="5"/><path d="M16 11.37A4 4 0 1112.63 8 4 4 0 0116 11.37z"/><line x1="17.5" y1="6.5" x2="17.51" y2="6.5"/></svg>
                                     Instagram
+                                    <?php if(\Livewire\Mechanisms\ExtendBlade\ExtendBlade::isRenderingLivewireComponent()): ?><!--[if BLOCK]><![endif]--><?php endif; ?><?php if($artist->profile->instagram_followers): ?>
+                                        <span style="font-size:0.7rem; opacity:0.7;">
+                                            · <?php echo e(number_format($artist->profile->instagram_followers)); ?>
+
+                                        </span>
+                                    <?php endif; ?><?php if(\Livewire\Mechanisms\ExtendBlade\ExtendBlade::isRenderingLivewireComponent()): ?><!--[if ENDBLOCK]><![endif]--><?php endif; ?>
                                 </a>
                             <?php endif; ?><?php if(\Livewire\Mechanisms\ExtendBlade\ExtendBlade::isRenderingLivewireComponent()): ?><!--[if ENDBLOCK]><![endif]--><?php endif; ?>
 
@@ -943,6 +1001,12 @@
                                 <a href="<?php echo e($artist->profile->youtube_url); ?>" target="_blank" rel="noopener noreferrer" class="ap-social-btn">
                                     <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M22.54 6.42a2.78 2.78 0 00-1.95-1.96C18.88 4 12 4 12 4s-6.88 0-8.59.46A2.78 2.78 0 001.46 6.42 29 29 0 001 12a29 29 0 00.46 5.58 2.78 2.78 0 001.95 1.96C5.12 20 12 20 12 20s6.88 0 8.59-.46a2.78 2.78 0 001.95-1.96A29 29 0 0023 12a29 29 0 00-.46-5.58z"/><polygon points="9.75 15.02 15.5 12 9.75 8.98 9.75 15.02" fill="white"/></svg>
                                     YouTube
+                                    <?php if(\Livewire\Mechanisms\ExtendBlade\ExtendBlade::isRenderingLivewireComponent()): ?><!--[if BLOCK]><![endif]--><?php endif; ?><?php if($artist->profile->youtube_followers): ?>
+                                        <span style="font-size:0.7rem; opacity:0.7;">
+                                            · <?php echo e(number_format($artist->profile->youtube_followers)); ?>
+
+                                        </span>
+                                    <?php endif; ?><?php if(\Livewire\Mechanisms\ExtendBlade\ExtendBlade::isRenderingLivewireComponent()): ?><!--[if ENDBLOCK]><![endif]--><?php endif; ?>
                                 </a>
                             <?php endif; ?><?php if(\Livewire\Mechanisms\ExtendBlade\ExtendBlade::isRenderingLivewireComponent()): ?><!--[if ENDBLOCK]><![endif]--><?php endif; ?>
 
@@ -950,6 +1014,12 @@
                                 <a href="<?php echo e($artist->profile->tiktok_url); ?>" target="_blank" rel="noopener noreferrer" class="ap-social-btn">
                                     <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M19.59 6.69a4.83 4.83 0 01-3.77-4.25V2h-3.45v13.67a2.89 2.89 0 01-2.88 2.5 2.89 2.89 0 01-2.89-2.89 2.89 2.89 0 012.89-2.89c.28 0 .54.04.79.1V9.01a6.34 6.34 0 00-.79-.05 6.34 6.34 0 00-6.34 6.34 6.34 6.34 0 006.34 6.34 6.34 6.34 0 006.33-6.34V8.69a8.17 8.17 0 004.78 1.52V6.76a4.85 4.85 0 01-1.01-.07z"/></svg>
                                     TikTok
+                                    <?php if(\Livewire\Mechanisms\ExtendBlade\ExtendBlade::isRenderingLivewireComponent()): ?><!--[if BLOCK]><![endif]--><?php endif; ?><?php if($artist->profile->tiktok_followers): ?>
+                                        <span style="font-size:0.7rem; opacity:0.7;">
+                                            · <?php echo e(number_format($artist->profile->tiktok_followers)); ?>
+
+                                        </span>
+                                    <?php endif; ?><?php if(\Livewire\Mechanisms\ExtendBlade\ExtendBlade::isRenderingLivewireComponent()): ?><!--[if ENDBLOCK]><![endif]--><?php endif; ?>
                                 </a>
                             <?php endif; ?><?php if(\Livewire\Mechanisms\ExtendBlade\ExtendBlade::isRenderingLivewireComponent()): ?><!--[if ENDBLOCK]><![endif]--><?php endif; ?>
 
@@ -957,6 +1027,12 @@
                                 <a href="<?php echo e($artist->profile->linkedin_url); ?>" target="_blank" rel="noopener noreferrer" class="ap-social-btn">
                                     <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M16 8a6 6 0 016 6v7h-4v-7a2 2 0 00-2-2 2 2 0 00-2 2v7h-4v-7a6 6 0 016-6zM2 9h4v12H2zM4 6a2 2 0 100-4 2 2 0 000 4z"/></svg>
                                     LinkedIn
+                                    <?php if(\Livewire\Mechanisms\ExtendBlade\ExtendBlade::isRenderingLivewireComponent()): ?><!--[if BLOCK]><![endif]--><?php endif; ?><?php if($artist->profile->linkedin_followers): ?>
+                                        <span style="font-size:0.7rem; opacity:0.7;">
+                                            · <?php echo e(number_format($artist->profile->linkedin_followers)); ?>
+
+                                        </span>
+                                    <?php endif; ?><?php if(\Livewire\Mechanisms\ExtendBlade\ExtendBlade::isRenderingLivewireComponent()): ?><!--[if ENDBLOCK]><![endif]--><?php endif; ?>
                                 </a>
                             <?php endif; ?><?php if(\Livewire\Mechanisms\ExtendBlade\ExtendBlade::isRenderingLivewireComponent()): ?><!--[if ENDBLOCK]><![endif]--><?php endif; ?>
 
@@ -1119,6 +1195,83 @@
                             </div>
                         <?php endif; ?><?php if(\Livewire\Mechanisms\ExtendBlade\ExtendBlade::isRenderingLivewireComponent()): ?><!--[if ENDBLOCK]><![endif]--><?php endif; ?>
 
+                        <?php if(\Livewire\Mechanisms\ExtendBlade\ExtendBlade::isRenderingLivewireComponent()): ?><!--[if BLOCK]><![endif]--><?php endif; ?><?php if($artist->profile?->weight_kg): ?>
+                            <div class="ap-attr">
+                                <span class="ap-attr-key">Weight</span>
+                                <span class="ap-attr-val"><?php echo e($artist->profile->weight_kg); ?> kg</span>
+                            </div>
+                        <?php endif; ?><?php if(\Livewire\Mechanisms\ExtendBlade\ExtendBlade::isRenderingLivewireComponent()): ?><!--[if ENDBLOCK]><![endif]--><?php endif; ?>
+
+                        <?php if(\Livewire\Mechanisms\ExtendBlade\ExtendBlade::isRenderingLivewireComponent()): ?><!--[if BLOCK]><![endif]--><?php endif; ?><?php if($artist->profile?->chest_bust_inches): ?>
+                            <div class="ap-attr">
+                                <span class="ap-attr-key">Chest / Bust</span>
+                                <span class="ap-attr-val"><?php echo e($artist->profile->chest_bust_inches); ?>"</span>
+                            </div>
+                        <?php endif; ?><?php if(\Livewire\Mechanisms\ExtendBlade\ExtendBlade::isRenderingLivewireComponent()): ?><!--[if ENDBLOCK]><![endif]--><?php endif; ?>
+
+                        <?php if(\Livewire\Mechanisms\ExtendBlade\ExtendBlade::isRenderingLivewireComponent()): ?><!--[if BLOCK]><![endif]--><?php endif; ?><?php if($artist->profile?->waist_inches): ?>
+                            <div class="ap-attr">
+                                <span class="ap-attr-key">Waist</span>
+                                <span class="ap-attr-val"><?php echo e($artist->profile->waist_inches); ?>"</span>
+                            </div>
+                        <?php endif; ?><?php if(\Livewire\Mechanisms\ExtendBlade\ExtendBlade::isRenderingLivewireComponent()): ?><!--[if ENDBLOCK]><![endif]--><?php endif; ?>
+
+                        <?php if(\Livewire\Mechanisms\ExtendBlade\ExtendBlade::isRenderingLivewireComponent()): ?><!--[if BLOCK]><![endif]--><?php endif; ?><?php if($artist->profile?->hips_inches): ?>
+                            <div class="ap-attr">
+                                <span class="ap-attr-key">Hips</span>
+                                <span class="ap-attr-val"><?php echo e($artist->profile->hips_inches); ?>"</span>
+                            </div>
+                        <?php endif; ?><?php if(\Livewire\Mechanisms\ExtendBlade\ExtendBlade::isRenderingLivewireComponent()): ?><!--[if ENDBLOCK]><![endif]--><?php endif; ?>
+
+                        <?php if(\Livewire\Mechanisms\ExtendBlade\ExtendBlade::isRenderingLivewireComponent()): ?><!--[if BLOCK]><![endif]--><?php endif; ?><?php if($artist->profile?->skin_tone): ?>
+                            <div class="ap-attr">
+                                <span class="ap-attr-key">Skin Tone</span>
+                                <span class="ap-attr-val"><?php echo e($artist->profile->skin_tone); ?></span>
+                            </div>
+                        <?php endif; ?><?php if(\Livewire\Mechanisms\ExtendBlade\ExtendBlade::isRenderingLivewireComponent()): ?><!--[if ENDBLOCK]><![endif]--><?php endif; ?>
+
+                        <?php if(\Livewire\Mechanisms\ExtendBlade\ExtendBlade::isRenderingLivewireComponent()): ?><!--[if BLOCK]><![endif]--><?php endif; ?><?php if($artist->profile?->eye_color): ?>
+                            <div class="ap-attr">
+                                <span class="ap-attr-key">Eye Color</span>
+                                <span class="ap-attr-val"><?php echo e($artist->profile->eye_color); ?></span>
+                            </div>
+                        <?php endif; ?><?php if(\Livewire\Mechanisms\ExtendBlade\ExtendBlade::isRenderingLivewireComponent()): ?><!--[if ENDBLOCK]><![endif]--><?php endif; ?>
+
+                        <?php if(\Livewire\Mechanisms\ExtendBlade\ExtendBlade::isRenderingLivewireComponent()): ?><!--[if BLOCK]><![endif]--><?php endif; ?><?php if($artist->profile?->hair_color): ?>
+                            <div class="ap-attr">
+                                <span class="ap-attr-key">Hair</span>
+                                <span class="ap-attr-val"><?php echo e($artist->profile->hair_color); ?><?php echo e($artist->profile->hair_length ? ' · ' . $artist->profile->hair_length : ''); ?></span>
+                            </div>
+                        <?php endif; ?><?php if(\Livewire\Mechanisms\ExtendBlade\ExtendBlade::isRenderingLivewireComponent()): ?><!--[if ENDBLOCK]><![endif]--><?php endif; ?>
+
+                        <?php if(\Livewire\Mechanisms\ExtendBlade\ExtendBlade::isRenderingLivewireComponent()): ?><!--[if BLOCK]><![endif]--><?php endif; ?><?php if($artist->profile?->shoe_size): ?>
+                            <div class="ap-attr">
+                                <span class="ap-attr-key">Shoe Size</span>
+                                <span class="ap-attr-val"><?php echo e($artist->profile->shoe_size); ?></span>
+                            </div>
+                        <?php endif; ?><?php if(\Livewire\Mechanisms\ExtendBlade\ExtendBlade::isRenderingLivewireComponent()): ?><!--[if ENDBLOCK]><![endif]--><?php endif; ?>
+
+                        <?php if(\Livewire\Mechanisms\ExtendBlade\ExtendBlade::isRenderingLivewireComponent()): ?><!--[if BLOCK]><![endif]--><?php endif; ?><?php if($artist->profile?->dress_size): ?>
+                            <div class="ap-attr">
+                                <span class="ap-attr-key">Dress Size</span>
+                                <span class="ap-attr-val"><?php echo e($artist->profile->dress_size); ?></span>
+                            </div>
+                        <?php endif; ?><?php if(\Livewire\Mechanisms\ExtendBlade\ExtendBlade::isRenderingLivewireComponent()): ?><!--[if ENDBLOCK]><![endif]--><?php endif; ?>
+
+                        <?php if(\Livewire\Mechanisms\ExtendBlade\ExtendBlade::isRenderingLivewireComponent()): ?><!--[if BLOCK]><![endif]--><?php endif; ?><?php if($artist->profile?->availability): ?>
+                            <div class="ap-attr">
+                                <span class="ap-attr-key">Availability</span>
+                                <span class="ap-attr-val"><?php echo e($artist->profile->availability); ?></span>
+                            </div>
+                        <?php endif; ?><?php if(\Livewire\Mechanisms\ExtendBlade\ExtendBlade::isRenderingLivewireComponent()): ?><!--[if ENDBLOCK]><![endif]--><?php endif; ?>
+
+                        <div class="ap-attr">
+                            <span class="ap-attr-key">Travel</span>
+                            <span class="ap-attr-val" style="color: <?php echo e($artist->profile?->willing_to_travel ? '#16a34a' : 'var(--text-muted)'); ?>">
+                                <?php echo e($artist->profile?->willing_to_travel ? 'Yes' : 'No'); ?>
+
+                            </span>
+                        </div>
                         <?php if(\Livewire\Mechanisms\ExtendBlade\ExtendBlade::isRenderingLivewireComponent()): ?><!--[if BLOCK]><![endif]--><?php endif; ?><?php if(!empty($artist->profile?->languages)): ?>
                             <div class="ap-attr" style="align-items: flex-start;">
                                 <span class="ap-attr-key" style="padding-top: 3px;">Languages</span>

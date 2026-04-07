@@ -18,9 +18,11 @@ class Profile extends Model implements HasMedia
     protected function casts(): array
     {
         return [
-            'categories'    => 'array',
-            'languages'     => 'array',
+            'categories' => 'array',
+            'languages' => 'array',
             'date_of_birth' => 'date',
+            'special_skills' => 'array',
+            'willing_to_travel' => 'boolean',
         ];
     }
 

@@ -75,7 +75,7 @@ class UserForm
                         Toggle::make('is_verified')
                             ->label('Verified Artist Badge')
                             ->columnSpanFull(),
-                            
+
                         Toggle::make('is_featured')
                             ->label('Feature on Homepage')
                             ->helperText('Override the algorithm and force this talent to the top of the homepage.')
@@ -198,6 +198,134 @@ class UserForm
                             ]),
                     ]),
 
+                // ── MEASUREMENTS ──
+                Section::make('Measurements & Appearance')
+                    ->columns(4)
+                    ->schema([
+                        TextInput::make('height_cm')
+                            ->label('Height (cm)')
+                            ->numeric(),
+
+                        TextInput::make('weight_kg')
+                            ->label('Weight (kg)')
+                            ->numeric(),
+
+                        TextInput::make('chest_bust_inches')
+                            ->label('Chest / Bust (in)')
+                            ->numeric(),
+
+                        TextInput::make('waist_inches')
+                            ->label('Waist (in)')
+                            ->numeric(),
+
+                        TextInput::make('hips_inches')
+                            ->label('Hips (in)')
+                            ->numeric(),
+
+                        TextInput::make('shoulder_inches')
+                            ->label('Shoulder (in) — Male')
+                            ->numeric(),
+
+                        TextInput::make('shoe_size')
+                            ->label('Shoe Size')
+                            ->placeholder('e.g. EU 42 / UK 8'),
+
+                        Select::make('dress_size')
+                            ->label('Dress Size')
+                            ->options([
+                                'XS' => 'XS',
+                                'S' => 'S',
+                                'M' => 'M',
+                                'L' => 'L',
+                                'XL' => 'XL',
+                                'XXL' => 'XXL',
+                            ]),
+
+                        Select::make('skin_tone')
+                            ->label('Skin Tone')
+                            ->options([
+                                'Fair' => 'Fair',
+                                'Medium' => 'Medium',
+                                'Dusky' => 'Dusky',
+                                'Deep' => 'Deep',
+                            ]),
+
+                        TextInput::make('eye_color')
+                            ->label('Eye Color')
+                            ->placeholder('e.g. Brown'),
+
+                        TextInput::make('hair_color')
+                            ->label('Hair Color')
+                            ->placeholder('e.g. Black'),
+
+                        Select::make('hair_length')
+                            ->label('Hair Length')
+                            ->options([
+                                'Bald' => 'Bald',
+                                'Short' => 'Short',
+                                'Medium' => 'Medium',
+                                'Long' => 'Long',
+                            ]),
+                    ]),
+
+                // ── EXPERIENCE & SKILLS ──
+                Section::make('Experience & Special Skills')
+                    ->columns(2)
+                    ->schema([
+                        Select::make('experience_level')
+                            ->label('Experience Level')
+                            ->options([
+                                'Fresher' => 'Fresher (No Experience)',
+                                '1-3 Years' => '1–3 Years',
+                                'Professional' => 'Professional (3+ Years)',
+                            ]),
+
+                        Select::make('availability')
+                            ->label('Availability')
+                            ->options([
+                                'Full-time' => 'Full-time',
+                                'Part-time' => 'Part-time',
+                                'Weekends' => 'Weekends Only',
+                                'Flexible' => 'Flexible',
+                            ]),
+
+                        TagsInput::make('special_skills')
+                            ->label('Special Skills')
+                            ->placeholder('e.g. Driving, Swimming, Dancing')
+                            ->helperText('Press Enter after each skill')
+                            ->columnSpanFull(),
+
+                        Toggle::make('willing_to_travel')
+                            ->label('Willing to Travel for Projects'),
+
+                        TextInput::make('showreel_url')
+                            ->label('Intro Video / Showreel URL')
+                            ->url()
+                            ->placeholder('https://youtube.com/watch?v=...')
+                            ->helperText('YouTube or Vimeo link'),
+                    ]),
+
+                // ── SOCIAL LINKS WITH FOLLOWER COUNTS ──
+                Section::make('Social Media & Follower Counts')
+                    ->columns(2)
+                    ->schema([
+                        TextInput::make('facebook_url')->url()->label('Facebook URL'),
+                        TextInput::make('facebook_followers')->numeric()->label('Facebook Followers'),
+
+                        TextInput::make('instagram_url')->url()->label('Instagram URL'),
+                        TextInput::make('instagram_followers')->numeric()->label('Instagram Followers'),
+
+                        TextInput::make('tiktok_url')->url()->label('TikTok URL'),
+                        TextInput::make('tiktok_followers')->numeric()->label('TikTok Followers'),
+
+                        TextInput::make('youtube_url')->url()->label('YouTube URL'),
+                        TextInput::make('linkedin_url')->url()->label('LinkedIn URL'),
+
+                        TextInput::make('portfolio_url')
+                            ->label('Portfolio Website')
+                            ->url()
+                            ->columnSpanFull(),
+                    ]),
                 // 3. Portfolio Gallery — 2 column grid
                 Section::make('Artist Portfolio Gallery')
                     ->schema([

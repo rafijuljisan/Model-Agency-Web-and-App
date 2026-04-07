@@ -57,6 +57,33 @@ class ArtistAccount extends Component
     public string $linkedin_url = '';
     public string $portfolio_url = '';
 
+    // ── Measurements ──
+    public $weight_kg = '';
+    public $chest_bust_inches = '';
+    public $waist_inches = '';
+    public $hips_inches = '';
+    public $shoulder_inches = '';
+    public string $shoe_size = '';
+    public string $dress_size = '';
+
+    // ── Appearance ──
+    public string $skin_tone = '';
+    public string $eye_color = '';
+    public string $hair_color = '';
+    public string $hair_length = '';
+
+    // ── Experience ──
+    public string $experience_level = '';
+    public array $special_skills = [];
+    public string $showreel_url = '';
+    public bool $willing_to_travel = false;
+    public string $availability = '';
+
+    // ── Social follower counts ──
+    public $instagram_followers = '';
+    public $tiktok_followers = '';
+    public $facebook_followers = '';
+
     public function mount()
     {
         /** @var \App\Models\User $user */
@@ -192,6 +219,32 @@ class ArtistAccount extends Component
             $this->tiktok_url = $profile->tiktok_url ?? '';
             $this->linkedin_url = $profile->linkedin_url ?? '';
             $this->portfolio_url = $profile->portfolio_url ?? '';
+            // Measurements
+            $this->weight_kg = $profile->weight_kg ?? '';
+            $this->chest_bust_inches = $profile->chest_bust_inches ?? '';
+            $this->waist_inches = $profile->waist_inches ?? '';
+            $this->hips_inches = $profile->hips_inches ?? '';
+            $this->shoulder_inches = $profile->shoulder_inches ?? '';
+            $this->shoe_size = $profile->shoe_size ?? '';
+            $this->dress_size = $profile->dress_size ?? '';
+
+            // Appearance
+            $this->skin_tone = $profile->skin_tone ?? '';
+            $this->eye_color = $profile->eye_color ?? '';
+            $this->hair_color = $profile->hair_color ?? '';
+            $this->hair_length = $profile->hair_length ?? '';
+
+            // Experience
+            $this->experience_level = $profile->experience_level ?? '';
+            $this->special_skills = $profile->special_skills ?? [];
+            $this->showreel_url = $profile->showreel_url ?? '';
+            $this->willing_to_travel = $profile->willing_to_travel ?? false;
+            $this->availability = $profile->availability ?? '';
+
+            // Follower counts
+            $this->instagram_followers = $profile->instagram_followers ?? '';
+            $this->tiktok_followers = $profile->tiktok_followers ?? '';
+            $this->facebook_followers = $profile->facebook_followers ?? '';
         }
 
         $this->portfolioImages = $user->getMedia('portfolio');
@@ -235,6 +288,25 @@ class ArtistAccount extends Component
                     'tiktok_url' => $this->tiktok_url ?: null,
                     'linkedin_url' => $this->linkedin_url ?: null,
                     'portfolio_url' => $this->portfolio_url ?: null,
+                    'weight_kg' => $this->weight_kg ?: null,
+                    'chest_bust_inches' => $this->chest_bust_inches ?: null,
+                    'waist_inches' => $this->waist_inches ?: null,
+                    'hips_inches' => $this->hips_inches ?: null,
+                    'shoulder_inches' => $this->shoulder_inches ?: null,
+                    'shoe_size' => $this->shoe_size ?: null,
+                    'dress_size' => $this->dress_size ?: null,
+                    'skin_tone' => $this->skin_tone ?: null,
+                    'eye_color' => $this->eye_color ?: null,
+                    'hair_color' => $this->hair_color ?: null,
+                    'hair_length' => $this->hair_length ?: null,
+                    'experience_level' => $this->experience_level ?: null,
+                    'special_skills' => !empty($this->special_skills) ? $this->special_skills : null,
+                    'showreel_url' => $this->showreel_url ?: null,
+                    'willing_to_travel' => $this->willing_to_travel,
+                    'availability' => $this->availability ?: null,
+                    'instagram_followers' => $this->instagram_followers ?: null,
+                    'tiktok_followers' => $this->tiktok_followers ?: null,
+                    'facebook_followers' => $this->facebook_followers ?: null,
                 ]
             );
 
@@ -331,6 +403,26 @@ class ArtistAccount extends Component
             'portfolio_url' => 'nullable|url|max:255',
             'newPhotos' => 'nullable|array|max:10',
             'newPhotos.*' => 'image|mimes:jpg,jpeg,png,webp|max:5120',
+            'weight_kg' => 'nullable|numeric|min:20|max:300',
+            'chest_bust_inches' => 'nullable|numeric|min:20|max:80',
+            'waist_inches' => 'nullable|numeric|min:20|max:80',
+            'hips_inches' => 'nullable|numeric|min:20|max:80',
+            'shoulder_inches' => 'nullable|numeric|min:10|max:60',
+            'shoe_size' => 'nullable|string|max:20',
+            'dress_size' => 'nullable|string|max:10',
+            'skin_tone' => 'nullable|string|max:50',
+            'eye_color' => 'nullable|string|max:50',
+            'hair_color' => 'nullable|string|max:50',
+            'hair_length' => 'nullable|string|max:20',
+            'experience_level' => 'nullable|string|max:50',
+            'special_skills' => 'nullable|array',
+            'special_skills.*' => 'string|max:100',
+            'showreel_url' => 'nullable|url|max:255',
+            'willing_to_travel' => 'boolean',
+            'availability' => 'nullable|string|max:50',
+            'instagram_followers' => 'nullable|integer|min:0',
+            'tiktok_followers' => 'nullable|integer|min:0',
+            'facebook_followers' => 'nullable|integer|min:0',
         ];
     }
 }
