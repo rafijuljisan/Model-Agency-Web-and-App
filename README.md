@@ -32,7 +32,7 @@ Built with an emphasis on **Trust, Quality, and Aesthetics**, the platform takes
 This application leverages a modern TALL-stack inspired architecture:
 - **Framework:** [Laravel](https://laravel.com)
 - **Frontend/Reactivity:** [Livewire v3](https://livewire.laravel.com)
-- **Admin Panel:** [Filament v3](https://filamentphp.com)
+- **Admin Panel:** [Filament v5.4](https://filamentphp.com)
 - **Styling:** Custom CSS with CSS Variables for seamless Light/Dark mode toggling ("Editorial Luxury" aesthetic).
 - **Media Management:** Spatie Media Library (for avatars and portfolio grid management).
 
@@ -42,42 +42,48 @@ To get the Dhaka Model Agency application running locally, follow these standard
 
 1. **Clone the repository:**
    ```bash
+   ```
    git clone <repository-url>
    cd agency-app
+   ```
 
 ## Install PHP dependencies:
 
 Bash
-
+```
 composer install
 Install NPM dependencies & compile assets:
+```
 
 Bash
-
+```
 npm install
 npm run build
+```
 ## Environment Configuration:
 Copy the .env.example file to .env and configure your database and mail credentials:
 
 Bash
-
+```
 cp .env.example .env
 php artisan key:generate
 Run Migrations and Seeders:
-
+```
 Bash
-
+```
 php artisan migrate --seed
 Link Storage (Crucial for Images):
-
+```
 Bash
-
+```
 php artisan storage:link
-Serve the Application:
+```
 
+## Serve the Application:
 Bash
-
+```
 php artisan serve
+```
 ## Security & Verification Protocols
 - Given the sensitive nature of talent data, DMA enforces strict access control:
 - Private Disk Storage: NID cards and academic certificates are stored on Laravel's private disk.
@@ -88,15 +94,16 @@ php artisan serve
 Ensure your server meets the following requirements before deployment:
 
 PHP >= 8.2
-MySQL >= 8.0 / MariaDB
-BCMath PHP Extension
-Ctype PHP Extension
-Fileinfo PHP extension
-JSON PHP Extension
-Mbstring PHP Extension
-OpenSSL PHP Extension
-PDO PHP Extension
-Tokenizer PHP Extension
-XML PHP Extension
+- MySQL >= 8.0 / MariaDB
+- BCMath PHP Extension
+- Ctype PHP Extension
+- Fileinfo PHP extension
+- JSON PHP Extension
+- Mbstring PHP Extension
+- OpenSSL PHP Extension
+- PDO PHP Extension
+- Tokenizer PHP Extension
+- XML PHP Extension
+
 ## License
 This software is a proprietary application developed specifically for Dhaka Model Agency. Unauthorized copying, modification, or distribution of this software, via any medium, is strictly prohibited.
