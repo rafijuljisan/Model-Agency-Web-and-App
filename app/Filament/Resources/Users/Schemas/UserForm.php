@@ -204,29 +204,84 @@ class UserForm
 
                 // 4. Verification Documents
                 Section::make('Verification Documents')
-                    ->description('Private documents used for user verification.')
+                    ->description('Private documents uploaded by the user for verification.')
                     ->columns(2)
                     ->schema([
-                        FileUpload::make('nid_path')
+
+                        // ── NID VIEWER ──
+                        // We use a Placeholder to render a custom view of the stored file.
+                        // FileUpload won't work here because nid_path is a plain string path,
+                        // not a Spatie media record, and it's on the 'private' disk.
+                        \Filament\Forms\Components\Placeholder::make('nid_preview')
                             ->label('National ID (NID)')
-                            ->disk('public')
-                            ->directory('nids')
-                            ->visibility('private')
-                            ->downloadable()
-                            ->image()
-                            ->imageEditor()
-                            ->deletable(false),
+                            ->content(function ($record): \Illuminate\Support\HtmlString {
+                                if (!$record || !$record->nid_path) {
+                                    return new \Illuminate\Support\HtmlString(
+                                        '<span style="color:#9ca3af; font-size:0.85rem;">No document uploaded yet.</span>'
+                                    );
+                                }
 
-                        FileUpload::make('academic_certificate_path')
+                                // Build a URL using a signed route so the private file is
+                                // served securely without exposing the real disk path.
+                                $url = route('admin.document.view', [
+                                    'type' => 'nid',
+                                    'user' => $record->id,
+                                ]);
+
+                                return new \Illuminate\Support\HtmlString("
+                    <div style='display:flex; flex-direction:column; gap:10px;'>
+                        <img src='{$url}'
+                             style='max-width:100%; max-height:280px; object-fit:contain;
+                                    border:1px solid #e5e7eb; border-radius:6px; background:#f9fafb;'
+                             onerror=\"this.style.display='none'; document.getElementById('nid-link-{$record->id}').style.display='inline-flex';\">
+                        <a id='nid-link-{$record->id}'
+                           href='{$url}' target='_blank'
+                           style='display:none; font-size:0.8rem; color:#6366f1; font-weight:600;'>
+                            Open Document ↗
+                        </a>
+                        <a href='{$url}' target='_blank'
+                           style='font-size:0.78rem; color:#6b7280; text-decoration:underline;'>
+                            View / Download full file ↗
+                        </a>
+                    </div>
+                ");
+                            }),
+
+                        // ── ACADEMIC CERTIFICATE VIEWER ──
+                        \Filament\Forms\Components\Placeholder::make('academic_preview')
                             ->label('Academic Certificate')
-                            ->disk('public')
-                            ->directory('academic_certificates')
-                            ->visibility('private')
-                            ->downloadable()
-                            ->image()
-                            ->imageEditor()
-                            ->deletable(false),
+                            ->content(function ($record): \Illuminate\Support\HtmlString {
+                                if (!$record || !$record->academic_certificate_path) {
+                                    return new \Illuminate\Support\HtmlString(
+                                        '<span style="color:#9ca3af; font-size:0.85rem;">No document uploaded yet.</span>'
+                                    );
+                                }
 
+                                $url = route('admin.document.view', [
+                                    'type' => 'academic',
+                                    'user' => $record->id,
+                                ]);
+
+                                return new \Illuminate\Support\HtmlString("
+                    <div style='display:flex; flex-direction:column; gap:10px;'>
+                        <img src='{$url}'
+                             style='max-width:100%; max-height:280px; object-fit:contain;
+                                    border:1px solid #e5e7eb; border-radius:6px; background:#f9fafb;'
+                             onerror=\"this.style.display='none'; document.getElementById('acad-link-{$record->id}').style.display='inline-flex';\">
+                        <a id='acad-link-{$record->id}'
+                           href='{$url}' target='_blank'
+                           style='display:none; font-size:0.8rem; color:#6366f1; font-weight:600;'>
+                            Open Document ↗
+                        </a>
+                        <a href='{$url}' target='_blank'
+                           style='font-size:0.78rem; color:#6b7280; text-decoration:underline;'>
+                            View / Download full file ↗
+                        </a>
+                    </div>
+                ");
+                            }),
+
+                        // ── NID STATUS ──
                         Select::make('verification_status')
                             ->label('NID Verification Status')
                             ->options([
@@ -238,6 +293,7 @@ class UserForm
                             ->default('unverified')
                             ->native(false),
 
+                        // ── ACADEMIC STATUS ──
                         Select::make('academic_verification_status')
                             ->label('Academic Verification Status')
                             ->options([

@@ -62,11 +62,9 @@ class ArtistAccount extends Component
         /** @var \App\Models\User $user */
         $user = Auth::user();
 
-        // 1. CHECK SUBSCRIPTION STATUS
         $subscription = $user->subscriptions()->latest()->first();
 
         if (!$subscription) {
-            // If they've never even tried to buy a package, send them to pricing.
             return redirect()->route('packages.index');
 
         } elseif ($subscription->status === 'failed') {
@@ -78,24 +76,27 @@ class ArtistAccount extends Component
         } elseif ($subscription->status === 'pending') {
             $this->currentStep = 'payment_pending';
 
-            // ── BUG FIXED HERE: Deleted the old nid_upload and nid_pending blocks! ──
+        } elseif (
+            in_array($user->verification_status, ['unverified', 'rejected']) ||
+            in_array($user->academic_verification_status, ['unverified', 'rejected'])
+        ) {
+            // Any doc missing OR rejected → send to upload form
+            $this->currentStep = 'document_upload';
 
-        } elseif ($user->verification_status === 'unverified' || $user->academic_verification_status === 'unverified') {
-            $this->currentStep = 'document_upload'; // Catch-all for any missing/rejected doc
-
-        } elseif ($user->verification_status === 'pending' || $user->academic_verification_status === 'pending') {
-            $this->currentStep = 'document_pending'; // Catch-all if waiting on admin
+        } elseif (
+            $user->verification_status === 'pending' ||
+            $user->academic_verification_status === 'pending'
+        ) {
+            // Both submitted, waiting on admin
+            $this->currentStep = 'document_pending';
 
         } else {
-            // Everything is approved! Give them full access.
+            // Both verified → full access
             $this->currentStep = 'profile';
             $this->loadProfileData($user);
         }
     }
 
-    // ── STEP 2 ACTION: SUBMIT NID (Payment step removed) ──
-    // ── STEP 2 ACTION: SUBMIT NID ──
-    // ── STEP 2 ACTION: SUBMIT DOCUMENTS ──
     public function submitDocuments()
     {
         /** @var \App\Models\User $user */
@@ -103,39 +104,35 @@ class ArtistAccount extends Component
         $rules = [];
         $updates = [];
 
-        // Only validate the inputs that are actually required right now
-        if ($user->verification_status === 'unverified') {
+        // Only require upload for docs that are missing or rejected
+        if (in_array($user->verification_status, ['unverified', 'rejected'])) {
             $rules['nidImage'] = 'required|image|mimes:jpg,jpeg,png,webp|max:5120';
         }
-        if ($user->academic_verification_status === 'unverified') {
+        if (in_array($user->academic_verification_status, ['unverified', 'rejected'])) {
             $rules['academicImage'] = 'required|image|mimes:jpg,jpeg,png,webp|max:5120';
         }
 
         $this->validate($rules);
 
-        // Process NID if uploaded
         if ($this->nidImage) {
             $updates['nid_path'] = $this->nidImage->store('nids', 'private');
             $updates['verification_status'] = 'pending';
         }
 
-        // Process Academic Certificate if uploaded
         if ($this->academicImage) {
             $updates['academic_certificate_path'] = $this->academicImage->store('academic_certificates', 'private');
             $updates['academic_verification_status'] = 'pending';
         }
 
-        // Save to database
         if (!empty($updates)) {
             $user->update($updates);
 
-            // ── TRIGGER ADMIN EMAIL ──
             $admins = User::role('Super-Admin')->get();
             Notification::send($admins, new AdminAlertNotification(
                 'New Documents Uploaded',
                 "{$user->name} has uploaded new verification documents.",
                 'Review Documents',
-                url('/admin/users') // Link to Filament users page
+                url('/admin/users')
             ));
         }
 

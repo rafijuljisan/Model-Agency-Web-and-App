@@ -570,21 +570,20 @@
 
     <div class="form-page">
 
-        {{-- Error flash --}}
-        @if(session()->has('error'))
+        
+        <?php if(\Livewire\Mechanisms\ExtendBlade\ExtendBlade::isRenderingLivewireComponent()): ?><!--[if BLOCK]><![endif]--><?php endif; ?><?php if(session()->has('error')): ?>
             <div class="form-flash" style="border-color: #c0392b; color: #c0392b; background: rgba(192,57,43,0.07);">
                 <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                     <circle cx="12" cy="12" r="10" />
                     <line x1="12" y1="8" x2="12" y2="12" />
                     <line x1="12" y1="16" x2="12.01" y2="16" />
                 </svg>
-                {{ session('error') }}
+                <?php echo e(session('error')); ?>
+
             </div>
-        @endif
-        {{-- ═════════════════════════════════════════
-        GATE 1: PAYMENT FAILED
-        ═════════════════════════════════════════ --}}
-        @if($currentStep === 'payment_failed')
+        <?php endif; ?><?php if(\Livewire\Mechanisms\ExtendBlade\ExtendBlade::isRenderingLivewireComponent()): ?><!--[if ENDBLOCK]><![endif]--><?php endif; ?>
+        
+        <?php if(\Livewire\Mechanisms\ExtendBlade\ExtendBlade::isRenderingLivewireComponent()): ?><!--[if BLOCK]><![endif]--><?php endif; ?><?php if($currentStep === 'payment_failed'): ?>
             <div class="text-center py-20 anim-fade-up">
                 <div
                     style="width: 80px; height: 80px; border-radius: 50%; background: rgba(220, 38, 38, 0.1); display: flex; align-items: center; justify-content: center; margin: 0 auto 24px;">
@@ -602,7 +601,7 @@
                 </p>
                 <div style="display: flex; gap: 16px; justify-content: center;">
                     <a href="/contact" class="btn-outline">Contact Support</a>
-                    <a href="{{ route('packages.index') }}" class="btn-fill">
+                    <a href="<?php echo e(route('packages.index')); ?>" class="btn-fill">
                         Submit Payment Again
                         <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
                             style="margin-left:8px;">
@@ -613,10 +612,8 @@
                 </div>
             </div>
 
-            {{-- ═════════════════════════════════════════
-            GATE 2: PAYMENT EXPIRED
-            ═════════════════════════════════════════ --}}
-        @elseif($currentStep === 'payment_expired')
+            
+        <?php elseif($currentStep === 'payment_expired'): ?>
             <div class="text-center py-20 anim-fade-up">
                 <div
                     style="width: 80px; height: 80px; border-radius: 50%; background: var(--bg-secondary); display: flex; align-items: center; justify-content: center; margin: 0 auto 24px;">
@@ -630,7 +627,7 @@
                     Your verified talent subscription has expired. Please renew your package to restore your public profile
                     and keep receiving casting calls.
                 </p>
-                <a href="{{ route('packages.index') }}" class="btn-fill" style="display: inline-flex;">
+                <a href="<?php echo e(route('packages.index')); ?>" class="btn-fill" style="display: inline-flex;">
                     Renew Subscription
                     <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
                         style="margin-left:8px;">
@@ -639,10 +636,8 @@
                 </a>
             </div>
 
-            {{-- ═════════════════════════════════════════
-            GATE 3: PAYMENT PENDING (Change your existing @if to @elseif)
-            ═════════════════════════════════════════ --}}
-        @elseif($currentStep === 'payment_pending')
+            
+        <?php elseif($currentStep === 'payment_pending'): ?>
             <div class="text-center py-20 anim-fade-up">
                 <div class="text-center py-20 anim-fade-up">
                     <svg class="mx-auto h-16 w-16 text-yellow-500 mb-6" fill="none" viewBox="0 0 24 24"
@@ -655,10 +650,8 @@
                         usually takes a few hours. Please check back soon!</p>
                 </div>
 
-                {{-- ═════════════════════════════════════════
-                GATE 3: DOCUMENT UPLOAD
-                ═════════════════════════════════════════ --}}
-                @elseif($currentStep === 'document_upload')
+                
+                <?php elseif($currentStep === 'document_upload'): ?>
                 <div class="form-section anim-fade-up">
                     <div class="form-section-header">
                         <div class="form-section-title">Step 2: Identity & Academic Verification</div>
@@ -671,14 +664,12 @@
 
                         <form wire:submit.prevent="submitDocuments" class="space-y-6">
 
-                            {{-- ══════════════════════════════════════
-                                BLOCK 1: NATIONAL ID
-                            ══════════════════════════════════════ --}}
+                            
 
-                            @php $nidStatus = Auth::user()->verification_status; @endphp
+                            <?php $nidStatus = Auth::user()->verification_status; ?>
 
-                            @if($nidStatus === 'verified')
-                                {{-- ✅ Already verified — show green tick, no upload --}}
+                            <?php if(\Livewire\Mechanisms\ExtendBlade\ExtendBlade::isRenderingLivewireComponent()): ?><!--[if BLOCK]><![endif]--><?php endif; ?><?php if($nidStatus === 'verified'): ?>
+                                
                                 <div style="display:flex; align-items:center; gap:12px; padding:16px 20px;
                                             background:rgba(22,163,74,0.05); border:1px solid rgba(22,163,74,0.25);
                                             border-radius:6px; margin-bottom:20px;">
@@ -689,8 +680,8 @@
                                     <span style="font-size:0.85rem; font-weight:600; color:#16a34a;">National ID — Verified</span>
                                 </div>
 
-                            @elseif($nidStatus === 'pending')
-                                {{-- 🕐 Submitted, waiting on admin --}}
+                            <?php elseif($nidStatus === 'pending'): ?>
+                                
                                 <div style="display:flex; align-items:center; gap:12px; padding:16px 20px;
                                             background:rgba(234,179,8,0.05); border:1px solid rgba(234,179,8,0.3);
                                             border-radius:6px; margin-bottom:20px;">
@@ -701,8 +692,8 @@
                                     <span style="font-size:0.85rem; font-weight:600; color:#eab308;">National ID — Pending Review</span>
                                 </div>
 
-                            @else
-                                {{-- ❌ unverified or rejected — show upload form --}}
+                            <?php else: ?>
+                                
                                 <div style="padding:20px; background:var(--bg-secondary); border:1px solid var(--border);
                                             border-radius:6px; margin-bottom:20px;">
 
@@ -710,8 +701,8 @@
                                         1. NID/Passport/Birth Certificate
                                     </h3>
 
-                                    {{-- Rejection banner (only when previously rejected) --}}
-                                    @if($nidStatus === 'rejected')
+                                    
+                                    <?php if(\Livewire\Mechanisms\ExtendBlade\ExtendBlade::isRenderingLivewireComponent()): ?><!--[if BLOCK]><![endif]--><?php endif; ?><?php if($nidStatus === 'rejected'): ?>
                                         <div style="display:flex; align-items:flex-start; gap:10px; padding:12px 16px;
                                                     background:rgba(220,38,38,0.07); border:1px solid rgba(220,38,38,0.3);
                                                     border-radius:6px; margin-bottom:16px;">
@@ -731,7 +722,7 @@
                                                 </p>
                                             </div>
                                         </div>
-                                    @endif
+                                    <?php endif; ?><?php if(\Livewire\Mechanisms\ExtendBlade\ExtendBlade::isRenderingLivewireComponent()): ?><!--[if ENDBLOCK]><![endif]--><?php endif; ?>
 
                                     <label class="upload-zone">
                                         <input type="file" wire:model="nidImage" accept="image/*">
@@ -745,8 +736,8 @@
                                         <div class="upload-zone-sub">Accepts JPG, PNG, WEBP &nbsp;·&nbsp; <span>Max 5MB</span></div>
                                     </label>
 
-                                    {{-- Live preview after picking a file --}}
-                                    @if($nidImage)
+                                    
+                                    <?php if(\Livewire\Mechanisms\ExtendBlade\ExtendBlade::isRenderingLivewireComponent()): ?><!--[if BLOCK]><![endif]--><?php endif; ?><?php if($nidImage): ?>
                                         <div style="margin-top:12px; display:flex; align-items:center; gap:8px;
                                                     font-size:0.8rem; color:var(--gold); font-weight:600;">
                                             <svg width="14" height="14" viewBox="0 0 24 24" fill="none"
@@ -757,7 +748,7 @@
                                             </svg>
                                             File selected — ready to submit
                                         </div>
-                                    @endif
+                                    <?php endif; ?><?php if(\Livewire\Mechanisms\ExtendBlade\ExtendBlade::isRenderingLivewireComponent()): ?><!--[if ENDBLOCK]><![endif]--><?php endif; ?>
 
                                     <div wire:loading wire:target="nidImage"
                                         style="color:var(--gold); font-size:0.7rem; font-weight:700;
@@ -765,23 +756,29 @@
                                         Preparing preview…
                                     </div>
 
-                                    @error('nidImage')
+                                    <?php if(\Livewire\Mechanisms\ExtendBlade\ExtendBlade::isRenderingLivewireComponent()): ?><!--[if BLOCK]><![endif]--><?php endif; ?><?php $__errorArgs = ['nidImage'];
+$__bag = $errors->getBag($__errorArgs[1] ?? 'default');
+if ($__bag->has($__errorArgs[0])) :
+if (isset($message)) { $__messageOriginal = $message; }
+$message = $__bag->first($__errorArgs[0]); ?>
                                         <span style="color:#dc2626; font-size:0.75rem; margin-top:6px; display:block;">
-                                            {{ $message }}
+                                            <?php echo e($message); ?>
+
                                         </span>
-                                    @enderror
+                                    <?php unset($message);
+if (isset($__messageOriginal)) { $message = $__messageOriginal; }
+endif;
+unset($__errorArgs, $__bag); ?><?php if(\Livewire\Mechanisms\ExtendBlade\ExtendBlade::isRenderingLivewireComponent()): ?><!--[if ENDBLOCK]><![endif]--><?php endif; ?>
                                 </div>
-                            @endif
+                            <?php endif; ?><?php if(\Livewire\Mechanisms\ExtendBlade\ExtendBlade::isRenderingLivewireComponent()): ?><!--[if ENDBLOCK]><![endif]--><?php endif; ?>
 
 
-                            {{-- ══════════════════════════════════════
-                                BLOCK 2: ACADEMIC CERTIFICATE
-                            ══════════════════════════════════════ --}}
+                            
 
-                            @php $acadStatus = Auth::user()->academic_verification_status; @endphp
+                            <?php $acadStatus = Auth::user()->academic_verification_status; ?>
 
-                            @if($acadStatus === 'verified')
-                                {{-- ✅ Already verified --}}
+                            <?php if(\Livewire\Mechanisms\ExtendBlade\ExtendBlade::isRenderingLivewireComponent()): ?><!--[if BLOCK]><![endif]--><?php endif; ?><?php if($acadStatus === 'verified'): ?>
+                                
                                 <div style="display:flex; align-items:center; gap:12px; padding:16px 20px;
                                             background:rgba(22,163,74,0.05); border:1px solid rgba(22,163,74,0.25);
                                             border-radius:6px; margin-bottom:24px;">
@@ -792,8 +789,8 @@
                                     <span style="font-size:0.85rem; font-weight:600; color:#16a34a;">Academic Certificate — Verified</span>
                                 </div>
 
-                            @elseif($acadStatus === 'pending')
-                                {{-- 🕐 Waiting on admin --}}
+                            <?php elseif($acadStatus === 'pending'): ?>
+                                
                                 <div style="display:flex; align-items:center; gap:12px; padding:16px 20px;
                                             background:rgba(234,179,8,0.05); border:1px solid rgba(234,179,8,0.3);
                                             border-radius:6px; margin-bottom:24px;">
@@ -804,8 +801,8 @@
                                     <span style="font-size:0.85rem; font-weight:600; color:#eab308;">Academic Certificate — Pending Review</span>
                                 </div>
 
-                            @else
-                                {{-- ❌ unverified or rejected — show upload form --}}
+                            <?php else: ?>
+                                
                                 <div style="padding:20px; background:var(--bg-secondary); border:1px solid var(--border);
                                             border-radius:6px; margin-bottom:24px;">
 
@@ -813,8 +810,8 @@
                                         2. Academic / Training Certificate
                                     </h3>
 
-                                    {{-- Rejection banner --}}
-                                    @if($acadStatus === 'rejected')
+                                    
+                                    <?php if(\Livewire\Mechanisms\ExtendBlade\ExtendBlade::isRenderingLivewireComponent()): ?><!--[if BLOCK]><![endif]--><?php endif; ?><?php if($acadStatus === 'rejected'): ?>
                                         <div style="display:flex; align-items:flex-start; gap:10px; padding:12px 16px;
                                                     background:rgba(220,38,38,0.07); border:1px solid rgba(220,38,38,0.3);
                                                     border-radius:6px; margin-bottom:16px;">
@@ -834,7 +831,7 @@
                                                 </p>
                                             </div>
                                         </div>
-                                    @endif
+                                    <?php endif; ?><?php if(\Livewire\Mechanisms\ExtendBlade\ExtendBlade::isRenderingLivewireComponent()): ?><!--[if ENDBLOCK]><![endif]--><?php endif; ?>
 
                                     <label class="upload-zone">
                                         <input type="file" wire:model="academicImage" accept="image/*">
@@ -847,7 +844,7 @@
                                         <div class="upload-zone-sub">Accepts JPG, PNG, WEBP &nbsp;·&nbsp; <span>Max 5MB</span></div>
                                     </label>
 
-                                    @if($academicImage)
+                                    <?php if(\Livewire\Mechanisms\ExtendBlade\ExtendBlade::isRenderingLivewireComponent()): ?><!--[if BLOCK]><![endif]--><?php endif; ?><?php if($academicImage): ?>
                                         <div style="margin-top:12px; display:flex; align-items:center; gap:8px;
                                                     font-size:0.8rem; color:var(--gold); font-weight:600;">
                                             <svg width="14" height="14" viewBox="0 0 24 24" fill="none"
@@ -858,7 +855,7 @@
                                             </svg>
                                             File selected — ready to submit
                                         </div>
-                                    @endif
+                                    <?php endif; ?><?php if(\Livewire\Mechanisms\ExtendBlade\ExtendBlade::isRenderingLivewireComponent()): ?><!--[if ENDBLOCK]><![endif]--><?php endif; ?>
 
                                     <div wire:loading wire:target="academicImage"
                                         style="color:var(--gold); font-size:0.7rem; font-weight:700;
@@ -866,19 +863,27 @@
                                         Preparing preview…
                                     </div>
 
-                                    @error('academicImage')
+                                    <?php if(\Livewire\Mechanisms\ExtendBlade\ExtendBlade::isRenderingLivewireComponent()): ?><!--[if BLOCK]><![endif]--><?php endif; ?><?php $__errorArgs = ['academicImage'];
+$__bag = $errors->getBag($__errorArgs[1] ?? 'default');
+if ($__bag->has($__errorArgs[0])) :
+if (isset($message)) { $__messageOriginal = $message; }
+$message = $__bag->first($__errorArgs[0]); ?>
                                         <span style="color:#dc2626; font-size:0.75rem; margin-top:6px; display:block;">
-                                            {{ $message }}
-                                        </span>
-                                    @enderror
-                                </div>
-                            @endif
+                                            <?php echo e($message); ?>
 
-                            {{-- Submit button — only show if at least one doc needs uploading --}}
-                            @if(
+                                        </span>
+                                    <?php unset($message);
+if (isset($__messageOriginal)) { $message = $__messageOriginal; }
+endif;
+unset($__errorArgs, $__bag); ?><?php if(\Livewire\Mechanisms\ExtendBlade\ExtendBlade::isRenderingLivewireComponent()): ?><!--[if ENDBLOCK]><![endif]--><?php endif; ?>
+                                </div>
+                            <?php endif; ?><?php if(\Livewire\Mechanisms\ExtendBlade\ExtendBlade::isRenderingLivewireComponent()): ?><!--[if ENDBLOCK]><![endif]--><?php endif; ?>
+
+                            
+                            <?php if(\Livewire\Mechanisms\ExtendBlade\ExtendBlade::isRenderingLivewireComponent()): ?><!--[if BLOCK]><![endif]--><?php endif; ?><?php if(
                                 in_array(Auth::user()->verification_status, ['unverified', 'rejected']) ||
                                 in_array(Auth::user()->academic_verification_status, ['unverified', 'rejected'])
-                            )
+                            ): ?>
                                 <button type="submit" class="btn-fill w-full justify-center"
                                         wire:loading.attr="disabled" wire:target="submitDocuments">
                                     <span wire:loading.remove wire:target="submitDocuments">
@@ -891,16 +896,14 @@
                                     </span>
                                     <span wire:loading wire:target="submitDocuments">Submitting…</span>
                                 </button>
-                            @endif
+                            <?php endif; ?><?php if(\Livewire\Mechanisms\ExtendBlade\ExtendBlade::isRenderingLivewireComponent()): ?><!--[if ENDBLOCK]><![endif]--><?php endif; ?>
 
                         </form>
                     </div>
                 </div>
 
-                {{-- ═════════════════════════════════════════
-                GATE 4: DOCUMENTS PENDING
-                ═════════════════════════════════════════ --}}
-            @elseif($currentStep === 'document_pending')
+                
+            <?php elseif($currentStep === 'document_pending'): ?>
                 <div class="text-center py-20 anim-fade-up max-w-lg mx-auto">
                     <svg class="mx-auto h-16 w-16 text-blue-500 mb-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5"
@@ -918,8 +921,9 @@
                                 ID</span>
                             <span
                                 style="font-size: 0.7rem; padding: 4px 10px; border-radius: 999px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.05em; 
-                            {{ Auth::user()->verification_status === 'verified' ? 'background: rgba(22,163,74,0.1); color: #16a34a;' : 'background: rgba(234,179,8,0.1); color: #eab308;' }}">
-                                {{ Auth::user()->verification_status }}
+                            <?php echo e(Auth::user()->verification_status === 'verified' ? 'background: rgba(22,163,74,0.1); color: #16a34a;' : 'background: rgba(234,179,8,0.1); color: #eab308;'); ?>">
+                                <?php echo e(Auth::user()->verification_status); ?>
+
                             </span>
                         </div>
                         <div style="display: flex; justify-content: space-between; align-items: center;">
@@ -927,18 +931,17 @@
                                 Certificate</span>
                             <span
                                 style="font-size: 0.7rem; padding: 4px 10px; border-radius: 999px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.05em; 
-                            {{ Auth::user()->academic_verification_status === 'verified' ? 'background: rgba(22,163,74,0.1); color: #16a34a;' : 'background: rgba(234,179,8,0.1); color: #eab308;' }}">
-                                {{ Auth::user()->academic_verification_status }}
+                            <?php echo e(Auth::user()->academic_verification_status === 'verified' ? 'background: rgba(22,163,74,0.1); color: #16a34a;' : 'background: rgba(234,179,8,0.1); color: #eab308;'); ?>">
+                                <?php echo e(Auth::user()->academic_verification_status); ?>
+
                             </span>
                         </div>
                     </div>
                 </div>
 
-                {{-- ═════════════════════════════════════════
-                GATE 5: FULL PROFILE ACCESS (APPROVED)
-                ═════════════════════════════════════════ --}}
-            @elseif($currentStep === 'profile')
-                {{-- Page header --}}
+                
+            <?php elseif($currentStep === 'profile'): ?>
+                
                 <div class="form-page-header anim-fade-up">
                     <div class="form-page-eyebrow">Your Profile</div>
                     <h1 class="form-page-title">Build Your <strong>Talent Profile</strong></h1>
@@ -946,7 +949,7 @@
                         clients.</p>
                 </div>
 
-                {{-- Progress steps --}}
+                
                 <div class="form-steps anim-fade-up anim-d1" aria-label="Form progress">
                     <div class="form-step is-active">
                         <div class="form-step-dot">01</div>
@@ -969,21 +972,22 @@
                     </div>
                 </div>
 
-                {{-- Success flash --}}
-                @if(session()->has('message'))
+                
+                <?php if(\Livewire\Mechanisms\ExtendBlade\ExtendBlade::isRenderingLivewireComponent()): ?><!--[if BLOCK]><![endif]--><?php endif; ?><?php if(session()->has('message')): ?>
                     <div class="form-flash anim-fade-up">
                         <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
                             aria-hidden="true">
                             <path
                                 d="M12 2L3 7v5c0 5.55 3.84 10.74 9 12 5.16-1.26 9-6.45 9-12V7L12 2zm-2 15l-4-4 1.41-1.41L10 14.17l6.59-6.59L18 9l-8 8z" />
                         </svg>
-                        {{ session('message') }}
+                        <?php echo e(session('message')); ?>
+
                     </div>
-                @endif
+                <?php endif; ?><?php if(\Livewire\Mechanisms\ExtendBlade\ExtendBlade::isRenderingLivewireComponent()): ?><!--[if ENDBLOCK]><![endif]--><?php endif; ?>
 
                 <form wire:submit="saveProfile" novalidate>
 
-                    {{-- ── AVATAR UPLOAD SECTION ── --}}
+                    
                     <div class="form-section anim-fade-up" x-data="{ menuOpen: false }">
                         <div class="form-section-header">
                             <div class="form-section-title">Profile Picture</div>
@@ -992,21 +996,21 @@
                         <div class="form-section-body">
                             <div style="display: flex; align-items: flex-start; gap: 32px; flex-wrap: wrap;">
 
-                                {{-- Left: Avatar + inline menu --}}
+                                
                                 <div style="display: flex; flex-direction: column; align-items: center; gap: 12px;">
 
-                                    {{-- Avatar Circle --}}
+                                    
                                     <div
                                         style="width: 130px; height: 130px; border-radius: 50%; padding: 4px; border: 2px dashed var(--border-strong); position: relative;">
                                         <div
                                             style="width: 100%; height: 100%; border-radius: 50%; overflow: hidden; background: var(--bg-secondary);">
-                                            @if ($newAvatar)
-                                                <img src="{{ $newAvatar->temporaryUrl() }}"
+                                            <?php if(\Livewire\Mechanisms\ExtendBlade\ExtendBlade::isRenderingLivewireComponent()): ?><!--[if BLOCK]><![endif]--><?php endif; ?><?php if($newAvatar): ?>
+                                                <img src="<?php echo e($newAvatar->temporaryUrl()); ?>"
                                                     style="width: 100%; height: 100%; object-fit: cover;">
-                                            @elseif(auth()->user()->getFirstMediaUrl('avatar'))
-                                                <img src="{{ auth()->user()->getFirstMediaUrl('avatar') }}"
+                                            <?php elseif(auth()->user()->getFirstMediaUrl('avatar')): ?>
+                                                <img src="<?php echo e(auth()->user()->getFirstMediaUrl('avatar')); ?>"
                                                     style="width: 100%; height: 100%; object-fit: cover;">
-                                            @else
+                                            <?php else: ?>
                                                 <div
                                                     style="width: 100%; height: 100%; display: flex; align-items: center; justify-content: center; color: var(--text-muted);">
                                                     <svg width="40" height="40" viewBox="0 0 24 24" fill="none"
@@ -1015,9 +1019,9 @@
                                                         <path d="M4 20c0-4 3.58-7 8-7s8 3 8 7" />
                                                     </svg>
                                                 </div>
-                                            @endif
+                                            <?php endif; ?><?php if(\Livewire\Mechanisms\ExtendBlade\ExtendBlade::isRenderingLivewireComponent()): ?><!--[if ENDBLOCK]><![endif]--><?php endif; ?>
                                         </div>
-                                        {{-- Edit Badge --}}
+                                        
                                         <button type="button" @click="menuOpen = !menuOpen"
                                             style="position: absolute; bottom: 0; right: 4px; background: var(--bg-surface); border: 1px solid var(--border-strong); border-radius: 50%; width: 32px; height: 32px; display: flex; align-items: center; justify-content: center; color: var(--text-primary); box-shadow: 0 4px 12px rgba(0,0,0,0.1); cursor: pointer;">
                                             <svg width="14" height="14" viewBox="0 0 24 24" fill="none"
@@ -1027,11 +1031,11 @@
                                         </button>
                                     </div>
 
-                                    {{-- Inline Menu (not absolutely positioned) --}}
+                                    
                                     <div x-show="menuOpen" x-transition
                                         style="width: 200px; background: var(--bg-surface); border: 1px solid var(--border-strong); border-radius: 6px; box-shadow: 0 8px 24px rgba(0,0,0,0.12); overflow: hidden;">
 
-                                        <a href="{{ route('artist.show', auth()->id()) }}" target="_blank"
+                                        <a href="<?php echo e(route('artist.show', auth()->id())); ?>" target="_blank"
                                             style="display: block; padding: 12px 16px; font-size: 0.85rem; color: var(--text-primary); text-decoration: none; border-bottom: 1px solid var(--border);"
                                             onmouseover="this.style.background='var(--bg-secondary)'"
                                             onmouseout="this.style.background=''">
@@ -1047,7 +1051,7 @@
                                                 style="display: none;">
                                         </label>
 
-                                        @if(auth()->user()->getMedia('avatar')->count() > 0)
+                                        <?php if(\Livewire\Mechanisms\ExtendBlade\ExtendBlade::isRenderingLivewireComponent()): ?><!--[if BLOCK]><![endif]--><?php endif; ?><?php if(auth()->user()->getMedia('avatar')->count() > 0): ?>
                                             <button type="button" wire:click="deleteAvatar"
                                                 onclick="return confirm('Remove your profile picture?')"
                                                 style="width: 100%; text-align: left; padding: 12px 16px; font-size: 0.85rem; color: #dc2626; background: none; border: none; cursor: pointer;"
@@ -1055,14 +1059,14 @@
                                                 onmouseout="this.style.background=''">
                                                 🗑 Remove Photo
                                             </button>
-                                        @endif
+                                        <?php endif; ?><?php if(\Livewire\Mechanisms\ExtendBlade\ExtendBlade::isRenderingLivewireComponent()): ?><!--[if ENDBLOCK]><![endif]--><?php endif; ?>
                                     </div>
 
                                 </div>
 
-                                {{-- Right: Status messages --}}
+                                
                                 <div style="flex: 1; min-width: 200px; padding-top: 8px;">
-                                    @if($newAvatar)
+                                    <?php if(\Livewire\Mechanisms\ExtendBlade\ExtendBlade::isRenderingLivewireComponent()): ?><!--[if BLOCK]><![endif]--><?php endif; ?><?php if($newAvatar): ?>
                                         <div
                                             style="background: rgba(201,169,110,0.1); border: 1px solid rgba(201,169,110,0.3); padding: 16px; border-radius: 6px;">
                                             <h4
@@ -1076,26 +1080,33 @@
                                                 <span wire:loading wire:target="updateAvatar">Saving...</span>
                                             </button>
                                         </div>
-                                    @else
+                                    <?php else: ?>
                                         <p style="font-size: 0.9rem; color: var(--text-muted); line-height: 1.6;">
                                             Click the <strong>pencil icon</strong> on your avatar to upload a new photo, view
                                             your public profile, or remove your current picture.
                                         </p>
-                                    @endif
+                                    <?php endif; ?><?php if(\Livewire\Mechanisms\ExtendBlade\ExtendBlade::isRenderingLivewireComponent()): ?><!--[if ENDBLOCK]><![endif]--><?php endif; ?>
                                     <div wire:loading wire:target="newAvatar"
                                         style="font-size: 0.8rem; color: var(--gold); margin-top: 8px;">Preparing image...
                                     </div>
-                                    @error('newAvatar') <div style="color: #ff4a4a; font-size: 0.8rem; margin-top: 8px;">
-                                    {{ $message }}</div> @enderror
-                                    @if(session()->has('success'))
+                                    <?php if(\Livewire\Mechanisms\ExtendBlade\ExtendBlade::isRenderingLivewireComponent()): ?><!--[if BLOCK]><![endif]--><?php endif; ?><?php $__errorArgs = ['newAvatar'];
+$__bag = $errors->getBag($__errorArgs[1] ?? 'default');
+if ($__bag->has($__errorArgs[0])) :
+if (isset($message)) { $__messageOriginal = $message; }
+$message = $__bag->first($__errorArgs[0]); ?> <div style="color: #ff4a4a; font-size: 0.8rem; margin-top: 8px;">
+                                    <?php echo e($message); ?></div> <?php unset($message);
+if (isset($__messageOriginal)) { $message = $__messageOriginal; }
+endif;
+unset($__errorArgs, $__bag); ?><?php if(\Livewire\Mechanisms\ExtendBlade\ExtendBlade::isRenderingLivewireComponent()): ?><!--[if ENDBLOCK]><![endif]--><?php endif; ?>
+                                    <?php if(\Livewire\Mechanisms\ExtendBlade\ExtendBlade::isRenderingLivewireComponent()): ?><!--[if BLOCK]><![endif]--><?php endif; ?><?php if(session()->has('success')): ?>
                                         <div style="color: #2a7d4f; font-size: 0.8rem; margin-top: 8px;">
-                                    {{ session('success') }}</div> @endif
+                                    <?php echo e(session('success')); ?></div> <?php endif; ?><?php if(\Livewire\Mechanisms\ExtendBlade\ExtendBlade::isRenderingLivewireComponent()): ?><!--[if ENDBLOCK]><![endif]--><?php endif; ?>
                                 </div>
 
                             </div>
                         </div>
                     </div>
-                    {{-- ── Section 01: Professional Details ── --}}
+                    
                     <div class="form-section anim-fade-up anim-d1">
                         <div class="form-section-header">
                             <div class="form-section-icon">
@@ -1118,34 +1129,42 @@
                                     <div class="form-hint mb-4">Select all areas where you have professional experience.
                                     </div>
 
-                                    @error('categories') <span
-                                        style="color: #dc2626; font-size: 0.75rem; display: block; margin-bottom: 16px;">{{ $message }}</span>
-                                    @enderror
+                                    <?php if(\Livewire\Mechanisms\ExtendBlade\ExtendBlade::isRenderingLivewireComponent()): ?><!--[if BLOCK]><![endif]--><?php endif; ?><?php $__errorArgs = ['categories'];
+$__bag = $errors->getBag($__errorArgs[1] ?? 'default');
+if ($__bag->has($__errorArgs[0])) :
+if (isset($message)) { $__messageOriginal = $message; }
+$message = $__bag->first($__errorArgs[0]); ?> <span
+                                        style="color: #dc2626; font-size: 0.75rem; display: block; margin-bottom: 16px;"><?php echo e($message); ?></span>
+                                    <?php unset($message);
+if (isset($__messageOriginal)) { $message = $__messageOriginal; }
+endif;
+unset($__errorArgs, $__bag); ?><?php if(\Livewire\Mechanisms\ExtendBlade\ExtendBlade::isRenderingLivewireComponent()): ?><!--[if ENDBLOCK]><![endif]--><?php endif; ?>
 
                                     <div style="display: grid; gap: 24px;">
-                                        @foreach($groupedCategories as $groupName => $cats)
+                                        <?php if(\Livewire\Mechanisms\ExtendBlade\ExtendBlade::isRenderingLivewireComponent()): ?><!--[if BLOCK]><![endif]--><?php \Livewire\Features\SupportCompiledWireKeys\SupportCompiledWireKeys::openLoop(); ?><?php endif; ?><?php $__currentLoopData = $groupedCategories; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $groupName => $cats): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?><?php if(\Livewire\Mechanisms\ExtendBlade\ExtendBlade::isRenderingLivewireComponent()): ?><?php \Livewire\Features\SupportCompiledWireKeys\SupportCompiledWireKeys::startLoopIteration(); ?><?php endif; ?>
                                             <div
                                                 style="background: var(--bg-primary); border: 1px solid var(--border); border-radius: 6px; padding: 16px;">
                                                 <h4
                                                     style="font-size: 0.85rem; font-weight: 600; color: var(--gold); text-transform: uppercase; letter-spacing: 0.1em; margin-bottom: 12px; border-bottom: 1px solid var(--border-strong); padding-bottom: 8px;">
-                                                    {{ $groupName }}
+                                                    <?php echo e($groupName); ?>
+
                                                 </h4>
                                                 <div
                                                     style="display: grid; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); gap: 12px;">
 
-                                                    @foreach($cats as $cat)
+                                                    <?php if(\Livewire\Mechanisms\ExtendBlade\ExtendBlade::isRenderingLivewireComponent()): ?><!--[if BLOCK]><![endif]--><?php \Livewire\Features\SupportCompiledWireKeys\SupportCompiledWireKeys::openLoop(); ?><?php endif; ?><?php $__currentLoopData = $cats; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $cat): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?><?php if(\Livewire\Mechanisms\ExtendBlade\ExtendBlade::isRenderingLivewireComponent()): ?><?php \Livewire\Features\SupportCompiledWireKeys\SupportCompiledWireKeys::startLoopIteration(); ?><?php endif; ?>
                                                         <label
                                                             style="display: flex; align-items: flex-start; gap: 8px; cursor: pointer; font-size: 0.9rem; color: var(--text-primary); transition: color 0.2s;">
                                                             <input type="checkbox" wire:model.defer="categories"
-                                                                value="{{ $cat->name }}"
+                                                                value="<?php echo e($cat->name); ?>"
                                                                 style="margin-top: 4px; accent-color: var(--gold); width: 16px; height: 16px; cursor: pointer;">
-                                                            <span style="line-height: 1.4;">{{ $cat->name }}</span>
+                                                            <span style="line-height: 1.4;"><?php echo e($cat->name); ?></span>
                                                         </label>
-                                                    @endforeach
+                                                    <?php if(\Livewire\Mechanisms\ExtendBlade\ExtendBlade::isRenderingLivewireComponent()): ?><?php \Livewire\Features\SupportCompiledWireKeys\SupportCompiledWireKeys::endLoop(); ?><?php endif; ?><?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?><?php if(\Livewire\Mechanisms\ExtendBlade\ExtendBlade::isRenderingLivewireComponent()): ?><!--[if ENDBLOCK]><![endif]--><?php \Livewire\Features\SupportCompiledWireKeys\SupportCompiledWireKeys::closeLoop(); ?><?php endif; ?>
 
                                                 </div>
                                             </div>
-                                        @endforeach
+                                        <?php if(\Livewire\Mechanisms\ExtendBlade\ExtendBlade::isRenderingLivewireComponent()): ?><?php \Livewire\Features\SupportCompiledWireKeys\SupportCompiledWireKeys::endLoop(); ?><?php endif; ?><?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?><?php if(\Livewire\Mechanisms\ExtendBlade\ExtendBlade::isRenderingLivewireComponent()): ?><!--[if ENDBLOCK]><![endif]--><?php \Livewire\Features\SupportCompiledWireKeys\SupportCompiledWireKeys::closeLoop(); ?><?php endif; ?>
                                     </div>
                                 </div>
 
@@ -1236,7 +1255,7 @@
                         </div>
                     </div>
 
-                    {{-- ── Section 02: Location ── --}}
+                    
                     <div class="form-section anim-fade-up anim-d2">
                         <div class="form-section-header">
                             <div class="form-section-icon">
@@ -1268,7 +1287,7 @@
                         </div>
                     </div>
 
-                    {{-- ── Section 03: About / Bio ── --}}
+                    
                     <div class="form-section anim-fade-up anim-d2">
                         <div class="form-section-header">
                             <div class="form-section-icon">
@@ -1295,7 +1314,7 @@
                         </div>
                     </div>
 
-                    {{-- ── Section: Social & Portfolio Links ── --}}
+                    
                     <div class="form-section anim-fade-up anim-d2">
                         <div class="form-section-header">
                             <div class="form-section-icon">
@@ -1394,7 +1413,7 @@
                             </div>
                         </div>
                     </div>
-                    {{-- ── Section 04: Portfolio ── --}}
+                    
                     <div class="form-section anim-fade-up anim-d3">
                         <div class="form-section-header">
                             <div class="form-section-icon">
@@ -1433,13 +1452,13 @@
                                 Processing uploads…
                             </div>
 
-                            @if(count($portfolioImages) > 0)
+                            <?php if(\Livewire\Mechanisms\ExtendBlade\ExtendBlade::isRenderingLivewireComponent()): ?><!--[if BLOCK]><![endif]--><?php endif; ?><?php if(count($portfolioImages) > 0): ?>
                                 <div class="portfolio-thumbs">
-                                    @foreach($portfolioImages as $image)
+                                    <?php if(\Livewire\Mechanisms\ExtendBlade\ExtendBlade::isRenderingLivewireComponent()): ?><!--[if BLOCK]><![endif]--><?php \Livewire\Features\SupportCompiledWireKeys\SupportCompiledWireKeys::openLoop(); ?><?php endif; ?><?php $__currentLoopData = $portfolioImages; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $image): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?><?php if(\Livewire\Mechanisms\ExtendBlade\ExtendBlade::isRenderingLivewireComponent()): ?><?php \Livewire\Features\SupportCompiledWireKeys\SupportCompiledWireKeys::startLoopIteration(); ?><?php endif; ?>
                                         <div class="portfolio-thumb">
-                                            <img src="{{ $image->getUrl() }}" alt="Portfolio image" loading="lazy">
+                                            <img src="<?php echo e($image->getUrl()); ?>" alt="Portfolio image" loading="lazy">
                                             <button type="button" class="portfolio-thumb-del"
-                                                wire:click="deletePhoto({{ $image->id }})"
+                                                wire:click="deletePhoto(<?php echo e($image->id); ?>)"
                                                 onclick="return confirm('Delete this photo from your portfolio?')"
                                                 aria-label="Delete photo">
                                                 <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor"
@@ -1449,23 +1468,23 @@
                                                 </svg>
                                             </button>
                                         </div>
-                                    @endforeach
+                                    <?php if(\Livewire\Mechanisms\ExtendBlade\ExtendBlade::isRenderingLivewireComponent()): ?><?php \Livewire\Features\SupportCompiledWireKeys\SupportCompiledWireKeys::endLoop(); ?><?php endif; ?><?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?><?php if(\Livewire\Mechanisms\ExtendBlade\ExtendBlade::isRenderingLivewireComponent()): ?><!--[if ENDBLOCK]><![endif]--><?php \Livewire\Features\SupportCompiledWireKeys\SupportCompiledWireKeys::closeLoop(); ?><?php endif; ?>
                                 </div>
-                            @endif
+                            <?php endif; ?><?php if(\Livewire\Mechanisms\ExtendBlade\ExtendBlade::isRenderingLivewireComponent()): ?><!--[if ENDBLOCK]><![endif]--><?php endif; ?>
 
                         </div>
                     </div>
 
-                    {{-- ── Sticky submit bar ── --}}
-                    {{-- ── Sticky submit bar ── --}}
+                    
+                    
                     <div class="form-submit-bar">
                         <span class="form-submit-status">
                             All changes are saved automatically on submit.
                         </span>
 
                         <div class="submit-actions">
-                            {{-- View public profile button --}}
-                            <a href="{{ route('artist.show', $user->id) }}" class="btn-outline" target="_blank">
+                            
+                            <a href="<?php echo e(route('artist.show', $user->id)); ?>" class="btn-outline" target="_blank">
                                 <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor"
                                     stroke-width="1.7" aria-hidden="true">
                                     <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z" />
@@ -1474,7 +1493,7 @@
                                 View Profile
                             </a>
 
-                            {{-- Save button --}}
+                            
                             <button type="submit" class="btn-fill" wire:loading.attr="disabled"
                                 style="min-width:200px; justify-content:center; display: flex; align-items: center;">
                                 <span wire:loading.remove>
@@ -1494,7 +1513,7 @@
                     </div>
 
                 </form>
-            @endif
+            <?php endif; ?><?php if(\Livewire\Mechanisms\ExtendBlade\ExtendBlade::isRenderingLivewireComponent()): ?><!--[if ENDBLOCK]><![endif]--><?php endif; ?>
         </div>
 
-    </div>
+    </div><?php /**PATH H:\agency-app\resources\views/livewire/artist-account.blade.php ENDPATH**/ ?>

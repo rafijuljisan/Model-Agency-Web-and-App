@@ -32,7 +32,7 @@ class UsersTable
                 TextColumn::make('verification_status')
                     ->label('NID Status')
                     ->badge()
-                    ->color(fn (string $state): string => match ($state) {
+                    ->color(fn(string $state): string => match ($state) {
                         'verified' => 'success',
                         'pending' => 'warning',
                         'unverified' => 'danger',
@@ -42,7 +42,7 @@ class UsersTable
                 TextColumn::make('academic_verification_status')
                     ->label('Academic Status')
                     ->badge()
-                    ->color(fn (string $state): string => match ($state) {
+                    ->color(fn(string $state): string => match ($state) {
                         'verified' => 'success',
                         'pending' => 'warning',
                         'unverified' => 'danger',
@@ -60,7 +60,8 @@ class UsersTable
                 Action::make('approve_nid')
                     ->label('Approve NID')
                     ->color('success')
-                    ->visible(fn ($record) =>
+                    ->visible(
+                        fn($record) =>
                         $record->verification_status === 'pending'
                         && $record->nid_path
                     )
@@ -84,19 +85,18 @@ class UsersTable
                 Action::make('reject_nid')
                     ->label('Reject NID')
                     ->color('danger')
-                    ->visible(fn ($record) =>
-                        $record->verification_status === 'pending'
-                        && $record->nid_path
+                    ->visible(
+                        fn($record) =>
+                        $record->verification_status === 'pending' && $record->nid_path
                     )
                     ->requiresConfirmation()
                     ->action(function ($record) {
-                        $record->update(['verification_status' => 'unverified']);
-
-                        // ── TRIGGER USER EMAIL ──
+                        $record->update(['verification_status' => 'rejected']); // ← was 'unverified'
+            
                         $record->notify(new UserStatusNotification(
                             'National ID Rejected',
                             'Unfortunately, we could not verify the National ID you uploaded. Please log in and upload a clearer, original document.',
-                            false // isSuccess = false (Red email button)
+                            false
                         ));
 
                         Notification::make()->title('NID Rejected')->danger()->send();
@@ -108,7 +108,8 @@ class UsersTable
                 Action::make('approve_academic')
                     ->label('Approve Certificate')
                     ->color('success')
-                    ->visible(fn ($record) =>
+                    ->visible(
+                        fn($record) =>
                         $record->academic_verification_status === 'pending'
                         && $record->academic_certificate_path
                     )
@@ -134,27 +135,21 @@ class UsersTable
                 Action::make('reject_academic')
                     ->label('Reject Certificate')
                     ->color('danger')
-                    ->visible(fn ($record) =>
-                        $record->academic_verification_status === 'pending'
-                        && $record->academic_certificate_path
+                    ->visible(
+                        fn($record) =>
+                        $record->academic_verification_status === 'pending' && $record->academic_certificate_path
                     )
                     ->requiresConfirmation()
                     ->action(function ($record) {
-                        $record->update([
-                            'academic_verification_status' => 'unverified',
-                        ]);
-
-                        // ── TRIGGER USER EMAIL (REJECTED) ──
+                        $record->update(['academic_verification_status' => 'rejected']); // ← was 'unverified'
+            
                         $record->notify(new \App\Notifications\UserStatusNotification(
                             'Academic Certificate Rejected',
-                            'Unfortunately, we could not verify the academic certificate you uploaded. Please log in to your dashboard and upload a clearer, valid document.',
-                            false // Shows the red error button
+                            'Unfortunately, we could not verify the academic certificate you uploaded. Please log in and upload a clearer, valid document.',
+                            false
                         ));
 
-                        Notification::make()
-                            ->title('Academic Certificate Rejected')
-                            ->danger()
-                            ->send();
+                        Notification::make()->title('Academic Certificate Rejected')->danger()->send();
                     }),
             ])
 

@@ -47,6 +47,37 @@ Route::get('/robots.txt', function () {
         ?? "User-agent: *\nAllow: /\nDisallow: /admin/\nSitemap: " . url('/sitemap.xml');
     return response($content, 200)->header('Content-Type', 'text/plain');
 });
+// Admin-only route to serve private verification documents
+// Admin-only route to serve private verification documents
+Route::middleware('auth')->group(function () {
+    Route::get('/admin/documents/{type}/{user}', function (string $type, User $user) {
+
+        /** @var \App\Models\User $admin */
+        $admin = \Illuminate\Support\Facades\Auth::user();
+
+        if (!$admin || !$admin->hasRole('Super-Admin')) {
+            abort(403, 'Unauthorized.');
+        }
+
+        $path = match($type) {
+            'nid'      => $user->nid_path,
+            'academic' => $user->academic_certificate_path,
+            default    => null,
+        };
+
+        if (!$path || !\Illuminate\Support\Facades\Storage::disk('private')->exists($path)) {
+            abort(404, 'Document not found.');
+        }
+
+        $fullPath = \Illuminate\Support\Facades\Storage::disk('private')->path($path);
+        $mimeType = mime_content_type($fullPath) ?: 'application/octet-stream';
+
+        return response()->file($fullPath, [
+            'Content-Type' => $mimeType,
+        ]);
+
+    })->name('admin.document.view');
+});
 // 2. Standard Pages & Livewire Components
 Route::get('/videos', App\Livewire\VideoGallery::class)->name('videos.index');
 Route::get('/contact', App\Livewire\ContactPage::class)->name('contact');
