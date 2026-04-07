@@ -440,11 +440,11 @@
 /* Hover panel — name */
 .artist-hover-name {
     font-family: 'Cormorant Garamond', serif;
-    font-size: 1.5rem;
+    font-size: 1.65rem; /* Increased from 1.5rem */
     font-weight: 600;
     color: #ffffff;
     letter-spacing: 0.02em;
-    margin-bottom: 4px;
+    margin-bottom: 6px;
     line-height: 1.2;
 }
 
@@ -458,11 +458,11 @@
 }
 
 .artist-hover-cat-tag {
-    padding: 3px 9px;
+    padding: 4px 10px;
     border: 1px solid rgba(255, 255, 255, 0.25);
-    font-size: 0.62rem;
+    font-size: 0.75rem; 
     font-weight: 500;
-    letter-spacing: 0.14em;
+    letter-spacing: normal; /* ← Changed this here as well */
     text-transform: uppercase;
     color: rgba(255, 255, 255, 0.85);
     background: rgba(255, 255, 255, 0.08);
@@ -486,8 +486,8 @@
     display: flex;
     align-items: center;
     gap: 8px;
-    font-size: 0.75rem;
-    color: rgba(255, 255, 255, 0.7);
+    font-size: 0.85rem; /* Increased from 0.75rem */
+    color: rgba(255, 255, 255, 0.8); /* Slightly brighter for better contrast */
 }
 
 .artist-hover-row svg {
@@ -503,13 +503,13 @@
 /* Hover panel — CTA button */
 .artist-hover-cta {
     margin-top: 18px;
-    padding: 10px 16px;
+    padding: 12px 16px;
     background: #ffffff;
     color: #111111;
-    font-family: 'Jost', sans-serif;
-    font-size: 0.72rem;
+    font-family: 'Poppins', sans-serif;
+    font-size: 0.85rem; /* Increased from 0.72rem */
     font-weight: 700;
-    letter-spacing: 0.18em;
+    letter-spacing: 0.15em;
     text-transform: uppercase;
     display: flex;
     align-items: center;
@@ -528,20 +528,19 @@
         }
 
         .artist-card-cat {
-            font-size: 0.68rem;
+            font-size: 0.8rem; 
             font-weight: 600;
-            letter-spacing: 0.2em;
+            letter-spacing: normal; /* ← Changed this to remove the spacing */
             text-transform: uppercase;
             color: #ffffff;
-            /* → pure white instead of rgba gold */
             margin-bottom: 3px;
             opacity: 0.85;
         }
 
         .artist-card-name {
             font-family: 'Cormorant Garamond', serif;
-            font-size: 1.55rem;
-            font-weight: 400;
+            font-size: 1.65rem; /* Increased from 1.55rem */
+            font-weight: 500; /* Made slightly bolder */
             color: #fff;
             letter-spacing: 0.02em;
             line-height: 1.2;
@@ -558,16 +557,14 @@
             display: flex;
             align-items: center;
             gap: 4px;
-            font-size: 0.82rem;
+            font-size: 0.9rem; /* Increased from 0.82rem */
             color: rgba(255, 255, 255, 0.75);
-            /* → was 0.55, now 0.75 */
         }
 
         .artist-card-rate {
-            font-size: 0.72rem;
+            font-size: 0.85rem; /* Increased from 0.72rem */
             font-weight: 700;
             color: #ffffff;
-            /* → pure white instead of rgba gold */
             letter-spacing: 0.06em;
         }
 
@@ -981,9 +978,28 @@
                         </div>
 
                         
+                        
                         <div class="artist-card-info">
+                            <?php
+                                // Dynamically figure out which Groups this artist belongs to
+                                $displayGroups = [];
+                                $artistCats = (array) ($artist->profile?->categories ?? []);
+                                
+                                if (!empty($artistCats)) {
+                                    foreach ($categories as $groupName => $cats) {
+                                        foreach ($cats as $c) {
+                                            // Check if any of the artist's categories belong to this group
+                                            if (in_array($c->name ?? $c['name'], $artistCats)) {
+                                                $displayGroups[] = $groupName;
+                                                break; // Found a match, move on to checking the next group
+                                            }
+                                        }
+                                    }
+                                }
+                            ?>
+
                             <div class="artist-card-cat">
-                                <?php echo e($artist->profile?->categories[0] ?? 'Professional'); ?>
+                                <?php echo e(!empty($displayGroups) ? implode(' · ', $displayGroups) : 'Professional'); ?>
 
                             </div>
                             <div class="artist-card-name"><?php echo e($artist->name); ?></div>

@@ -339,107 +339,262 @@
             gap: 2px;
         }
 
-        /* Talent card */
-        .talent-card {
+/* Artist card (Matches Directory Page) */
+        .artist-card {
             position: relative;
             overflow: hidden;
             background: var(--bg-secondary);
-            cursor: pointer;
             display: block;
             text-decoration: none;
+            cursor: pointer;
         }
-        .talent-card-media {
+
+        .artist-card-media {
             aspect-ratio: 3/4;
             overflow: hidden;
             position: relative;
             background: var(--bg-secondary);
         }
-        .talent-card-media img {
-            width: 100%; height: 100%;
-            object-fit: cover;
-            transition: transform 0.6s cubic-bezier(0.25, 0.46, 0.45, 0.94);
-        }
-        .talent-card:hover .talent-card-media img { transform: scale(1.07); }
 
-        /* Placeholder avatar */
-        .talent-card-placeholder {
-            width: 100%; height: 100%;
+        .artist-card-media img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: transform 0.55s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+        }
+
+        .artist-card:hover .artist-card-media img {
+            transform: scale(1.06);
+        }
+
+        .artist-card-placeholder {
+            width: 100%;
+            height: 100%;
             display: flex;
             flex-direction: column;
             align-items: center;
             justify-content: center;
-            gap: 12px;
+            gap: 10px;
             color: var(--text-muted);
-            background: var(--bg-secondary);
         }
-        .talent-card-placeholder svg { opacity: 0.35; }
-        .talent-card-placeholder span {
-            font-size: 0.6rem;
+
+        .artist-card-placeholder svg {
+            opacity: 0.28;
+        }
+
+        .artist-card-placeholder span {
+            font-size: 0.72rem;
             letter-spacing: 0.18em;
             text-transform: uppercase;
             opacity: 0.5;
         }
 
-        /* Card overlay info */
-        .talent-card-overlay {
+        /* Verified badge (White Triangle) */
+        .artist-card-verified {
             position: absolute;
-            bottom: 0; left: 0; right: 0;
-            padding: 32px 18px 18px;
-            background: linear-gradient(to top, rgba(10,8,4,0.9) 0%, rgba(10,8,4,0.4) 60%, transparent 100%);
-            transform: translateY(4px);
-            transition: transform 0.3s ease;
+            top: 0;
+            left: 0;
+            width: 0;
+            height: 0;
+            border-style: solid;
+            border-width: 72px 72px 0 0;
+            border-color: #ffffff transparent transparent transparent;
+            z-index: 3;
         }
-        .talent-card:hover .talent-card-overlay { transform: translateY(0); }
 
-        .talent-card-verified {
+        .artist-card-verified-inner {
             position: absolute;
-            top: 12px; left: 12px;
-            background: rgba(255,255,255,0.92);
-            backdrop-filter: blur(6px);
-            padding: 3px 8px;
+            top: -68px;
+            left: 4px;
             display: flex;
+            flex-direction: column;
             align-items: center;
-            gap: 4px;
-            font-size: 0.56rem;
-            font-weight: 700;
-            letter-spacing: 0.14em;
-            text-transform: uppercase;
-            color: #1a1714;
+            gap: 2px;
         }
 
-        .talent-card-name {
+        .artist-card-verified-inner svg {
+            width: 14px;
+            height: 14px;
+        }
+
+        .artist-card-verified-inner span {
+            font-size: 0.5rem;
+            font-weight: 700;
+            letter-spacing: 0.08em;
+            text-transform: uppercase;
+            color: #2a7d4f;
+            line-height: 1;
+        }
+
+        /* Base info — always visible at bottom */
+        .artist-card-info {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            padding: 48px 16px 16px;
+            background: linear-gradient(
+                to top,
+                rgba(0, 0, 0, 0.95) 0%,
+                rgba(0, 0, 0, 0.75) 40%,
+                rgba(0, 0, 0, 0.2) 70%,
+                transparent 100%
+            );
+            transition: opacity 0.3s;
+            z-index: 2;
+        }
+
+        .artist-card:hover .artist-card-info {
+            opacity: 0;
+        }
+
+        .artist-card-cat {
+            font-size: 0.8rem;
+            font-weight: 600;
+            letter-spacing: normal;
+            text-transform: uppercase;
+            color: #ffffff;
+            margin-bottom: 3px;
+            opacity: 0.85;
+        }
+
+        .artist-card-name {
             font-family: 'Cormorant Garamond', serif;
-            font-size: 1.15rem;
-            font-weight: 400;
+            font-size: 1.65rem;
+            font-weight: 500;
             color: #fff;
             letter-spacing: 0.02em;
             line-height: 1.2;
         }
-        .talent-card-cat {
-            font-size: 0.58rem;
-            font-weight: 500;
-            letter-spacing: 0.2em;
-            text-transform: uppercase;
-            color: rgba(201,169,110,0.9);
-            margin-top: 4px;
-        }
-        .talent-card-cta {
-            margin-top: 10px;
-            font-size: 0.6rem;
-            font-weight: 600;
-            letter-spacing: 0.2em;
-            text-transform: uppercase;
-            color: rgba(255,255,255,0.7);
+
+        .artist-card-meta {
             display: flex;
             align-items: center;
-            gap: 6px;
-            opacity: 0;
-            transform: translateY(4px);
-            transition: opacity 0.3s, transform 0.3s;
+            justify-content: space-between;
+            margin-top: 8px;
         }
-        .talent-card-cta svg { width: 10px; height: 10px; }
-        .talent-card:hover .talent-card-cta { opacity: 1; transform: translateY(0); }
 
+        .artist-card-location {
+            display: flex;
+            align-items: center;
+            gap: 4px;
+            font-size: 0.9rem;
+            color: rgba(255, 255, 255, 0.75);
+        }
+
+        .artist-card-rate {
+            font-size: 0.85rem;
+            font-weight: 700;
+            color: #ffffff;
+            letter-spacing: 0.06em;
+        }
+
+        /* Hover overlay — full card cover with all details */
+        .artist-card-hover {
+            position: absolute;
+            inset: 0;
+            background: rgba(10, 8, 6, 0.92);
+            backdrop-filter: blur(2px);
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            padding: 24px 20px;
+            opacity: 0;
+            transform: translateY(8px);
+            transition: opacity 0.35s ease, transform 0.35s ease;
+            z-index: 4;
+        }
+
+        .artist-card:hover .artist-card-hover {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        /* Hover panel — name */
+        .artist-hover-name {
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 1.65rem;
+            font-weight: 600;
+            color: #ffffff;
+            letter-spacing: 0.02em;
+            margin-bottom: 6px;
+            line-height: 1.2;
+        }
+
+        /* Hover panel — categories list */
+        .artist-hover-cats {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 5px;
+            margin-bottom: 16px;
+            margin-top: 8px;
+        }
+
+        .artist-hover-cat-tag {
+            padding: 4px 10px;
+            border: 1px solid rgba(255, 255, 255, 0.25);
+            font-size: 0.75rem;
+            font-weight: 500;
+            letter-spacing: normal;
+            text-transform: uppercase;
+            color: rgba(255, 255, 255, 0.85);
+            background: rgba(255, 255, 255, 0.08);
+        }
+
+        /* Hover panel — divider */
+        .artist-hover-divider {
+            height: 1px;
+            background: rgba(255, 255, 255, 0.12);
+            margin-bottom: 14px;
+        }
+
+        /* Hover panel — info rows */
+        .artist-hover-meta {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .artist-hover-row {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 0.85rem;
+            color: rgba(255, 255, 255, 0.8);
+        }
+
+        .artist-hover-row svg {
+            flex-shrink: 0;
+            opacity: 0.6;
+        }
+
+        .artist-hover-row strong {
+            color: #ffffff;
+            font-weight: 600;
+        }
+
+        /* Hover panel — CTA button */
+        .artist-hover-cta {
+            margin-top: 18px;
+            padding: 12px 16px;
+            background: #ffffff;
+            color: #111111;
+            font-family: 'Jost', sans-serif;
+            font-size: 0.85rem;
+            font-weight: 700;
+            letter-spacing: 0.15em;
+            text-transform: uppercase;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            transition: background 0.2s;
+        }
+
+        .artist-hover-cta:hover {
+            background: var(--gold);
+            color: #ffffff;
+        }
         /* Empty state */
         .talent-empty {
             grid-column: 1 / -1;
@@ -974,7 +1129,7 @@
     </nav>
 
     {{-- ══════════════════════════════════════════
-         FEATURED TALENT
+         Latest TALENT
     ══════════════════════════════════════════ --}}
     <section class="talent-section" aria-labelledby="talent-heading">
         <div class="section-inner">
@@ -982,7 +1137,7 @@
                 <div class="section-header-left">
                     <div class="section-eyebrow">Exclusively Verified</div>
                     <h2 class="section-title" id="talent-heading">
-                        Featured <strong>Talent</strong>
+                        Latest <strong>Talent</strong>
                     </h2>
                 </div>
                 <a href="/artists" class="btn-outline">View All Talent</a>
@@ -990,55 +1145,153 @@
 
             <div class="talent-grid">
                 @forelse($featuredArtists as $artist)
-    <a href="/artist/{{ $artist->id }}" class="talent-card">
+                    <a href="/artist/{{ $artist->id }}" class="artist-card" aria-label="View {{ $artist->name }}'s profile">
 
-                        {{-- OLD STATIC HTML (REPLACE THIS) --}}
-                        {{--
-                        <div class="talent-card-verified">
-                            <svg width="9" height="9" viewBox="0 0 24 24" fill="#2a7d4f" aria-hidden="true">
-                                <path d="M12 2L3 7v5c0 5.55 3.84 10.74 9 12 5.16-1.26 9-6.45 9-12V7L12 2zm-2 15l-4-4 1.41-1.41L10 14.17l6.59-6.59L18 9l-8 8z"/>
-                            </svg>
-                            Verified
-                        </div>
-                        --}}
+                                        {{-- ── White triangle verified badge ── --}}
+                                        <div class="artist-card-verified">
+                                            <div class="artist-card-verified-inner">
+                                                <svg viewBox="0 0 24 24" fill="#2a7d4f">
+                                                    <path d="M12 2L3 7v5c0 5.55 3.84 10.74 9 12 5.16-1.26 9-6.45 9-12V7L12 2zm-2 15l-4-4 1.41-1.41L10 14.17l6.59-6.59L18 9l-8 8z"/>
+                                                </svg>
+                                                <span>Verified</span>
+                                            </div>
+                                        </div>
 
-                        {{-- NEW UPDATED HTML STRUCTURE --}}
-                        <div class="verified-tag">
-                            {{-- Updated SVG for cleaner, consistent look within the tag --}}
-                            <svg class="verified-tag-icon" viewBox="0 0 24 24" aria-hidden="true">
-                                <path d="M12 2L3 7v5c0 5.55 3.84 10.74 9 12 5.16-1.26 9-6.45 9-12V7L12 2zm-2 15l-4-4 1.41-1.41L10 14.17l6.59-6.59L18 9l-8 8z"/>
-                            </svg>
-                            <span class="verified-tag-text">Verified</span>
-                        </div>
+                                        {{-- ── Photo ── --}}
+                                        <div class="artist-card-media">
+                                            @if($artist->hasMedia('avatar'))
+                                                <img src="{{ $artist->getFirstMediaUrl('avatar') }}" alt="{{ $artist->name }}" loading="lazy">
+                                            @elseif($artist->hasMedia('portfolio'))
+                                                <img src="{{ $artist->getFirstMediaUrl('portfolio') }}" alt="{{ $artist->name }}" loading="lazy">
+                                            @else
+                                                <div class="artist-card-placeholder">
+                                                    <svg width="36" height="36" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1">
+                                                        <circle cx="12" cy="8" r="4"/><path d="M4 20c0-4 3.58-7 8-7s8 3 8 7"/>
+                                                    </svg>
+                                                    <span>No Photo</span>
+                                                </div>
+                                            @endif
+                                        </div>
 
-                        <div class="talent-card-media">
-                            @if($artist->hasMedia('avatar'))
-                                <img src="{{ $artist->getFirstMediaUrl('avatar') }}" alt="{{ $artist->name }}" loading="lazy">
-                            @elseif($artist->hasMedia('portfolio'))
-                                <img src="{{ $artist->getFirstMediaUrl('portfolio') }}" alt="{{ $artist->name }}" loading="lazy">
-                            @else
-                                <div class="talent-card-placeholder">
-                                    <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1" aria-hidden="true">
-                                        <circle cx="12" cy="8" r="4"/><path d="M4 20c0-4 3.58-7 8-7s8 3 8 7"/>
-                                    </svg>
-                                    <span>No Photo Yet</span>
-                                </div>
-                            @endif
-                        </div>
+                                        {{-- ── Always-visible bottom info ── --}}
+                                        <div class="artist-card-info">
+                                            @php
+                                                // Safely fetch categories specifically for the welcome page
+                                                $allCategories = \App\Models\Category::all()->groupBy('group');
+                                                $displayGroups = [];
+                                                $artistCats = (array) ($artist->profile?->categories ?? []);
+                                                
+                                                if (!empty($artistCats)) {
+                                                    foreach ($allCategories as $groupName => $cats) {
+                                                        foreach ($cats as $c) {
+                                                            if (in_array($c->name ?? $c['name'], $artistCats)) {
+                                                                $displayGroups[] = $groupName;
+                                                                break;
+                                                            }
+                                                        }
+                                                    }
+                                                }
+                                            @endphp
 
-                        <div class="talent-card-overlay">
-                            {{-- ADDED ?-> TO PREVENT CRASHES IF PROFILE IS EMPTY --}}
-                            <div class="talent-card-cat">{{ ucfirst($artist->profile?->category ?? 'Professional') }}</div>
-                            <div class="talent-card-name">{{ $artist->name }}</div>
-                            <div class="talent-card-cta">
-                                View Profile
-                                <svg viewBox="0 0 10 10" fill="none">
-                                    <path d="M1 5h8M5 1l4 4-4 4" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/>
-                                </svg>
-                            </div>
-                        </div>
+                                            <div class="artist-card-cat">
+                                                {{ !empty($displayGroups) ? implode(' · ', $displayGroups) : 'Professional' }}
+                                            </div>
+                                            <div class="artist-card-name">{{ $artist->name }}</div>
+                                            <div class="artist-card-meta">
+                                                <div class="artist-card-location">
+                                                    <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                                                        <path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7z"/>
+                                                        <circle cx="12" cy="9" r="2.5"/>
+                                                    </svg>
+                                                    {{ implode(', ', array_filter([$artist->profile?->upazila, $artist->profile?->district])) ?: 'Bangladesh' }}
+                                                </div>
+                                                @if($artist->profile?->hourly_rate)
+                                                    <div class="artist-card-rate">
+                                                        {{ number_format($artist->profile->hourly_rate) }} BDT/hr
+                                                    </div>
+                                                @endif
+                                            </div>
+                                        </div>
 
-                    </a>
+                                        {{-- ── Hover overlay with full details ── --}}
+                                        <div class="artist-card-hover">
+                                            <div class="artist-hover-name">{{ $artist->name }}</div>
+
+                                            @if(!empty($artist->profile?->categories))
+                                                <div class="artist-hover-cats">
+                                                    @foreach($artist->profile->categories as $cat)
+                                                        <span class="artist-hover-cat-tag">{{ $cat }}</span>
+                                                    @endforeach
+                                                </div>
+                                            @endif
+
+                                            <div class="artist-hover-divider"></div>
+
+                                            <div class="artist-hover-meta">
+                                                {{-- Location --}}
+                                                <div class="artist-hover-row">
+                                                    <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                                                        <path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7z"/>
+                                                        <circle cx="12" cy="9" r="2.5"/>
+                                                    </svg>
+                                                    {{ implode(', ', array_filter([$artist->profile?->upazila, $artist->profile?->district, $artist->profile?->country])) ?: 'Location not specified' }}
+                                                </div>
+
+                                                {{-- Gender + Age --}}
+                                                @if($artist->profile?->gender || $artist->profile?->date_of_birth)
+                                                    <div class="artist-hover-row">
+                                                        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                                                            <circle cx="12" cy="8" r="4"/><path d="M4 20c0-4 3.58-7 8-7s8 3 8 7"/>
+                                                        </svg>
+                                                        {{ $artist->profile?->gender ?? '' }}
+                                                        @if($artist->profile?->date_of_birth)
+                                                            &nbsp;·&nbsp;
+                                                            <strong>{{ \Carbon\Carbon::parse($artist->profile->date_of_birth)->age }} yrs</strong>
+                                                        @endif
+                                                    </div>
+                                                @endif
+
+                                                {{-- Height --}}
+                                                @if($artist->profile?->height_cm)
+                                                    <div class="artist-hover-row">
+                                                        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                                                            <path d="M8 3v18M5 6h3M5 10h3M5 14h3M5 18h3M16 3l4 4-4 4M20 7H8"/>
+                                                        </svg>
+                                                        <strong>{{ $artist->profile->height_cm }} cm</strong>
+                                                    </div>
+                                                @endif
+
+                                                {{-- Rate --}}
+                                                @if($artist->profile?->hourly_rate)
+                                                    <div class="artist-hover-row">
+                                                        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                                                            <circle cx="12" cy="12" r="10"/><path d="M9 8h6M9 12h6M9 16h4"/>
+                                                        </svg>
+                                                        Starting from&nbsp;
+                                                        <strong>{{ number_format($artist->profile->hourly_rate) }} BDT/hr</strong>
+                                                    </div>
+                                                @endif
+
+                                                {{-- Languages --}}
+                                                @if(!empty($artist->profile?->languages))
+                                                    <div class="artist-hover-row">
+                                                        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                                                            <path d="M2 5h20M2 12h20M2 19h20"/>
+                                                        </svg>
+                                                        {{ implode(', ', (array)$artist->profile->languages) }}
+                                                    </div>
+                                                @endif
+                                            </div>
+
+                                            <div class="artist-hover-cta">
+                                                View Full Profile
+                                                <svg width="10" height="10" viewBox="0 0 10 10" fill="none">
+                                                    <path d="M1 5h8M5 1l4 4-4 4" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/>
+                                                </svg>
+                                            </div>
+                                        </div>
+
+                                    </a>
                 @empty
                     <div class="talent-empty">
                         <svg class="talent-empty-icon" width="56" height="56" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1" aria-hidden="true">
