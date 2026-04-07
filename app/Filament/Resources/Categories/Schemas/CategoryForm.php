@@ -15,11 +15,12 @@ class CategoryForm
             ->components([
                 Select::make('group')
                     ->options([
-                        'Performance & Talent' => 'Performance & Talent',
-                        'Production & Creative' => 'Production & Creative',
-                        'Media & Content' => 'Media & Content',
-                        'Entertainment & Events' => 'Entertainment & Events',
-                        'Special Categories' => 'Special Categories',
+                        'Artist' => 'Artist',
+                        'Brand Promoter' => 'Brand Promoter',
+                        'Model' => 'Model',
+                        'Influencer & Content Creator' => 'Influencer & Content Creator',
+                        'Director' => 'Director',
+                        'Creative Crew' => 'Creative Crew',
                     ])
                     ->required(),
 

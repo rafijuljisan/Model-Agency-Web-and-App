@@ -1152,6 +1152,19 @@
                 transform: none !important;
             }
         }
+        /* ── Mobile Drawer button overrides ── */
+        @media (max-width: 1024px) {
+            .nav-drawer .drawer-actions .btn-outline {
+                border-color: var(--border-strong);
+                color: var(--text-primary);
+                background: var(--bg-surface);
+            }
+
+            .nav-drawer .drawer-actions .btn-fill {
+                background: var(--btn-fill-bg);
+                color: var(--btn-fill-color);
+            }
+        }
     </style>
 
 <?php if(\Livewire\Mechanisms\ExtendBlade\ExtendBlade::isRenderingLivewireComponent()): ?><!--[if BLOCK]><![endif]--><?php endif; ?><?php if($seo): ?>
@@ -1286,38 +1299,21 @@
                     <button class="nav-drop-btn" type="button" aria-haspopup="listbox" aria-expanded="false">
                         Categories
                         <svg class="chevron" viewBox="0 0 10 6" fill="none" aria-hidden="true">
-                            <path d="M1 1l4 4 4-4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"
-                                stroke-linejoin="round" />
+                            <path d="M1 1l4 4 4-4" stroke="currentColor" stroke-width="1.5"
+                                stroke-linecap="round" stroke-linejoin="round"/>
                         </svg>
                     </button>
 
-                    
                     <div class="nav-drop-panel mega-menu-modern" role="listbox">
                         <div class="mega-menu-cards">
-                            <a href="/artists?group=Artist" class="mega-menu-card">
-                                <div class="mega-menu-card-title">Artists</div>
-                                <div class="mega-menu-card-sub">Actors, Singers, Dancers & Performers</div>
-                            </a>
-                            <a href="/artists?group=Model" class="mega-menu-card">
-                                <div class="mega-menu-card-title">Models</div>
-                                <div class="mega-menu-card-sub">Fashion, Commercial & Print Modeling</div>
-                            </a>
-                            <a href="/artists?group=Brand+Promotor" class="mega-menu-card">
-                                <div class="mega-menu-card-title">Brand Promotors</div>
-                                <div class="mega-menu-card-sub">Influencers, Hosts & Content Creators</div>
-                            </a>
-                            <a href="/artists?group=Celebrity" class="mega-menu-card">
-                                <div class="mega-menu-card-title">Celebrities</div>
-                                <div class="mega-menu-card-sub">VIP Talent & Special Appearances</div>
-                            </a>
-                            <a href="/artists?group=Technician" class="mega-menu-card">
-                                <div class="mega-menu-card-title">Technicians</div>
-                                <div class="mega-menu-card-sub">Photographers, Editors, Stylists & Crew</div>
-                            </a>
-                            <a href="/artists?group=Director" class="mega-menu-card">
-                                <div class="mega-menu-card-title">Directors</div>
-                                <div class="mega-menu-card-sub">Filmmakers, Choreographers & Writers</div>
-                            </a>
+                            <?php if(\Livewire\Mechanisms\ExtendBlade\ExtendBlade::isRenderingLivewireComponent()): ?><!--[if BLOCK]><![endif]--><?php \Livewire\Features\SupportCompiledWireKeys\SupportCompiledWireKeys::openLoop(); ?><?php endif; ?><?php $__currentLoopData = $navGroups; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $group): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?><?php if(\Livewire\Mechanisms\ExtendBlade\ExtendBlade::isRenderingLivewireComponent()): ?><?php \Livewire\Features\SupportCompiledWireKeys\SupportCompiledWireKeys::startLoopIteration(); ?><?php endif; ?>
+                                <a href="/artists?group=<?php echo e(urlencode($group)); ?>" class="mega-menu-card">
+                                    <div class="mega-menu-card-title"><?php echo e($group); ?></div>
+                                    <div class="mega-menu-card-sub">
+                                        Browse all <?php echo e($group); ?> talent
+                                    </div>
+                                </a>
+                            <?php if(\Livewire\Mechanisms\ExtendBlade\ExtendBlade::isRenderingLivewireComponent()): ?><?php \Livewire\Features\SupportCompiledWireKeys\SupportCompiledWireKeys::endLoop(); ?><?php endif; ?><?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?><?php if(\Livewire\Mechanisms\ExtendBlade\ExtendBlade::isRenderingLivewireComponent()): ?><!--[if ENDBLOCK]><![endif]--><?php \Livewire\Features\SupportCompiledWireKeys\SupportCompiledWireKeys::closeLoop(); ?><?php endif; ?>
                         </div>
                         <div class="mega-menu-footer">
                             <a href="/artists" class="mega-menu-all">Browse All Talent &rarr;</a>
@@ -1379,19 +1375,24 @@
         <a href="/artists" style="font-weight: 600;">Browse All Talent</a>
 
         
-        <div
-            style="font-size: 0.65rem; font-weight: 700; letter-spacing: 0.15em; text-transform: uppercase; color: var(--gold); margin: 16px 0 4px 20px; opacity: 0.8;">
+        <div style="font-size:0.65rem; font-weight:700; letter-spacing:0.15em;
+                    text-transform:uppercase; color:var(--gold);
+                    margin:16px 0 4px 20px; opacity:0.8;">
             Categories
         </div>
-        <a href="/artists?group=Artist" style="padding-left: 28px; font-size: 0.95rem;">Artists</a>
-        <a href="/artists?group=Model" style="padding-left: 28px; font-size: 0.95rem;">Models</a>
-        <a href="/artists?group=Brand+Promotor" style="padding-left: 28px; font-size: 0.95rem;">Brand Promotors</a>
-        <a href="/artists?group=Celebrity" style="padding-left: 28px; font-size: 0.95rem;">Celebrities</a>
-        <a href="/artists?group=Technician" style="padding-left: 28px; font-size: 0.95rem;">Technicians</a>
-        <a href="/artists?group=Director" style="padding-left: 28px; font-size: 0.95rem;">Directors</a>
 
-        
-        <hr style="border: none; border-top: 1px solid var(--border); margin: 16px 20px;">
+        <?php if(\Livewire\Mechanisms\ExtendBlade\ExtendBlade::isRenderingLivewireComponent()): ?><!--[if BLOCK]><![endif]--><?php \Livewire\Features\SupportCompiledWireKeys\SupportCompiledWireKeys::openLoop(); ?><?php endif; ?><?php $__currentLoopData = $navGroups; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $group): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?><?php if(\Livewire\Mechanisms\ExtendBlade\ExtendBlade::isRenderingLivewireComponent()): ?><?php \Livewire\Features\SupportCompiledWireKeys\SupportCompiledWireKeys::startLoopIteration(); ?><?php endif; ?>
+            <a href="/artists?group=<?php echo e(urlencode($group)); ?>"
+            style="padding-left:28px;
+                    font-size:1.25rem;
+                    padding-top:8px;
+                    padding-bottom:8px;
+                    font-family:'Cormorant Garamond', serif;
+                    font-weight:500;">
+                <?php echo e($group); ?>
+
+            </a>
+        <?php if(\Livewire\Mechanisms\ExtendBlade\ExtendBlade::isRenderingLivewireComponent()): ?><?php \Livewire\Features\SupportCompiledWireKeys\SupportCompiledWireKeys::endLoop(); ?><?php endif; ?><?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?><?php if(\Livewire\Mechanisms\ExtendBlade\ExtendBlade::isRenderingLivewireComponent()): ?><!--[if ENDBLOCK]><![endif]--><?php \Livewire\Features\SupportCompiledWireKeys\SupportCompiledWireKeys::closeLoop(); ?><?php endif; ?>
 
         <a href="/casting">Casting Calls</a>
         <a href="/about">About</a>

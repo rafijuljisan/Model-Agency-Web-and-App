@@ -1,40 +1,40 @@
 <!DOCTYPE html>
-<html lang="{{ str_replace('_', '-', app()->getLocale()) }}" data-theme="light">
+<html lang="<?php echo e(str_replace('_', '-', app()->getLocale())); ?>" data-theme="light">
 
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>{{ $title ?? 'Verified Talent Directory' }} | Dhaka Model Agency</title>
+    <title><?php echo e($title ?? 'Verified Talent Directory'); ?> | Dhaka Model Agency</title>
 
-    @php $seo = \App\Models\Setting::first(); @endphp
+    <?php $seo = \App\Models\Setting::first(); ?>
 
-    {{-- ── SEO: Basic Meta Tags ── --}}
-    <meta name="description" content="{{ $seo?->meta_description ?? 'Verified talent directory — Bangladesh' }}">
-    <meta name="keywords" content="{{ $seo?->meta_keywords }}">
+    
+    <meta name="description" content="<?php echo e($seo?->meta_description ?? 'Verified talent directory — Bangladesh'); ?>">
+    <meta name="keywords" content="<?php echo e($seo?->meta_keywords); ?>">
     <meta name="robots" content="index, follow">
-    <link rel="canonical" href="{{ url()->current() }}">
+    <link rel="canonical" href="<?php echo e(url()->current()); ?>">
 
-    {{-- ── SEO: Open Graph (Facebook, WhatsApp) ── --}}
+    
     <meta property="og:type" content="website">
-    <meta property="og:url" content="{{ url()->current() }}">
-    <meta property="og:title" content="{{ $title ?? $seo?->meta_title ?? config('app.name') }}">
-    <meta property="og:description" content="{{ $seo?->meta_description }}">
-    <meta property="og:image" content="{{ $seo?->og_image ? asset('storage/' . $seo->og_image) : '' }}">
-    <meta property="og:site_name" content="{{ $seo?->site_name ?? config('app.name') }}">
+    <meta property="og:url" content="<?php echo e(url()->current()); ?>">
+    <meta property="og:title" content="<?php echo e($title ?? $seo?->meta_title ?? config('app.name')); ?>">
+    <meta property="og:description" content="<?php echo e($seo?->meta_description); ?>">
+    <meta property="og:image" content="<?php echo e($seo?->og_image ? asset('storage/' . $seo->og_image) : ''); ?>">
+    <meta property="og:site_name" content="<?php echo e($seo?->site_name ?? config('app.name')); ?>">
 
-    {{-- ── SEO: Twitter Card ── --}}
+    
     <meta name="twitter:card" content="summary_large_image">
-    <meta name="twitter:title" content="{{ $title ?? $seo?->meta_title ?? config('app.name') }}">
-    <meta name="twitter:description" content="{{ $seo?->meta_description }}">
-    <meta name="twitter:image" content="{{ $seo?->og_image ? asset('storage/' . $seo->og_image) : '' }}">
+    <meta name="twitter:title" content="<?php echo e($title ?? $seo?->meta_title ?? config('app.name')); ?>">
+    <meta name="twitter:description" content="<?php echo e($seo?->meta_description); ?>">
+    <meta name="twitter:image" content="<?php echo e($seo?->og_image ? asset('storage/' . $seo->og_image) : ''); ?>">
 
-    {{-- ── Google Search Console Verification ── --}}
-    @if($seo?->google_search_console_id)
-        <meta name="google-site-verification" content="{{ $seo->google_search_console_id }}">
-    @endif
+    
+    <?php if(\Livewire\Mechanisms\ExtendBlade\ExtendBlade::isRenderingLivewireComponent()): ?><!--[if BLOCK]><![endif]--><?php endif; ?><?php if($seo?->google_search_console_id): ?>
+        <meta name="google-site-verification" content="<?php echo e($seo->google_search_console_id); ?>">
+    <?php endif; ?><?php if(\Livewire\Mechanisms\ExtendBlade\ExtendBlade::isRenderingLivewireComponent()): ?><!--[if ENDBLOCK]><![endif]--><?php endif; ?>
 
-    {{-- ── Google Tag Manager (head) ── --}}
-    @if($seo?->google_tag_manager_id)
+    
+    <?php if(\Livewire\Mechanisms\ExtendBlade\ExtendBlade::isRenderingLivewireComponent()): ?><!--[if BLOCK]><![endif]--><?php endif; ?><?php if($seo?->google_tag_manager_id): ?>
         <script>(function (w, d, s, l, i) {
                 w[l] = w[l] || []; w[l].push({
                     'gtm.start':
@@ -42,22 +42,22 @@
                 }); var f = d.getElementsByTagName(s)[0],
                     j = d.createElement(s), dl = l != 'dataLayer' ? '&l=' + l : ''; j.async = true; j.src =
                         'https://www.googletagmanager.com/gtm.js?id=' + i + dl; f.parentNode.insertBefore(j, f);
-            })(window, document, 'script', 'dataLayer', '{{ $seo->google_tag_manager_id }}');</script>
-    @endif
+            })(window, document, 'script', 'dataLayer', '<?php echo e($seo->google_tag_manager_id); ?>');</script>
+    <?php endif; ?><?php if(\Livewire\Mechanisms\ExtendBlade\ExtendBlade::isRenderingLivewireComponent()): ?><!--[if ENDBLOCK]><![endif]--><?php endif; ?>
 
-    {{-- ── Google Analytics 4 ── --}}
-    @if($seo?->google_analytics_id)
-        <script async src="https://www.googletagmanager.com/gtag/js?id={{ $seo->google_analytics_id }}"></script>
+    
+    <?php if(\Livewire\Mechanisms\ExtendBlade\ExtendBlade::isRenderingLivewireComponent()): ?><!--[if BLOCK]><![endif]--><?php endif; ?><?php if($seo?->google_analytics_id): ?>
+        <script async src="https://www.googletagmanager.com/gtag/js?id=<?php echo e($seo->google_analytics_id); ?>"></script>
         <script>
             window.dataLayer = window.dataLayer || [];
             function gtag() { dataLayer.push(arguments); }
             gtag('js', new Date());
-            gtag('config', '{{ $seo->google_analytics_id }}');
+            gtag('config', '<?php echo e($seo->google_analytics_id); ?>');
         </script>
-    @endif
+    <?php endif; ?><?php if(\Livewire\Mechanisms\ExtendBlade\ExtendBlade::isRenderingLivewireComponent()): ?><!--[if ENDBLOCK]><![endif]--><?php endif; ?>
 
-    {{-- ── Facebook Pixel ── --}}
-    @if($seo?->facebook_pixel_id)
+    
+    <?php if(\Livewire\Mechanisms\ExtendBlade\ExtendBlade::isRenderingLivewireComponent()): ?><!--[if BLOCK]><![endif]--><?php endif; ?><?php if($seo?->facebook_pixel_id): ?>
         <script>
             !function (f, b, e, v, n, t, s) {
                 if (f.fbq) return; n = f.fbq = function () {
@@ -68,19 +68,20 @@
                 t.src = v; s = b.getElementsByTagName(e)[0]; s.parentNode.insertBefore(t, s)
             }(window,
                 document, 'script', 'https://connect.facebook.net/en_US/fbevents.js');
-            fbq('init', '{{ $seo->facebook_pixel_id }}');
+            fbq('init', '<?php echo e($seo->facebook_pixel_id); ?>');
             fbq('track', 'PageView');
         </script>
-    @endif
-    {{-- Fonts: Cormorant Garamond (luxury editorial display) + Jost (refined body) --}}
+    <?php endif; ?><?php if(\Livewire\Mechanisms\ExtendBlade\ExtendBlade::isRenderingLivewireComponent()): ?><!--[if ENDBLOCK]><![endif]--><?php endif; ?>
+    
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link
         href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,500&family=Jost:wght@300;400;500;600&display=swap"
         rel="stylesheet">
 
-    @vite(['resources/css/app.css', 'resources/js/app.js'])
-    @livewireStyles
+    <?php echo app('Illuminate\Foundation\Vite')(['resources/css/app.css', 'resources/js/app.js']); ?>
+    <?php echo \Livewire\Mechanisms\FrontendAssets\FrontendAssets::styles(); ?>
+
 
     <style>
         /* ═══════════════════════════════════════════
@@ -1151,23 +1152,10 @@
                 transform: none !important;
             }
         }
-        /* ── Mobile Drawer button overrides ── */
-        @media (max-width: 1024px) {
-            .nav-drawer .drawer-actions .btn-outline {
-                border-color: var(--border-strong);
-                color: var(--text-primary);
-                background: var(--bg-surface);
-            }
-
-            .nav-drawer .drawer-actions .btn-fill {
-                background: var(--btn-fill-bg);
-                color: var(--btn-fill-color);
-            }
-        }
     </style>
-{{-- Schema.org Structured Data --}}
-@if($seo)
-    @php
+
+<?php if(\Livewire\Mechanisms\ExtendBlade\ExtendBlade::isRenderingLivewireComponent()): ?><!--[if BLOCK]><![endif]--><?php endif; ?><?php if($seo): ?>
+    <?php
         $socialLinks = array_values(array_filter([
             $seo->facebook_url,
             $seo->instagram_url,
@@ -1193,106 +1181,104 @@
         if (!empty($socialLinks)) {
             $schemaData["sameAs"] = $socialLinks;
         }
-    @endphp
+    ?>
 
     <script type="application/ld+json">
-    {!! json_encode($schemaData, JSON_UNESCAPED_SLASHES | JSON_PRETTY_PRINT) !!}
+    <?php echo json_encode($schemaData, JSON_UNESCAPED_SLASHES | JSON_PRETTY_PRINT); ?>
+
     </script>
-@endif
+<?php endif; ?><?php if(\Livewire\Mechanisms\ExtendBlade\ExtendBlade::isRenderingLivewireComponent()): ?><!--[if ENDBLOCK]><![endif]--><?php endif; ?>
 </head>
 
 <body>
 
-    {{-- ── Google Tag Manager (noscript) ── --}}
-    @if($seo?->google_tag_manager_id)
-        <noscript><iframe src="https://www.googletagmanager.com/ns.html?id={{ $seo->google_tag_manager_id }}"
+    
+    <?php if(\Livewire\Mechanisms\ExtendBlade\ExtendBlade::isRenderingLivewireComponent()): ?><!--[if BLOCK]><![endif]--><?php endif; ?><?php if($seo?->google_tag_manager_id): ?>
+        <noscript><iframe src="https://www.googletagmanager.com/ns.html?id=<?php echo e($seo->google_tag_manager_id); ?>"
         height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
-    @endif
+    <?php endif; ?><?php if(\Livewire\Mechanisms\ExtendBlade\ExtendBlade::isRenderingLivewireComponent()): ?><!--[if ENDBLOCK]><![endif]--><?php endif; ?>
 
-    {{-- ══════════════════════════════════
-    TOPBAR (Contact, License, Socials)
-    ══════════════════════════════════ --}}
-    @php
+    
+    <?php
         $settings = \App\Models\Setting::first();
-    @endphp
+    ?>
     <div class="site-topbar" aria-label="Top contact bar">
         <div class="topbar-inner">
             <div class="topbar-left">
-                @if($settings->contact_phone)
-                    <a href="tel:{{ $settings->contact_phone }}" aria-label="Call us">
+                <?php if(\Livewire\Mechanisms\ExtendBlade\ExtendBlade::isRenderingLivewireComponent()): ?><!--[if BLOCK]><![endif]--><?php endif; ?><?php if($settings->contact_phone): ?>
+                    <a href="tel:<?php echo e($settings->contact_phone); ?>" aria-label="Call us">
                         <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                             <path
                                 d="M22 16.92v3a2 2 0 01-2.18 2 19.79 19.79 0 01-8.63-3.07A19.5 19.5 0 013.07 9.81 19.79 19.79 0 01.05 2.18 2 2 0 012 0h3a2 2 0 012 1.72c.127.96.361 1.903.7 2.81a2 2 0 01-.45 2.11L6.09 7.91a16 16 0 006 6l1.27-1.27a2 2 0 012.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0122 14.92z" />
                         </svg>
-                        Call Us: {{ $settings->contact_phone }}
+                        Call Us: <?php echo e($settings->contact_phone); ?>
+
                     </a>
-                @endif
-                @if($settings->license_number)
-                    <span>Lic. No: {{ $settings->license_number }}</span>
-                @endif
+                <?php endif; ?><?php if(\Livewire\Mechanisms\ExtendBlade\ExtendBlade::isRenderingLivewireComponent()): ?><!--[if ENDBLOCK]><![endif]--><?php endif; ?>
+                <?php if(\Livewire\Mechanisms\ExtendBlade\ExtendBlade::isRenderingLivewireComponent()): ?><!--[if BLOCK]><![endif]--><?php endif; ?><?php if($settings->license_number): ?>
+                    <span>Lic. No: <?php echo e($settings->license_number); ?></span>
+                <?php endif; ?><?php if(\Livewire\Mechanisms\ExtendBlade\ExtendBlade::isRenderingLivewireComponent()): ?><!--[if ENDBLOCK]><![endif]--><?php endif; ?>
             </div>
 
             <div class="topbar-right">
-                @if($settings->facebook_url)
-                    <a href="{{ $settings->facebook_url }}" target="_blank" rel="noopener" aria-label="Facebook"><svg
+                <?php if(\Livewire\Mechanisms\ExtendBlade\ExtendBlade::isRenderingLivewireComponent()): ?><!--[if BLOCK]><![endif]--><?php endif; ?><?php if($settings->facebook_url): ?>
+                    <a href="<?php echo e($settings->facebook_url); ?>" target="_blank" rel="noopener" aria-label="Facebook"><svg
                             viewBox="0 0 24 24" fill="currentColor">
                             <path d="M18 2h-3a5 5 0 00-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 011-1h3z" />
                         </svg></a>
-                @endif
-                @if($settings->instagram_url)
-                    <a href="{{ $settings->instagram_url }}" target="_blank" rel="noopener" aria-label="Instagram"><svg
+                <?php endif; ?><?php if(\Livewire\Mechanisms\ExtendBlade\ExtendBlade::isRenderingLivewireComponent()): ?><!--[if ENDBLOCK]><![endif]--><?php endif; ?>
+                <?php if(\Livewire\Mechanisms\ExtendBlade\ExtendBlade::isRenderingLivewireComponent()): ?><!--[if BLOCK]><![endif]--><?php endif; ?><?php if($settings->instagram_url): ?>
+                    <a href="<?php echo e($settings->instagram_url); ?>" target="_blank" rel="noopener" aria-label="Instagram"><svg
                             viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                             <rect x="2" y="2" width="20" height="20" rx="5" />
                             <path d="M16 11.37A4 4 0 1112.63 8 4 4 0 0116 11.37z" />
                             <line x1="17.5" y1="6.5" x2="17.51" y2="6.5" />
                         </svg></a>
-                @endif
-                @if($settings->youtube_url)
-                    <a href="{{ $settings->youtube_url }}" target="_blank" rel="noopener" aria-label="YouTube"><svg
+                <?php endif; ?><?php if(\Livewire\Mechanisms\ExtendBlade\ExtendBlade::isRenderingLivewireComponent()): ?><!--[if ENDBLOCK]><![endif]--><?php endif; ?>
+                <?php if(\Livewire\Mechanisms\ExtendBlade\ExtendBlade::isRenderingLivewireComponent()): ?><!--[if BLOCK]><![endif]--><?php endif; ?><?php if($settings->youtube_url): ?>
+                    <a href="<?php echo e($settings->youtube_url); ?>" target="_blank" rel="noopener" aria-label="YouTube"><svg
                             viewBox="0 0 24 24" fill="currentColor">
                             <path
                                 d="M22.54 6.42a2.78 2.78 0 00-1.95-1.96C18.88 4 12 4 12 4s-6.88 0-8.59.46A2.78 2.78 0 001.46 6.42 29 29 0 001 12a29 29 0 00.46 5.58 2.78 2.78 0 001.95 1.96C5.12 20 12 20 12 20s6.88 0 8.59-.46a2.78 2.78 0 001.95-1.96A29 29 0 0023 12a29 29 0 00-.46-5.58z" />
                             <polygon points="9.75 15.02 15.5 12 9.75 8.98 9.75 15.02" fill="var(--bg-secondary)" />
                         </svg></a>
-                @endif
-                @if($settings->linkedin_url)
-                    <a href="{{ $settings->linkedin_url }}" target="_blank" rel="noopener" aria-label="LinkedIn"><svg
+                <?php endif; ?><?php if(\Livewire\Mechanisms\ExtendBlade\ExtendBlade::isRenderingLivewireComponent()): ?><!--[if ENDBLOCK]><![endif]--><?php endif; ?>
+                <?php if(\Livewire\Mechanisms\ExtendBlade\ExtendBlade::isRenderingLivewireComponent()): ?><!--[if BLOCK]><![endif]--><?php endif; ?><?php if($settings->linkedin_url): ?>
+                    <a href="<?php echo e($settings->linkedin_url); ?>" target="_blank" rel="noopener" aria-label="LinkedIn"><svg
                             viewBox="0 0 24 24" fill="currentColor">
                             <path
                                 d="M16 8a6 6 0 016 6v7h-4v-7a2 2 0 00-2-2 2 2 0 00-2 2v7h-4v-7a6 6 0 016-6zM2 9h4v12H2zM4 6a2 2 0 100-4 2 2 0 000 4z" />
                         </svg></a>
-                @endif
+                <?php endif; ?><?php if(\Livewire\Mechanisms\ExtendBlade\ExtendBlade::isRenderingLivewireComponent()): ?><!--[if ENDBLOCK]><![endif]--><?php endif; ?>
             </div>
         </div>
     </div>
-    {{-- ══════════════════════════════════
-    NAVIGATION
-    ══════════════════════════════════ --}}
+    
     <nav class="site-nav" id="siteNav" aria-label="Primary navigation">
         <div class="nav-inner">
 
-            @php
+            <?php
                 // Fetch the settings (assuming you have a Setting model holding the first row)
                 // $settings = \App\Models\Setting::first();
 
                 $siteName = $settings->site_name ?? 'Dhaka Model Agency';
                 $siteSub = $settings->site_description ?? 'Verified Talent Directory';
                 $logo = $settings->logo ? asset('storage/' . $settings->logo) : null;
-            @endphp
+            ?>
 
-            {{-- Brand --}}
-            <a href="/" class="nav-brand" aria-label="{{ $siteName }} — home">
-                @if($logo)
-                    {{-- Show uploaded logo --}}
-                    <img src="{{ $logo }}" alt="{{ $siteName }} Logo" class="nav-brand-logo">
-                @else
-                    {{-- Fallback to text styling if no logo is uploaded --}}
-                    <span class="nav-brand-name">{{ $siteName }}</span>
-                    <span class="nav-brand-sub">{{ $siteSub }}</span>
-                @endif
+            
+            <a href="/" class="nav-brand" aria-label="<?php echo e($siteName); ?> — home">
+                <?php if(\Livewire\Mechanisms\ExtendBlade\ExtendBlade::isRenderingLivewireComponent()): ?><!--[if BLOCK]><![endif]--><?php endif; ?><?php if($logo): ?>
+                    
+                    <img src="<?php echo e($logo); ?>" alt="<?php echo e($siteName); ?> Logo" class="nav-brand-logo">
+                <?php else: ?>
+                    
+                    <span class="nav-brand-name"><?php echo e($siteName); ?></span>
+                    <span class="nav-brand-sub"><?php echo e($siteSub); ?></span>
+                <?php endif; ?><?php if(\Livewire\Mechanisms\ExtendBlade\ExtendBlade::isRenderingLivewireComponent()): ?><!--[if ENDBLOCK]><![endif]--><?php endif; ?>
             </a>
 
-            {{-- Desktop nav links --}}
+            
             <ul class="nav-links" role="list">
                 <li><a href="/artists">Browse Talent</a></li>
 
@@ -1307,14 +1293,14 @@
 
                     <div class="nav-drop-panel mega-menu-modern" role="listbox">
                         <div class="mega-menu-cards">
-                            @foreach($navGroups as $group)
-                                <a href="/artists?group={{ urlencode($group) }}" class="mega-menu-card">
-                                    <div class="mega-menu-card-title">{{ $group }}</div>
+                            <?php if(\Livewire\Mechanisms\ExtendBlade\ExtendBlade::isRenderingLivewireComponent()): ?><!--[if BLOCK]><![endif]--><?php \Livewire\Features\SupportCompiledWireKeys\SupportCompiledWireKeys::openLoop(); ?><?php endif; ?><?php $__currentLoopData = $navGroups; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $group): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?><?php if(\Livewire\Mechanisms\ExtendBlade\ExtendBlade::isRenderingLivewireComponent()): ?><?php \Livewire\Features\SupportCompiledWireKeys\SupportCompiledWireKeys::startLoopIteration(); ?><?php endif; ?>
+                                <a href="/artists?group=<?php echo e(urlencode($group)); ?>" class="mega-menu-card">
+                                    <div class="mega-menu-card-title"><?php echo e($group); ?></div>
                                     <div class="mega-menu-card-sub">
-                                        Browse all {{ $group }} talent
+                                        Browse all <?php echo e($group); ?> talent
                                     </div>
                                 </a>
-                            @endforeach
+                            <?php if(\Livewire\Mechanisms\ExtendBlade\ExtendBlade::isRenderingLivewireComponent()): ?><?php \Livewire\Features\SupportCompiledWireKeys\SupportCompiledWireKeys::endLoop(); ?><?php endif; ?><?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?><?php if(\Livewire\Mechanisms\ExtendBlade\ExtendBlade::isRenderingLivewireComponent()): ?><!--[if ENDBLOCK]><![endif]--><?php \Livewire\Features\SupportCompiledWireKeys\SupportCompiledWireKeys::closeLoop(); ?><?php endif; ?>
                         </div>
                         <div class="mega-menu-footer">
                             <a href="/artists" class="mega-menu-all">Browse All Talent &rarr;</a>
@@ -1329,28 +1315,28 @@
                 <li><a href="/editorial">Editorial</a></li>
             </ul>
 
-            {{-- Right controls --}}
+            
             <div class="nav-actions">
 
-                {{-- Theme toggle --}}
+                
                 <button class="theme-toggle" id="themeToggle" aria-label="Toggle dark mode">
-                    {{-- Sun: shown in dark mode --}}
+                    
                     <svg class="icon-sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"
                         aria-hidden="true">
                         <circle cx="12" cy="12" r="4" />
                         <path
                             d="M12 2v2M12 20v2M4.22 4.22l1.42 1.42M18.36 18.36l1.42 1.42M2 12h2M20 12h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42" />
                     </svg>
-                    {{-- Moon: shown in light mode --}}
+                    
                     <svg class="icon-moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"
                         aria-hidden="true">
                         <path d="M21 12.79A9 9 0 1111.21 3a7 7 0 109.79 9.79z" />
                     </svg>
                 </button>
 
-                @auth
+                <?php if(\Livewire\Mechanisms\ExtendBlade\ExtendBlade::isRenderingLivewireComponent()): ?><!--[if BLOCK]><![endif]--><?php endif; ?><?php if(auth()->guard()->check()): ?>
                     <a href="/account" class="btn-outline">Dashboard</a>
-                @else
+                <?php else: ?>
                     <a href="/login" class="btn-ghost">Sign In</a>
                     <a href="/register" class="btn-fill">
                         Join as Talent
@@ -1359,9 +1345,9 @@
                                 stroke-linecap="round" stroke-linejoin="round" />
                         </svg>
                     </a>
-                @endauth
+                <?php endif; ?><?php if(\Livewire\Mechanisms\ExtendBlade\ExtendBlade::isRenderingLivewireComponent()): ?><!--[if ENDBLOCK]><![endif]--><?php endif; ?>
 
-                {{-- Hamburger (mobile) --}}
+                
                 <button class="nav-hamburger" id="navHamburger" aria-label="Open menu" aria-expanded="false">
                     <span></span>
                     <span></span>
@@ -1371,30 +1357,27 @@
         </div>
     </nav>
 
-    {{-- ══════════════════════════════════
-    MOBILE DRAWER
-    ══════════════════════════════════ --}}
+    
     <div class="nav-drawer" id="navDrawer" role="dialog" aria-label="Mobile menu" aria-hidden="true">
         <a href="/artists" style="font-weight: 600;">Browse All Talent</a>
 
-        {{-- ── NEW: 6 High-Level Category Groups ── --}}
+        
         <div style="font-size:0.65rem; font-weight:700; letter-spacing:0.15em;
-                    text-transform:uppercase; color:var(--gold);
-                    margin:16px 0 4px 20px; opacity:0.8;">
-            Categories
-        </div>
+            text-transform:uppercase; color:var(--gold);
+            margin:16px 0 4px 20px; opacity:0.8;">
+    Categories
+</div>
 
-        @foreach($navGroups as $group)
-            <a href="/artists?group={{ urlencode($group) }}"
-            style="padding-left:28px;
-                    font-size:1.25rem;
-                    padding-top:8px;
-                    padding-bottom:8px;
-                    font-family:'Cormorant Garamond', serif;
-                    font-weight:500;">
-                {{ $group }}
-            </a>
-        @endforeach
+<?php if(\Livewire\Mechanisms\ExtendBlade\ExtendBlade::isRenderingLivewireComponent()): ?><!--[if BLOCK]><![endif]--><?php \Livewire\Features\SupportCompiledWireKeys\SupportCompiledWireKeys::openLoop(); ?><?php endif; ?><?php $__currentLoopData = $navGroups; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $group): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?><?php if(\Livewire\Mechanisms\ExtendBlade\ExtendBlade::isRenderingLivewireComponent()): ?><?php \Livewire\Features\SupportCompiledWireKeys\SupportCompiledWireKeys::startLoopIteration(); ?><?php endif; ?>
+    <a href="/artists?group=<?php echo e(urlencode($group)); ?>"
+       style="padding-left:28px; font-size:0.95rem;">
+        <?php echo e($group); ?>
+
+    </a>
+<?php if(\Livewire\Mechanisms\ExtendBlade\ExtendBlade::isRenderingLivewireComponent()): ?><?php \Livewire\Features\SupportCompiledWireKeys\SupportCompiledWireKeys::endLoop(); ?><?php endif; ?><?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?><?php if(\Livewire\Mechanisms\ExtendBlade\ExtendBlade::isRenderingLivewireComponent()): ?><!--[if ENDBLOCK]><![endif]--><?php \Livewire\Features\SupportCompiledWireKeys\SupportCompiledWireKeys::closeLoop(); ?><?php endif; ?>
+
+        
+        <hr style="border: none; border-top: 1px solid var(--border); margin: 16px 20px;">
 
         <a href="/casting">Casting Calls</a>
         <a href="/about">About</a>
@@ -1403,22 +1386,20 @@
         <a href="/editorial">Editorial</a>
 
         <div class="drawer-actions">
-            @auth
+            <?php if(\Livewire\Mechanisms\ExtendBlade\ExtendBlade::isRenderingLivewireComponent()): ?><!--[if BLOCK]><![endif]--><?php endif; ?><?php if(auth()->guard()->check()): ?>
                 <a href="/account" class="btn-fill" style="width: 100%; justify-content: center;">Dashboard</a>
-            @else
+            <?php else: ?>
                 <a href="/login" class="btn-outline" style="width: 100%; justify-content: center; margin-bottom: 10px;">Sign
                     In</a>
                 <a href="/register" class="btn-fill" style="width: 100%; justify-content: center;">Join as Talent</a>
-            @endauth
+            <?php endif; ?><?php if(\Livewire\Mechanisms\ExtendBlade\ExtendBlade::isRenderingLivewireComponent()): ?><!--[if ENDBLOCK]><![endif]--><?php endif; ?>
         </div>
     </div>
 
-    {{-- ══════════════════════════════════
-    ANNOUNCEMENT TICKER (Dynamic)
-    ══════════════════════════════════ --}}
+    
     <div class="site-ticker" aria-live="polite" aria-label="Site announcements">
         <div class="ticker-track" aria-hidden="true">
-            @php
+            <?php
                 // Fetch the latest 8 published editorials
                 $tickerEditorials = \App\Models\Editorial::where('is_published', true)
                     ->latest('published_at')
@@ -1433,39 +1414,37 @@
                         (object) ['title' => 'Models & Actors — Create Your Free Verified Profile']
                     ]);
                 }
-            @endphp
+            ?>
 
-            {{-- First set of titles --}}
-            @foreach($tickerEditorials as $editorial)
+            
+            <?php if(\Livewire\Mechanisms\ExtendBlade\ExtendBlade::isRenderingLivewireComponent()): ?><!--[if BLOCK]><![endif]--><?php \Livewire\Features\SupportCompiledWireKeys\SupportCompiledWireKeys::openLoop(); ?><?php endif; ?><?php $__currentLoopData = $tickerEditorials; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $editorial): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?><?php if(\Livewire\Mechanisms\ExtendBlade\ExtendBlade::isRenderingLivewireComponent()): ?><?php \Livewire\Features\SupportCompiledWireKeys\SupportCompiledWireKeys::startLoopIteration(); ?><?php endif; ?>
                 <span>
-                    {{-- Optional: Make it clickable if you have an editorial show route --}}
-                    {{-- <a href="/editorial/{{ $editorial->slug }}" class="hover:text-white"> --}}
-                        {{ $editorial->title }}
-                        {{-- </a> --}}
-                </span>
-            @endforeach
+                    
+                    
+                        <?php echo e($editorial->title); ?>
 
-            {{-- Exact duplicate set of titles (Required for the seamless CSS marquee loop!) --}}
-            @foreach($tickerEditorials as $editorial)
-                <span>{{ $editorial->title }}</span>
-            @endforeach
+                        
+                </span>
+            <?php if(\Livewire\Mechanisms\ExtendBlade\ExtendBlade::isRenderingLivewireComponent()): ?><?php \Livewire\Features\SupportCompiledWireKeys\SupportCompiledWireKeys::endLoop(); ?><?php endif; ?><?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?><?php if(\Livewire\Mechanisms\ExtendBlade\ExtendBlade::isRenderingLivewireComponent()): ?><!--[if ENDBLOCK]><![endif]--><?php \Livewire\Features\SupportCompiledWireKeys\SupportCompiledWireKeys::closeLoop(); ?><?php endif; ?>
+
+            
+            <?php if(\Livewire\Mechanisms\ExtendBlade\ExtendBlade::isRenderingLivewireComponent()): ?><!--[if BLOCK]><![endif]--><?php \Livewire\Features\SupportCompiledWireKeys\SupportCompiledWireKeys::openLoop(); ?><?php endif; ?><?php $__currentLoopData = $tickerEditorials; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $editorial): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?><?php if(\Livewire\Mechanisms\ExtendBlade\ExtendBlade::isRenderingLivewireComponent()): ?><?php \Livewire\Features\SupportCompiledWireKeys\SupportCompiledWireKeys::startLoopIteration(); ?><?php endif; ?>
+                <span><?php echo e($editorial->title); ?></span>
+            <?php if(\Livewire\Mechanisms\ExtendBlade\ExtendBlade::isRenderingLivewireComponent()): ?><?php \Livewire\Features\SupportCompiledWireKeys\SupportCompiledWireKeys::endLoop(); ?><?php endif; ?><?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?><?php if(\Livewire\Mechanisms\ExtendBlade\ExtendBlade::isRenderingLivewireComponent()): ?><!--[if ENDBLOCK]><![endif]--><?php \Livewire\Features\SupportCompiledWireKeys\SupportCompiledWireKeys::closeLoop(); ?><?php endif; ?>
         </div>
     </div>
 
-    {{-- ══════════════════════════════════
-    PAGE CONTENT SLOT
-    ══════════════════════════════════ --}}
+    
     <main class="site-main" id="main-content">
-        {{ $slot }}
+        <?php echo e($slot); ?>
+
     </main>
 
-    {{-- ══════════════════════════════════
-    FOOTER
-    ══════════════════════════════════ --}}
+    
     <footer class="site-footer" aria-label="Site footer">
         <div class="footer-top">
 
-            {{-- Brand column --}}
+            
             <div>
                 <div class="footer-brand-name">Agency<em>Market</em></div>
                 <div class="footer-brand-sub">Verified Talent Directory</div>
@@ -1474,17 +1453,17 @@
                     creators, and brand promoters with brands and production houses.
                 </p>
                 <div class="footer-socials">
-                    @if($settings->facebook_url)
-                        <a href="{{ $settings->facebook_url }}" target="_blank" rel="noopener noreferrer" class="social-btn"
+                    <?php if(\Livewire\Mechanisms\ExtendBlade\ExtendBlade::isRenderingLivewireComponent()): ?><!--[if BLOCK]><![endif]--><?php endif; ?><?php if($settings->facebook_url): ?>
+                        <a href="<?php echo e($settings->facebook_url); ?>" target="_blank" rel="noopener noreferrer" class="social-btn"
                             aria-label="Facebook">
                             <svg width="13" height="13" viewBox="0 0 24 24" fill="currentColor">
                                 <path d="M18 2h-3a5 5 0 00-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 011-1h3z" />
                             </svg>
                         </a>
-                    @endif
+                    <?php endif; ?><?php if(\Livewire\Mechanisms\ExtendBlade\ExtendBlade::isRenderingLivewireComponent()): ?><!--[if ENDBLOCK]><![endif]--><?php endif; ?>
 
-                    @if($settings->instagram_url)
-                        <a href="{{ $settings->instagram_url }}" target="_blank" rel="noopener noreferrer"
+                    <?php if(\Livewire\Mechanisms\ExtendBlade\ExtendBlade::isRenderingLivewireComponent()): ?><!--[if BLOCK]><![endif]--><?php endif; ?><?php if($settings->instagram_url): ?>
+                        <a href="<?php echo e($settings->instagram_url); ?>" target="_blank" rel="noopener noreferrer"
                             class="social-btn" aria-label="Instagram">
                             <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor"
                                 stroke-width="2">
@@ -1493,10 +1472,10 @@
                                 <line x1="17.5" y1="6.5" x2="17.51" y2="6.5" />
                             </svg>
                         </a>
-                    @endif
+                    <?php endif; ?><?php if(\Livewire\Mechanisms\ExtendBlade\ExtendBlade::isRenderingLivewireComponent()): ?><!--[if ENDBLOCK]><![endif]--><?php endif; ?>
 
-                    @if($settings->youtube_url)
-                        <a href="{{ $settings->youtube_url }}" target="_blank" rel="noopener noreferrer" class="social-btn"
+                    <?php if(\Livewire\Mechanisms\ExtendBlade\ExtendBlade::isRenderingLivewireComponent()): ?><!--[if BLOCK]><![endif]--><?php endif; ?><?php if($settings->youtube_url): ?>
+                        <a href="<?php echo e($settings->youtube_url); ?>" target="_blank" rel="noopener noreferrer" class="social-btn"
                             aria-label="YouTube">
                             <svg width="13" height="13" viewBox="0 0 24 24" fill="currentColor">
                                 <path
@@ -1504,21 +1483,21 @@
                                 <polygon points="9.75 15.02 15.5 12 9.75 8.98 9.75 15.02" fill="var(--bg-secondary)" />
                             </svg>
                         </a>
-                    @endif
+                    <?php endif; ?><?php if(\Livewire\Mechanisms\ExtendBlade\ExtendBlade::isRenderingLivewireComponent()): ?><!--[if ENDBLOCK]><![endif]--><?php endif; ?>
 
-                    @if($settings->linkedin_url)
-                        <a href="{{ $settings->linkedin_url }}" target="_blank" rel="noopener noreferrer" class="social-btn"
+                    <?php if(\Livewire\Mechanisms\ExtendBlade\ExtendBlade::isRenderingLivewireComponent()): ?><!--[if BLOCK]><![endif]--><?php endif; ?><?php if($settings->linkedin_url): ?>
+                        <a href="<?php echo e($settings->linkedin_url); ?>" target="_blank" rel="noopener noreferrer" class="social-btn"
                             aria-label="LinkedIn">
                             <svg width="13" height="13" viewBox="0 0 24 24" fill="currentColor">
                                 <path
                                     d="M16 8a6 6 0 016 6v7h-4v-7a2 2 0 00-2-2 2 2 0 00-2 2v7h-4v-7a6 6 0 016-6zM2 9h4v12H2zM4 6a2 2 0 100-4 2 2 0 000 4z" />
                             </svg>
                         </a>
-                    @endif
+                    <?php endif; ?><?php if(\Livewire\Mechanisms\ExtendBlade\ExtendBlade::isRenderingLivewireComponent()): ?><!--[if ENDBLOCK]><![endif]--><?php endif; ?>
                 </div>
             </div>
 
-            {{-- Talent --}}
+            
             <div>
                 <div class="footer-col-title">Talent</div>
                 <ul class="footer-col-links">
@@ -1531,7 +1510,7 @@
                 </ul>
             </div>
 
-            {{-- Platform --}}
+            
             <div>
                 <div class="footer-col-title">Platform</div>
                 <ul class="footer-col-links">
@@ -1546,7 +1525,7 @@
                 </ul>
             </div>
 
-            {{-- Support --}}
+            
             <div>
                 <div class="footer-col-title">Support</div>
                 <ul class="footer-col-links">
@@ -1561,7 +1540,7 @@
 
         <div class="footer-bottom">
             <span class="footer-copy">
-                &copy; {{ date('Y') }} Dhaka Model Agency. All rights reserved. &nbsp;&middot;&nbsp; Dhaka, Bangladesh
+                &copy; <?php echo e(date('Y')); ?> Dhaka Model Agency. All rights reserved. &nbsp;&middot;&nbsp; Dhaka, Bangladesh
             </span>
 
             <span class="footer-copy" style="font-size: 0.875rem;">
@@ -1580,7 +1559,8 @@
         </div>
     </footer>
 
-    @livewireScripts
+    <?php echo \Livewire\Mechanisms\FrontendAssets\FrontendAssets::scripts(); ?>
+
 
     <script>
         /* ──────────────────────────────────────
@@ -1668,4 +1648,4 @@
     </script>
 </body>
 
-</html>
+</html><?php /**PATH H:\agency-app\resources\views/layouts/app.blade.php ENDPATH**/ ?>
