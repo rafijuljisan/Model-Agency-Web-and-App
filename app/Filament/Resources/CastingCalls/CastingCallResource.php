@@ -18,7 +18,7 @@ class CastingCallResource extends Resource
 {
     protected static ?string $model = CastingCall::class;
 
-    protected static string|BackedEnum|null $navigationIcon = Heroicon::OutlinedRectangleStack;
+    protected static string|BackedEnum|null $navigationIcon = Heroicon::UserPlus;
 
     protected static ?string $recordTitleAttribute = 'Casting';
 

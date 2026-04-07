@@ -18,7 +18,7 @@ class EditorialResource extends Resource
 {
     protected static ?string $model = Editorial::class;
 
-    protected static string|BackedEnum|null $navigationIcon = Heroicon::OutlinedRectangleStack;
+    protected static string|BackedEnum|null $navigationIcon = Heroicon::ClipboardDocumentList;
 
     protected static ?string $recordTitleAttribute = 'Editorial';
 
