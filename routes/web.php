@@ -129,7 +129,26 @@ Route::get('/editorial/{editorial}', function (Editorial $editorial) {
     abort_if(!$editorial->is_published, 404);
     return view('editorial.show', compact('editorial'));
 })->name('editorial.show');
+// Static & Legal Pages
+Route::get('/help', function () {
+    $settings = \App\Models\Setting::first();
+    return view('pages.help', compact('settings'));
+})->name('help');
 
+Route::get('/privacy', function () {
+    $settings = \App\Models\Setting::first();
+    return view('pages.privacy', compact('settings'));
+})->name('privacy');
+
+Route::get('/terms', function () {
+    $settings = \App\Models\Setting::first();
+    return view('pages.terms', compact('settings'));
+})->name('terms');
+
+Route::get('/legal', function () {
+    $settings = \App\Models\Setting::first();
+    return view('pages.legal', compact('settings'));
+})->name('legal');
 // 5. Public Pricing Page (Renamed to avoid conflict)
 Route::get('/pricing', [App\Http\Controllers\PaymentController::class, 'show'])->name('pricing.index');
 

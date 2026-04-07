@@ -1165,6 +1165,24 @@
                 color: var(--btn-fill-color);
             }
         }
+        /* Logout Icon Button (Desktop) */
+        .logout-icon-btn {
+            background: none;
+            border: none;
+            color: var(--text-muted);
+            cursor: pointer;
+            padding: 6px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: color 0.25s, transform 0.2s;
+            margin-left: 4px;
+        }
+
+        .logout-icon-btn:hover {
+            color: var(--gold);
+            transform: translateX(2px);
+        }
     </style>
 
 <?php if(\Livewire\Mechanisms\ExtendBlade\ExtendBlade::isRenderingLivewireComponent()): ?><!--[if BLOCK]><![endif]--><?php endif; ?><?php if($seo): ?>
@@ -1349,6 +1367,18 @@
 
                 <?php if(\Livewire\Mechanisms\ExtendBlade\ExtendBlade::isRenderingLivewireComponent()): ?><!--[if BLOCK]><![endif]--><?php endif; ?><?php if(auth()->guard()->check()): ?>
                     <a href="/account" class="btn-outline">Dashboard</a>
+                    
+                    
+                    <form method="POST" action="<?php echo e(route('logout')); ?>" style="display: inline-flex;">
+                        <?php echo csrf_field(); ?>
+                        <button type="submit" class="logout-icon-btn" aria-label="Log out" title="Log Out">
+                            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"></path>
+                                <polyline points="16 17 21 12 16 7"></polyline>
+                                <line x1="21" y1="12" x2="9" y2="12"></line>
+                            </svg>
+                        </button>
+                    </form>
                 <?php else: ?>
                     <a href="/login" class="btn-ghost">Sign In</a>
                     <a href="/register" class="btn-fill">
@@ -1402,7 +1432,20 @@
 
         <div class="drawer-actions">
             <?php if(\Livewire\Mechanisms\ExtendBlade\ExtendBlade::isRenderingLivewireComponent()): ?><!--[if BLOCK]><![endif]--><?php endif; ?><?php if(auth()->guard()->check()): ?>
-                <a href="/account" class="btn-fill" style="width: 100%; justify-content: center;">Dashboard</a>
+                <a href="/account" class="btn-fill" style="width: 100%; justify-content: center; margin-bottom: 10px;">Dashboard</a>
+                
+                
+                <form method="POST" action="<?php echo e(route('logout')); ?>" style="width: 100%;">
+                    <?php echo csrf_field(); ?>
+                    <button type="submit" class="btn-outline" style="width: 100%; justify-content: center;">
+                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="margin-right: 6px;">
+                            <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"></path>
+                            <polyline points="16 17 21 12 16 7"></polyline>
+                            <line x1="21" y1="12" x2="9" y2="12"></line>
+                        </svg>
+                        Log Out
+                    </button>
+                </form>
             <?php else: ?>
                 <a href="/login" class="btn-outline" style="width: 100%; justify-content: center; margin-bottom: 10px;">Sign
                     In</a>
@@ -1516,12 +1559,23 @@
             <div>
                 <div class="footer-col-title">Talent</div>
                 <ul class="footer-col-links">
-                    <li><a href="/models">Models</a></li>
-                    <li><a href="/actors">Actors</a></li>
-                    <li><a href="/photographers">Photographers</a></li>
-                    <li><a href="/musicians">Musicians</a></li>
-                    <li><a href="/creators">Content Creators</a></li>
-                    <li><a href="/brand-promoters">Brand Promoters</a></li>
+                    <?php
+                        // Safely fetch distinct, active category groups directly from the database
+                        $footerGroups = \App\Models\Category::where('is_active', true)
+                            ->select('group')
+                            ->distinct()
+                            ->orderBy('group')
+                            ->pluck('group');
+                    ?>
+
+                    <?php if(\Livewire\Mechanisms\ExtendBlade\ExtendBlade::isRenderingLivewireComponent()): ?><!--[if BLOCK]><![endif]--><?php \Livewire\Features\SupportCompiledWireKeys\SupportCompiledWireKeys::openLoop(); ?><?php endif; ?><?php $__currentLoopData = $footerGroups; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $group): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?><?php if(\Livewire\Mechanisms\ExtendBlade\ExtendBlade::isRenderingLivewireComponent()): ?><?php \Livewire\Features\SupportCompiledWireKeys\SupportCompiledWireKeys::startLoopIteration(); ?><?php endif; ?>
+                        <li>
+                            <a href="/artists?group=<?php echo e(urlencode($group)); ?>">
+                                <?php echo e($group); ?>
+
+                            </a>
+                        </li>
+                    <?php if(\Livewire\Mechanisms\ExtendBlade\ExtendBlade::isRenderingLivewireComponent()): ?><?php \Livewire\Features\SupportCompiledWireKeys\SupportCompiledWireKeys::endLoop(); ?><?php endif; ?><?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?><?php if(\Livewire\Mechanisms\ExtendBlade\ExtendBlade::isRenderingLivewireComponent()): ?><!--[if ENDBLOCK]><![endif]--><?php \Livewire\Features\SupportCompiledWireKeys\SupportCompiledWireKeys::closeLoop(); ?><?php endif; ?>
                 </ul>
             </div>
 
@@ -1549,6 +1603,7 @@
                     <li><a href="/privacy">Privacy Policy</a></li>
                     <li><a href="/terms">Terms of Service</a></li>
                     <li><a href="/legal">Legal &amp; Copyright</a></li>
+                    <li><a href="/admin/login">Admin Login</a></li>
                 </ul>
             </div>
         </div>

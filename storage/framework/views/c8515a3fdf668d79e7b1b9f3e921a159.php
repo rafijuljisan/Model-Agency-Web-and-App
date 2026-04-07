@@ -943,7 +943,14 @@ unset($__errorArgs, $__bag); ?><?php if(\Livewire\Mechanisms\ExtendBlade\ExtendB
             <?php elseif($currentStep === 'profile'): ?>
                 
                 <div class="form-page-header anim-fade-up">
-                    <div class="form-page-eyebrow">Your Profile</div>
+                    <div class="form-page-eyebrow" style="display: flex; justify-content: space-between; width: 100%;">
+                        <span>Your Profile</span>
+                        <?php if(\Livewire\Mechanisms\ExtendBlade\ExtendBlade::isRenderingLivewireComponent()): ?><!--[if BLOCK]><![endif]--><?php endif; ?><?php if(Auth::user()->member_id): ?>
+                            <span style="color: var(--text-muted); text-transform: none; letter-spacing: normal;">
+                                Member ID: <strong style="color: var(--text-primary);"><?php echo e(Auth::user()->member_id); ?></strong>
+                            </span>
+                        <?php endif; ?><?php if(\Livewire\Mechanisms\ExtendBlade\ExtendBlade::isRenderingLivewireComponent()): ?><!--[if ENDBLOCK]><![endif]--><?php endif; ?>
+                    </div>
                     <h1 class="form-page-title">Build Your <strong>Talent Profile</strong></h1>
                     <p class="form-page-sub">Complete your profile to appear in the verified talent directory and attract
                         clients.</p>
