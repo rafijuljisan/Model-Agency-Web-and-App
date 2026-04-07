@@ -41,7 +41,7 @@ This application leverages a modern TALL-stack inspired architecture:
 To get the Dhaka Model Agency application running locally, follow these standard Laravel setup guidelines:
 
 1. **Clone the repository:**
-   ```bash
+   bash
    ```
    git clone <repository-url>
    cd agency-app
@@ -52,8 +52,8 @@ To get the Dhaka Model Agency application running locally, follow these standard
 Bash
 ```
 composer install
-Install NPM dependencies & compile assets:
 ```
+## Install NPM dependencies & compile assets:
 
 Bash
 ```
