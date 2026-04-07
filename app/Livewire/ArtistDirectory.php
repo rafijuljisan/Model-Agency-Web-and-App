@@ -14,15 +14,12 @@ class ArtistDirectory extends Component
 {
     use WithPagination;
 
-    // Existing filters
+    // ── PRIMARY FILTERS ──
     public $search = '';
-
-    #[Url] // <-- ADD THIS
+    #[Url]
     public $category = '';
     #[Url]
     public $group = '';
-    
-    // NEW Advanced Filters
     public $gender = '';
     public $minAge = null;
     public $maxAge = null;
@@ -32,7 +29,18 @@ class ArtistDirectory extends Component
     public $district = '';
     #[Url]
     public $upazila = '';
-    public $language = '';
+
+    // ── ADVANCED FILTERS (NEW) ──
+    public $experienceLevel = '';
+    public $availability = '';
+    public $minRate = null;
+    public $maxRate = null;
+    public $skinTone = '';
+    public $hairColor = '';
+    public $hairLength = '';
+    public $willingToTravel = false;
+
+    // ── UI STATE ──
     public $showMobileFilters = false;
 
     // Reset pagination when a filter changes
@@ -45,12 +53,25 @@ class ArtistDirectory extends Component
     {
         $this->upazila = ''; 
     }
+
+    // Clean method to reset all filters at once
+    public function resetFilters()
+    {
+        $this->reset([
+            'search', 'category', 'group', 'gender', 'minAge', 'maxAge', 
+            'minHeight', 'maxHeight', 'district', 'upazila', 'experienceLevel', 
+            'availability', 'minRate', 'maxRate', 'skinTone', 'hairColor', 
+            'hairLength', 'willingToTravel'
+        ]);
+        $this->resetPage();
+    }
+
     public function render()
     {
         $query = User::role('Verified-Artist')
             ->with(['profile', 'media' => fn($q) => $q->whereIn('collection_name', ['avatar', 'portfolio'])])
-            ->where('verification_status', 'verified')          // MUST be verified
-            ->where('academic_verification_status', 'verified') // MUST be verified
+            ->where('verification_status', 'verified')
+            ->where('academic_verification_status', 'verified')
             ->whereHas('subscriptions', fn($q) => $q->where('status', 'active'));
 
         // 1. Basic Search
@@ -58,48 +79,47 @@ class ArtistDirectory extends Component
             $query->where('name', 'like', '%' . $this->search . '%');
         }
 
-        // 2. Complex Profile Filters
+        // 2. Profile Filters
         $query->whereHas('profile', function ($q) {
             
-            // ── NEW: Handle Mega Menu Group Clicks ──
+            // Mega Menu Category Group
             if ($this->group) {
-                // Find all sub-categories belonging to this group
                 $categoryNames = \App\Models\Category::where('group', $this->group)->pluck('name')->toArray();
-                
                 if (!empty($categoryNames)) {
                     $q->where(function($subQ) use ($categoryNames) {
                         foreach($categoryNames as $catName) {
-                            // If they have ANY of the skills in this group, show them
                             $subQ->orWhereJsonContains('categories', $catName);
                         }
                     });
                 }
             }
-            // ── BUG FIXED: Uses whereJsonContains for the new array! ──
-            if ($this->category) $q->whereJsonContains('categories', $this->category);
             
+            // Primary Filters
+            if ($this->category) $q->whereJsonContains('categories', $this->category);
             if ($this->gender) $q->where('gender', $this->gender);
             if ($this->district) $q->where('district', $this->district);
             if ($this->upazila) $q->where('upazila', $this->upazila);
 
-            if ($this->minAge) {
-                $q->whereDate('date_of_birth', '<=', now()->subYears($this->minAge));
-            }
-            if ($this->maxAge) {
-                $q->whereDate('date_of_birth', '>=', now()->subYears($this->maxAge + 1));
-            }
-
+            if ($this->minAge) $q->whereDate('date_of_birth', '<=', now()->subYears($this->minAge));
+            if ($this->maxAge) $q->whereDate('date_of_birth', '>=', now()->subYears($this->maxAge + 1));
             if ($this->minHeight) $q->where('height_cm', '>=', $this->minHeight);
             if ($this->maxHeight) $q->where('height_cm', '<=', $this->maxHeight);
 
-            if ($this->language) {
-                $q->whereJsonContains('languages', $this->language);
-            }
+            // ── NEW ADVANCED FILTERS ──
+            if ($this->experienceLevel) $q->where('experience_level', $this->experienceLevel);
+            if ($this->availability) $q->where('availability', $this->availability);
+            if ($this->skinTone) $q->where('skin_tone', $this->skinTone);
+            if ($this->hairColor) $q->where('hair_color', $this->hairColor);
+            if ($this->hairLength) $q->where('hair_length', $this->hairLength);
+            
+            if ($this->minRate) $q->where('hourly_rate', '>=', $this->minRate);
+            if ($this->maxRate) $q->where('hourly_rate', '<=', $this->maxRate);
+            
+            if ($this->willingToTravel) $q->where('willing_to_travel', 1);
         });
 
-        // ── THE NEW FAIR-ROTATION ALGORITHM ──
-        
-        $seed = date('Ymd'); // Generates a unique number for today (e.g., 20260407)
+        // ── FAIR-ROTATION ALGORITHM ──
+        $seed = date('Ymd'); 
         $newThreshold = now()->subDays(15);
         $inactiveThreshold = now()->subDays(60);
 
@@ -110,19 +130,12 @@ class ArtistDirectory extends Component
                 ELSE 2
             END ASC
         ", [$newThreshold, $inactiveThreshold])
-        
-        // 1. Sort Tier 1 (New Talent) by absolute newest first
         ->orderByRaw("CASE WHEN users.created_at >= ? THEN users.created_at ELSE NULL END DESC", [$newThreshold])
-        
-        // 2. Sort Tier 2 (Active Talent) using the daily seeded randomizer
-        // This shuffles everyone nightly, but keeps them in place during the day for pagination!
         ->orderByRaw("RAND({$seed})");
 
         $artists = $query->paginate(12);
         
-        // ── END ALGORITHM ──
-
-        // Fetch dynamic categories and districts for the sidebar
+        // Dynamic Sidebar Data
         $categories = \App\Models\Category::where('is_active', true)
             ->orderBy('group')
             ->orderBy('name')
@@ -131,7 +144,6 @@ class ArtistDirectory extends Component
         
         $locations = \App\Models\Profile::whereNotNull('district')->distinct()->pluck('district');
         
-        // <-- ADD THIS BLOCK -->
         $upazilas = collect();
         if ($this->district) {
             $upazilas = \App\Models\Profile::where('district', $this->district)
@@ -145,7 +157,7 @@ class ArtistDirectory extends Component
             'artists' => $artists,
             'categories' => $categories,
             'locations' => $locations,
-            'upazilas' => $upazilas, // <-- PASS TO VIEW
+            'upazilas' => $upazilas,
         ]);
     }
 }

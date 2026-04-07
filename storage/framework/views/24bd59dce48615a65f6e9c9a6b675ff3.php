@@ -766,6 +766,66 @@
                 grid-template-columns: 1fr;
             }
         }
+        /* ── Advanced Filters Accordion ── */
+        .advanced-filters {
+            margin-top: 24px;
+            border-top: 1px dashed var(--border-strong);
+            padding-top: 16px;
+        }
+
+        .advanced-filters-summary {
+            font-size: 0.72rem;
+            font-weight: 600;
+            letter-spacing: 0.15em;
+            text-transform: uppercase;
+            color: var(--text-primary);
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            list-style: none; /* Removes default arrow */
+            padding: 8px 0;
+            user-select: none;
+        }
+
+        .advanced-filters-summary::-webkit-details-marker {
+            display: none;
+        }
+
+        .advanced-filters-summary svg {
+            transition: transform 0.3s ease;
+        }
+
+        .advanced-filters[open] .advanced-filters-summary svg {
+            transform: rotate(180deg);
+        }
+
+        .advanced-filters-content {
+            margin-top: 16px;
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+        }
+
+        /* Checkbox styling */
+        .filter-checkbox-wrap {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            cursor: pointer;
+        }
+
+        .filter-checkbox-wrap input {
+            accent-color: var(--gold);
+            width: 16px;
+            height: 16px;
+            cursor: pointer;
+        }
+        
+        .filter-checkbox-wrap span {
+            font-size: 0.85rem;
+            color: var(--text-primary);
+        }
     </style>
 
     
@@ -795,21 +855,21 @@
                     Filter
 
                     <div style="display: flex; gap: 12px; align-items: center;">
-                        <button class="filter-clear-btn"
-                            wire:click="$set('search', ''); $set('category', '');$set('group', ''); $set('gender', ''); $set('minAge', null); $set('maxAge', null); $set('minHeight', null); $set('maxHeight', null); $set('district', ''); $set('upazila', '')"
-                            Clear all </button>
+                        
+                        <button class="filter-clear-btn" wire:click="resetFilters">
+                            Clear all
+                        </button>
 
-                            
-                            <button class="mobile-filter-close" wire:click="$set('showMobileFilters', false)">
-                                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor"
-                                    stroke-width="2">
-                                    <line x1="18" y1="6" x2="6" y2="18"></line>
-                                    <line x1="6" y1="6" x2="18" y2="18"></line>
-                                </svg>
-                            </button>
+                        <button class="mobile-filter-close" wire:click="$set('showMobileFilters', false)">
+                            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <line x1="18" y1="6" x2="6" y2="18"></line>
+                                <line x1="6" y1="6" x2="18" y2="18"></line>
+                            </svg>
+                        </button>
                     </div>
                 </div>
 
+                
                 
                 <div class="filter-group">
                     <label class="filter-label" for="filter-search">Search Name</label>
@@ -817,18 +877,15 @@
                         wire:model.live.debounce.300ms="search" autocomplete="off">
                 </div>
 
-                
                 <div class="filter-group">
                     <label class="filter-label" for="filter-category">Category</label>
                     <div class="filter-select-wrap">
                         <select id="filter-category" class="filter-select" wire:model.live="category">
                             <option value="">All Categories</option>
                             <?php if(\Livewire\Mechanisms\ExtendBlade\ExtendBlade::isRenderingLivewireComponent()): ?><!--[if BLOCK]><![endif]--><?php \Livewire\Features\SupportCompiledWireKeys\SupportCompiledWireKeys::openLoop(); ?><?php endif; ?><?php $__currentLoopData = $categories; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $groupName => $cats): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?><?php if(\Livewire\Mechanisms\ExtendBlade\ExtendBlade::isRenderingLivewireComponent()): ?><?php \Livewire\Features\SupportCompiledWireKeys\SupportCompiledWireKeys::startLoopIteration(); ?><?php endif; ?>
-                                <optgroup label="<?php echo e($groupName); ?>"
-                                    style="color: var(--gold); font-weight: 600; text-transform: uppercase;">
+                                <optgroup label="<?php echo e($groupName); ?>" style="color: var(--gold); font-weight: 600; text-transform: uppercase;">
                                     <?php if(\Livewire\Mechanisms\ExtendBlade\ExtendBlade::isRenderingLivewireComponent()): ?><!--[if BLOCK]><![endif]--><?php \Livewire\Features\SupportCompiledWireKeys\SupportCompiledWireKeys::openLoop(); ?><?php endif; ?><?php $__currentLoopData = $cats; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $cat): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?><?php if(\Livewire\Mechanisms\ExtendBlade\ExtendBlade::isRenderingLivewireComponent()): ?><?php \Livewire\Features\SupportCompiledWireKeys\SupportCompiledWireKeys::startLoopIteration(); ?><?php endif; ?>
-                                        <option value="<?php echo e($cat->name); ?>"
-                                            style="color: var(--text-primary); font-weight: 300; text-transform: none;">
+                                        <option value="<?php echo e($cat->name); ?>" style="color: var(--text-primary); font-weight: 300; text-transform: none;">
                                             <?php echo e($cat->name); ?>
 
                                         </option>
@@ -839,55 +896,18 @@
                     </div>
                 </div>
 
-                
                 <div class="filter-group">
-                    <label class="filter-label" for="filter-gender">Gender</label>
-                    <div class="filter-select-wrap">
-                        <select id="filter-gender" class="filter-select" wire:model.live="gender">
-                            <option value="">Any Gender</option>
-                            <option value="Male">Male</option>
-                            <option value="Female">Female</option>
-                            <option value="Other">Other</option>
-                        </select>
-                    </div>
-                </div>
-
-                
-                <div class="filter-group">
-                    <span class="filter-label">Age Range (Years)</span>
-                    <div style="display: flex; gap: 8px;">
-                        <input class="filter-input" type="number" placeholder="Min age"
-                            wire:model.live.debounce.500ms="minAge" min="13">
-                        <input class="filter-input" type="number" placeholder="Max age"
-                            wire:model.live.debounce.500ms="maxAge">
-                    </div>
-                </div>
-
-                
-                <div class="filter-group">
-                    <span class="filter-label">Height Range (CM)</span>
-                    <div style="display: flex; gap: 8px;">
-                        <input class="filter-input" type="number" placeholder="Min cm"
-                            wire:model.live.debounce.500ms="minHeight">
-                        <input class="filter-input" type="number" placeholder="Max cm"
-                            wire:model.live.debounce.500ms="maxHeight">
-                    </div>
-                </div>
-
-                
-                <div class="filter-group">
-                    <label class="filter-label" for="filter-district">District</label>
+                    <label class="filter-label" for="filter-district">Location (District)</label>
                     <div class="filter-select-wrap">
                         <select id="filter-district" class="filter-select" wire:model.live="district">
                             <option value="">All of Bangladesh</option>
-                            
                             <?php if(\Livewire\Mechanisms\ExtendBlade\ExtendBlade::isRenderingLivewireComponent()): ?><!--[if BLOCK]><![endif]--><?php \Livewire\Features\SupportCompiledWireKeys\SupportCompiledWireKeys::openLoop(); ?><?php endif; ?><?php $__currentLoopData = $locations; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $loc): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?><?php if(\Livewire\Mechanisms\ExtendBlade\ExtendBlade::isRenderingLivewireComponent()): ?><?php \Livewire\Features\SupportCompiledWireKeys\SupportCompiledWireKeys::startLoopIteration(); ?><?php endif; ?>
                                 <option value="<?php echo e($loc); ?>"><?php echo e(ucfirst($loc)); ?></option>
                             <?php if(\Livewire\Mechanisms\ExtendBlade\ExtendBlade::isRenderingLivewireComponent()): ?><?php \Livewire\Features\SupportCompiledWireKeys\SupportCompiledWireKeys::endLoop(); ?><?php endif; ?><?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?><?php if(\Livewire\Mechanisms\ExtendBlade\ExtendBlade::isRenderingLivewireComponent()): ?><!--[if ENDBLOCK]><![endif]--><?php \Livewire\Features\SupportCompiledWireKeys\SupportCompiledWireKeys::closeLoop(); ?><?php endif; ?>
                         </select>
                     </div>
                 </div>
-                
+
                 <?php if(\Livewire\Mechanisms\ExtendBlade\ExtendBlade::isRenderingLivewireComponent()): ?><!--[if BLOCK]><![endif]--><?php endif; ?><?php if($district): ?>
                     <div class="filter-group anim-fade-up">
                         <label class="filter-label" for="filter-upazila">Thana / Upazila</label>
@@ -901,6 +921,126 @@
                         </div>
                     </div>
                 <?php endif; ?><?php if(\Livewire\Mechanisms\ExtendBlade\ExtendBlade::isRenderingLivewireComponent()): ?><!--[if ENDBLOCK]><![endif]--><?php endif; ?>
+
+                <div class="filter-group">
+                    <label class="filter-label" for="filter-gender">Gender</label>
+                    <div class="filter-select-wrap">
+                        <select id="filter-gender" class="filter-select" wire:model.live="gender">
+                            <option value="">Any Gender</option>
+                            <option value="Male">Male</option>
+                            <option value="Female">Female</option>
+                            <option value="Other">Other</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="filter-group">
+                    <span class="filter-label">Age Range (Years)</span>
+                    <div style="display: flex; gap: 8px;">
+                        <input class="filter-input" type="number" placeholder="Min" wire:model.live.debounce.500ms="minAge" min="13">
+                        <input class="filter-input" type="number" placeholder="Max" wire:model.live.debounce.500ms="maxAge">
+                    </div>
+                </div>
+
+                <div class="filter-group">
+                    <span class="filter-label">Height Range (CM)</span>
+                    <div style="display: flex; gap: 8px;">
+                        <input class="filter-input" type="number" placeholder="Min cm" wire:model.live.debounce.500ms="minHeight">
+                        <input class="filter-input" type="number" placeholder="Max cm" wire:model.live.debounce.500ms="maxHeight">
+                    </div>
+                </div>
+
+                
+                <details class="advanced-filters">
+                    <summary class="advanced-filters-summary">
+                        Advanced Filters
+                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <polyline points="6 9 12 15 18 9"></polyline>
+                        </svg>
+                    </summary>
+                    
+                    <div class="advanced-filters-content">
+                        
+                        
+                        <div class="filter-group" style="border: none; padding: 0; margin: 0;">
+                            <label class="filter-label">Experience Level</label>
+                            <div class="filter-select-wrap">
+                                <select class="filter-select" wire:model.live="experienceLevel">
+                                    <option value="">Any Experience</option>
+                                    <option value="Fresher">Fresher (No Experience)</option>
+                                    <option value="1-3 Years">1–3 Years</option>
+                                    <option value="Professional">Professional (3+ Years)</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        
+                        <div class="filter-group" style="border: none; padding: 0; margin: 0;">
+                            <span class="filter-label">Hourly Rate (BDT)</span>
+                            <div style="display: flex; gap: 8px;">
+                                <input class="filter-input" type="number" placeholder="Min ৳" wire:model.live.debounce.500ms="minRate">
+                                <input class="filter-input" type="number" placeholder="Max ৳" wire:model.live.debounce.500ms="maxRate">
+                            </div>
+                        </div>
+
+                        
+                        <div class="filter-group" style="border: none; padding: 0; margin: 0;">
+                            <label class="filter-label">Skin Tone</label>
+                            <div class="filter-select-wrap">
+                                <select class="filter-select" wire:model.live="skinTone">
+                                    <option value="">Any Skin Tone</option>
+                                    <option value="Fair">Fair</option>
+                                    <option value="Medium">Medium</option>
+                                    <option value="Dusky">Dusky</option>
+                                    <option value="Deep">Deep</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        
+                        <div style="display: flex; gap: 8px;">
+                            <div class="filter-select-wrap" style="flex: 1;">
+                                <select class="filter-select" wire:model.live="hairColor">
+                                    <option value="">Hair Color</option>
+                                    <option value="Black">Black</option>
+                                    <option value="Brown">Brown</option>
+                                    <option value="Light Brown">Light Brown</option>
+                                    <option value="Blonde">Blonde</option>
+                                </select>
+                            </div>
+                            <div class="filter-select-wrap" style="flex: 1;">
+                                <select class="filter-select" wire:model.live="hairLength">
+                                    <option value="">Length</option>
+                                    <option value="Bald">Bald</option>
+                                    <option value="Short">Short</option>
+                                    <option value="Medium">Medium</option>
+                                    <option value="Long">Long</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        
+                        <div class="filter-group" style="border: none; padding: 0; margin: 0;">
+                            <label class="filter-label">Availability</label>
+                            <div class="filter-select-wrap">
+                                <select class="filter-select" wire:model.live="availability">
+                                    <option value="">Any Availability</option>
+                                    <option value="Full-time">Full-time</option>
+                                    <option value="Part-time">Part-time</option>
+                                    <option value="Weekends Only">Weekends Only</option>
+                                    <option value="Flexible">Flexible</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        
+                        <label class="filter-checkbox-wrap">
+                            <input type="checkbox" wire:model.live="willingToTravel">
+                            <span>Willing to travel for projects</span>
+                        </label>
+
+                    </div>
+                </details>
 
             </div>
         </aside>
