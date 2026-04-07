@@ -70,7 +70,7 @@
         }
 
         .directory-hero-title {
-            font-family: 'Cormorant Garamond', serif;
+            font-family: 'Jost', sans-serif;
             font-size: clamp(2rem, 4vw, 3.2rem);
             font-weight: 300;
             color: var(--text-primary);
@@ -439,7 +439,7 @@
 
 /* Hover panel — name */
 .artist-hover-name {
-    font-family: 'Cormorant Garamond', serif;
+    font-family: 'Jost', sans-serif;
     font-size: 1.65rem; /* Increased from 1.5rem */
     font-weight: 600;
     color: #ffffff;
@@ -538,7 +538,7 @@
         }
 
         .artist-card-name {
-            font-family: 'Cormorant Garamond', serif;
+            font-family: 'Jost', sans-serif;
             font-size: 1.65rem; /* Increased from 1.55rem */
             font-weight: 500; /* Made slightly bolder */
             color: #fff;
@@ -605,7 +605,7 @@
         }
 
         .artist-empty-title {
-            font-family: 'Cormorant Garamond', serif;
+            font-family: 'Jost', sans-serif;
             font-size: 1.6rem;
             font-weight: 300;
             color: var(--text-secondary);

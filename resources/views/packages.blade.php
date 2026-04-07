@@ -44,7 +44,7 @@
     background: var(--gold);
 }
 .pricing-hero-title {
-    font-family: 'Cormorant Garamond', serif;
+    font-family: 'Jost', sans-serif;
     font-size: clamp(2.5rem, 5vw, 4rem); /* Increased scaling for better impact */
     font-weight: 300;
     color: var(--text-primary);
@@ -153,7 +153,7 @@
 }
 
 .package-name {
-    font-family: 'Cormorant Garamond', serif;
+    font-family: 'Jost', sans-serif;
     font-size: 1.75rem; /* Increased from 1.4rem */
     font-weight: 600;
     color: var(--text-primary);
@@ -175,13 +175,13 @@
     margin-bottom: 4px;
 }
 .package-currency {
-    font-family: 'Cormorant Garamond', serif;
+    font-family: 'Jost', sans-serif;
     font-size: 1.5rem; /* Increased from 1.2rem */
     font-weight: 400;
     color: var(--gold);
 }
 .package-price {
-    font-family: 'Cormorant Garamond', serif;
+    font-family: 'Jost', sans-serif;
     font-size: 3.5rem; /* Increased from 3rem */
     font-weight: 600;
     color: var(--text-primary);
@@ -241,7 +241,7 @@
     flex-shrink: 0;
 }
 .payment-section-title {
-    font-family: 'Cormorant Garamond', serif;
+    font-family: 'Jost', sans-serif;
     font-size: 1.5rem; /* Increased from 1.15rem */
     font-weight: 600;
     color: var(--text-primary);
@@ -252,7 +252,7 @@
     line-height: 1.6;
 }
 .payment-instruction-number {
-    font-family: 'Cormorant Garamond', serif;
+    font-family: 'Jost', sans-serif;
     font-size: 1.75rem; /* Increased from 1.4rem */
     font-weight: 600;
     color: var(--gold);

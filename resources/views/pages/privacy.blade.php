@@ -4,9 +4,9 @@
         .legal-shell { max-width: 860px; margin: 0 auto; padding: 100px 40px; }
         .legal-header { text-align: center; margin-bottom: 60px; padding-bottom: 40px; border-bottom: 1px solid var(--border); }
         .legal-eyebrow { font-size: 0.75rem; font-weight: 600; letter-spacing: 0.2em; text-transform: uppercase; color: var(--gold); margin-bottom: 16px; }
-        .legal-title { font-family: 'Cormorant Garamond', serif; font-size: 3.5rem; font-weight: 300; color: var(--text-primary); line-height: 1.1; }
+        .legal-title { font-family: 'Jost', sans-serif; font-size: 3.5rem; font-weight: 300; color: var(--text-primary); line-height: 1.1; }
         .legal-content { font-family: 'Jost', sans-serif; color: var(--text-secondary); line-height: 1.8; font-size: 1.05rem; }
-        .legal-content h2 { font-family: 'Cormorant Garamond', serif; font-size: 2rem; font-weight: 500; color: var(--text-primary); margin: 48px 0 20px; }
+        .legal-content h2 { font-family: 'Jost', sans-serif; font-size: 2rem; font-weight: 500; color: var(--text-primary); margin: 48px 0 20px; }
         .legal-content h3 { font-size: 1.2rem; font-weight: 600; color: var(--text-primary); margin: 32px 0 16px; }
         .legal-content p { margin-bottom: 20px; }
         .legal-content ul { margin-bottom: 24px; padding-left: 24px; list-style: square; }

@@ -35,7 +35,7 @@
         }
 
         .auth-title {
-            font-family: 'Cormorant Garamond', serif;
+            font-family: 'Jost', sans-serif;
             font-size: 2.6rem;
             font-weight: 300;
             color: var(--text-primary);

@@ -15,7 +15,7 @@
         }
 
         .auth-eyebrow {
-            font-size: 0.65rem;
+            font-size: 0.85rem;
             font-weight: 600;
             letter-spacing: 0.3em;
             text-transform: uppercase;
@@ -35,7 +35,7 @@
         }
 
         .auth-title {
-            font-family: 'Cormorant Garamond', serif;
+            font-family: 'Jost', sans-serif;
             font-size: 2.6rem;
             font-weight: 300;
             color: var(--text-primary);
@@ -45,7 +45,7 @@
         .auth-title strong { font-weight: 600; }
 
         .auth-sub {
-            font-size: 0.85rem;
+            font-size: 1rem;
             color: var(--text-muted);
             line-height: 1.6;
             padding: 0 20px;
@@ -62,7 +62,7 @@
         .form-field { margin-bottom: 22px; }
         .form-field-label {
             display: block;
-            font-size: 0.65rem;
+            font-size: 0.85rem;
             font-weight: 600;
             letter-spacing: 0.18em;
             text-transform: uppercase;
@@ -77,7 +77,7 @@
             border: 1px solid var(--border-strong);
             color: var(--text-primary);
             font-family: 'Jost', sans-serif;
-            font-size: 0.9rem;
+            font-size: 1.25rem;
             font-weight: 300;
             outline: none;
             transition: border-color 0.25s, box-shadow 0.25s;
@@ -101,7 +101,7 @@
             align-items: center;
             gap: 6px;
             color: #d32f2f;
-            font-size: 0.68rem;
+            font-size: 0.85rem;
             font-weight: 500;
             margin-top: 6px;
             letter-spacing: 0.04em;
@@ -147,13 +147,13 @@
             transform: rotate(45deg);
         }
         .checkbox-label {
-            font-size: 0.75rem;
+            font-size: 0.85rem;
             color: var(--text-secondary);
             font-weight: 500;
         }
         
         .forgot-link {
-            font-size: 0.75rem;
+            font-size: 0.85rem;
             color: var(--text-muted);
             transition: color 0.2s;
             text-decoration: none;
@@ -169,7 +169,7 @@
         .auth-footer {
             margin-top: 28px;
             text-align: center;
-            font-size: 0.75rem;
+            font-size: 0.85rem;
             color: var(--text-muted);
             letter-spacing: 0.04em;
         }
@@ -194,7 +194,7 @@
             background: var(--badge-ok-bg);
             border: 1px solid var(--badge-ok-color);
             color: var(--badge-ok-color);
-            font-size: 0.78rem;
+            font-size: 1rem;
             font-weight: 500;
             letter-spacing: 0.06em;
             margin-bottom: 24px;
@@ -232,7 +232,7 @@
                 <div class="form-field">
                     <label class="form-field-label" for="email">Email Address</label>
                     <div class="form-input-wrap">
-                        <svg class="form-input-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" aria-hidden="true">
+                        <svg class="form-input-icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" aria-hidden="true">
                             <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"></path><polyline points="22,6 12,13 2,6"></polyline>
                         </svg>
                         <input id="email" type="email" name="email" value="{{ old('email') }}" class="form-input" placeholder="you@example.com" required autofocus autocomplete="username">
@@ -249,7 +249,7 @@
                 <div class="form-field" style="margin-bottom: 0;">
                     <label class="form-field-label" for="password">Password</label>
                     <div class="form-input-wrap">
-                        <svg class="form-input-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" aria-hidden="true">
+                        <svg class="form-input-icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" aria-hidden="true">
                             <rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect><path d="M7 11V7a5 5 0 0 1 10 0v4"></path>
                         </svg>
                         <input id="password" type="password" name="password" class="form-input" placeholder="Enter your password" required autocomplete="current-password">
@@ -279,7 +279,7 @@
                 {{-- Submit Button --}}
                 <button type="submit" class="btn-fill auth-submit">
                     Sign In
-                    <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="margin-left:8px;" aria-hidden="true">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="margin-left:8px;" aria-hidden="true">
                         <path d="M15 3h4a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-4M10 17l5-5-5-5M15 12H3"/>
                     </svg>
                 </button>

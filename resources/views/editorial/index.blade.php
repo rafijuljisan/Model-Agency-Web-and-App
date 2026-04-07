@@ -5,7 +5,7 @@
             font-size: 0.65rem; font-weight: 600; letter-spacing: 0.3em; text-transform: uppercase; color: var(--gold); margin-bottom: 16px; display: flex; align-items: center; justify-content: center; gap: 12px;
         }
         .editorial-eyebrow::before, .editorial-eyebrow::after { content: ''; width: 30px; height: 1px; background: var(--gold); opacity: 0.6; }
-        .editorial-title { font-family: 'Cormorant Garamond', serif; font-size: 3.5rem; font-weight: 300; color: var(--text-primary); line-height: 1.1; }
+        .editorial-title { font-family: 'Jost', sans-serif; font-size: 3.5rem; font-weight: 300; color: var(--text-primary); line-height: 1.1; }
         .editorial-title strong { font-weight: 600; font-style: italic; color: var(--gold); }
 
         .editorial-grid { max-width: 1440px; margin: 0 auto 100px; padding: 0 40px; display: grid; grid-template-columns: repeat(3, 1fr); gap: 40px; }
@@ -20,7 +20,7 @@
         .play-indicator svg { width: 48px; height: 48px; color: white; fill: white; }
 
         .editorial-meta { font-size: 0.7rem; font-weight: 600; letter-spacing: 0.15em; text-transform: uppercase; color: var(--gold); margin-bottom: 12px; }
-        .editorial-card-title { font-family: 'Cormorant Garamond', serif; font-size: 1.8rem; color: var(--text-primary); line-height: 1.2; margin-bottom: 12px; transition: color 0.3s; }
+        .editorial-card-title { font-family: 'Jost', sans-serif; font-size: 1.8rem; color: var(--text-primary); line-height: 1.2; margin-bottom: 12px; transition: color 0.3s; }
         .editorial-card:hover .editorial-card-title { color: var(--gold); }
         .editorial-excerpt { font-size: 1.2rem; color: var(--text-secondary); line-height: 1.6; display: -webkit-box; -webkit-line-clamp: 3; -webkit-box-orient: vertical; overflow: hidden; }
 

@@ -3,21 +3,21 @@
     <style>
         .help-shell { max-width: 900px; margin: 0 auto; padding: 100px 40px; }
         .help-header { text-align: center; margin-bottom: 60px; }
-        .help-title { font-family: 'Cormorant Garamond', serif; font-size: 3.5rem; font-weight: 300; color: var(--text-primary); margin-bottom: 16px; }
+        .help-title { font-family: 'Jost', sans-serif; font-size: 3.5rem; font-weight: 300; color: var(--text-primary); margin-bottom: 16px; }
         
         .faq-item { border-bottom: 1px solid var(--border); padding: 24px 0; }
-        .faq-q { font-size: 1.1rem; font-weight: 500; color: var(--gold); margin-bottom: 12px; font-family: 'Cormorant Garamond', serif; font-size: 1.6rem; }
+        .faq-q { font-size: 1.1rem; font-weight: 500; color: var(--gold); margin-bottom: 12px; font-family: 'Jost', sans-serif; font-size: 1.6rem; }
         .faq-a { color: var(--text-secondary); line-height: 1.7; font-size: 1rem; }
 
         .guideline-box { margin-top: 60px; display: grid; grid-template-columns: 1fr 1fr; gap: 32px; }
         .g-card { background: var(--bg-secondary); border: 1px solid var(--border); padding: 40px; }
-        .g-card h3 { font-family: 'Cormorant Garamond', serif; font-size: 1.8rem; color: var(--text-primary); border-bottom: 1px solid var(--border-strong); padding-bottom: 16px; margin-bottom: 24px; }
+        .g-card h3 { font-family: 'Jost', sans-serif; font-size: 1.8rem; color: var(--text-primary); border-bottom: 1px solid var(--border-strong); padding-bottom: 16px; margin-bottom: 24px; }
         .g-card ul { padding-left: 20px; color: var(--text-secondary); line-height: 1.8; }
         .g-card li { margin-bottom: 12px; }
         .g-card-highlight { background: rgba(201,169,110,0.1); padding: 16px; border-left: 3px solid var(--gold); margin-top: 24px; font-size: 0.9rem; }
 
         .support-strip { margin-top: 60px; padding: 40px; background: var(--gold-bg); border: 1px solid var(--border-strong); text-align: center; }
-        .support-title { font-family: 'Cormorant Garamond', serif; font-size: 2rem; color: var(--text-primary); margin-bottom: 20px; }
+        .support-title { font-family: 'Jost', sans-serif; font-size: 2rem; color: var(--text-primary); margin-bottom: 20px; }
         .support-links { display: flex; justify-content: center; gap: 32px; flex-wrap: wrap; }
         .support-link { display: flex; align-items: center; gap: 8px; color: var(--text-primary); font-weight: 500; text-decoration: none; }
         .support-link:hover { color: var(--gold); }

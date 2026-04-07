@@ -715,7 +715,7 @@
         .nav-drawer a {
             display: block;
             padding: 15px 0;
-            font-family: 'Cormorant Garamond', serif;
+            font-family: 'Jost', sans-serif;
             font-size: 1.45rem;
             font-weight: 400;
             letter-spacing: 0.04em;
@@ -963,7 +963,7 @@
             align-items: center;
             gap: 14px;
             color: var(--gold);
-            font-family: 'Cormorant Garamond', serif;
+            font-family: 'Jost', sans-serif;
             font-size: 1rem;
         }
 
@@ -1093,7 +1093,7 @@
         }
 
         .mega-menu-card-title {
-            font-family: 'Cormorant Garamond', serif;
+            font-family: 'Jost', sans-serif;
             font-size: 1.35rem;
             font-weight: 600;
             color: var(--text-primary);

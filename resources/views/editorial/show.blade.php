@@ -3,7 +3,7 @@
         .article-container { max-width: 840px; margin: 60px auto 100px; padding: 0 20px; }
         
         .article-meta { font-size: 0.75rem; font-weight: 600; letter-spacing: 0.2em; text-transform: uppercase; color: var(--gold); text-align: center; margin-bottom: 20px; }
-        .article-title { font-family: 'Cormorant Garamond', serif; font-size: 3.8rem; font-weight: 400; color: var(--text-primary); text-align: center; line-height: 1.1; margin-bottom: 40px; }
+        .article-title { font-family: 'Jost', sans-serif; font-size: 3.8rem; font-weight: 400; color: var(--text-primary); text-align: center; line-height: 1.1; margin-bottom: 40px; }
         
         /* High Quality Image Rendering */
         .article-media { width: 100%; margin-bottom: 40px; box-shadow: var(--shadow-lg); }
@@ -20,7 +20,7 @@
         /* Article Prose */
         .prose { color: var(--text-secondary); font-size: 1.2rem; line-height: 1.8; font-weight: 300; margin-bottom: 60px; }
         .prose p { margin-bottom: 24px; }
-        .prose h2, .prose h3 { font-family: 'Cormorant Garamond', serif; color: var(--text-primary); margin-top: 40px; margin-bottom: 20px; }
+        .prose h2, .prose h3 { font-family: 'Jost', sans-serif; color: var(--text-primary); margin-top: 40px; margin-bottom: 20px; }
         .prose h2 { font-size: 2.2rem; }
         .prose h3 { font-size: 1.8rem; }
         .prose ul { margin-bottom: 24px; padding-left: 20px; }
@@ -43,7 +43,7 @@
 
         /* ── HD Gallery ── */
         .gallery-section { margin-top: 60px; }
-        .gallery-title { font-family: 'Cormorant Garamond', serif; font-size: 2.4rem; color: var(--text-primary); text-align: center; margin-bottom: 30px; }
+        .gallery-title { font-family: 'Jost', sans-serif; font-size: 2.4rem; color: var(--text-primary); text-align: center; margin-bottom: 30px; }
         .gallery-grid {
             display: grid;
             grid-template-columns: repeat(2, 1fr);

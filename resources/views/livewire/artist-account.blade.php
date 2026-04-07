@@ -38,7 +38,7 @@
         }
 
         .form-page-title {
-            font-family: 'Cormorant Garamond', serif;
+            font-family: 'Jost', sans-serif;
             font-size: 2.8rem;
             font-weight: 300;
             color: var(--text-primary);
@@ -104,7 +104,6 @@
         .form-step-label {
             font-size: 0.875rem;
             font-weight: 500;
-            letter-spacing: 0.16em;
             text-transform: uppercase;
             color: var(--text-muted);
             margin-left: 8px;
@@ -153,7 +152,7 @@
         }
 
         .form-section-title {
-            font-family: 'Cormorant Garamond', serif;
+            font-family: 'Jost', sans-serif;
             font-size: 1.4rem;
             font-weight: 600;
             color: var(--text-primary);

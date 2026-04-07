@@ -324,7 +324,7 @@
             background: var(--gold);
         }
         .section-title {
-            font-family: 'Cormorant Garamond', serif;
+            font-family: 'Jost', sans-serif;
             font-size: clamp(2rem, 3.5vw, 3rem);
             font-weight: 300;
             color: var(--text-primary);
@@ -459,7 +459,7 @@
         }
 
         .artist-card-name {
-            font-family: 'Cormorant Garamond', serif;
+            font-family: 'Jost', sans-serif;
             font-size: 1.65rem;
             font-weight: 500;
             color: #fff;
@@ -512,7 +512,7 @@
 
         /* Hover panel — name */
         .artist-hover-name {
-            font-family: 'Cormorant Garamond', serif;
+            font-family: 'Jost', sans-serif;
             font-size: 1.65rem;
             font-weight: 600;
             color: #ffffff;
@@ -645,7 +645,7 @@
         }
         .trust-card:hover { background: var(--gold-bg); }
         .trust-card-num {
-            font-family: 'Cormorant Garamond', serif;
+            font-family: 'Jost', sans-serif;
             font-size: 3.5rem;
             font-weight: 300;
             color: var(--border-strong);
@@ -659,14 +659,14 @@
             margin-bottom: 20px;
         }
         .trust-card-title {
-            font-family: 'Cormorant Garamond', serif;
+            font-family: 'Jost', sans-serif;
             font-size: 1.6rem;
             font-weight: 600;
             color: var(--text-primary);
             margin-bottom: 12px;
         }
         .trust-card-desc {
-            font-size: 1rem;
+            font-size: 1.125rem;
             color: var(--text-secondary);
             line-height: 1.8;
         }
@@ -695,7 +695,7 @@
         }
         .cta-banner-deco-text {
             position: absolute;
-            font-family: 'Cormorant Garamond', serif;
+            font-family: 'Jost', sans-serif;
             font-size: 16rem;
             font-weight: 700;
             color: var(--border);
@@ -733,7 +733,7 @@
             background: var(--gold);
         }
         .cta-headline {
-            font-family: 'Cormorant Garamond', serif;
+            font-family: 'Jost', sans-serif;
             font-size: clamp(2.2rem, 4vw, 3.6rem);
             font-weight: 300;
             color: var(--text-primary);
@@ -882,7 +882,7 @@
         }
         .testi-author-info {}
         .testi-name {
-            font-family: 'Cormorant Garamond', serif;
+            font-family: 'Jost', sans-serif;
             font-size: 1.25rem;
             font-weight: 600;
             color: var(--text-primary);
@@ -930,7 +930,7 @@
             object-fit: cover;
         }
         .team-name {
-            font-family: 'Cormorant Garamond', serif;
+            font-family: 'Jost', sans-serif;
             font-size: 1.8rem;
             font-weight: 500;
             color: var(--text-primary);

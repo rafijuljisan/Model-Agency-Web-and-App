@@ -18,7 +18,7 @@
 /* ── Hero Section ── */
 .ap-hero {
     position: relative;
-    height: 380px;
+    height: 280px; /* ← Change this from 380px to 280px */
     overflow: hidden;
     background: var(--bg-secondary);
 }
@@ -59,7 +59,7 @@
 .ap-header {
     position: relative;
     z-index: 2;
-    margin-top: -100px;
+    margin-top: -120px;
     display: grid;
     grid-template-columns: auto 1fr auto;
     gap: 32px;
@@ -98,7 +98,7 @@
 }
 .ap-verified-ring {
     position: absolute;
-    bottom: 6px; right: 6px;
+    bottom: 8px; right: 8px;
     width: 36px; height: 36px;
     background: #16a34a;
     border: 3px solid var(--bg-primary);
@@ -112,9 +112,9 @@
     padding-bottom: 8px;
 }
 .ap-name {
-    font-family: 'Cormorant Garamond', serif;
+    font-family: 'Jost', sans-serif;
     font-size: 3.2rem;
-    font-weight: 600;
+    font-weight: 500;
     color: var(--text-primary);
     line-height: 1;
     margin: 0 0 12px;
@@ -186,7 +186,7 @@
 /* ── Stats Strip ── */
 .ap-stats {
     display: grid;
-    grid-template-columns: repeat(3, 1fr);
+    grid-template-columns: repeat(4, 1fr); /* <-- Changed to 4 columns */
     border: 1px solid var(--border);
     border-top: none;
     background: var(--bg-surface);
@@ -200,9 +200,9 @@
 .ap-stat:last-child { border-right: none; }
 .ap-stat:hover { background: var(--gold-bg); }
 .ap-stat-num {
-    font-family: 'Cormorant Garamond', serif;
+    font-family: 'Jost', sans-serif;
     font-size: 2rem;
-    font-weight: 600;
+    font-weight: 500;
     color: var(--text-primary);
     line-height: 1;
     margin-bottom: 4px;
@@ -302,7 +302,7 @@
     flex-shrink: 0;
 }
 .ap-card-title {
-    font-family: 'Cormorant Garamond', serif;
+    font-family: 'Jost', sans-serif;
     font-size: 1.25rem;
     font-weight: 600;
     color: var(--text-primary);
@@ -427,7 +427,7 @@
     background: var(--bg-primary);
 }
 .ap-portfolio-empty-title {
-    font-family: 'Cormorant Garamond', serif;
+    font-family: 'Jost', sans-serif;
     font-size: 1.4rem;
     font-weight: 300;
     color: var(--text-muted);
@@ -465,16 +465,15 @@
     margin-bottom: 20px;
 }
 .ap-rate-num {
-    font-family: 'Cormorant Garamond', serif;
+    font-family: 'Jost', sans-serif;
     font-size: 2.4rem;
-    font-weight: 600;
+    font-weight: 500;
     color: var(--text-primary);
     line-height: 1;
 }
 .ap-rate-unit {
     font-size: 0.72rem;
     font-weight: 600;
-    letter-spacing: 0.16em;
     text-transform: uppercase;
     color: var(--text-muted);
     margin-top: 4px;
@@ -490,14 +489,13 @@
 }
 .ap-attr:last-child { border-bottom: none; padding-bottom: 0; }
 .ap-attr-key {
-    font-size: 0.72rem;
+    font-size: 0.85rem;
     font-weight: 700;
-    letter-spacing: 0.16em;
     text-transform: uppercase;
     color: var(--text-muted);
 }
 .ap-attr-val {
-    font-family: 'Cormorant Garamond', serif;
+    font-family: 'Jost', sans-serif;
     font-size: 1.05rem;
     font-weight: 500;
     color: var(--text-primary);
@@ -520,7 +518,7 @@
     margin-bottom: 8px;
 }
 .ap-contact-phone {
-    font-family: 'Cormorant Garamond', serif;
+    font-family: 'Jost', sans-serif;
     font-size: 1.6rem;
     font-weight: 600;
     color: var(--text-primary);
@@ -624,7 +622,7 @@
     color: var(--gold);
 }
 .ap-modal-title {
-    font-family: 'Cormorant Garamond', serif;
+    font-family: 'Jost', sans-serif;
     font-size: 2rem;
     font-weight: 600;
     color: var(--text-primary);
@@ -665,25 +663,29 @@
     .ap-shell { padding: 0 24px 60px; }
 }
 @media (max-width: 768px) {
-    .ap-hero { height: 260px; }
+    .ap-hero { height: 180px; }
     .ap-header {
         grid-template-columns: 1fr;
         text-align: center;
-        margin-top: -70px;
+        margin-top: -90px;
     }
     .ap-avatar-ring { margin: 0 auto; }
-    .ap-avatar { width: 130px; height: 130px; }
+    .ap-avatar { width: 150px; height: 150px; }
     .ap-identity { text-align: center; }
     .ap-name { font-size: 2.2rem; }
     .ap-tags { justify-content: center; }
     .ap-meta { justify-content: center; }
     .ap-actions { align-items: center; flex-direction: row; flex-wrap: wrap; justify-content: center; }
-    .ap-stats { grid-template-columns: 1fr 1fr; }
-    .ap-stats .ap-stat:nth-child(2) { border-right: none; }
-    .ap-stats .ap-stat:nth-child(3) { grid-column: 1 / -1; border-right: none; border-top: 1px solid var(--border); }
+    .ap-stats { grid-template-columns: repeat(2, 1fr); }
+    .ap-stats .ap-stat:nth-child(even) { border-right: none; } /* Removes border for the 2nd and 4th items */
+    .ap-stats .ap-stat:nth-child(3),
+    .ap-stats .ap-stat:nth-child(4) { border-top: 1px solid var(--border); } /* Adds top border to the bottom row */
     .ap-portfolio-grid { grid-template-columns: repeat(2, 1fr); }
     .ap-tab { padding: 12px 16px; }
     .ap-shell { padding: 0 16px 60px; }
+    .ap-id-wrapper {
+        justify-content: center; /* Centers the ID tag exclusively on mobile */
+    }
 }
 @media (max-width: 480px) {
     .ap-portfolio-grid { grid-template-columns: repeat(2, 1fr); }
@@ -698,6 +700,10 @@
 .ap-fade-2 { animation: ap-fade-up 0.5s 0.1s ease both; }
 .ap-fade-3 { animation: ap-fade-up 0.5s 0.2s ease both; }
 .ap-fade-4 { animation: ap-fade-up 0.5s 0.3s ease both; }
+.ap-id-wrapper {
+    display: flex;
+    margin-bottom: 12px; /* Adds space between the ID and the Category tags */
+}
 </style>
 
 {{-- ══════════════════════════════════════════
@@ -742,13 +748,17 @@
         <div class="ap-identity">
             <h1 class="ap-name">{{ $artist->name }}</h1>
 
-            <div class="ap-tags">
-                {{-- NEW: Member ID Badge --}}
-                @if($artist->member_id)
+            {{-- 1. NEW: Standalone ID Wrapper (Placed immediately under the name) --}}
+            @if($artist->member_id)
+                <div class="ap-id-wrapper">
                     <span class="ap-tag" style="color: var(--text-primary); background: var(--bg-secondary); border-color: var(--border-strong);">
                         ID: {{ $artist->member_id }}
                     </span>
-                @endif
+                </div>
+            @endif
+
+            {{-- 2. Category tags & Verified Badge --}}
+            <div class="ap-tags">
                 @if(!empty($artist->profile?->categories))
                     @foreach(array_slice($artist->profile->categories, 0, 3) as $cat)
                         <span class="ap-tag">{{ $cat }}</span>
