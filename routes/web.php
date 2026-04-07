@@ -14,23 +14,48 @@ use App\Livewire\ArtistProfile;
 */
 
 // 1. The Homepage
+// 1. The Homepage
 Route::get('/', function () {
     $featuredArtists = App\Models\User::role('Verified-Artist')
         ->with([
             'profile',
             'media' => fn($q) => $q->whereIn('collection_name', ['avatar', 'portfolio']),
         ])
+        // 1. MUST BE FULLY VERIFIED
         ->where('verification_status', 'verified')
         ->where('academic_verification_status', 'verified')
         ->whereHas('profile')
-        ->whereHas('subscriptions', function ($q) {
-            $q->where('status', 'active');
+        
+        // 2. MUST HAVE AN AVATAR
+        ->whereHas('media', function ($q) {
+            $q->where('collection_name', 'avatar');
         })
-        ->inRandomOrder()
+        
+        // 3. MUST HAVE AT LEAST 3 PORTFOLIO IMAGES
+        ->withCount(['media as portfolio_count' => function ($q) {
+            $q->where('collection_name', 'portfolio');
+        }])
+        ->having('portfolio_count', '>=', 3)
+        
+        // 4. GET THE HIGHEST ACTIVE SUBSCRIPTION TIER (Pro = 3, Verified = 2)
+        ->addSelect(['subscription_tier' => function ($query) {
+            $query->select('package_id')
+                  ->from('subscriptions')
+                  ->whereColumn('user_id', 'users.id')
+                  ->where('status', 'active')
+                  ->orderByDesc('package_id')
+                  ->limit(1);
+        }])
+        
+        // 5. THE WEIGHTED SORTING ALGORITHM
+        ->orderByDesc('is_featured')       // Priority 1: Admin manually toggled "is_featured"
+        ->orderByDesc('subscription_tier') // Priority 2: Pro Artists (ID 3) beat Verified (ID 2)
+        ->orderByDesc('last_active_at')    // Priority 3: Recently active users
+        ->orderByDesc('created_at')        // Priority 4: Newest accounts fallback
         ->take(8)
         ->get();
 
-    // Fetch the new dynamic content
+    // Fetch the dynamic content for the rest of the page
     $clients = App\Models\Client::where('is_active', true)->orderBy('sort_order')->get();
     $testimonials = App\Models\Testimonial::where('is_active', true)->orderBy('sort_order')->get();
     $teamMembers = App\Models\TeamMember::where('is_active', true)->orderBy('sort_order')->get();

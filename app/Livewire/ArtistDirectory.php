@@ -97,7 +97,30 @@ class ArtistDirectory extends Component
             }
         });
 
-        $artists = $query->latest()->paginate(12);
+        // ── THE NEW FAIR-ROTATION ALGORITHM ──
+        
+        $seed = date('Ymd'); // Generates a unique number for today (e.g., 20260407)
+        $newThreshold = now()->subDays(15);
+        $inactiveThreshold = now()->subDays(60);
+
+        $query->orderByRaw("
+            CASE 
+                WHEN users.created_at >= ? THEN 1
+                WHEN users.last_active_at IS NULL OR users.last_active_at < ? THEN 3
+                ELSE 2
+            END ASC
+        ", [$newThreshold, $inactiveThreshold])
+        
+        // 1. Sort Tier 1 (New Talent) by absolute newest first
+        ->orderByRaw("CASE WHEN users.created_at >= ? THEN users.created_at ELSE NULL END DESC", [$newThreshold])
+        
+        // 2. Sort Tier 2 (Active Talent) using the daily seeded randomizer
+        // This shuffles everyone nightly, but keeps them in place during the day for pagination!
+        ->orderByRaw("RAND({$seed})");
+
+        $artists = $query->paginate(12);
+        
+        // ── END ALGORITHM ──
 
         // Fetch dynamic categories and districts for the sidebar
         $categories = \App\Models\Category::where('is_active', true)

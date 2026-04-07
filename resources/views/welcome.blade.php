@@ -1137,7 +1137,7 @@
                 <div class="section-header-left">
                     <div class="section-eyebrow">Exclusively Verified</div>
                     <h2 class="section-title" id="talent-heading">
-                        Latest <strong>Talent</strong>
+                        Featured <strong>Talent</strong>
                     </h2>
                 </div>
                 <a href="/artists" class="btn-outline">View All Talent</a>

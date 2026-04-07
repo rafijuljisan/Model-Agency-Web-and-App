@@ -201,6 +201,7 @@ class ArtistAccount extends Component
     {
         /** @var \App\Models\User $user */
         $user = Auth::user();
+        $user->update(['last_active_at' => now()]);
 
         try {
             $this->validate();

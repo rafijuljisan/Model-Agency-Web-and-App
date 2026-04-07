@@ -15,6 +15,7 @@ use Illuminate\Support\Facades\Hash;
 use Filament\Forms\Components\SpatieMediaLibraryFileUpload;
 use Filament\Forms\Components\FileUpload;
 
+
 class UserForm
 {
     public static function configure(Schema $schema): Schema
@@ -44,7 +45,7 @@ class UserForm
                             ->disabled() // Prevent manual editing to maintain sequential integrity
                             ->dehydrated(false) // Prevents saving the disabled field
                             ->helperText('Auto-generated (e.g., DMA-261001)'),
-                            
+
                         TextInput::make('name')
                             ->required()
                             ->maxLength(255),
@@ -73,6 +74,11 @@ class UserForm
 
                         Toggle::make('is_verified')
                             ->label('Verified Artist Badge')
+                            ->columnSpanFull(),
+                            
+                        Toggle::make('is_featured')
+                            ->label('Feature on Homepage')
+                            ->helperText('Override the algorithm and force this talent to the top of the homepage.')
                             ->columnSpanFull(),
                     ]),
 
