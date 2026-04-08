@@ -4,30 +4,50 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title><?php echo e($title ?? 'Verified Talent Directory'); ?> | Dhaka Model Agency</title>
+    <meta name="csrf-token" content="<?php echo e(csrf_token()); ?>"> 
+    
+    <title><?php echo e($title ?? $seo?->meta_title ?? 'Verified Talent Directory | Dhaka Model Agency'); ?></title>
+    
+    <link rel="icon" type="image/x-icon" href="<?php echo e(asset('favicon.ico')); ?>"> 
 
-    <?php $seo = \App\Models\Setting::first(); ?>
+    <?php 
+        // PRO TIP: Cache this query so you don't hit the database on every single page load!
+        $seo = cache()->remember('site_settings', 86400, fn() => \App\Models\Setting::first()); 
+    ?>
 
     
-    <meta name="description" content="<?php echo e($seo?->meta_description ?? 'Verified talent directory — Bangladesh'); ?>">
-    <meta name="keywords" content="<?php echo e($seo?->meta_keywords); ?>">
-    <meta name="robots" content="index, follow">
-    <link rel="canonical" href="<?php echo e(url()->current()); ?>">
+    <?php if(\Livewire\Mechanisms\ExtendBlade\ExtendBlade::isRenderingLivewireComponent()): ?><!--[if BLOCK]><![endif]--><?php endif; ?><?php if(isset($meta)): ?>
+        
+        <?php echo e($meta); ?>
+
+    <?php else: ?>
+        
+        <meta name="description" content="<?php echo e($seo?->meta_description ?? 'Verified talent directory — Bangladesh'); ?>">
+        <meta name="keywords" content="<?php echo e($seo?->meta_keywords); ?>">
+        <meta name="robots" content="index, follow">
+        <link rel="canonical" href="<?php echo e(url()->current()); ?>">
+
+        
+        <meta property="og:type" content="website">
+        <meta property="og:url" content="<?php echo e(url()->current()); ?>">
+        <meta property="og:title" content="<?php echo e($seo?->meta_title ?? config('app.name')); ?>">
+        <meta property="og:description" content="<?php echo e($seo?->meta_description); ?>">
+        <?php if(\Livewire\Mechanisms\ExtendBlade\ExtendBlade::isRenderingLivewireComponent()): ?><!--[if BLOCK]><![endif]--><?php endif; ?><?php if($seo?->og_image): ?>
+            <meta property="og:image" content="<?php echo e(asset('storage/' . $seo->og_image)); ?>">
+        <?php endif; ?><?php if(\Livewire\Mechanisms\ExtendBlade\ExtendBlade::isRenderingLivewireComponent()): ?><!--[if ENDBLOCK]><![endif]--><?php endif; ?>
+        <meta property="og:site_name" content="<?php echo e($seo?->site_name ?? config('app.name')); ?>">
+
+        
+        <meta name="twitter:card" content="summary_large_image">
+        <meta name="twitter:title" content="<?php echo e($seo?->meta_title ?? config('app.name')); ?>">
+        <meta name="twitter:description" content="<?php echo e($seo?->meta_description); ?>">
+        <?php if(\Livewire\Mechanisms\ExtendBlade\ExtendBlade::isRenderingLivewireComponent()): ?><!--[if BLOCK]><![endif]--><?php endif; ?><?php if($seo?->og_image): ?>
+            <meta name="twitter:image" content="<?php echo e(asset('storage/' . $seo->og_image)); ?>">
+        <?php endif; ?><?php if(\Livewire\Mechanisms\ExtendBlade\ExtendBlade::isRenderingLivewireComponent()): ?><!--[if ENDBLOCK]><![endif]--><?php endif; ?>
+    <?php endif; ?><?php if(\Livewire\Mechanisms\ExtendBlade\ExtendBlade::isRenderingLivewireComponent()): ?><!--[if ENDBLOCK]><![endif]--><?php endif; ?>
 
     
-    <meta property="og:type" content="website">
-    <meta property="og:url" content="<?php echo e(url()->current()); ?>">
-    <meta property="og:title" content="<?php echo e($title ?? $seo?->meta_title ?? config('app.name')); ?>">
-    <meta property="og:description" content="<?php echo e($seo?->meta_description); ?>">
-    <meta property="og:image" content="<?php echo e($seo?->og_image ? asset('storage/' . $seo->og_image) : ''); ?>">
-    <meta property="og:site_name" content="<?php echo e($seo?->site_name ?? config('app.name')); ?>">
-
     
-    <meta name="twitter:card" content="summary_large_image">
-    <meta name="twitter:title" content="<?php echo e($title ?? $seo?->meta_title ?? config('app.name')); ?>">
-    <meta name="twitter:description" content="<?php echo e($seo?->meta_description); ?>">
-    <meta name="twitter:image" content="<?php echo e($seo?->og_image ? asset('storage/' . $seo->og_image) : ''); ?>">
-
     
     <?php if(\Livewire\Mechanisms\ExtendBlade\ExtendBlade::isRenderingLivewireComponent()): ?><!--[if BLOCK]><![endif]--><?php endif; ?><?php if($seo?->google_search_console_id): ?>
         <meta name="google-site-verification" content="<?php echo e($seo->google_search_console_id); ?>">
@@ -72,12 +92,11 @@
             fbq('track', 'PageView');
         </script>
     <?php endif; ?><?php if(\Livewire\Mechanisms\ExtendBlade\ExtendBlade::isRenderingLivewireComponent()): ?><!--[if ENDBLOCK]><![endif]--><?php endif; ?>
+
     
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link
-        href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,500&family=Jost:wght@300;400;500;600&display=swap"
-        rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,500&family=Jost:wght@300;400;500;600&display=swap" rel="stylesheet">
 
     <?php echo app('Illuminate\Foundation\Vite')(['resources/css/app.css', 'resources/js/app.js']); ?>
     <?php echo \Livewire\Mechanisms\FrontendAssets\FrontendAssets::styles(); ?>

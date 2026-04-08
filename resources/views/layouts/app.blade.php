@@ -4,36 +4,55 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>{{ $title ?? 'Verified Talent Directory' }} | Dhaka Model Agency</title>
+    <meta name="csrf-token" content="{{ csrf_token() }}"> {{-- REQUIRED FOR LARAVEL SECURITY --}}
+    
+    <title>{{ $title ?? $seo?->meta_title ?? 'Verified Talent Directory | Dhaka Model Agency' }}</title>
+    
+    <link rel="icon" type="image/x-icon" href="{{ asset('favicon.ico') }}"> {{-- ADD YOUR FAVICON --}}
 
-    @php $seo = \App\Models\Setting::first(); @endphp
+    @php 
+        // PRO TIP: Cache this query so you don't hit the database on every single page load!
+        $seo = cache()->remember('site_settings', 86400, fn() => \App\Models\Setting::first()); 
+    @endphp
 
-    {{-- ── SEO: Basic Meta Tags ── --}}
-    <meta name="description" content="{{ $seo?->meta_description ?? 'Verified talent directory — Bangladesh' }}">
-    <meta name="keywords" content="{{ $seo?->meta_keywords }}">
-    <meta name="robots" content="index, follow">
-    <link rel="canonical" href="{{ url()->current() }}">
+    {{-- ── DYNAMIC SEO INJECTION ── --}}
+    @if(isset($meta))
+        {{-- If a specific page (like an editorial) passes custom tags, print them here --}}
+        {{ $meta }}
+    @else
+        {{-- ── GLOBAL FALLBACK SEO ── --}}
+        <meta name="description" content="{{ $seo?->meta_description ?? 'Verified talent directory — Bangladesh' }}">
+        <meta name="keywords" content="{{ $seo?->meta_keywords }}">
+        <meta name="robots" content="index, follow">
+        <link rel="canonical" href="{{ url()->current() }}">
 
-    {{-- ── SEO: Open Graph (Facebook, WhatsApp) ── --}}
-    <meta property="og:type" content="website">
-    <meta property="og:url" content="{{ url()->current() }}">
-    <meta property="og:title" content="{{ $title ?? $seo?->meta_title ?? config('app.name') }}">
-    <meta property="og:description" content="{{ $seo?->meta_description }}">
-    <meta property="og:image" content="{{ $seo?->og_image ? asset('storage/' . $seo->og_image) : '' }}">
-    <meta property="og:site_name" content="{{ $seo?->site_name ?? config('app.name') }}">
+        {{-- Open Graph (Facebook, WhatsApp) --}}
+        <meta property="og:type" content="website">
+        <meta property="og:url" content="{{ url()->current() }}">
+        <meta property="og:title" content="{{ $seo?->meta_title ?? config('app.name') }}">
+        <meta property="og:description" content="{{ $seo?->meta_description }}">
+        @if($seo?->og_image)
+            <meta property="og:image" content="{{ asset('storage/' . $seo->og_image) }}">
+        @endif
+        <meta property="og:site_name" content="{{ $seo?->site_name ?? config('app.name') }}">
 
-    {{-- ── SEO: Twitter Card ── --}}
-    <meta name="twitter:card" content="summary_large_image">
-    <meta name="twitter:title" content="{{ $title ?? $seo?->meta_title ?? config('app.name') }}">
-    <meta name="twitter:description" content="{{ $seo?->meta_description }}">
-    <meta name="twitter:image" content="{{ $seo?->og_image ? asset('storage/' . $seo->og_image) : '' }}">
+        {{-- Twitter Card --}}
+        <meta name="twitter:card" content="summary_large_image">
+        <meta name="twitter:title" content="{{ $seo?->meta_title ?? config('app.name') }}">
+        <meta name="twitter:description" content="{{ $seo?->meta_description }}">
+        @if($seo?->og_image)
+            <meta name="twitter:image" content="{{ asset('storage/' . $seo->og_image) }}">
+        @endif
+    @endif
 
-    {{-- ── Google Search Console Verification ── --}}
+    {{-- ── TRACKING SCRIPTS ── --}}
+    
+    {{-- Google Search Console Verification --}}
     @if($seo?->google_search_console_id)
         <meta name="google-site-verification" content="{{ $seo->google_search_console_id }}">
     @endif
 
-    {{-- ── Google Tag Manager (head) ── --}}
+    {{-- Google Tag Manager (head) --}}
     @if($seo?->google_tag_manager_id)
         <script>(function (w, d, s, l, i) {
                 w[l] = w[l] || []; w[l].push({
@@ -45,7 +64,7 @@
             })(window, document, 'script', 'dataLayer', '{{ $seo->google_tag_manager_id }}');</script>
     @endif
 
-    {{-- ── Google Analytics 4 ── --}}
+    {{-- Google Analytics 4 --}}
     @if($seo?->google_analytics_id)
         <script async src="https://www.googletagmanager.com/gtag/js?id={{ $seo->google_analytics_id }}"></script>
         <script>
@@ -56,7 +75,7 @@
         </script>
     @endif
 
-    {{-- ── Facebook Pixel ── --}}
+    {{-- Facebook Pixel --}}
     @if($seo?->facebook_pixel_id)
         <script>
             !function (f, b, e, v, n, t, s) {
@@ -72,12 +91,11 @@
             fbq('track', 'PageView');
         </script>
     @endif
-    {{-- Fonts: Cormorant Garamond (luxury editorial display) + Jost (refined body) --}}
+
+    {{-- Fonts & Vite --}}
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link
-        href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,500&family=Jost:wght@300;400;500;600&display=swap"
-        rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,500&family=Jost:wght@300;400;500;600&display=swap" rel="stylesheet">
 
     @vite(['resources/css/app.css', 'resources/js/app.js'])
     @livewireStyles

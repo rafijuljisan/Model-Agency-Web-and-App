@@ -1353,8 +1353,8 @@
             </div>
 
             <h3 class="ap-modal-title">Book <?php echo e($artist->name); ?></h3>
-            <p class="ap-modal-desc">
-                All bookings are handled through our agency to ensure privacy and professionalism. Contact us below to discuss availability and rates.
+            <p class="ap-modal-desc" style="font-family: 'SolaimanLipi', sans-serif; font-size: 1.4rem; color: var(--text-secondary); line-height: auto;">
+                গোপনীয়তা এবং পেশাদারিত্ব নিশ্চিত করতে সমস্ত বুকিং আমাদের এজেন্সির মাধ্যমে পরিচালিত হয়। শিডিউল এবং পারিশ্রমিক সম্পর্কে আলোচনা করতে নিচে আমাদের সাথে যোগাযোগ করুন।
             </p>
 
             <div class="ap-modal-contact-box">

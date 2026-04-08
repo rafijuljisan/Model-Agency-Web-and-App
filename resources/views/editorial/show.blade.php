@@ -1,4 +1,33 @@
 <x-app-layout>
+    {{-- 1. Set the Page Title --}}
+    <x-slot name="title">
+        {{ $editorial->title }} | {{ config('app.name') }}
+    </x-slot>
+
+    {{-- 2. Inject Dynamic SEO & Social Share (Open Graph) Tags --}}
+    <x-slot name="meta">
+        {{-- Standard SEO --}}
+        <meta name="description" content="{{ Str::limit(strip_tags($editorial->content), 155) }}">
+        <meta name="author" content="AgencyMarket">
+        
+        {{-- Open Graph / Facebook / LinkedIn --}}
+        <meta property="og:type" content="article">
+        <meta property="og:title" content="{{ $editorial->title }}">
+        <meta property="og:description" content="{{ Str::limit(strip_tags($editorial->content), 155) }}">
+        <meta property="og:url" content="{{ Request::fullUrl() }}">
+        @if($editorial->featured_image)
+            <meta property="og:image" content="{{ asset('storage/' . $editorial->featured_image) }}">
+        @endif
+        <meta property="article:published_time" content="{{ $editorial->published_at->toIso8601String() }}">
+
+        {{-- Twitter Card --}}
+        <meta name="twitter:card" content="summary_large_image">
+        <meta name="twitter:title" content="{{ $editorial->title }}">
+        <meta name="twitter:description" content="{{ Str::limit(strip_tags($editorial->content), 155) }}">
+        @if($editorial->featured_image)
+            <meta name="twitter:image" content="{{ asset('storage/' . $editorial->featured_image) }}">
+        @endif
+    </x-slot>
     <style>
         .article-container { max-width: 840px; margin: 60px auto 100px; padding: 0 20px; }
         
@@ -129,7 +158,7 @@
                     @foreach($editorial->gallery as $image)
                         {{-- Wrap in an anchor tag so clicking it opens the full HD image in a new tab --}}
                         <a href="{{ asset('storage/' . $image) }}" target="_blank" class="gallery-item">
-                            <img src="{{ asset('storage/' . $image) }}" alt="Gallery Image" loading="lazy">
+                            <img src="{{ asset('storage/' . $image) }}" alt="{{ $editorial->title }} - Editorial Image" loading="lazy">
                         </a>
                     @endforeach
                 </div>

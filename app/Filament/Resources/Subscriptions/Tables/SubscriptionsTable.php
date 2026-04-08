@@ -9,6 +9,12 @@ use Filament\Actions\DeleteBulkAction;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Table;
 
+// ✅ NEW IMPORTS REQUIRED FOR FILTERS
+use Filament\Tables\Filters\Filter;
+use Filament\Tables\Filters\SelectFilter;
+use Filament\Forms\Components\DatePicker;
+use Illuminate\Database\Eloquent\Builder;
+
 class SubscriptionsTable
 {
     public static function configure(Table $table): Table
@@ -53,6 +59,68 @@ class SubscriptionsTable
                     ->sortable(),
             ])
 
+            // =========================
+            // ✅ ALL POSSIBLE FILTERS
+            // =========================
+            ->filters([
+                // 1. Status Filter
+                SelectFilter::make('status')
+                    ->options([
+                        'pending' => 'Pending',
+                        'active' => 'Active',
+                        'failed' => 'Failed',
+                        'expired' => 'Expired',
+                    ]),
+
+                // 2. Payment Method Filter (Dynamically grabs all unique methods from DB)
+                SelectFilter::make('payment_method')
+                    ->label('Payment Method')
+                    ->options(function () {
+                        return \App\Models\Subscription::query()
+                            ->select('payment_method')
+                            ->distinct()
+                            ->whereNotNull('payment_method')
+                            ->pluck('payment_method', 'payment_method')
+                            ->toArray();
+                    }),
+
+                // 3. Submission Date Range Filter
+                Filter::make('created_at')
+                    ->form([
+                        DatePicker::make('created_from')->label('Submitted From'),
+                        DatePicker::make('created_until')->label('Submitted Until'),
+                    ])
+                    ->query(function (Builder $query, array $data): Builder {
+                        return $query
+                            ->when(
+                                $data['created_from'],
+                                fn (Builder $query, $date): Builder => $query->whereDate('created_at', '>=', $date),
+                            )
+                            ->when(
+                                $data['created_until'],
+                                fn (Builder $query, $date): Builder => $query->whereDate('created_at', '<=', $date),
+                            );
+                    }),
+
+                // 4. Expiry Date Range Filter
+                Filter::make('expires_at')
+                    ->form([
+                        DatePicker::make('expires_from')->label('Expires From'),
+                        DatePicker::make('expires_until')->label('Expires Until'),
+                    ])
+                    ->query(function (Builder $query, array $data): Builder {
+                        return $query
+                            ->when(
+                                $data['expires_from'],
+                                fn (Builder $query, $date): Builder => $query->whereDate('expires_at', '>=', $date),
+                            )
+                            ->when(
+                                $data['expires_until'],
+                                fn (Builder $query, $date): Builder => $query->whereDate('expires_at', '<=', $date),
+                            );
+                    }),
+            ])
+
             ->recordActions([
                 Action::make('approve')
                     ->label('Approve & Verify')
@@ -70,7 +138,9 @@ class SubscriptionsTable
 
                         $user = $record->user;
                         $user->update(['is_verified' => true]);
-                        $user->assignRole('Verified-Artist');
+                        if (!$user->hasRole('Verified-Artist')) {
+                            $user->assignRole('Verified-Artist');
+                        }
                     }),
 
                 EditAction::make(),
