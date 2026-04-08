@@ -10,6 +10,8 @@ use Illuminate\Support\Facades\Auth;
 use App\Models\User;
 use Illuminate\Support\Facades\Notification;
 use App\Notifications\AdminAlertNotification;
+use Filament\Notifications\Notification as FilamentNotification;
+use Filament\Actions\Action; // ← Correct v5 namespace!
 
 class PackageController extends Controller
 {
@@ -34,9 +36,12 @@ class PackageController extends Controller
 
         $package = Package::findOrFail($request->package_id);
 
+        /** @var \App\Models\User $user */
+        $user = Auth::user(); // ← PHPDoc fixes the "Undefined method 'user'" IDE error
+
         // Create the subscription record
         Subscription::create([
-            'user_id'        => Auth::id(),
+            'user_id'        => $user->id,
             'package_id'     => $package->id,
             'trx_id'         => $request->trx_id,
             'sender_number'  => $request->sender_number,
@@ -48,12 +53,29 @@ class PackageController extends Controller
         ]);
 
         $admins = User::role('Super-Admin')->get();
+        $formattedPrice = number_format($package->price);
+        $userName = $user->name; 
+
+        // 1. Send Email Notification
         Notification::send($admins, new AdminAlertNotification(
             'New Payment Submitted',
-            "{$request->sender_number} has submitted a payment of {$package->price} BDT (TrxID: {$request->trx_id}).",
+            "{$userName} ({$request->sender_number}) has submitted a payment of {$formattedPrice} BDT (TrxID: {$request->trx_id}).",
             'Review Payment',
-            url('/admin/subscriptions') // Link to your Filament subscriptions page
+            url('/admin/subscriptions')
         ));
+
+        // 2. Send Real-Time Filament Panel Notification (Bell Icon)
+        FilamentNotification::make()
+            ->title('New Payment Submitted 💰')
+            ->body("{$userName} submitted {$formattedPrice} BDT from {$request->sender_number}. TrxID: {$request->trx_id}")
+            ->success()
+            ->actions([
+                Action::make('view') // ← V5 Syntax
+                    ->label('Review Payment')
+                    ->button()
+                    ->url('/admin/subscriptions')
+            ])
+            ->sendToDatabase($admins);
 
         return redirect()->route('account.dashboard')->with('message', 'Payment submitted! Waiting for Admin approval.');
     }

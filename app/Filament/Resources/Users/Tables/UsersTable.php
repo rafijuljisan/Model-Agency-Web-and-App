@@ -5,6 +5,9 @@ namespace App\Filament\Resources\Users\Tables;
 use Filament\Tables\Table;
 use Filament\Tables\Columns\ImageColumn;
 use Filament\Tables\Columns\TextColumn;
+use Filament\Tables\Filters\SelectFilter;
+use Filament\Tables\Filters\TernaryFilter;
+use Illuminate\Database\Eloquent\Builder;
 
 use Filament\Actions\EditAction;
 use Filament\Actions\DeleteAction;
@@ -49,6 +52,77 @@ class UsersTable
                         'unverified' => 'danger',
                         default => 'gray',
                     }),
+            ])
+            
+            // =========================
+            // ✅ ALL POSSIBLE FILTERS
+            // =========================
+            ->filters([
+                // 1. Roles Filter
+                SelectFilter::make('roles')
+                    ->relationship('roles', 'name')
+                    ->multiple()
+                    ->preload()
+                    ->searchable(),
+
+                // 2. NID Status Filter
+                SelectFilter::make('verification_status')
+                    ->label('NID Verification')
+                    ->options([
+                        'unverified' => 'Unverified',
+                        'pending' => 'Pending Review',
+                        'verified' => 'Verified',
+                        'rejected' => 'Rejected',
+                    ]),
+
+                // 3. Academic Status Filter
+                SelectFilter::make('academic_verification_status')
+                    ->label('Academic Verification')
+                    ->options([
+                        'unverified' => 'Unverified',
+                        'pending' => 'Pending Review',
+                        'verified' => 'Verified',
+                        'rejected' => 'Rejected',
+                    ]),
+
+                // 4. Gender Filter (Queries the Profile relation)
+                SelectFilter::make('gender')
+                    ->label('Gender')
+                    ->options([
+                        'Male' => 'Male',
+                        'Female' => 'Female',
+                        'Other' => 'Other',
+                    ])
+                    ->query(function (Builder $query, array $data): Builder {
+                        return $query->when(
+                            $data['value'],
+                            fn (Builder $query, $value): Builder => $query->whereHas('profile', fn ($q) => $q->where('gender', $value))
+                        );
+                    }),
+
+                // 5. Experience Level Filter (Queries the Profile relation)
+                SelectFilter::make('experience_level')
+                    ->label('Experience Level')
+                    ->options([
+                        'Fresher' => 'Fresher (No Experience)',
+                        '1-3 Years' => '1–3 Years',
+                        'Professional' => 'Professional (3+ Years)',
+                    ])
+                    ->query(function (Builder $query, array $data): Builder {
+                        return $query->when(
+                            $data['value'],
+                            fn (Builder $query, $value): Builder => $query->whereHas('profile', fn ($q) => $q->where('experience_level', $value))
+                        );
+                    }),
+
+                // 6. Willing to Travel Filter (Queries the Profile relation)
+                TernaryFilter::make('willing_to_travel')
+                    ->label('Willing to Travel')
+                    ->queries(
+                        true: fn (Builder $query) => $query->whereHas('profile', fn($q) => $q->where('willing_to_travel', true)),
+                        false: fn (Builder $query) => $query->whereHas('profile', fn($q) => $q->where('willing_to_travel', false)),
+                        blank: fn (Builder $query) => $query,
+                    ),
             ])
 
             ->actions([

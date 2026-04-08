@@ -161,7 +161,7 @@ class UserForm
                             ->columns(4)
                             ->schema([
                                 TextInput::make('height_cm')
-                                    ->label('Height (cm)')
+                                    ->label('Height (ft)')
                                     ->numeric(),
 
                                 TextInput::make('weight_kg')

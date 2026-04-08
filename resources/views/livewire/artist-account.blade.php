@@ -1049,7 +1049,7 @@
                                 </div>
 
                                 <div class="form-field">
-                                    <label class="form-field-label" for="f-height">Height (cm)</label>
+                                    <label class="form-field-label" for="f-height">Height (ft)</label>
                                     <div class="form-input-wrap">
                                         <svg class="form-input-icon" width="14" height="14" viewBox="0 0 24 24" fill="none"
                                             stroke="currentColor" stroke-width="1.7" aria-hidden="true">
@@ -1086,7 +1086,7 @@
                             <div class="form-grid-2">
 
                                 <div class="form-field">
-                                    <label class="form-field-label">Height (cm)</label>
+                                    <label class="form-field-label">Height (ft)</label>
                                     <input type="number" class="form-input" wire:model.defer="height_cm" placeholder="e.g. 170">
                                 </div>
 

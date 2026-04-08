@@ -11,6 +11,7 @@ use Livewire\Attributes\Layout;
 use App\Models\User;
 use Illuminate\Support\Facades\Notification;
 use App\Notifications\AdminAlertNotification;
+use Filament\Notifications\Notification as FilamentNotification;
 
 #[Layout('layouts.app')]
 class ArtistAccount extends Component
@@ -160,12 +161,21 @@ class ArtistAccount extends Component
             $user->update($updates);
 
             $admins = User::role('Super-Admin')->get();
+            
+            // 1. Send Email (Your existing code)
             Notification::send($admins, new AdminAlertNotification(
                 'New Documents Uploaded',
                 "{$user->name} has uploaded new verification documents.",
                 'Review Documents',
                 url('/admin/users')
             ));
+
+            // 2. Send Filament Panel Notification (NEW)
+            FilamentNotification::make()
+                ->title('New Documents Uploaded 📄')
+                ->body("{$user->name} just uploaded their NID/Academic certificates for review.")
+                ->warning() // Shows a yellow/orange icon
+                ->sendToDatabase($admins);
         }
 
         // ── NEW LOGIC: Check if they already paid before redirecting ──
