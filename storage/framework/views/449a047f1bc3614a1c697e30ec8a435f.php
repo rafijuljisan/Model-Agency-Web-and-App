@@ -17,11 +17,10 @@
 ═══════════════════════════════════════════ */
 
 /* Page hero */
-/* Page hero */
 .pricing-hero {
     background: var(--bg-secondary);
     border-bottom: 1px solid var(--border);
-    padding: 80px 40px 72px; /* Slightly increased padding to balance larger text */
+    padding: 80px 40px 72px;
     text-align: center;
     position: relative;
     overflow: hidden;
@@ -37,9 +36,8 @@
     pointer-events: none;
 }
 .pricing-hero-eyebrow {
-    font-size: 0.875rem; /* Increased from 0.58rem */
+    font-size: 1.1rem;
     font-weight: 600;
-    letter-spacing: 0.2em; /* Reduced spacing slightly for cleaner look */
     text-transform: uppercase;
     color: var(--gold);
     margin-bottom: 16px;
@@ -55,8 +53,8 @@
     background: var(--gold);
 }
 .pricing-hero-title {
-    font-family: 'Cormorant Garamond', serif;
-    font-size: clamp(2.5rem, 5vw, 4rem); /* Increased scaling for better impact */
+    font-family: 'SolaimanLipi', sans-serif;
+    font-size: clamp(2.5rem, 5vw, 4rem);
     font-weight: 300;
     color: var(--text-primary);
     line-height: 1.15;
@@ -64,10 +62,10 @@
 }
 .pricing-hero-title strong { font-weight: 600; }
 .pricing-hero-sub {
-    font-size: 1.125rem; /* Increased from 0.88rem */
+    font-family: 'SolaimanLipi', sans-serif;
+    font-size: 1.5rem;
     color: var(--text-muted);
     margin-top: 16px;
-    letter-spacing: 0.02em;
     position: relative;
     max-width: 600px;
     margin-left: auto;
@@ -113,7 +111,7 @@
 }
 .package-card:hover { background: var(--gold-bg); }
 
-/* Selected state via sibling selector on checked input */
+/* Selected state */
 .package-label input:checked ~ .package-card {
     background: var(--gold-bg);
     border-color: var(--gold);
@@ -150,31 +148,27 @@
 }
 
 /* Popular badge */
-/* Popular badge */
 .package-popular {
     position: absolute;
     top: -1px; left: 32px;
     background: var(--gold);
     color: #faf8f5;
-    font-size: 0.75rem; /* Increased from 0.52rem */
+    font-size: 0.95rem;
     font-weight: 700;
-    letter-spacing: 0.15em;
     text-transform: uppercase;
     padding: 4px 12px;
 }
 
 .package-name {
-    font-family: 'Cormorant Garamond', serif;
-    font-size: 1.75rem; /* Increased from 1.4rem */
+    font-family: 'SolaimanLipi', sans-serif;
+    font-size: 1.4rem;
     font-weight: 600;
     color: var(--text-primary);
     margin-bottom: 4px;
-    letter-spacing: 0.02em;
 }
 .package-duration {
-    font-size: 0.875rem; /* Increased from 0.62rem */
+    font-size: 1.05rem;
     font-weight: 500;
-    letter-spacing: 0.1em;
     text-transform: uppercase;
     color: var(--text-muted);
     margin-bottom: 24px;
@@ -186,22 +180,22 @@
     margin-bottom: 4px;
 }
 .package-currency {
-    font-family: 'Cormorant Garamond', serif;
-    font-size: 1.5rem; /* Increased from 1.2rem */
+    font-family: 'SolaimanLipi', sans-serif;
+    font-size: 1.5rem;
     font-weight: 400;
     color: var(--gold);
 }
 .package-price {
-    font-family: 'Cormorant Garamond', serif;
-    font-size: 3.5rem; /* Increased from 3rem */
+    font-family: 'SolaimanLipi', sans-serif;
+    font-size: 3.5rem;
     font-weight: 600;
     color: var(--text-primary);
     line-height: 1;
 }
 .package-price-sub {
-    font-size: 0.875rem; /* Increased from 0.65rem */
+    font-family: 'SolaimanLipi', sans-serif;
+    font-size: 1.3rem;
     color: var(--text-muted);
-    letter-spacing: 0.05em;
     margin-bottom: 28px;
 }
 
@@ -216,7 +210,8 @@
     display: flex;
     align-items: flex-start;
     gap: 12px;
-    font-size: 1rem; /* Increased from 0.8rem for standard readability */
+    font-family: 'SolaimanLipi', sans-serif;
+    font-size: 1.4rem;
     color: var(--text-secondary);
     line-height: 1.5;
 }
@@ -224,7 +219,7 @@
     color: var(--gold);
     flex-shrink: 0;
     margin-top: 3px;
-    width: 18px; /* Slightly larger checkmark */
+    width: 18px;
     height: 18px;
 }
 
@@ -233,6 +228,8 @@
     background: var(--bg-surface);
     border: 1px solid var(--border);
     transition: background 0.4s, border-color 0.4s;
+    border-radius: 8px;
+    overflow: hidden;
 }
 .payment-section-header {
     padding: 22px 32px;
@@ -240,6 +237,7 @@
     display: flex;
     align-items: center;
     gap: 12px;
+    background: var(--bg-primary);
 }
 .payment-section-icon {
     width: 32px; height: 32px;
@@ -250,43 +248,61 @@
     justify-content: center;
     color: var(--gold);
     flex-shrink: 0;
+    border-radius: 4px;
 }
 .payment-section-title {
-    font-family: 'Cormorant Garamond', serif;
-    font-size: 1.5rem; /* Increased from 1.15rem */
+    font-family: 'SolaimanLipi', sans-serif;
+    font-size: 1.4rem;
     font-weight: 600;
     color: var(--text-primary);
 }
+.payment-section-body {
+    padding: 32px;
+}
+
+/* ── NEW: Payment Instruction Box (Fixes the broken icon) ── */
+.payment-instruction {
+    display: flex;
+    align-items: flex-start;
+    gap: 16px;
+    background: var(--bg-secondary);
+    border: 1px solid var(--border);
+    padding: 20px;
+    border-radius: 6px;
+    margin-bottom: 24px;
+}
+.payment-instruction-icon {
+    flex-shrink: 0;
+    color: var(--gold);
+    margin-top: 2px;
+}
 .payment-instruction-text {
-    font-size: 1rem; /* Increased from 0.82rem */
+    font-family: 'SolaimanLipi', sans-serif;
+    font-size: 1.5rem;
     color: var(--text-secondary);
     line-height: 1.6;
 }
 .payment-instruction-number {
-    font-family: 'Cormorant Garamond', serif;
-    font-size: 1.75rem; /* Increased from 1.4rem */
+    font-family: 'SolaimanLipi', sans-serif;
+    font-size: 1.75rem;
     font-weight: 600;
     color: var(--gold);
     display: block;
     margin-top: 4px;
-    letter-spacing: 0.02em;
 }
 
 /* ── Payment method tabs ── */
 .payment-methods {
     display: grid;
-    grid-template-columns: repeat(3, 1fr); /* Puts them neatly side-by-side */
+    grid-template-columns: repeat(3, 1fr);
     gap: 16px;
     margin-bottom: 24px;
 }
-
 .payment-method-label {
     display: block;
     cursor: pointer;
     position: relative;
 }
-
-/* CRITICAL FIX: Completely hide the default browser radio dot */
 .payment-method-label input[type="radio"] {
     position: absolute;
     opacity: 0;
@@ -294,8 +310,6 @@
     height: 0;
     pointer-events: none;
 }
-
-/* The actual box that the user clicks */
 .payment-method-tab {
     display: flex;
     align-items: center;
@@ -304,103 +318,120 @@
     border: 1.5px solid var(--border-strong);
     background: var(--bg-primary);
     color: var(--text-secondary);
-    font-family: 'Jost', sans-serif;
-    font-size: 0.875rem;
+    font-family: 'SolaimanLipi', sans-serif;
+    font-size: 1.2rem;
     font-weight: 600;
-    letter-spacing: 0.1em;
     text-transform: uppercase;
     border-radius: 6px;
     transition: all 0.25s ease;
     user-select: none;
 }
-
-/* Subtle hover effect */
 .payment-method-label:hover .payment-method-tab {
     border-color: var(--gold);
 }
-
-/* Selected state (Turns the box gold/red when clicked) */
 .payment-method-label input[type="radio"]:checked ~ .payment-method-tab {
     border-color: var(--gold);
     color: var(--gold);
     background: var(--gold-bg);
 }
 
-/* Fields */
+/* ── NEW: Form Fields Spacing (Fixes cramped inputs) ── */
+.pay-field {
+    margin-bottom: 24px;
+}
 .pay-label {
     display: block;
-    font-size: 0.875rem; /* Increased from 0.62rem */
+    font-size: 1.05rem;
     font-weight: 600;
-    letter-spacing: 0.1em;
-    text-transform: uppercase;
     color: var(--text-secondary);
     margin-bottom: 8px;
 }
-.pay-input,
-.pay-select {
+.pay-input {
     width: 100%;
-    padding: 12px 16px;
+    padding: 14px 16px;
     background: var(--bg-primary);
     border: 1px solid var(--border-strong);
     color: var(--text-primary);
     font-family: 'Jost', sans-serif;
-    font-size: 1rem; /* Increased from 0.88rem - STOPS IOS ZOOM BUG */
-    font-weight: 400; /* Increased from 300 to match cleaner inputs */
+    font-size: 1.05rem;
+    font-weight: 400;
     outline: none;
-    appearance: none;
-    -webkit-appearance: none;
-    border-radius: 0;
-    transition: border-color 0.22s, background 0.4s, color 0.4s, box-shadow 0.22s;
+    border-radius: 6px;
+    transition: border-color 0.22s, box-shadow 0.22s;
+}
+.pay-input:focus {
+    border-color: var(--gold);
+    box-shadow: 0 0 0 3px var(--gold-bg);
 }
 .pay-hint {
-    font-size: 0.85rem; /* Increased from 0.66rem */
+    font-family: 'SolaimanLipi', sans-serif;
+    font-size: 1.4rem;
     color: var(--text-muted);
-    margin-top: 6px;
-    letter-spacing: 0.02em;
+    margin-top: 8px;
 }
 
-/* Order summary strip */
+/* ── NEW: Order Summary Box ── */
+.order-summary {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background: var(--bg-secondary);
+    border: 1px solid var(--border);
+    padding: 24px;
+    border-radius: 6px;
+    margin-bottom: 32px;
+    margin-top: 16px;
+}
 .order-summary-label {
-    font-size: 0.875rem; /* Increased from 0.62rem */
+    font-size: 1.1rem;
     font-weight: 600;
-    letter-spacing: 0.1em;
-    text-transform: uppercase;
-    color: var(--text-muted);
+    color: var(--text-primary);
 }
 .order-summary-note {
-    font-size: 1rem; /* Increased from 0.78rem */
+    font-size: 0.95rem;
     color: var(--text-secondary);
     margin-top: 4px;
+}
+.order-summary-amount {
+    font-family: 'SolaimanLipi', sans-serif;
+    font-size: 2rem;
+    font-weight: 600;
+    color: var(--gold);
+}
+.order-summary-amount sup {
+    font-size: 1.2rem;
+    margin-right: 4px;
 }
 
 /* Submit button */
 .pay-submit {
     width: 100%;
     padding: 18px 32px;
-    background: var(--btn-fill-bg);
-    color: var(--btn-fill-color);
-    font-family: 'Jost', sans-serif;
-    font-size: 1rem; /* Increased from 0.75rem */
+    background: var(--gold);
+    color: #fff;
+    font-family: 'SolaimanLipi', sans-serif;
+    font-size: 1.3rem;
     font-weight: 600;
-    letter-spacing: 0.15em;
-    text-transform: uppercase;
     border: none;
+    border-radius: 6px;
     cursor: pointer;
     display: flex;
     align-items: center;
     justify-content: center;
-    gap: 10px;
+    gap: 12px;
     transition: background 0.25s, transform 0.2s;
+}
+.pay-submit:hover {
+    background: #b8860b;
 }
 .secure-note {
     display: flex;
     align-items: center;
     justify-content: center;
     gap: 8px;
-    margin-top: 16px;
-    font-size: 0.85rem; /* Increased from 0.66rem */
+    margin-top: 20px;
+    font-size: 0.95rem;
     color: var(--text-muted);
-    letter-spacing: 0.05em;
 }
 
 /* Responsive */
@@ -408,21 +439,19 @@
     .pricing-page { padding: 32px 20px 60px; }
     .pricing-hero { padding: 48px 20px 40px; }
     .packages-grid { grid-template-columns: 1fr; }
-    .pay-grid-2 { grid-template-columns: 1fr; }
     .payment-section-body { padding: 20px; }
     .payment-section-header { padding: 16px 20px; }
     .package-card { padding: 24px 20px; }
-    .payment-methods {
-        grid-template-columns: 1fr; /* Forces them to stack vertically on small screens */
-    }
+    .payment-methods { grid-template-columns: 1fr; }
+    .order-summary { flex-direction: column; text-align: center; gap: 16px; }
 }
 </style>
 
 
 <div class="pricing-hero">
-    <div class="pricing-hero-eyebrow">Membership Plans</div>
-    <h1 class="pricing-hero-title">Choose Your <strong>Plan</strong></h1>
-    <p class="pricing-hero-sub">Unlock full visibility in the verified talent directory.</p>
+    <div class="pricing-hero-eyebrow">মেম্বারশিপ প্ল্যানসমূহ</div>
+    <h1 class="pricing-hero-title">আপনার <strong>প্ল্যান</strong> নির্বাচন করুন</h1>
+    <p class="pricing-hero-sub">ভেরিফাইড ট্যালেন্ট ডিরেক্টরিতে আপনার প্রোফাইল সম্পূর্ণভাবে আনলক করুন।</p>
 </div>
 
 <div class="pricing-page">
@@ -443,21 +472,20 @@
                     >
                     <div class="package-card">
 
-                        
                         <?php if(\Livewire\Mechanisms\ExtendBlade\ExtendBlade::isRenderingLivewireComponent()): ?><!--[if BLOCK]><![endif]--><?php endif; ?><?php if($index === 1): ?>
-                            <div class="package-popular">Most Popular</div>
+                            <div class="package-popular">সবচেয়ে জনপ্রিয়</div>
                         <?php endif; ?><?php if(\Livewire\Mechanisms\ExtendBlade\ExtendBlade::isRenderingLivewireComponent()): ?><!--[if ENDBLOCK]><![endif]--><?php endif; ?>
 
                         <div class="package-select-ring"></div>
 
                         <div class="package-name"><?php echo e($package->name); ?></div>
-                        <div class="package-duration"><?php echo e($package->duration_months); ?> <?php echo e($package->duration_months == 1 ? 'month' : 'months'); ?> access</div>
+                        <div class="package-duration"><?php echo e($package->duration_months); ?> মাসের অ্যাক্সেস</div>
 
                         <div class="package-price-row">
                             <span class="package-currency">৳</span>
                             <span class="package-price"><?php echo e(number_format($package->price)); ?></span>
                         </div>
-                        <div class="package-price-sub">One-time payment &nbsp;·&nbsp; No hidden fees</div>
+                        <div class="package-price-sub">এককালীন পেমেন্ট &nbsp;·&nbsp; কোনো লুকানো চার্জ নেই</div>
 
                         <?php if(\Livewire\Mechanisms\ExtendBlade\ExtendBlade::isRenderingLivewireComponent()): ?><!--[if BLOCK]><![endif]--><?php endif; ?><?php if($package->features): ?>
                             <ul class="package-features">
@@ -485,64 +513,62 @@
                         <rect x="1" y="4" width="22" height="16" rx="2"/><line x1="1" y1="10" x2="23" y2="10"/>
                     </svg>
                 </div>
-                <div class="payment-section-title">Payment Instructions</div>
+                <div class="payment-section-title">পেমেন্ট নির্দেশিকা</div>
             </div>
             <div class="payment-section-body">
 
                 
-<div class="payment-instruction">
-    <svg class="payment-instruction-icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" aria-hidden="true">
-        <circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/>
-    </svg>
-    <div class="payment-instruction-text">
-        Send the exact amount for your selected plan via
-        <strong id="payment-send-type">Send Money</strong>
-        to the number shown after selecting your payment method below.
-        Then enter your Transaction ID to complete submission.
-    </div>
-</div>
-
-
-<div class="payment-methods">
-    <?php if(\Livewire\Mechanisms\ExtendBlade\ExtendBlade::isRenderingLivewireComponent()): ?><!--[if BLOCK]><![endif]--><?php endif; ?><?php if($settings?->bkash_number): ?>
-        <label class="payment-method-label">
-            <input type="radio" name="payment_method" value="bKash" required>
-            <div class="payment-method-tab">bKash</div>
-        </label>
-    <?php endif; ?><?php if(\Livewire\Mechanisms\ExtendBlade\ExtendBlade::isRenderingLivewireComponent()): ?><!--[if ENDBLOCK]><![endif]--><?php endif; ?>
-
-    <?php if(\Livewire\Mechanisms\ExtendBlade\ExtendBlade::isRenderingLivewireComponent()): ?><!--[if BLOCK]><![endif]--><?php endif; ?><?php if($settings?->nagad_number): ?>
-        <label class="payment-method-label">
-            <input type="radio" name="payment_method" value="Nagad" required>
-            <div class="payment-method-tab">Nagad</div>
-        </label>
-    <?php endif; ?><?php if(\Livewire\Mechanisms\ExtendBlade\ExtendBlade::isRenderingLivewireComponent()): ?><!--[if ENDBLOCK]><![endif]--><?php endif; ?>
-
-    <?php if(\Livewire\Mechanisms\ExtendBlade\ExtendBlade::isRenderingLivewireComponent()): ?><!--[if BLOCK]><![endif]--><?php endif; ?><?php if($settings?->rocket_number): ?>
-        <label class="payment-method-label">
-            <input type="radio" name="payment_method" value="Rocket" required>
-            <div class="payment-method-tab">Rocket</div>
-        </label>
-    <?php endif; ?><?php if(\Livewire\Mechanisms\ExtendBlade\ExtendBlade::isRenderingLivewireComponent()): ?><!--[if ENDBLOCK]><![endif]--><?php endif; ?>
-</div>
-
-
-<div class="payment-instruction" id="payment-number-display" style="margin-top: 12px;">
-    <svg class="payment-instruction-icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7">
-        <rect x="1" y="4" width="22" height="16" rx="2"/><line x1="1" y1="10" x2="23" y2="10"/>
-    </svg>
-    <div class="payment-instruction-text">
-        Send to this number:
-        <span class="payment-instruction-number" id="payment-number-shown">—</span>
-        <span id="payment-account-type" style="font-size:0.7rem; color:var(--text-muted); letter-spacing:0.1em; text-transform:uppercase; margin-top:2px; display:block;"></span>
-    </div>
-</div>
+                <div class="payment-instruction">
+                    <svg class="payment-instruction-icon" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" aria-hidden="true">
+                        <circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/>
+                    </svg>
+                    <div class="payment-instruction-text">
+                        আপনার নির্বাচিত প্ল্যানের নির্দিষ্ট পরিমাণ টাকা নিচের মেথড ব্যবহার করে 
+                        <strong id="payment-send-type">সেন্ড মানি (Send Money)</strong> 
+                        করুন। পেমেন্ট সম্পন্ন হলে নিচের ফর্মে আপনার মোবাইল নম্বর এবং ট্রানজেকশন আইডি (TrxID) প্রদান করুন।
+                    </div>
+                </div>
 
                 
+                <div class="payment-methods">
+                    <?php if(\Livewire\Mechanisms\ExtendBlade\ExtendBlade::isRenderingLivewireComponent()): ?><!--[if BLOCK]><![endif]--><?php endif; ?><?php if($settings?->bkash_number): ?>
+                        <label class="payment-method-label">
+                            <input type="radio" name="payment_method" value="bKash" required>
+                            <div class="payment-method-tab">বিকাশ</div>
+                        </label>
+                    <?php endif; ?><?php if(\Livewire\Mechanisms\ExtendBlade\ExtendBlade::isRenderingLivewireComponent()): ?><!--[if ENDBLOCK]><![endif]--><?php endif; ?>
+
+                    <?php if(\Livewire\Mechanisms\ExtendBlade\ExtendBlade::isRenderingLivewireComponent()): ?><!--[if BLOCK]><![endif]--><?php endif; ?><?php if($settings?->nagad_number): ?>
+                        <label class="payment-method-label">
+                            <input type="radio" name="payment_method" value="Nagad" required>
+                            <div class="payment-method-tab">নগদ</div>
+                        </label>
+                    <?php endif; ?><?php if(\Livewire\Mechanisms\ExtendBlade\ExtendBlade::isRenderingLivewireComponent()): ?><!--[if ENDBLOCK]><![endif]--><?php endif; ?>
+
+                    <?php if(\Livewire\Mechanisms\ExtendBlade\ExtendBlade::isRenderingLivewireComponent()): ?><!--[if BLOCK]><![endif]--><?php endif; ?><?php if($settings?->rocket_number): ?>
+                        <label class="payment-method-label">
+                            <input type="radio" name="payment_method" value="Rocket" required>
+                            <div class="payment-method-tab">রকেট</div>
+                        </label>
+                    <?php endif; ?><?php if(\Livewire\Mechanisms\ExtendBlade\ExtendBlade::isRenderingLivewireComponent()): ?><!--[if ENDBLOCK]><![endif]--><?php endif; ?>
+                </div>
+
                 
-                <div class="pay-field" style="grid-column:1/-1;">
+                <div class="payment-instruction" id="payment-number-display">
+                    <svg class="payment-instruction-icon" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7">
+                        <rect x="1" y="4" width="22" height="16" rx="2"/><line x1="1" y1="10" x2="23" y2="10"/>
+                    </svg>
+                    <div class="payment-instruction-text">
+                        এই নম্বরে টাকা পাঠান:
+                        <span class="payment-instruction-number" id="payment-number-shown">—</span>
+                        <span id="payment-account-type" style="font-size:1.1rem; color:var(--text-muted); text-transform:uppercase; margin-top:2px; display:block;"></span>
+                    </div>
+                </div>
+
+                
+                <div class="pay-field">
                     <label class="pay-label" for="p-sender">
-                        Your Mobile Number <span style="color:var(--gold)">*</span>
+                        আপনার মোবাইল নম্বর <span style="color:var(--gold)">*</span>
                     </label>
                     <input
                         id="p-sender"
@@ -550,15 +576,16 @@
                         name="sender_number"
                         class="pay-input"
                         required
-                        placeholder="e.g. 01XXXXXXXXX"
+                        placeholder="যেমন: 01XXXXXXXXX"
                         autocomplete="tel"
                     >
-                    <div class="pay-hint">The number you used to send the payment.</div>
+                    <div class="pay-hint">যে নম্বর থেকে আপনি পেমেন্ট পাঠিয়েছেন।</div>
                 </div>
                 
-                <div class="pay-field" style="grid-column:1/-1;">
+                
+                <div class="pay-field">
                     <label class="pay-label" for="p-trxid">
-                        Transaction ID (TrxID) <span style="color:var(--gold)">*</span>
+                        ট্রানজেকশন আইডি (TrxID) <span style="color:var(--gold)">*</span>
                     </label>
                     <input
                         id="p-trxid"
@@ -566,38 +593,37 @@
                         name="trx_id"
                         class="pay-input"
                         required
-                        placeholder="e.g. 9J5A6B8C"
+                        placeholder="যেমন: 9J5A6B8C"
                         autocomplete="off"
-                        style="letter-spacing:0.1em; font-size:1rem;"
+                        style="letter-spacing:0.1em;"
                     >
-                    <div class="pay-hint">Find this in your transaction history.</div>
+                    <div class="pay-hint">এটি আপনার পেমেন্ট হিস্টোরিতে বা এসএমএস-এ পাবেন।</div>
                 </div>
-
 
                 
                 <div class="order-summary">
                     <div>
-                        <div class="order-summary-label">You are paying</div>
-                        <div class="order-summary-note">Amount will be verified within 24 hours.</div>
+                        <div class="order-summary-label">আপনার সর্বমোট পেমেন্ট</div>
+                        <div class="order-summary-note">আপনার পেমেন্ট ২৪ ঘণ্টার মধ্যে ভেরিফাই করা হবে।</div>
                     </div>
-                    <div class="order-summary-amount">
+                    <div class="order-summary-amount" id="order-summary-amount">
                         <sup>৳</sup>—
                     </div>
                 </div>
 
                 
                 <button type="submit" class="pay-submit">
-                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" aria-hidden="true">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
                         <path d="M12 2L3 7v5c0 5.55 3.84 10.74 9 12 5.16-1.26 9-6.45 9-12V7L12 2zm-2 15l-4-4 1.41-1.41L10 14.17l6.59-6.59L18 9l-8 8z"/>
                     </svg>
-                    Submit Payment for Verification
+                    ভেরিফিকেশনের জন্য পেমেন্ট সাবমিট করুন
                 </button>
 
                 <div class="secure-note">
-                    <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" aria-hidden="true">
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" aria-hidden="true">
                         <rect x="3" y="11" width="18" height="11" rx="1"/><path d="M7 11V7a5 5 0 0110 0v4"/>
                     </svg>
-                    All submissions are manually reviewed &amp; verified within 24 hours
+                    সকল সাবমিশন ম্যানুয়ালি চেক করা হয় এবং ২৪ ঘণ্টার মধ্যে ভেরিফাই করা হয়
                 </div>
 
             </div>
@@ -610,7 +636,7 @@
 <script>
 (function () {
     const radios  = document.querySelectorAll('input[name="package_id"]');
-    const amtEl   = document.querySelector('.order-summary-amount');
+    const amtEl   = document.getElementById('order-summary-amount');
 
     const prices = {
         <?php $__currentLoopData = $packages; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $package): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
@@ -621,7 +647,16 @@
     function updateSummary() {
         const checked = document.querySelector('input[name="package_id"]:checked');
         if (checked && prices[checked.value]) {
-            amtEl.innerHTML = '<sup>৳</sup>' + prices[checked.value];
+            // Converts English numbers to Bangla dynamically
+            const englishNumbers = ['0','1','2','3','4','5','6','7','8','9'];
+            const banglaNumbers = ['০','১','২','৩','৪','৫','৬','৭','৮','৯'];
+            let banglaPrice = prices[checked.value];
+            
+            englishNumbers.forEach((num, index) => {
+                banglaPrice = banglaPrice.split(num).join(banglaNumbers[index]);
+            });
+
+            amtEl.innerHTML = '<sup>৳</sup>' + banglaPrice;
         }
     }
 
@@ -629,9 +664,10 @@
     updateSummary(); // init
 })();
 </script>
+
 <script>
 (function () {
-    // Numbers loaded from PHP — no hardcoding
+    // Numbers loaded from PHP
     const methods = {
         bKash:  { number: '<?php echo e($settings?->bkash_number); ?>',  type: '<?php echo e($settings?->bkash_type); ?>' },
         Nagad:  { number: '<?php echo e($settings?->nagad_number); ?>',  type: '<?php echo e($settings?->nagad_type); ?>' },

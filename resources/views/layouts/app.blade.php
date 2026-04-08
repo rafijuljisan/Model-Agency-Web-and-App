@@ -224,7 +224,6 @@
             /* Increased from 0.65rem */
 
             font-weight: 500;
-            letter-spacing: 0.12em;
             text-transform: uppercase;
             color: var(--text-secondary);
             transition: background 0.4s, color 0.4s, border-color 0.4s;
@@ -403,7 +402,6 @@
         .nav-brand-sub {
             font-size: 0.65rem;
             font-weight: 500;
-            letter-spacing: 0.38em;
             text-transform: uppercase;
             color: var(--text-muted);
             margin-top: 3px;
@@ -420,15 +418,14 @@
         .nav-links>li>.nav-drop-btn {
             display: inline-flex;
             align-items: center;
-            gap: 4px;
+            gap: 3px;
             padding: 6px 15px;
 
             /* --- UPDATED FONT SIZE --- */
-            font-size: 0.85rem;
+            font-size: 1rem;
             /* Increased from 0.68rem */
 
             font-weight: 500;
-            letter-spacing: 0.17em;
             text-transform: uppercase;
             color: var(--text-secondary);
             background: none;
@@ -529,7 +526,6 @@
             /* Increased from 0.90rem */
 
             font-weight: 400;
-            letter-spacing: 0.09em;
             color: var(--text-secondary);
             transition: background 0.18s, color 0.18s;
         }
@@ -613,7 +609,6 @@
             /* Increased from 0.68rem */
 
             font-weight: 500;
-            letter-spacing: 0.15em;
             text-transform: uppercase;
             color: var(--text-secondary);
             transition: color 0.22s;
@@ -638,7 +633,6 @@
             /* Increased from 0.67rem */
 
             font-weight: 500;
-            letter-spacing: 0.18em;
             text-transform: uppercase;
             border: none;
             cursor: pointer;
@@ -662,7 +656,6 @@
             font-family: 'Jost', sans-serif;
             font-size: 0.875rem;
             font-weight: 500;
-            letter-spacing: 0.18em;
             text-transform: uppercase;
             cursor: pointer;
             transition: border-color 0.25s, color 0.25s, transform 0.2s;
@@ -755,7 +748,6 @@
             font-family: 'Jost', sans-serif;
             font-size: 0.90rem;
             font-weight: 500;
-            letter-spacing: 0.08em;
             text-transform: uppercase;
             display: flex;
             align-items: center;
@@ -772,12 +764,12 @@
         }
 
         .ticker-track span {
-            padding: 0 52px;
+            padding: 0 30px;
         }
 
         .ticker-track span::before {
             content: '✦';
-            margin-right: 52px;
+            margin-right: 30px;
             opacity: 0.55;
         }
 
@@ -845,7 +837,7 @@
         }
 
         .footer-brand-desc {
-            font-size: 1.00rem;
+            font-size: 1.2rem;
             color: var(--text-secondary);
             line-height: 1.8;
             max-width: 290px;
@@ -877,9 +869,8 @@
 
         /* Footer columns */
         .footer-col-title {
-            font-size: 0.85rem;
+            font-size: 1.2rem;
             font-weight: 600;
-            letter-spacing: 0.28em;
             text-transform: uppercase;
             color: var(--gold);
             margin-bottom: 18px;
@@ -892,7 +883,7 @@
         }
 
         .footer-col-links a {
-            font-size: 1.00rem;
+            font-size: 1.2rem;
             color: var(--text-secondary);
             transition: color 0.22s, padding-left 0.22s;
             display: block;
@@ -951,7 +942,6 @@
             color: var(--badge-ok-color);
             font-size: 0.75rem;
             font-weight: 600;
-            letter-spacing: 0.12em;
             text-transform: uppercase;
             border-radius: 2px;
             transition: background 0.3s, color 0.3s;
@@ -1120,7 +1110,6 @@
         .mega-menu-all {
             font-size: 0.75rem;
             font-weight: 600;
-            letter-spacing: 0.15em;
             text-transform: uppercase;
             color: var(--text-primary);
             text-decoration: none;

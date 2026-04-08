@@ -29,7 +29,7 @@
     background: var(--gold);
 }
 .form-page-title {
-    font-family: 'Cormorant Garamond', serif;
+    font-family: 'Jost', sans-serif;
     font-size: 2.8rem;
     font-weight: 300;
     color: var(--text-primary);
@@ -63,7 +63,7 @@
     background: var(--bg-primary); /* Slight contrast for header */
 }
 .casting-title {
-    font-family: 'Cormorant Garamond', serif;
+    font-family: 'Jost', sans-serif;
     font-size: 1.7rem;
     font-weight: 600;
     color: var(--text-primary);

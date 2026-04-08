@@ -104,7 +104,6 @@
         .form-step-label {
             font-size: 0.875rem;
             font-weight: 500;
-            letter-spacing: 0.16em;
             text-transform: uppercase;
             color: var(--text-muted);
             margin-left: 8px;
@@ -189,9 +188,8 @@
             display: flex;
             align-items: center;
             gap: 5px;
-            font-size: 0.875rem;
+            font-size: 1.2rem;
             font-weight: 600;
-            letter-spacing: 0.18em;
             text-transform: uppercase;
             color: var(--text-secondary);
             margin-bottom: 8px;
@@ -583,8 +581,83 @@
             </div>
         <?php endif; ?><?php if(\Livewire\Mechanisms\ExtendBlade\ExtendBlade::isRenderingLivewireComponent()): ?><!--[if ENDBLOCK]><![endif]--><?php endif; ?>
         
-        <?php if(\Livewire\Mechanisms\ExtendBlade\ExtendBlade::isRenderingLivewireComponent()): ?><!--[if BLOCK]><![endif]--><?php endif; ?><?php if($currentStep === 'payment_failed'): ?>
-            <div class="text-center py-20 anim-fade-up">
+        <?php if(\Livewire\Mechanisms\ExtendBlade\ExtendBlade::isRenderingLivewireComponent()): ?><!--[if BLOCK]><![endif]--><?php endif; ?><?php if($currentStep === 'document_upload'): ?>
+            <div class="text-center py-10 anim-fade-up max-w-2xl mx-auto" style="font-family: 'SolaimanLipi', sans-serif;">
+                <div style="width: 80px; height: 80px; border-radius: 50%; background: var(--gold-bg); display: flex; align-items: center; justify-content: center; margin: 0 auto 24px; color: var(--gold);">
+                    <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
+                        <polyline points="14 2 14 8 20 8"></polyline>
+                        <line x1="12" y1="18" x2="12" y2="12"></line>
+                        <line x1="9" y1="15" x2="15" y2="15"></line>
+                    </svg>
+                </div>
+                
+                <h2 class="form-page-title mb-2">আপনার <strong>পরিচয়</strong> যাচাই করুন</h2>
+                <p class="form-page-sub mx-auto mb-8" style="font-size: 1.1rem; line-height: 1.5;">
+                    প্যাকেজ নির্বাচন করার আগে, আমাদের আপনার ন্যাশনাল আইডি (NID) এবং শিক্ষাগত বা প্রশিক্ষণ সার্টিফিকেট ভেরিফাই করতে হবে।
+                </p>
+
+                <form wire:submit.prevent="submitDocuments" class="text-left" style="background: var(--bg-surface); border: 1px solid var(--border); border-radius: 8px; padding: 32px; box-shadow: var(--shadow-sm);">
+                    
+                    
+                    <?php if(\Livewire\Mechanisms\ExtendBlade\ExtendBlade::isRenderingLivewireComponent()): ?><!--[if BLOCK]><![endif]--><?php endif; ?><?php if(in_array(Auth::user()->verification_status, ['unverified', 'rejected', null, ''])): ?>
+                    <div style="margin-bottom: 24px;">
+                        <label class="form-field-label" style="font-size: 1.1rem; letter-spacing: normal;">পাসপোর্ট/জন্ম নিবন্ধন/ন্যাশনাল আইডি (উভয় পিঠ বা স্পষ্ট ছবি) <span class="required">*</span></label>
+                        
+                        <?php if(\Livewire\Mechanisms\ExtendBlade\ExtendBlade::isRenderingLivewireComponent()): ?><!--[if BLOCK]><![endif]--><?php endif; ?><?php if(Auth::user()->verification_status === 'rejected'): ?>
+                            <div style="color: #dc2626; font-size: 1.1rem; margin-bottom: 12px; padding: 12px; background: rgba(220,38,38,0.1); border-radius: 4px; border: 1px solid rgba(220,38,38,0.2);">
+                                <strong>বাতিল করা হয়েছে:</strong> আপনার আগের এনআইডি/পাসপোর্ট/জন্ম নিবন্ধন বাতিল করা হয়েছে। অনুগ্রহ করে একটি স্পষ্ট ছবি আপলোড করুন।
+                            </div>
+                        <?php endif; ?><?php if(\Livewire\Mechanisms\ExtendBlade\ExtendBlade::isRenderingLivewireComponent()): ?><!--[if ENDBLOCK]><![endif]--><?php endif; ?>
+                        
+                        <input type="file" wire:model="nidImage" class="form-input" accept="image/*" required>
+                        <div wire:loading wire:target="nidImage" style="color: var(--gold); font-size: 0.95rem; margin-top: 4px;">ছবি প্রস্তুত করা হচ্ছে...</div>
+                        <?php if(\Livewire\Mechanisms\ExtendBlade\ExtendBlade::isRenderingLivewireComponent()): ?><!--[if BLOCK]><![endif]--><?php endif; ?><?php $__errorArgs = ['nidImage'];
+$__bag = $errors->getBag($__errorArgs[1] ?? 'default');
+if ($__bag->has($__errorArgs[0])) :
+if (isset($message)) { $__messageOriginal = $message; }
+$message = $__bag->first($__errorArgs[0]); ?> <span style="color: #dc2626; font-size: 0.95rem; display: block; margin-top: 4px;"><?php echo e($message); ?></span> <?php unset($message);
+if (isset($__messageOriginal)) { $message = $__messageOriginal; }
+endif;
+unset($__errorArgs, $__bag); ?><?php if(\Livewire\Mechanisms\ExtendBlade\ExtendBlade::isRenderingLivewireComponent()): ?><!--[if ENDBLOCK]><![endif]--><?php endif; ?>
+                    </div>
+                    <?php endif; ?><?php if(\Livewire\Mechanisms\ExtendBlade\ExtendBlade::isRenderingLivewireComponent()): ?><!--[if ENDBLOCK]><![endif]--><?php endif; ?>
+
+                    
+                    <?php if(\Livewire\Mechanisms\ExtendBlade\ExtendBlade::isRenderingLivewireComponent()): ?><!--[if BLOCK]><![endif]--><?php endif; ?><?php if(in_array(Auth::user()->academic_verification_status, ['unverified', 'rejected', null, ''])): ?>
+                    <div style="margin-bottom: 32px;">
+                        <label class="form-field-label" style="font-size: 1.1rem; letter-spacing: normal;">শিক্ষাগত বা প্রশিক্ষণ সার্টিফিকেট <span class="required">*</span></label>
+                        
+                        <?php if(\Livewire\Mechanisms\ExtendBlade\ExtendBlade::isRenderingLivewireComponent()): ?><!--[if BLOCK]><![endif]--><?php endif; ?><?php if(Auth::user()->academic_verification_status === 'rejected'): ?>
+                            <div style="color: #dc2626; font-size: 1.1rem; margin-bottom: 12px; padding: 12px; background: rgba(220,38,38,0.1); border-radius: 4px; border: 1px solid rgba(220,38,38,0.2);">
+                                <strong>বাতিল করা হয়েছে:</strong> আপনার আগের সার্টিফিকেটটি বাতিল করা হয়েছে। অনুগ্রহ করে একটি সঠিক ডকুমেন্ট আপলোড করুন।
+                            </div>
+                        <?php endif; ?><?php if(\Livewire\Mechanisms\ExtendBlade\ExtendBlade::isRenderingLivewireComponent()): ?><!--[if ENDBLOCK]><![endif]--><?php endif; ?>
+                        
+                        <input type="file" wire:model="academicImage" class="form-input" accept="image/*" required>
+                        <div wire:loading wire:target="academicImage" style="color: var(--gold); font-size: 0.95rem; margin-top: 4px;">ছবি প্রস্তুত করা হচ্ছে...</div>
+                        <?php if(\Livewire\Mechanisms\ExtendBlade\ExtendBlade::isRenderingLivewireComponent()): ?><!--[if BLOCK]><![endif]--><?php endif; ?><?php $__errorArgs = ['academicImage'];
+$__bag = $errors->getBag($__errorArgs[1] ?? 'default');
+if ($__bag->has($__errorArgs[0])) :
+if (isset($message)) { $__messageOriginal = $message; }
+$message = $__bag->first($__errorArgs[0]); ?> <span style="color: #dc2626; font-size: 0.95rem; display: block; margin-top: 4px;"><?php echo e($message); ?></span> <?php unset($message);
+if (isset($__messageOriginal)) { $message = $__messageOriginal; }
+endif;
+unset($__errorArgs, $__bag); ?><?php if(\Livewire\Mechanisms\ExtendBlade\ExtendBlade::isRenderingLivewireComponent()): ?><!--[if ENDBLOCK]><![endif]--><?php endif; ?>
+                    </div>
+                    <?php endif; ?><?php if(\Livewire\Mechanisms\ExtendBlade\ExtendBlade::isRenderingLivewireComponent()): ?><!--[if ENDBLOCK]><![endif]--><?php endif; ?>
+
+                    <button type="submit" class="btn-fill" style="width: 100%; justify-content: center; padding: 14px; font-size: 1.15rem; font-family: 'SolaimanLipi', sans-serif;">
+                        <span wire:loading.remove wire:target="submitDocuments">ডকুমেন্ট সাবমিট করুন এবং প্যাকেজ পেজে যান</span>
+                        <span wire:loading wire:target="submitDocuments">আপলোড এবং সেভ হচ্ছে...</span>
+                    </button>
+                </form>
+            </div>
+
+        
+        
+        <?php elseif($currentStep === 'payment_failed'): ?>
+            <div class="text-center py-20 anim-fade-up" style="font-family: 'SolaimanLipi', sans-serif;">
                 <div
                     style="width: 80px; height: 80px; border-radius: 50%; background: rgba(220, 38, 38, 0.1); display: flex; align-items: center; justify-content: center; margin: 0 auto 24px;">
                     <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="#dc2626" stroke-width="1.5">
@@ -593,16 +666,15 @@
                         <line x1="9" y1="9" x2="15" y2="15" />
                     </svg>
                 </div>
-                <h2 class="form-page-title mb-4">Payment <strong>Failed</strong></h2>
-                <p class="form-page-sub mx-auto mb-8" style="max-width: 480px; font-size: 1rem;">
-                    We could not verify your payment. Please double-check your Transaction ID (TrxID) and mobile number, and
-                    submit the form again.<br><br>
-                    If you are certain you paid successfully, please contact our support team.
+                <h2 class="form-page-title mb-4">পেমেন্ট <strong>ব্যর্থ হয়েছে</strong></h2>
+                <p class="form-page-sub mx-auto mb-8" style="max-width: 480px; font-size: 1.1rem; line-height: 1.5;">
+                    আমরা আপনার পেমেন্ট ভেরিফাই করতে পারিনি। অনুগ্রহ করে আপনার ট্রানজেকশন আইডি (TrxID) এবং মোবাইল নম্বর পুনরায় চেক করে আবার ফর্মটি সাবমিট করুন।<br><br>
+                    যদি আপনি নিশ্চিত থাকেন যে পেমেন্ট সফল হয়েছে, তবে অনুগ্রহ করে আমাদের সাপোর্ট টিমের সাথে যোগাযোগ করুন।
                 </p>
                 <div style="display: flex; gap: 16px; justify-content: center;">
-                    <a href="/contact" class="btn-outline">Contact Support</a>
-                    <a href="<?php echo e(route('packages.index')); ?>" class="btn-fill">
-                        Submit Payment Again
+                    <a href="/contact" class="btn-outline" style="font-size: 1rem;">সাপোর্টে যোগাযোগ করুন</a>
+                    <a href="<?php echo e(route('packages.index')); ?>" class="btn-fill" style="font-size: 1rem;">
+                        আবার পেমেন্ট সাবমিট করুন
                         <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
                             style="margin-left:8px;">
                             <line x1="5" y1="12" x2="19" y2="12"></line>
@@ -613,331 +685,88 @@
             </div>
 
             
-        <?php elseif($currentStep === 'payment_expired'): ?>
-            <div class="text-center py-20 anim-fade-up">
-                <div
-                    style="width: 80px; height: 80px; border-radius: 50%; background: var(--bg-secondary); display: flex; align-items: center; justify-content: center; margin: 0 auto 24px;">
-                    <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
-                        <circle cx="12" cy="12" r="10" />
-                        <polyline points="12 6 12 12 16 14" />
-                    </svg>
+            <?php elseif($currentStep === 'payment_expired'): ?>
+                <div class="text-center py-20 anim-fade-up" style="font-family: 'SolaimanLipi', sans-serif;">
+                    <div
+                        style="width: 80px; height: 80px; border-radius: 50%; background: var(--bg-secondary); display: flex; align-items: center; justify-content: center; margin: 0 auto 24px;">
+                        <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                            <circle cx="12" cy="12" r="10" />
+                            <polyline points="12 6 12 12 16 14" />
+                        </svg>
+                    </div>
+                    <h2 class="form-page-title mb-4">সাবস্ক্রিপশন <strong>মেয়াদোত্তীর্ণ</strong></h2>
+                    <p class="form-page-sub mx-auto mb-8" style="max-width: 480px; font-size: 1.1rem; line-height: 1.5;">
+                        আপনার ভেরিফাইড ট্যালেন্ট সাবস্ক্রিপশনের মেয়াদ শেষ হয়ে গেছে। আপনার পাবলিক প্রোফাইলটি পুনরায় লাইভ করতে এবং কাস্টিং কল পেতে অনুগ্রহ করে আপনার প্যাকেজটি রিনিউ করুন।
+                    </p>
+                    <a href="<?php echo e(route('packages.index')); ?>" class="btn-fill" style="display: inline-flex; font-size: 1.1rem;">
+                        সাবস্ক্রিপশন রিনিউ করুন
+                        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                            style="margin-left:8px;">
+                            <path d="M21.5 2v6h-6M21.34 15.57a10 10 0 1 1-.92-10.26l3.08 2.69" />
+                        </svg>
+                    </a>
                 </div>
-                <h2 class="form-page-title mb-4">Subscription <strong>Expired</strong></h2>
-                <p class="form-page-sub mx-auto mb-8" style="max-width: 480px; font-size: 1rem;">
-                    Your verified talent subscription has expired. Please renew your package to restore your public profile
-                    and keep receiving casting calls.
-                </p>
-                <a href="<?php echo e(route('packages.index')); ?>" class="btn-fill" style="display: inline-flex;">
-                    Renew Subscription
-                    <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
-                        style="margin-left:8px;">
-                        <path d="M21.5 2v6h-6M21.34 15.57a10 10 0 1 1-.92-10.26l3.08 2.69" />
-                    </svg>
-                </a>
-            </div>
 
             
         <?php elseif($currentStep === 'payment_pending'): ?>
-            <div class="text-center py-20 anim-fade-up">
-                <div class="text-center py-20 anim-fade-up">
-                    <svg class="mx-auto h-16 w-16 text-yellow-500 mb-6" fill="none" viewBox="0 0 24 24"
-                        stroke="currentColor">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5"
-                            d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
-                    </svg>
-                    <h2 class="form-page-title mb-2">Payment <strong>Pending Verification</strong></h2>
-                    <p class="form-page-sub mx-auto">Our accounts team is currently verifying your transaction ID. This
-                        usually takes a few hours. Please check back soon!</p>
-                </div>
+            <div class="text-center py-20 anim-fade-up" style="font-family: 'SolaimanLipi', sans-serif;">
+                <svg class="mx-auto h-16 w-16 text-yellow-500 mb-6" fill="none" viewBox="0 0 24 24"
+                    stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5"
+                        d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
+                </svg>
+                <h2 class="form-page-title mb-2">পেমেন্ট <strong>যাচাইয়ের অপেক্ষায়</strong></h2>
+                <p class="form-page-sub mx-auto" style="font-size: 1.1rem; line-height: 1.5; max-width: 480px;">
+                    আমাদের অ্যাকাউন্টস টিম বর্তমানে আপনার ট্রানজেকশন আইডি যাচাই করছে। এতে সাধারণত কয়েক ঘণ্টা সময় লাগতে পারে। অনুগ্রহ করে কিছুক্ষণ পর আবার চেক করুন!
+                </p>
+            </div>
 
-                
-                <?php elseif($currentStep === 'document_upload'): ?>
-                <div class="form-section anim-fade-up">
-                    <div class="form-section-header">
-                        <div class="form-section-title">Step 2: Identity & Academic Verification</div>
-                    </div>
-                    <div class="form-section-body">
-                        <p style="color: var(--text-muted); font-size: 0.9rem; margin-bottom: 24px; line-height: 1.6;">
-                            To maintain the highest quality of talent, we require both a National ID and an
-                            Academic/Acting Certificate. Please upload the required documents below.
-                        </p>
+        
+        <?php elseif($currentStep === 'under_review'): ?>
+            <div class="text-center py-20 anim-fade-up max-w-lg mx-auto" style="font-family: 'SolaimanLipi', sans-serif;">
+                <svg class="mx-auto h-16 w-16 text-blue-500 mb-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5"
+                        d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z" />
+                </svg>
+                <h2 class="form-page-title mb-2">অ্যাকাউন্ট <strong>রিভিউ করা হচ্ছে</strong></h2>
+                <p class="form-page-sub mx-auto mb-8" style="color: var(--text-secondary); font-size: 1.1rem; line-height: 1.5;">
+                    আমাদের টিম বর্তমানে আপনার আপলোড করা ডকুমেন্ট এবং পেমেন্ট ট্রানজেকশন ভেরিফাই করছে। সবকিছু অনুমোদিত হওয়ার পরেই আপনার প্রোফাইল আনলক করা হবে!
+                </p>
 
-                        <form wire:submit.prevent="submitDocuments" class="space-y-6">
-
-                            
-
-                            <?php $nidStatus = Auth::user()->verification_status; ?>
-
-                            <?php if(\Livewire\Mechanisms\ExtendBlade\ExtendBlade::isRenderingLivewireComponent()): ?><!--[if BLOCK]><![endif]--><?php endif; ?><?php if($nidStatus === 'verified'): ?>
-                                
-                                <div style="display:flex; align-items:center; gap:12px; padding:16px 20px;
-                                            background:rgba(22,163,74,0.05); border:1px solid rgba(22,163,74,0.25);
-                                            border-radius:6px; margin-bottom:20px;">
-                                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#16a34a" stroke-width="2">
-                                        <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/>
-                                        <polyline points="22 4 12 14.01 9 11.01"/>
-                                    </svg>
-                                    <span style="font-size:0.85rem; font-weight:600; color:#16a34a;">National ID — Verified</span>
-                                </div>
-
-                            <?php elseif($nidStatus === 'pending'): ?>
-                                
-                                <div style="display:flex; align-items:center; gap:12px; padding:16px 20px;
-                                            background:rgba(234,179,8,0.05); border:1px solid rgba(234,179,8,0.3);
-                                            border-radius:6px; margin-bottom:20px;">
-                                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#eab308" stroke-width="2">
-                                        <circle cx="12" cy="12" r="10"/>
-                                        <polyline points="12 6 12 12 16 14"/>
-                                    </svg>
-                                    <span style="font-size:0.85rem; font-weight:600; color:#eab308;">National ID — Pending Review</span>
-                                </div>
-
-                            <?php else: ?>
-                                
-                                <div style="padding:20px; background:var(--bg-secondary); border:1px solid var(--border);
-                                            border-radius:6px; margin-bottom:20px;">
-
-                                    <h3 style="font-weight:600; color:var(--text-primary); margin-bottom:12px; font-size:0.95rem;">
-                                        1. NID/Passport/Birth Certificate
-                                    </h3>
-
-                                    
-                                    <?php if(\Livewire\Mechanisms\ExtendBlade\ExtendBlade::isRenderingLivewireComponent()): ?><!--[if BLOCK]><![endif]--><?php endif; ?><?php if($nidStatus === 'rejected'): ?>
-                                        <div style="display:flex; align-items:flex-start; gap:10px; padding:12px 16px;
-                                                    background:rgba(220,38,38,0.07); border:1px solid rgba(220,38,38,0.3);
-                                                    border-radius:6px; margin-bottom:16px;">
-                                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#dc2626"
-                                                stroke-width="2" style="flex-shrink:0; margin-top:2px;">
-                                                <circle cx="12" cy="12" r="10"/>
-                                                <line x1="12" y1="8" x2="12" y2="12"/>
-                                                <line x1="12" y1="16" x2="12.01" y2="16"/>
-                                            </svg>
-                                            <div>
-                                                <p style="font-size:0.8rem; font-weight:700; color:#dc2626; margin-bottom:3px;">
-                                                    Your National ID was Rejected
-                                                </p>
-                                                <p style="font-size:0.78rem; color:#dc2626; opacity:0.85; line-height:1.5;">
-                                                    Please upload a clear, original photo of your NID showing both front and back.
-                                                    Make sure all text is readable and the document is not cropped.
-                                                </p>
-                                            </div>
-                                        </div>
-                                    <?php endif; ?><?php if(\Livewire\Mechanisms\ExtendBlade\ExtendBlade::isRenderingLivewireComponent()): ?><!--[if ENDBLOCK]><![endif]--><?php endif; ?>
-
-                                    <label class="upload-zone">
-                                        <input type="file" wire:model="nidImage" accept="image/*">
-                                        <svg class="upload-zone-icon" width="36" height="36" viewBox="0 0 24 24"
-                                            fill="none" stroke="currentColor" stroke-width="1">
-                                            <path d="M4 22h14a2 2 0 002-2V7.5L14.5 2H6a2 2 0 00-2 2v4"/>
-                                            <polyline points="14 2 14 8 20 8"/>
-                                            <path d="M2 15h10M2 18h10M2 12h10"/>
-                                        </svg>
-                                        <div class="upload-zone-title">Upload (Front & Back merged or clear photo)</div>
-                                        <div class="upload-zone-sub">Accepts JPG, PNG, WEBP &nbsp;·&nbsp; <span>Max 5MB</span></div>
-                                    </label>
-
-                                    
-                                    <?php if(\Livewire\Mechanisms\ExtendBlade\ExtendBlade::isRenderingLivewireComponent()): ?><!--[if BLOCK]><![endif]--><?php endif; ?><?php if($nidImage): ?>
-                                        <div style="margin-top:12px; display:flex; align-items:center; gap:8px;
-                                                    font-size:0.8rem; color:var(--gold); font-weight:600;">
-                                            <svg width="14" height="14" viewBox="0 0 24 24" fill="none"
-                                                stroke="currentColor" stroke-width="2">
-                                                <path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4"/>
-                                                <polyline points="17 8 12 3 7 8"/>
-                                                <line x1="12" y1="3" x2="12" y2="15"/>
-                                            </svg>
-                                            File selected — ready to submit
-                                        </div>
-                                    <?php endif; ?><?php if(\Livewire\Mechanisms\ExtendBlade\ExtendBlade::isRenderingLivewireComponent()): ?><!--[if ENDBLOCK]><![endif]--><?php endif; ?>
-
-                                    <div wire:loading wire:target="nidImage"
-                                        style="color:var(--gold); font-size:0.7rem; font-weight:700;
-                                                text-transform:uppercase; margin-top:8px; letter-spacing:0.08em;">
-                                        Preparing preview…
-                                    </div>
-
-                                    <?php if(\Livewire\Mechanisms\ExtendBlade\ExtendBlade::isRenderingLivewireComponent()): ?><!--[if BLOCK]><![endif]--><?php endif; ?><?php $__errorArgs = ['nidImage'];
-$__bag = $errors->getBag($__errorArgs[1] ?? 'default');
-if ($__bag->has($__errorArgs[0])) :
-if (isset($message)) { $__messageOriginal = $message; }
-$message = $__bag->first($__errorArgs[0]); ?>
-                                        <span style="color:#dc2626; font-size:0.75rem; margin-top:6px; display:block;">
-                                            <?php echo e($message); ?>
-
-                                        </span>
-                                    <?php unset($message);
-if (isset($__messageOriginal)) { $message = $__messageOriginal; }
-endif;
-unset($__errorArgs, $__bag); ?><?php if(\Livewire\Mechanisms\ExtendBlade\ExtendBlade::isRenderingLivewireComponent()): ?><!--[if ENDBLOCK]><![endif]--><?php endif; ?>
-                                </div>
-                            <?php endif; ?><?php if(\Livewire\Mechanisms\ExtendBlade\ExtendBlade::isRenderingLivewireComponent()): ?><!--[if ENDBLOCK]><![endif]--><?php endif; ?>
-
-
-                            
-
-                            <?php $acadStatus = Auth::user()->academic_verification_status; ?>
-
-                            <?php if(\Livewire\Mechanisms\ExtendBlade\ExtendBlade::isRenderingLivewireComponent()): ?><!--[if BLOCK]><![endif]--><?php endif; ?><?php if($acadStatus === 'verified'): ?>
-                                
-                                <div style="display:flex; align-items:center; gap:12px; padding:16px 20px;
-                                            background:rgba(22,163,74,0.05); border:1px solid rgba(22,163,74,0.25);
-                                            border-radius:6px; margin-bottom:24px;">
-                                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#16a34a" stroke-width="2">
-                                        <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/>
-                                        <polyline points="22 4 12 14.01 9 11.01"/>
-                                    </svg>
-                                    <span style="font-size:0.85rem; font-weight:600; color:#16a34a;">Academic Certificate — Verified</span>
-                                </div>
-
-                            <?php elseif($acadStatus === 'pending'): ?>
-                                
-                                <div style="display:flex; align-items:center; gap:12px; padding:16px 20px;
-                                            background:rgba(234,179,8,0.05); border:1px solid rgba(234,179,8,0.3);
-                                            border-radius:6px; margin-bottom:24px;">
-                                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#eab308" stroke-width="2">
-                                        <circle cx="12" cy="12" r="10"/>
-                                        <polyline points="12 6 12 12 16 14"/>
-                                    </svg>
-                                    <span style="font-size:0.85rem; font-weight:600; color:#eab308;">Academic Certificate — Pending Review</span>
-                                </div>
-
-                            <?php else: ?>
-                                
-                                <div style="padding:20px; background:var(--bg-secondary); border:1px solid var(--border);
-                                            border-radius:6px; margin-bottom:24px;">
-
-                                    <h3 style="font-weight:600; color:var(--text-primary); margin-bottom:12px; font-size:0.95rem;">
-                                        2. Academic / Training Certificate
-                                    </h3>
-
-                                    
-                                    <?php if(\Livewire\Mechanisms\ExtendBlade\ExtendBlade::isRenderingLivewireComponent()): ?><!--[if BLOCK]><![endif]--><?php endif; ?><?php if($acadStatus === 'rejected'): ?>
-                                        <div style="display:flex; align-items:flex-start; gap:10px; padding:12px 16px;
-                                                    background:rgba(220,38,38,0.07); border:1px solid rgba(220,38,38,0.3);
-                                                    border-radius:6px; margin-bottom:16px;">
-                                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#dc2626"
-                                                stroke-width="2" style="flex-shrink:0; margin-top:2px;">
-                                                <circle cx="12" cy="12" r="10"/>
-                                                <line x1="12" y1="8" x2="12" y2="12"/>
-                                                <line x1="12" y1="16" x2="12.01" y2="16"/>
-                                            </svg>
-                                            <div>
-                                                <p style="font-size:0.8rem; font-weight:700; color:#dc2626; margin-bottom:3px;">
-                                                    Your Academic Certificate was Rejected
-                                                </p>
-                                                <p style="font-size:0.78rem; color:#dc2626; opacity:0.85; line-height:1.5;">
-                                                    Please upload a valid, original certificate. Ensure it clearly shows your name,
-                                                    institution, and course. Blurry or incomplete documents will not be accepted.
-                                                </p>
-                                            </div>
-                                        </div>
-                                    <?php endif; ?><?php if(\Livewire\Mechanisms\ExtendBlade\ExtendBlade::isRenderingLivewireComponent()): ?><!--[if ENDBLOCK]><![endif]--><?php endif; ?>
-
-                                    <label class="upload-zone">
-                                        <input type="file" wire:model="academicImage" accept="image/*">
-                                        <svg class="upload-zone-icon" width="36" height="36" viewBox="0 0 24 24"
-                                            fill="none" stroke="currentColor" stroke-width="1">
-                                            <path d="M22 10v6M2 10l10-5 10 5-10 5z"/>
-                                            <path d="M6 12v5c3 3 9 3 12 0v-5"/>
-                                        </svg>
-                                        <div class="upload-zone-title">Upload Certificate or Portfolio Document</div>
-                                        <div class="upload-zone-sub">Accepts JPG, PNG, WEBP &nbsp;·&nbsp; <span>Max 5MB</span></div>
-                                    </label>
-
-                                    <?php if(\Livewire\Mechanisms\ExtendBlade\ExtendBlade::isRenderingLivewireComponent()): ?><!--[if BLOCK]><![endif]--><?php endif; ?><?php if($academicImage): ?>
-                                        <div style="margin-top:12px; display:flex; align-items:center; gap:8px;
-                                                    font-size:0.8rem; color:var(--gold); font-weight:600;">
-                                            <svg width="14" height="14" viewBox="0 0 24 24" fill="none"
-                                                stroke="currentColor" stroke-width="2">
-                                                <path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4"/>
-                                                <polyline points="17 8 12 3 7 8"/>
-                                                <line x1="12" y1="3" x2="12" y2="15"/>
-                                            </svg>
-                                            File selected — ready to submit
-                                        </div>
-                                    <?php endif; ?><?php if(\Livewire\Mechanisms\ExtendBlade\ExtendBlade::isRenderingLivewireComponent()): ?><!--[if ENDBLOCK]><![endif]--><?php endif; ?>
-
-                                    <div wire:loading wire:target="academicImage"
-                                        style="color:var(--gold); font-size:0.7rem; font-weight:700;
-                                                text-transform:uppercase; margin-top:8px; letter-spacing:0.08em;">
-                                        Preparing preview…
-                                    </div>
-
-                                    <?php if(\Livewire\Mechanisms\ExtendBlade\ExtendBlade::isRenderingLivewireComponent()): ?><!--[if BLOCK]><![endif]--><?php endif; ?><?php $__errorArgs = ['academicImage'];
-$__bag = $errors->getBag($__errorArgs[1] ?? 'default');
-if ($__bag->has($__errorArgs[0])) :
-if (isset($message)) { $__messageOriginal = $message; }
-$message = $__bag->first($__errorArgs[0]); ?>
-                                        <span style="color:#dc2626; font-size:0.75rem; margin-top:6px; display:block;">
-                                            <?php echo e($message); ?>
-
-                                        </span>
-                                    <?php unset($message);
-if (isset($__messageOriginal)) { $message = $__messageOriginal; }
-endif;
-unset($__errorArgs, $__bag); ?><?php if(\Livewire\Mechanisms\ExtendBlade\ExtendBlade::isRenderingLivewireComponent()): ?><!--[if ENDBLOCK]><![endif]--><?php endif; ?>
-                                </div>
-                            <?php endif; ?><?php if(\Livewire\Mechanisms\ExtendBlade\ExtendBlade::isRenderingLivewireComponent()): ?><!--[if ENDBLOCK]><![endif]--><?php endif; ?>
-
-                            
-                            <?php if(\Livewire\Mechanisms\ExtendBlade\ExtendBlade::isRenderingLivewireComponent()): ?><!--[if BLOCK]><![endif]--><?php endif; ?><?php if(
-                                in_array(Auth::user()->verification_status, ['unverified', 'rejected']) ||
-                                in_array(Auth::user()->academic_verification_status, ['unverified', 'rejected'])
-                            ): ?>
-                                <button type="submit" class="btn-fill w-full justify-center"
-                                        wire:loading.attr="disabled" wire:target="submitDocuments">
-                                    <span wire:loading.remove wire:target="submitDocuments">
-                                        Submit Documents
-                                        <svg width="10" height="10" viewBox="0 0 10 10" fill="none"
-                                            style="display:inline; margin-left:6px;">
-                                            <path d="M1 5h8M5 1l4 4-4 4" stroke="currentColor" stroke-width="1.4"
-                                                stroke-linecap="round" stroke-linejoin="round"/>
-                                        </svg>
-                                    </span>
-                                    <span wire:loading wire:target="submitDocuments">Submitting…</span>
-                                </button>
-                            <?php endif; ?><?php if(\Livewire\Mechanisms\ExtendBlade\ExtendBlade::isRenderingLivewireComponent()): ?><!--[if ENDBLOCK]><![endif]--><?php endif; ?>
-
-                        </form>
-                    </div>
-                </div>
-
-                
-            <?php elseif($currentStep === 'document_pending'): ?>
-                <div class="text-center py-20 anim-fade-up max-w-lg mx-auto">
-                    <svg class="mx-auto h-16 w-16 text-blue-500 mb-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5"
-                            d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z" />
-                    </svg>
-                    <h2 class="form-page-title mb-2">Documents <strong>Under Review</strong></h2>
-                    <p class="form-page-sub mx-auto mb-8" style="color: var(--text-secondary);">Our team is reviewing your
-                        uploaded documents. Your profile will unlock once both are approved.</p>
-
-                    <div
-                        style="background: var(--bg-surface); border: 1px solid var(--border); border-radius: 8px; padding: 20px; text-align: left; box-shadow: var(--shadow-sm);">
-                        <div
-                            style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px; padding-bottom: 16px; border-bottom: 1px solid var(--border);">
-                            <span style="font-size: 0.85rem; font-weight: 600; color: var(--text-primary);">National
-                                ID</span>
-                            <span
-                                style="font-size: 0.7rem; padding: 4px 10px; border-radius: 999px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.05em; 
+                <div style="background: var(--bg-surface); border: 1px solid var(--border); border-radius: 8px; padding: 20px; text-align: left; box-shadow: var(--shadow-sm);">
+                    
+                    
+                    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px; padding-bottom: 16px; border-bottom: 1px solid var(--border);">
+                        <span style="font-size: 1rem; font-weight: 600; color: var(--text-primary);">ন্যাশনাল আইডি (NID)</span>
+                        <span style="font-size: 0.75rem; padding: 4px 10px; border-radius: 999px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.05em; font-family: 'Jost', sans-serif;
                             <?php echo e(Auth::user()->verification_status === 'verified' ? 'background: rgba(22,163,74,0.1); color: #16a34a;' : 'background: rgba(234,179,8,0.1); color: #eab308;'); ?>">
-                                <?php echo e(Auth::user()->verification_status); ?>
+                            <?php echo e(Auth::user()->verification_status); ?>
 
-                            </span>
-                        </div>
-                        <div style="display: flex; justify-content: space-between; align-items: center;">
-                            <span style="font-size: 0.85rem; font-weight: 600; color: var(--text-primary);">Academic
-                                Certificate</span>
-                            <span
-                                style="font-size: 0.7rem; padding: 4px 10px; border-radius: 999px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.05em; 
+                        </span>
+                    </div>
+                    
+                    
+                    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px; padding-bottom: 16px; border-bottom: 1px solid var(--border);">
+                        <span style="font-size: 1rem; font-weight: 600; color: var(--text-primary);">শিক্ষাগত সার্টিফিকেট</span>
+                        <span style="font-size: 0.75rem; padding: 4px 10px; border-radius: 999px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.05em; font-family: 'Jost', sans-serif;
                             <?php echo e(Auth::user()->academic_verification_status === 'verified' ? 'background: rgba(22,163,74,0.1); color: #16a34a;' : 'background: rgba(234,179,8,0.1); color: #eab308;'); ?>">
-                                <?php echo e(Auth::user()->academic_verification_status); ?>
+                            <?php echo e(Auth::user()->academic_verification_status); ?>
 
-                            </span>
-                        </div>
+                        </span>
+                    </div>
+
+                    
+                    <?php $sub = Auth::user()->subscriptions()->latest()->first(); ?>
+                    <div style="display: flex; justify-content: space-between; align-items: center;">
+                        <span style="font-size: 1rem; font-weight: 600; color: var(--text-primary);">পেমেন্ট ভেরিফিকেশন</span>
+                        <span style="font-size: 0.75rem; padding: 4px 10px; border-radius: 999px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.05em; font-family: 'Jost', sans-serif;
+                            <?php echo e($sub && $sub->status === 'active' ? 'background: rgba(22,163,74,0.1); color: #16a34a;' : 'background: rgba(234,179,8,0.1); color: #eab308;'); ?>">
+                            <?php echo e($sub ? ($sub->status === 'active' ? 'verified' : $sub->status) : 'pending'); ?>
+
+                        </span>
                     </div>
                 </div>
+            </div>
 
                 
             <?php elseif($currentStep === 'profile'): ?>

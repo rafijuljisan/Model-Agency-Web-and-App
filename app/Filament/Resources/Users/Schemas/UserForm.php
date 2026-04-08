@@ -87,7 +87,7 @@ class UserForm
                 Group::make()
                     ->relationship('profile')
                     ->schema([
-                        
+
                         // 2. Public Profile Information
                         Section::make('Public Profile Information')
                             ->columns(2)
@@ -191,15 +191,21 @@ class UserForm
                                 Select::make('dress_size')
                                     ->label('Dress Size')
                                     ->options([
-                                        'XS' => 'XS', 'S' => 'S', 'M' => 'M', 
-                                        'L' => 'L', 'XL' => 'XL', 'XXL' => 'XXL',
+                                        'XS' => 'XS',
+                                        'S' => 'S',
+                                        'M' => 'M',
+                                        'L' => 'L',
+                                        'XL' => 'XL',
+                                        'XXL' => 'XXL',
                                     ]),
 
                                 Select::make('skin_tone')
                                     ->label('Skin Tone')
                                     ->options([
-                                        'Fair' => 'Fair', 'Medium' => 'Medium', 
-                                        'Dusky' => 'Dusky', 'Deep' => 'Deep',
+                                        'Fair' => 'Fair',
+                                        'Medium' => 'Medium',
+                                        'Dusky' => 'Dusky',
+                                        'Deep' => 'Deep',
                                     ]),
 
                                 TextInput::make('eye_color')
@@ -213,8 +219,10 @@ class UserForm
                                 Select::make('hair_length')
                                     ->label('Hair Length')
                                     ->options([
-                                        'Bald' => 'Bald', 'Short' => 'Short', 
-                                        'Medium' => 'Medium', 'Long' => 'Long',
+                                        'Bald' => 'Bald',
+                                        'Short' => 'Short',
+                                        'Medium' => 'Medium',
+                                        'Long' => 'Long',
                                     ]),
                             ]),
 
@@ -277,7 +285,7 @@ class UserForm
                                     ->columnSpanFull()
                                     ->helperText('External portfolio, Behance, or personal website'),
                             ]),
-                    ]), 
+                    ]),
                 // === END OF PROFILE RELATIONSHIP ===
 
                 // 6. Portfolio Gallery (Belongs to User model)
@@ -342,6 +350,8 @@ class UserForm
                                 'rejected' => 'Rejected',
                             ])
                             ->default('unverified')
+                            ->required()                   // ← ADD THIS
+                            ->selectablePlaceholder(false) // ← ADD THIS
                             ->native(false),
 
                         Select::make('academic_verification_status')
@@ -353,6 +363,8 @@ class UserForm
                                 'rejected' => 'Rejected',
                             ])
                             ->default('unverified')
+                            ->required()                   // ← ADD THIS
+                            ->selectablePlaceholder(false) // ← ADD THIS
                             ->native(false),
                     ]),
             ]);

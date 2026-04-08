@@ -89,39 +89,45 @@ class ArtistAccount extends Component
         /** @var \App\Models\User $user */
         $user = Auth::user();
 
+        // 1. FIRST GATE: Check if documents are missing, rejected, or empty (NULL)
+        if (
+            in_array($user->verification_status, ['unverified', 'rejected', null, ''], true) ||
+            in_array($user->academic_verification_status, ['unverified', 'rejected', null, ''], true)
+        ) {
+            $this->currentStep = 'document_upload';
+            return;
+        }
+
+        // 2. SECOND GATE: Documents are uploaded (Pending or Verified). Now check Payment.
         $subscription = $user->subscriptions()->latest()->first();
 
         if (!$subscription) {
+            // Docs are uploaded, but no payment exists -> Redirect to packages
             return redirect()->route('packages.index');
 
         } elseif ($subscription->status === 'failed') {
             $this->currentStep = 'payment_failed';
+            return;
 
         } elseif ($subscription->status === 'expired') {
             $this->currentStep = 'payment_expired';
-
-        } elseif ($subscription->status === 'pending') {
-            $this->currentStep = 'payment_pending';
-
-        } elseif (
-            in_array($user->verification_status, ['unverified', 'rejected']) ||
-            in_array($user->academic_verification_status, ['unverified', 'rejected'])
-        ) {
-            // Any doc missing OR rejected → send to upload form
-            $this->currentStep = 'document_upload';
-
-        } elseif (
-            $user->verification_status === 'pending' ||
-            $user->academic_verification_status === 'pending'
-        ) {
-            // Both submitted, waiting on admin
-            $this->currentStep = 'document_pending';
-
-        } else {
-            // Both verified → full access
-            $this->currentStep = 'profile';
-            $this->loadProfileData($user);
+            return;
         }
+
+        // 3. THIRD GATE: Docs are (Pending or Verified) AND Payment is (Pending or Active).
+        // If ANYTHING is still pending, show the combined "Under Review" screen.
+        if (
+            $user->verification_status === 'pending' ||
+            $user->academic_verification_status === 'pending' ||
+            $subscription->status === 'pending'
+        ) {
+            $this->currentStep = 'under_review';
+            return;
+        }
+
+        // 4. FINAL GATE: Everything is verified and active -> Full Access
+        $this->currentStep = 'profile';
+        $this->loadProfileData($user);
     }
 
     public function submitDocuments()
@@ -131,7 +137,6 @@ class ArtistAccount extends Component
         $rules = [];
         $updates = [];
 
-        // Only require upload for docs that are missing or rejected
         if (in_array($user->verification_status, ['unverified', 'rejected'])) {
             $rules['nidImage'] = 'required|image|mimes:jpg,jpeg,png,webp|max:5120';
         }
@@ -163,7 +168,17 @@ class ArtistAccount extends Component
             ));
         }
 
-        $this->currentStep = 'document_pending';
+        // ── NEW LOGIC: Check if they already paid before redirecting ──
+        $subscription = $user->subscriptions()->latest()->first();
+
+        // If they have no subscription, or it failed/expired, send them to pay
+        if (!$subscription || in_array($subscription->status, ['failed', 'expired'])) {
+            return redirect()->route('packages.index');
+        }
+
+        // If they already paid (status is pending or active), reload the dashboard.
+        // The mount() method will catch them and put them in the 'under_review' gate!
+        return redirect()->route('account.dashboard');
     }
 
     // In ArtistAccount.php - updateAvatar()

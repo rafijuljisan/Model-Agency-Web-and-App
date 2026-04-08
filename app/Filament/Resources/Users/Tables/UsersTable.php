@@ -20,6 +20,7 @@ class UsersTable
     public static function configure(Table $table): Table
     {
         return $table
+            ->defaultSort('created_at', 'desc')
             ->columns([
                 TextColumn::make('name')->searchable()->sortable(),
                 TextColumn::make('email')->searchable(),
@@ -150,6 +151,72 @@ class UsersTable
                         ));
 
                         Notification::make()->title('Academic Certificate Rejected')->danger()->send();
+                    }),
+                // =========================
+                // 🌟 ONE-CLICK FULL APPROVAL
+                // =========================
+                Action::make('approve_full_account')
+                    ->label('Verify Account')
+                    ->color('success')
+                    ->icon('heroicon-o-check-badge')
+                    ->visible(
+                        fn($record) =>
+                        $record->verification_status === 'pending' ||
+                        $record->academic_verification_status === 'pending'
+                    )
+                    ->requiresConfirmation()
+                    ->modalHeading('Approve Artist Account')
+                    ->modalDescription('Are you sure you want to approve both the NID and Academic Certificate for this user?')
+                    ->action(function ($record) {
+                        // Approve both documents at once
+                        $record->update([
+                            'verification_status' => 'verified',
+                            'academic_verification_status' => 'verified',
+                        ]);
+
+                        // Assign the Verified Artist role
+                        if (!$record->hasRole('Verified-Artist')) {
+                            $record->assignRole('Verified-Artist');
+                        }
+
+                        // Trigger a single success email
+                        $record->notify(new UserStatusNotification(
+                            'Account Verified!',
+                            'Great news! Your identity and academic documents have been verified. Your profile is now unlocked.',
+                            true
+                        ));
+
+                        Notification::make()->title('Account Fully Verified')->success()->send();
+                    }),
+                Action::make('unverify_account')
+                    ->label('Revoke Verification')
+                    ->color('warning')
+                    ->icon('heroicon-o-x-circle')
+                    ->visible(
+                        fn($record) =>
+                        $record->verification_status === 'verified' ||
+                        $record->academic_verification_status === 'verified'
+                    )
+                    ->requiresConfirmation()
+                    ->modalHeading('Revoke Verification')
+                    ->modalDescription('Are you sure you want to unverify this user? This will remove their Verified role and require them to upload documents again.')
+                    ->action(function ($record) {
+
+                        // 1. Reset the database columns to the 'unverified' string
+                        $record->update([
+                            'verification_status' => 'unverified',
+                            'academic_verification_status' => 'unverified',
+                        ]);
+
+                        // 2. Safely remove the Verified-Artist role
+                        if ($record->hasRole('Verified-Artist')) {
+                            $record->removeRole('Verified-Artist');
+                        }
+
+                        Notification::make()
+                            ->title('User Unverified')
+                            ->warning()
+                            ->send();
                     }),
             ])
 

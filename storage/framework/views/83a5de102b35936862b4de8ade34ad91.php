@@ -26,7 +26,7 @@
         }
 
         .auth-eyebrow {
-            font-size: 0.65rem;
+            font-size: 0.85rem;
             font-weight: 600;
             letter-spacing: 0.3em;
             text-transform: uppercase;
@@ -46,8 +46,8 @@
         }
 
         .auth-title {
-            font-family: 'Cormorant Garamond', serif;
-            font-size: 2.6rem;
+            font-family: 'Jost', sans-serif;
+            font-size: 3rem;
             font-weight: 300;
             color: var(--text-primary);
             line-height: 1.1;
@@ -56,7 +56,7 @@
         .auth-title strong { font-weight: 600; }
 
         .auth-sub {
-            font-size: 0.85rem;
+            font-size: 1rem;
             color: var(--text-muted);
             line-height: 1.6;
             padding: 0 20px;
@@ -73,7 +73,7 @@
         .form-field { margin-bottom: 22px; }
         .form-field-label {
             display: block;
-            font-size: 0.65rem;
+            font-size: 0.875rem;
             font-weight: 600;
             letter-spacing: 0.18em;
             text-transform: uppercase;
@@ -88,7 +88,7 @@
             border: 1px solid var(--border-strong);
             color: var(--text-primary);
             font-family: 'Jost', sans-serif;
-            font-size: 0.9rem;
+            font-size: 1.2rem;
             font-weight: 300;
             outline: none;
             transition: border-color 0.25s, box-shadow 0.25s;
@@ -112,7 +112,7 @@
             align-items: center;
             gap: 6px;
             color: #d32f2f;
-            font-size: 0.68rem;
+            font-size: 0.875rem;
             font-weight: 500;
             margin-top: 6px;
             letter-spacing: 0.04em;
@@ -128,7 +128,7 @@
         .auth-footer {
             margin-top: 28px;
             text-align: center;
-            font-size: 0.75rem;
+            font-size: 0.875rem;
             color: var(--text-muted);
             letter-spacing: 0.04em;
         }
@@ -147,6 +147,214 @@
         @media (max-width: 640px) {
             .auth-card { padding: 30px 20px; }
             .auth-title { font-size: 2.2rem; }
+        }
+        /* ═══════════════════════════════════════════
+           CUSTOM BANGLA FONT
+        ═══════════════════════════════════════════ */
+        @font-face {
+            font-family: 'SolaimanLipi';
+            src: url('<?php echo e(asset('fonts/SolaimanLipi.ttf')); ?>') format('truetype');
+            font-weight: normal;
+            font-style: normal;
+            font-display: swap;
+        }
+
+        /* ═══════════════════════════════════════════
+           INSTRUCTION MODAL (POPUP)
+        ═══════════════════════════════════════════ */
+        .modal-overlay {
+            position: fixed;
+            inset: 0;
+            background: rgba(0, 0, 0, 0.8);
+            backdrop-filter: blur(5px);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 9999;
+            padding: 20px;
+            opacity: 0;
+            visibility: hidden;
+            transition: opacity 0.3s ease, visibility 0.3s ease;
+        }
+
+        .modal-overlay.is-active {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        .instruction-modal {
+            background: var(--bg-surface);
+            border: 1px solid var(--gold);
+            border-radius: 8px;
+            max-width: 580px; /* Made slightly wider to fit dynamic cards nicely */
+            width: 100%;
+            padding: 32px 40px;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.6);
+            transform: translateY(20px);
+            transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+            max-height: 90vh;
+            overflow-y: auto;
+            /* Apply Bangla font to the whole modal */
+            font-family: 'SolaimanLipi', 'Jost', sans-serif;
+        }
+
+        .modal-overlay.is-active .instruction-modal {
+            transform: translateY(0);
+        }
+
+        .modal-icon {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            background: var(--gold-bg);
+            color: var(--gold);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 16px;
+        }
+
+        .modal-title {
+            font-size: 1.6rem;
+            font-weight: 600;
+            color: var(--text-primary);
+            text-align: center;
+            margin-bottom: 8px;
+        }
+
+        .modal-text {
+            font-size: 1rem;
+            color: var(--text-muted);
+            line-height: 1.5;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+
+        .modal-steps {
+            margin-bottom: 24px;
+        }
+
+        .step-item {
+            display: flex;
+            gap: 12px;
+            margin-bottom: 12px;
+        }
+
+        .step-number {
+            width: 24px;
+            height: 24px;
+            border-radius: 50%;
+            background: var(--gold);
+            color: #fff;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.8rem;
+            font-weight: 600;
+            flex-shrink: 0;
+            margin-top: 4px;
+        }
+
+        .step-content strong {
+            display: block;
+            color: var(--text-primary);
+            font-size: 1.1rem;
+            margin-bottom: 2px;
+        }
+
+        .step-content p {
+            font-size: 0.95rem;
+            color: var(--text-secondary);
+            line-height: 1.4;
+            margin: 0;
+        }
+
+        /* Dynamic Package Cards Styling */
+        .modal-packages-title {
+            font-size: 1.1rem;
+            color: var(--gold);
+            text-align: center;
+            margin-bottom: 12px;
+            font-weight: 600;
+        }
+
+        .modal-packages {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+            gap: 12px;
+            margin-bottom: 28px;
+        }
+
+        .package-card {
+            background: var(--bg-primary);
+            border: 1px solid var(--border-strong);
+            border-radius: 6px;
+            padding: 20px;
+            text-align: center;
+            transition: border-color 0.3s;
+            display: flex;
+            flex-direction: column;
+        }
+        
+        .package-card:hover {
+            border-color: var(--gold);
+        }
+
+        .package-duration {
+            font-size: 0.85rem;
+            color: var(--text-muted);
+            margin-bottom: 4px;
+        }
+
+        .package-name {
+            font-size: 1.2rem;
+            color: var(--text-primary);
+            font-weight: 600;
+            margin-bottom: 8px;
+        }
+
+        .package-price {
+            font-family: 'Jost', sans-serif; /* Keep numbers in Jost if preferred */
+            font-size: 1.4rem;
+            font-weight: 600;
+            color: var(--gold);
+            margin-bottom: 12px;
+            padding-bottom: 12px;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .package-benefits {
+            font-size: 0.9rem;
+            color: var(--text-secondary);
+            line-height: 1.5;
+            text-align: left;
+            margin-top: auto;
+        }
+
+        .package-benefits ul {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+
+        .package-benefits li {
+            position: relative;
+            padding-left: 20px;
+            margin-bottom: 6px;
+        }
+
+        .package-benefits li::before {
+            content: '✓';
+            position: absolute;
+            left: 0;
+            color: var(--gold);
+            font-weight: bold;
+        }
+
+        @media (max-width: 480px) {
+            .modal-packages {
+                grid-template-columns: 1fr;
+            }
         }
     </style>
 
@@ -277,6 +485,108 @@ unset($__errorArgs, $__bag); ?><?php if(\Livewire\Mechanisms\ExtendBlade\ExtendB
         </div>
 
     </div>
+    
+    <?php
+        // Fetch active packages directly from the database
+        $packages = \App\Models\Package::where('is_active', true)->orderBy('price', 'asc')->get();
+    ?>
+
+    <div id="registerInstructionModal" class="modal-overlay">
+        <div class="instruction-modal">
+            
+            <div class="modal-icon">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>
+                    <path d="M9 12l2 2 4-4"/>
+                </svg>
+            </div>
+
+            <h3 class="modal-title">অ্যাকাউন্ট খোলার নিয়মাবলী</h3>
+            
+            <p class="modal-text">
+                আমাদের ট্যালেন্ট ডিরেক্টরিতে যুক্ত হয়ে ব্র্যান্ড ও কাস্টিং ডিরেক্টরদের নজরে আসতে ৩টি ধাপ সম্পন্ন করুন।
+            </p>
+
+            <div class="modal-steps">
+                <div class="step-item">
+                    <div class="step-number">১</div>
+                    <div class="step-content">
+                        <strong>রেজিস্ট্রেশন করুন</strong>
+                        <p>সঠিক তথ্য দিয়ে আপনার প্রাথমিক প্রোফাইল তৈরি করুন।</p>
+                    </div>
+                </div>
+                
+                <div class="step-item">
+                    <div class="step-number">২</div>
+                    <div class="step-content">
+                        <strong>ডকুমেন্ট আপলোড (NID/Certificate)</strong>
+                        <p>অ্যাকাউন্ট ভেরিফিকেশনের জন্য আপনার ন্যাশনাল আইডি এবং কাজের বা শিক্ষাগত সার্টিফিকেট আপলোড করুন।</p>
+                    </div>
+                </div>
+
+                <div class="step-item">
+                    <div class="step-number">৩</div>
+                    <div class="step-content">
+                        <strong>প্যাকেজ নির্বাচন</strong>
+                        <p>প্রোফাইলটি লাইভ করতে এবং কাস্টিং কল পেতে একটি প্ল্যান সাবস্ক্রাইব করুন।</p>
+                    </div>
+                </div>
+            </div>
+
+            <?php if(\Livewire\Mechanisms\ExtendBlade\ExtendBlade::isRenderingLivewireComponent()): ?><!--[if BLOCK]><![endif]--><?php endif; ?><?php if($packages->isNotEmpty()): ?>
+            <div class="modal-packages-title">আমাদের সাবস্ক্রিপশন প্যাকেজসমূহ</div>
+            <div class="modal-packages">
+                
+                <?php if(\Livewire\Mechanisms\ExtendBlade\ExtendBlade::isRenderingLivewireComponent()): ?><!--[if BLOCK]><![endif]--><?php \Livewire\Features\SupportCompiledWireKeys\SupportCompiledWireKeys::openLoop(); ?><?php endif; ?><?php $__currentLoopData = $packages; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $package): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?><?php if(\Livewire\Mechanisms\ExtendBlade\ExtendBlade::isRenderingLivewireComponent()): ?><?php \Livewire\Features\SupportCompiledWireKeys\SupportCompiledWireKeys::startLoopIteration(); ?><?php endif; ?>
+                <div class="package-card">
+                    <div class="package-duration">
+                        <?php echo e($package->duration_months); ?> মাসের প্ল্যান
+                    </div>
+                    <div class="package-name"><?php echo e($package->name); ?></div>
+                    <div class="package-price">৳<?php echo e(number_format($package->price)); ?></div>
+                    
+                    <div class="package-benefits">
+                        <?php if(\Livewire\Mechanisms\ExtendBlade\ExtendBlade::isRenderingLivewireComponent()): ?><!--[if BLOCK]><![endif]--><?php endif; ?><?php if(is_array($package->features) && count($package->features) > 0): ?>
+                            <ul>
+                                <?php if(\Livewire\Mechanisms\ExtendBlade\ExtendBlade::isRenderingLivewireComponent()): ?><!--[if BLOCK]><![endif]--><?php \Livewire\Features\SupportCompiledWireKeys\SupportCompiledWireKeys::openLoop(); ?><?php endif; ?><?php $__currentLoopData = $package->features; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $feature): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?><?php if(\Livewire\Mechanisms\ExtendBlade\ExtendBlade::isRenderingLivewireComponent()): ?><?php \Livewire\Features\SupportCompiledWireKeys\SupportCompiledWireKeys::startLoopIteration(); ?><?php endif; ?>
+                                    <li><?php echo e($feature); ?></li>
+                                <?php if(\Livewire\Mechanisms\ExtendBlade\ExtendBlade::isRenderingLivewireComponent()): ?><?php \Livewire\Features\SupportCompiledWireKeys\SupportCompiledWireKeys::endLoop(); ?><?php endif; ?><?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?><?php if(\Livewire\Mechanisms\ExtendBlade\ExtendBlade::isRenderingLivewireComponent()): ?><!--[if ENDBLOCK]><![endif]--><?php \Livewire\Features\SupportCompiledWireKeys\SupportCompiledWireKeys::closeLoop(); ?><?php endif; ?>
+                            </ul>
+                        <?php else: ?>
+                            <p>Premium features included.</p>
+                        <?php endif; ?><?php if(\Livewire\Mechanisms\ExtendBlade\ExtendBlade::isRenderingLivewireComponent()): ?><!--[if ENDBLOCK]><![endif]--><?php endif; ?>
+                    </div>
+                </div>
+                <?php if(\Livewire\Mechanisms\ExtendBlade\ExtendBlade::isRenderingLivewireComponent()): ?><?php \Livewire\Features\SupportCompiledWireKeys\SupportCompiledWireKeys::endLoop(); ?><?php endif; ?><?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?><?php if(\Livewire\Mechanisms\ExtendBlade\ExtendBlade::isRenderingLivewireComponent()): ?><!--[if ENDBLOCK]><![endif]--><?php \Livewire\Features\SupportCompiledWireKeys\SupportCompiledWireKeys::closeLoop(); ?><?php endif; ?>
+
+            </div>
+            <?php endif; ?><?php if(\Livewire\Mechanisms\ExtendBlade\ExtendBlade::isRenderingLivewireComponent()): ?><!--[if ENDBLOCK]><![endif]--><?php endif; ?>
+
+            <button type="button" id="closeInstructionBtn" class="btn-fill" style="width: 100%; justify-content: center; padding: 14px; font-family: 'SolaimanLipi', sans-serif; font-size: 1.1rem;">
+                আমি বুঝতে পেরেছি — এগিয়ে যান
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="margin-left: 8px;">
+                    <path d="M5 12h14M12 5l7 7-7 7"/>
+                </svg>
+            </button>
+        </div>
+    </div>
+
+    
+    <script>
+        document.addEventListener("DOMContentLoaded", function() {
+            const modal = document.getElementById('registerInstructionModal');
+            const closeBtn = document.getElementById('closeInstructionBtn');
+
+            // ALWAYS show the modal with a slight delay for animation
+            setTimeout(() => {
+                modal.classList.add('is-active');
+            }, 300);
+
+            closeBtn.addEventListener('click', function() {
+                modal.classList.remove('is-active');
+            });
+        });
+    </script>
  <?php echo $__env->renderComponent(); ?>
 <?php endif; ?>
 <?php if (isset($__attributesOriginal9ac128a9029c0e4701924bd2d73d7f54)): ?>

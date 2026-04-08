@@ -37,7 +37,7 @@
             opacity: 0.6;
         }
         .video-title {
-            font-family: 'Cormorant Garamond', serif;
+            font-family: 'Jost', sans-serif;
             font-size: 3.5rem;
             font-weight: 300;
             color: var(--text-primary);
@@ -147,7 +147,7 @@
             flex-direction: column;
         }
         .video-card-title {
-            font-family: 'Cormorant Garamond', serif;
+            font-family: 'Jost', sans-serif;
             font-size: 1.6rem;
             font-weight: 600;
             color: var(--text-primary);
@@ -183,7 +183,7 @@
             opacity: 0.5;
         }
         .video-empty-title {
-            font-family: 'Cormorant Garamond', serif;
+            font-family: 'Jost', sans-serif;
             font-size: 1.8rem;
             color: var(--text-primary);
             margin-bottom: 8px;

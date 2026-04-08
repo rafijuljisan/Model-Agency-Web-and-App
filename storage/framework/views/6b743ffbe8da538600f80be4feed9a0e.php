@@ -40,7 +40,7 @@
             opacity: 0.6;
         }
         .about-title {
-            font-family: 'Cormorant Garamond', serif;
+            font-family: 'Jost', sans-serif;
             font-size: 3.5rem;
             font-weight: 300;
             color: var(--text-primary);
@@ -122,7 +122,7 @@
             margin-bottom: 20px;
         }
         .mv-title {
-            font-family: 'Cormorant Garamond', serif;
+            font-family: 'Jost', sans-serif;
             font-size: 2rem;
             color: var(--text-primary);
             margin-bottom: 16px;
@@ -142,7 +142,7 @@
             margin-bottom: 40px;
         }
         .section-header {
-            font-family: 'Cormorant Garamond', serif;
+            font-family: 'Jost', sans-serif;
             font-size: 2.2rem;
             color: var(--text-primary);
             margin-bottom: 30px;

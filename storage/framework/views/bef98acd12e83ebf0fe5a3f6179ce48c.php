@@ -491,7 +491,7 @@
 .ap-attr-key {
     font-size: 0.85rem;
     font-weight: 700;
-    text-transform: C;
+    text-transform: uppercase;
     color: var(--text-muted);
 }
 .ap-attr-val {

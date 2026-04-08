@@ -290,9 +290,8 @@
         .category-item:hover .cat-label { color: var(--text-primary); }
         .cat-icon { color: var(--text-muted); transition: color 0.22s; flex-shrink: 0; }
         .cat-label {
-            font-size: 0.8rem;
+            font-size: 1.2rem;
             font-weight: 600;
-            letter-spacing: 0.18em;
             text-transform: uppercase;
             color: var(--text-secondary);
             transition: color 0.22s;
@@ -654,7 +653,9 @@
             overflow: hidden;
             transition: background 0.3s;
         }
-        .trust-card:hover { background: var(--gold-bg); }
+        .trust-card:hover { 
+            background: var(--gold-bg); 
+        }
         .trust-card-num {
             font-family: 'Jost', sans-serif;
             font-size: 3.5rem;
@@ -664,7 +665,10 @@
             margin-bottom: 20px;
             transition: color 0.3s;
         }
-        .trust-card:hover .trust-card-num { color: var(--gold); opacity: 0.4; }
+        .trust-card:hover .trust-card-num { 
+            color: var(--gold); 
+            opacity: 0.4; 
+        }
         .trust-card-icon {
             color: var(--gold);
             margin-bottom: 20px;
@@ -677,16 +681,56 @@
             margin-bottom: 12px;
         }
         .trust-card-desc {
-            font-size: 1.125rem;
+            font-size: 1.05rem; /* রিচ-টেক্সটের জন্য পারফেক্ট সাইজ */
             color: var(--text-secondary);
-            line-height: 1.8;
+            line-height: 1.7;
+        }
+        
+        /* ── Dynamic Rich Text Styles (ডাটাবেজ থেকে আসা HTML এর জন্য) ── */
+        .trust-card-desc p {
+            margin-bottom: 12px;
+        }
+        .trust-card-desc p:last-child {
+            margin-bottom: 0;
+        }
+        .trust-card-desc ul {
+            list-style-type: disc;
+            padding-left: 20px;
+            margin-top: 8px;
+            margin-bottom: 12px;
+        }
+        .trust-card-desc li {
+            margin-bottom: 6px;
+        }
+        .trust-card-desc ul:last-child {
+            margin-bottom: 0;
+        }
+
+        /* ── Responsive Design ── */
+        @media (max-width: 1024px) {
+            .trust-card {
+                padding: 40px 24px; /* ট্যাবলেটের জন্য প্যাডিং কমানো হয়েছে */
+            }
+        }
+        
+        @media (max-width: 768px) {
+            .trust-section {
+                padding: 60px 0;
+            }
+            .trust-grid {
+                grid-template-columns: 1fr; /* মোবাইলে একটির নিচে আরেকটি দেখাবে */
+                margin-top: 40px;
+            }
+            .trust-card {
+                padding: 40px 32px;
+            }
         }
 
         /* ── CTA Banner ── */
         .cta-banner {
             position: relative;
             padding: 100px 40px;
-            background: var(--bg-secondary);
+            background: var(--bg-surface);
             border-top: 1px solid var(--border);
             overflow: hidden;
             text-align: center;
@@ -913,40 +957,53 @@
             padding: 100px 0;
             background: var(--bg-primary);
         }
+        
+        /* Changed to Flexbox for perfect center alignment */
         .team-grid {
-            display: grid;
-            grid-template-columns: repeat(3, 1fr);
-            gap: 32px;
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center; /* This centers the items if there are 5 */
+            gap: 20px; /* Reduced gap to fit 5 columns nicely */
         }
+        
         .team-card {
+            flex: 0 0 calc(20% - 16px); /* 5 Columns layout */
+            max-width: calc(20% - 16px);
             text-align: center;
             background: var(--bg-surface);
             border: 1px solid var(--border);
-            padding: 40px 24px;
+            padding: 32px 10px; /* Reduced left/right padding */
             transition: border-color 0.4s;
         }
+        
         .team-card:hover {
             border-color: var(--gold);
         }
+        
         .team-avatar-wrap {
-            width: 140px; height: 140px;
+            width: 170px; /* Increased from 140px for larger profile image */
+            height: 170px; /* Increased from 140px for larger profile image */
             margin: 0 auto 24px;
             border-radius: 50%;
             padding: 4px;
             border: 1px dashed var(--border-strong);
         }
+        
         .team-avatar {
-            width: 100%; height: 100%;
+            width: 100%; 
+            height: 100%;
             border-radius: 50%;
             object-fit: cover;
         }
+        
         .team-name {
             font-family: 'Jost', sans-serif;
-            font-size: 1.8rem;
+            font-size: 1.5rem; /* Slightly reduced so big names don't break in 5 cols */
             font-weight: 500;
             color: var(--text-primary);
             margin-bottom: 6px;
         }
+        
         .team-role {
             font-size: 0.75rem;
             font-weight: 600;
@@ -955,14 +1012,17 @@
             color: var(--gold);
             margin-bottom: 20px;
         }
+        
         .team-socials {
             display: flex;
             align-items: center;
             justify-content: center;
-            gap: 12px;
+            gap: 10px;
         }
+        
         .team-social-link {
-            width: 36px; height: 36px;
+            width: 34px; 
+            height: 34px;
             border-radius: 50%;
             background: var(--bg-secondary);
             color: var(--text-muted);
@@ -971,18 +1031,37 @@
             justify-content: center;
             transition: all 0.3s;
         }
+        
         .team-social-link:hover {
             background: var(--gold);
             color: #fff;
         }
 
         /* Responsive Additions */
-        @media (max-width: 1024px) {
-            .testi-grid { grid-template-columns: 1fr; }
-            .team-grid { grid-template-columns: repeat(2, 1fr); }
+        
+        /* Small Desktop / Laptop - 3 Columns */
+        @media (max-width: 1200px) {
+            .team-card {
+                flex: 0 0 calc(33.333% - 14px);
+                max-width: calc(33.333% - 14px);
+            }
         }
+        
+        /* Tablet - 2 Columns */
+        @media (max-width: 900px) {
+            .testi-grid { grid-template-columns: 1fr; }
+            .team-card {
+                flex: 0 0 calc(50% - 10px);
+                max-width: calc(50% - 10px);
+            }
+        }
+        
+        /* Mobile - 1 Column */
         @media (max-width: 640px) {
-            .team-grid { grid-template-columns: 1fr; }
+            .team-card {
+                flex: 0 0 100%;
+                max-width: 100%;
+            }
             .clients-grid { gap: 32px; flex-direction: column; }
         }
     </style>
@@ -1348,43 +1427,6 @@
     </section>
     <?php endif; ?><?php if(\Livewire\Mechanisms\ExtendBlade\ExtendBlade::isRenderingLivewireComponent()): ?><!--[if ENDBLOCK]><![endif]--><?php endif; ?>
 
-    
-    <?php if(\Livewire\Mechanisms\ExtendBlade\ExtendBlade::isRenderingLivewireComponent()): ?><!--[if BLOCK]><![endif]--><?php endif; ?><?php if($testimonials->count() > 0): ?>
-    <section class="testi-section anim-fade-up">
-        <div class="section-inner">
-            <div class="section-header">
-                <div class="section-header-left">
-                    <div class="section-eyebrow">Success Stories</div>
-                    <h2 class="section-title">What Our <strong>Models Say</strong></h2>
-                </div>
-            </div>
-
-            <div class="testi-grid">
-                <?php if(\Livewire\Mechanisms\ExtendBlade\ExtendBlade::isRenderingLivewireComponent()): ?><!--[if BLOCK]><![endif]--><?php \Livewire\Features\SupportCompiledWireKeys\SupportCompiledWireKeys::openLoop(); ?><?php endif; ?><?php $__currentLoopData = $testimonials; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $testi): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?><?php if(\Livewire\Mechanisms\ExtendBlade\ExtendBlade::isRenderingLivewireComponent()): ?><?php \Livewire\Features\SupportCompiledWireKeys\SupportCompiledWireKeys::startLoopIteration(); ?><?php endif; ?>
-                    <div class="testi-card">
-                        <svg class="testi-quote-icon" viewBox="0 0 24 24" fill="currentColor">
-                            <path d="M14.017 21v-7.391c0-5.704 3.731-9.57 8.983-10.609l.995 2.151c-2.432.917-3.995 3.638-3.995 5.849h4v10h-9.983zm-14.017 0v-7.391c0-5.704 3.748-9.57 9-10.609l.996 2.151c-2.433.917-3.996 3.638-3.996 5.849h3.983v10h-9.983z"/>
-                        </svg>
-                        <p class="testi-text">"<?php echo e($testi->quote); ?>"</p>
-                        <div class="testi-author">
-                            <?php if(\Livewire\Mechanisms\ExtendBlade\ExtendBlade::isRenderingLivewireComponent()): ?><!--[if BLOCK]><![endif]--><?php endif; ?><?php if($testi->image): ?>
-                                <img src="<?php echo e(Storage::url($testi->image)); ?>" alt="<?php echo e($testi->name); ?>" class="testi-avatar">
-                            <?php else: ?>
-                                <div class="testi-avatar" style="background: var(--bg-primary); display: flex; align-items:center; justify-content:center; color: var(--gold);">
-                                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path><circle cx="12" cy="7" r="4"></circle></svg>
-                                </div>
-                            <?php endif; ?><?php if(\Livewire\Mechanisms\ExtendBlade\ExtendBlade::isRenderingLivewireComponent()): ?><!--[if ENDBLOCK]><![endif]--><?php endif; ?>
-                            <div class="testi-author-info">
-                                <div class="testi-name"><?php echo e($testi->name); ?></div>
-                                <div class="testi-role"><?php echo e($testi->designation); ?></div>
-                            </div>
-                        </div>
-                    </div>
-                <?php if(\Livewire\Mechanisms\ExtendBlade\ExtendBlade::isRenderingLivewireComponent()): ?><?php \Livewire\Features\SupportCompiledWireKeys\SupportCompiledWireKeys::endLoop(); ?><?php endif; ?><?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?><?php if(\Livewire\Mechanisms\ExtendBlade\ExtendBlade::isRenderingLivewireComponent()): ?><!--[if ENDBLOCK]><![endif]--><?php \Livewire\Features\SupportCompiledWireKeys\SupportCompiledWireKeys::closeLoop(); ?><?php endif; ?>
-            </div>
-        </div>
-    </section>
-    <?php endif; ?><?php if(\Livewire\Mechanisms\ExtendBlade\ExtendBlade::isRenderingLivewireComponent()): ?><!--[if ENDBLOCK]><![endif]--><?php endif; ?>
 
     
     <?php if(\Livewire\Mechanisms\ExtendBlade\ExtendBlade::isRenderingLivewireComponent()): ?><!--[if BLOCK]><![endif]--><?php endif; ?><?php if($teamMembers->count() > 0): ?>
@@ -1441,52 +1483,107 @@
     </section>
     <?php endif; ?><?php if(\Livewire\Mechanisms\ExtendBlade\ExtendBlade::isRenderingLivewireComponent()): ?><!--[if ENDBLOCK]><![endif]--><?php endif; ?>
     
-    <section class="trust-section" aria-labelledby="trust-heading">
-        <div class="section-inner">
-            <div style="text-align:center; max-width:560px; margin:0 auto;">
-                <div class="section-eyebrow" style="justify-content:center;">Why AgencyMarket</div>
-                <h2 class="section-title" id="trust-heading" style="text-align:center;">
-                    Built on <strong>Trust,</strong><br>Powered by Talent.
-                </h2>
+<section class="trust-section anim-fade-up" aria-labelledby="trust-heading">
+    <div class="section-inner">
+        <div style="text-align:center; max-width:560px; margin:0 auto;">
+            
+            <div class="section-eyebrow" style="justify-content:center;">
+                Why <?php echo e($settings?->site_name ?? 'Our Agency'); ?>
+
+            </div>
+            
+            <h2 class="section-title" id="trust-heading" style="text-align:center;">
+                Built on <strong>Trust,</strong><br>Powered by Talent.
+            </h2>
+        </div>
+
+        <div class="trust-grid">
+            
+            
+            <div class="trust-card">
+                <div class="trust-card-num">01</div>
+                <div class="trust-card-icon">
+                    <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                        <path d="M12 2L3 7v5c0 5.55 3.84 10.74 9 12 5.16-1.26 9-6.45 9-12V7L12 2z"/>
+                    </svg>
+                </div>
+                <div class="trust-card-title">What We Offer</div>
+                <div class="trust-card-desc">
+                    <?php echo $settings?->what_we_offer ?? 'We provide professional photoshoots and verified talent directories.'; ?>
+
+                </div>
             </div>
 
-            <div class="trust-grid">
-                <div class="trust-card">
-                    <div class="trust-card-num">01</div>
-                    <div class="trust-card-icon">
-                        <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
-                            <path d="M12 2L3 7v5c0 5.55 3.84 10.74 9 12 5.16-1.26 9-6.45 9-12V7L12 2z"/>
-                        </svg>
-                    </div>
-                    <div class="trust-card-title">100% NID Verified</div>
-                    <p class="trust-card-desc">Every talent on AgencyMarket has passed strict national ID verification. You know exactly who you're hiring — no fakes, no risk.</p>
+            
+            <div class="trust-card">
+                <div class="trust-card-num">02</div>
+                <div class="trust-card-icon">
+                    <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                        <circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/>
+                    </svg>
                 </div>
+                <div class="trust-card-title">Our Experience</div>
+                <div class="trust-card-desc">
+                    <?php echo $settings?->our_experience ?? 'With years of expertise in the modeling and creative industry.'; ?>
 
-                <div class="trust-card">
-                    <div class="trust-card-num">02</div>
-                    <div class="trust-card-icon">
-                        <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
-                            <circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/>
-                        </svg>
-                    </div>
-                    <div class="trust-card-title">Instant Connections</div>
-                    <p class="trust-card-desc">Browse verified portfolios, filter by category, and connect directly with talent for your production, campaign, or brand project.</p>
                 </div>
+            </div>
 
-                <div class="trust-card">
-                    <div class="trust-card-num">03</div>
-                    <div class="trust-card-icon">
-                        <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
-                            <path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 00-3-3.87M16 3.13a4 4 0 010 7.75"/>
-                        </svg>
-                    </div>
-                    <div class="trust-card-title">Diverse Talent Pool</div>
-                    <p class="trust-card-desc">From runway models and film actors to brand promoters and content creators — all in one curated, professional directory.</p>
+            
+            <div class="trust-card">
+                <div class="trust-card-num">03</div>
+                <div class="trust-card-icon">
+                    <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                        <path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 00-3-3.87M16 3.13a4 4 0 010 7.75"/>
+                    </svg>
                 </div>
+                <div class="trust-card-title">Advice For Models</div>
+                <div class="trust-card-desc">
+                    <?php echo $settings?->models_advice ?? 'Becoming a successful model takes more than just good looks.'; ?>
+
+                </div>
+            </div>
+
+        </div>
+    </div>
+</section>
+
+    <?php if(\Livewire\Mechanisms\ExtendBlade\ExtendBlade::isRenderingLivewireComponent()): ?><!--[if BLOCK]><![endif]--><?php endif; ?><?php if($testimonials->count() > 0): ?>
+    <section class="testi-section anim-fade-up">
+        <div class="section-inner">
+            <div class="section-header">
+                <div class="section-header-left">
+                    <div class="section-eyebrow">Success Stories</div>
+                    <h2 class="section-title">What Our <strong>Models Say</strong></h2>
+                </div>
+            </div>
+
+            <div class="testi-grid">
+                <?php if(\Livewire\Mechanisms\ExtendBlade\ExtendBlade::isRenderingLivewireComponent()): ?><!--[if BLOCK]><![endif]--><?php \Livewire\Features\SupportCompiledWireKeys\SupportCompiledWireKeys::openLoop(); ?><?php endif; ?><?php $__currentLoopData = $testimonials; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $testi): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?><?php if(\Livewire\Mechanisms\ExtendBlade\ExtendBlade::isRenderingLivewireComponent()): ?><?php \Livewire\Features\SupportCompiledWireKeys\SupportCompiledWireKeys::startLoopIteration(); ?><?php endif; ?>
+                    <div class="testi-card">
+                        <svg class="testi-quote-icon" viewBox="0 0 24 24" fill="currentColor">
+                            <path d="M14.017 21v-7.391c0-5.704 3.731-9.57 8.983-10.609l.995 2.151c-2.432.917-3.995 3.638-3.995 5.849h4v10h-9.983zm-14.017 0v-7.391c0-5.704 3.748-9.57 9-10.609l.996 2.151c-2.433.917-3.996 3.638-3.996 5.849h3.983v10h-9.983z"/>
+                        </svg>
+                        <p class="testi-text">"<?php echo e($testi->quote); ?>"</p>
+                        <div class="testi-author">
+                            <?php if(\Livewire\Mechanisms\ExtendBlade\ExtendBlade::isRenderingLivewireComponent()): ?><!--[if BLOCK]><![endif]--><?php endif; ?><?php if($testi->image): ?>
+                                <img src="<?php echo e(Storage::url($testi->image)); ?>" alt="<?php echo e($testi->name); ?>" class="testi-avatar">
+                            <?php else: ?>
+                                <div class="testi-avatar" style="background: var(--bg-primary); display: flex; align-items:center; justify-content:center; color: var(--gold);">
+                                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path><circle cx="12" cy="7" r="4"></circle></svg>
+                                </div>
+                            <?php endif; ?><?php if(\Livewire\Mechanisms\ExtendBlade\ExtendBlade::isRenderingLivewireComponent()): ?><!--[if ENDBLOCK]><![endif]--><?php endif; ?>
+                            <div class="testi-author-info">
+                                <div class="testi-name"><?php echo e($testi->name); ?></div>
+                                <div class="testi-role"><?php echo e($testi->designation); ?></div>
+                            </div>
+                        </div>
+                    </div>
+                <?php if(\Livewire\Mechanisms\ExtendBlade\ExtendBlade::isRenderingLivewireComponent()): ?><?php \Livewire\Features\SupportCompiledWireKeys\SupportCompiledWireKeys::endLoop(); ?><?php endif; ?><?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?><?php if(\Livewire\Mechanisms\ExtendBlade\ExtendBlade::isRenderingLivewireComponent()): ?><!--[if ENDBLOCK]><![endif]--><?php \Livewire\Features\SupportCompiledWireKeys\SupportCompiledWireKeys::closeLoop(); ?><?php endif; ?>
             </div>
         </div>
     </section>
-
+    <?php endif; ?><?php if(\Livewire\Mechanisms\ExtendBlade\ExtendBlade::isRenderingLivewireComponent()): ?><!--[if ENDBLOCK]><![endif]--><?php endif; ?>
     
     <section class="cta-banner" aria-labelledby="cta-heading">
         <div class="cta-banner-deco" aria-hidden="true">

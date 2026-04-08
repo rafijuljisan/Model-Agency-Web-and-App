@@ -34,7 +34,7 @@
     background: var(--gold);
 }
 .form-page-title {
-    font-family: 'Cormorant Garamond', serif;
+    font-family: 'Jost', sans-serif;
     font-size: 2.8rem; /* Slightly larger for public page */
     font-weight: 300;
     color: var(--text-primary);
@@ -76,7 +76,7 @@
     flex-shrink: 0;
 }
 .form-section-title {
-    font-family: 'Cormorant Garamond', serif;
+    font-family: 'Jost', sans-serif;
     font-size: 1.15rem;
     font-weight: 600;
     color: var(--text-primary);
