@@ -206,7 +206,7 @@
 
     <div class="video-page-container anim-fade-up">
         
-        {{-- Header Section --}}
+        
         <div class="video-header">
             <div class="video-eyebrow">Our Portfolio</div>
             <h1 class="video-title">Featured <strong>Videos</strong></h1>
@@ -215,28 +215,28 @@
             </p>
         </div>
 
-        {{-- Video Grid --}}
+        
         <div class="video-grid anim-fade-up anim-d1">
-            @foreach($videos as $video)
-                @if($video->embed_url || $video->is_facebook)
+            <?php if(\Livewire\Mechanisms\ExtendBlade\ExtendBlade::isRenderingLivewireComponent()): ?><!--[if BLOCK]><![endif]--><?php \Livewire\Features\SupportCompiledWireKeys\SupportCompiledWireKeys::openLoop(); ?><?php endif; ?><?php $__currentLoopData = $videos; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $video): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?><?php if(\Livewire\Mechanisms\ExtendBlade\ExtendBlade::isRenderingLivewireComponent()): ?><?php \Livewire\Features\SupportCompiledWireKeys\SupportCompiledWireKeys::startLoopIteration(); ?><?php endif; ?>
+                <?php if(\Livewire\Mechanisms\ExtendBlade\ExtendBlade::isRenderingLivewireComponent()): ?><!--[if BLOCK]><![endif]--><?php endif; ?><?php if($video->embed_url || $video->is_facebook): ?>
                     <div class="video-card">
                         
-                        @if($video->is_facebook)
-                            {{-- 🔴 FACEBOOK BEHAVIOR: Redirect to App/Website --}}
-                            <a href="{{ $video->url }}" target="_blank" rel="noopener noreferrer" class="video-media-wrap">
-                                <img src="{{ $video->smart_thumbnail }}" class="video-thumbnail" alt="{{ $video->title }}">
+                        <?php if(\Livewire\Mechanisms\ExtendBlade\ExtendBlade::isRenderingLivewireComponent()): ?><!--[if BLOCK]><![endif]--><?php endif; ?><?php if($video->is_facebook): ?>
+                            
+                            <a href="<?php echo e($video->url); ?>" target="_blank" rel="noopener noreferrer" class="video-media-wrap">
+                                <img src="<?php echo e($video->smart_thumbnail); ?>" class="video-thumbnail" alt="<?php echo e($video->title); ?>">
                                 <div class="play-overlay">
                                     <div class="play-btn">
                                         <svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>
                                     </div>
                                 </div>
                             </a>
-                        @else
-                            {{-- 🔴 YOUTUBE BEHAVIOR: Play in Page (Alpine.js Lazy Loader) --}}
+                        <?php else: ?>
+                            
                             <div x-data="{ playing: false }" class="video-media-wrap"> 
                                 <template x-if="!playing">
                                     <div @click="playing = true" class="play-overlay">
-                                        <img src="{{ $video->smart_thumbnail }}" class="video-thumbnail" alt="{{ $video->title }}">
+                                        <img src="<?php echo e($video->smart_thumbnail); ?>" class="video-thumbnail" alt="<?php echo e($video->title); ?>">
                                         <div class="play-btn">
                                             <svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>
                                         </div>
@@ -245,38 +245,41 @@
 
                                 <template x-if="playing">
                                     <iframe 
-                                        src="{{ $video->embed_url }}" 
+                                        src="<?php echo e($video->embed_url); ?>" 
                                         class="video-iframe"
                                         allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" 
                                         allowfullscreen>
                                     </iframe>
                                 </template>
                             </div>
-                        @endif
+                        <?php endif; ?><?php if(\Livewire\Mechanisms\ExtendBlade\ExtendBlade::isRenderingLivewireComponent()): ?><!--[if ENDBLOCK]><![endif]--><?php endif; ?>
 
-                        {{-- Text Details --}}
+                        
                         <div class="video-content">
                             <h3 class="video-card-title">
-                                {{ $video->title }}
+                                <?php echo e($video->title); ?>
+
                             </h3>
-                            @if($video->description)
+                            <?php if(\Livewire\Mechanisms\ExtendBlade\ExtendBlade::isRenderingLivewireComponent()): ?><!--[if BLOCK]><![endif]--><?php endif; ?><?php if($video->description): ?>
                                 <p class="video-desc">
-                                    {{ $video->description }}
+                                    <?php echo e($video->description); ?>
+
                                 </p>
-                            @endif
+                            <?php endif; ?><?php if(\Livewire\Mechanisms\ExtendBlade\ExtendBlade::isRenderingLivewireComponent()): ?><!--[if ENDBLOCK]><![endif]--><?php endif; ?>
                         </div>
                         
                     </div>
-                @endif
-            @endforeach
+                <?php endif; ?><?php if(\Livewire\Mechanisms\ExtendBlade\ExtendBlade::isRenderingLivewireComponent()): ?><!--[if ENDBLOCK]><![endif]--><?php endif; ?>
+            <?php if(\Livewire\Mechanisms\ExtendBlade\ExtendBlade::isRenderingLivewireComponent()): ?><?php \Livewire\Features\SupportCompiledWireKeys\SupportCompiledWireKeys::endLoop(); ?><?php endif; ?><?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?><?php if(\Livewire\Mechanisms\ExtendBlade\ExtendBlade::isRenderingLivewireComponent()): ?><!--[if ENDBLOCK]><![endif]--><?php \Livewire\Features\SupportCompiledWireKeys\SupportCompiledWireKeys::closeLoop(); ?><?php endif; ?>
         </div>
 
-        {{-- ⬇️ Place pagination immediately after the video grid --}}
+        
         <div style="margin-top: 40px;">
-            {{ $videos->links('vendor.pagination.custom-numbered') }}
+            <?php echo e($videos->links('vendor.pagination.custom-numbered')); ?>
+
         </div>
-        {{-- Empty State Design --}}
-        @if($videos->isEmpty())
+        
+        <?php if(\Livewire\Mechanisms\ExtendBlade\ExtendBlade::isRenderingLivewireComponent()): ?><!--[if BLOCK]><![endif]--><?php endif; ?><?php if($videos->isEmpty()): ?>
             <div class="video-empty anim-fade-up anim-d2">
                 <svg fill="none" viewBox="0 0 24 24" stroke="currentColor">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M15 10l4.553-2.276A1 1 0 0121 8.618v6.764a1 1 0 01-1.447.894L15 14M5 18h8a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v8a2 2 0 002 2z" />
@@ -284,7 +287,7 @@
                 <h3 class="video-empty-title">No videos published yet</h3>
                 <p class="video-empty-sub">Check back soon for new visual content and campaign reels!</p>
             </div>
-        @endif
+        <?php endif; ?><?php if(\Livewire\Mechanisms\ExtendBlade\ExtendBlade::isRenderingLivewireComponent()): ?><!--[if ENDBLOCK]><![endif]--><?php endif; ?>
 
     </div>
-</div>
+</div><?php /**PATH H:\agency-app\resources\views/livewire/video-gallery.blade.php ENDPATH**/ ?>
