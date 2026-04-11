@@ -26,10 +26,12 @@
             justify-content: center;
             gap: 12px;
         }
+
         .auth-eyebrow::before,
         .auth-eyebrow::after {
             content: '';
-            width: 24px; height: 1px;
+            width: 24px;
+            height: 1px;
             background: var(--gold);
             opacity: 0.5;
         }
@@ -42,7 +44,10 @@
             line-height: 1.1;
             margin-bottom: 12px;
         }
-        .auth-title strong { font-weight: 600; }
+
+        .auth-title strong {
+            font-weight: 600;
+        }
 
         .auth-sub {
             font-size: 1rem;
@@ -59,7 +64,10 @@
         }
 
         /* Form Fields (Reused & adapted from your design system) */
-        .form-field { margin-bottom: 22px; }
+        .form-field {
+            margin-bottom: 22px;
+        }
+
         .form-field-label {
             display: block;
             font-size: 0.875rem;
@@ -69,10 +77,15 @@
             color: var(--text-secondary);
             margin-bottom: 8px;
         }
-        .form-input-wrap { position: relative; }
+
+        .form-input-wrap {
+            position: relative;
+        }
+
         .form-input {
             width: 100%;
-            padding: 12px 14px 12px 42px; /* Extra left padding for icons */
+            padding: 12px 14px 12px 42px;
+            /* Extra left padding for icons */
             background: var(--bg-primary);
             border: 1px solid var(--border-strong);
             color: var(--text-primary);
@@ -83,14 +96,21 @@
             transition: border-color 0.25s, box-shadow 0.25s;
             border-radius: 0;
         }
+
         .form-input:focus {
             border-color: var(--gold);
             box-shadow: 0 0 0 3px var(--gold-bg);
         }
-        .form-input::placeholder { color: var(--text-muted); opacity: 0.6; }
+
+        .form-input::placeholder {
+            color: var(--text-muted);
+            opacity: 0.6;
+        }
+
         .form-input-icon {
             position: absolute;
-            left: 14px; top: 50%;
+            left: 14px;
+            top: 50%;
             transform: translateY(-50%);
             color: var(--text-muted);
             pointer-events: none;
@@ -121,6 +141,7 @@
             color: var(--text-muted);
             letter-spacing: 0.04em;
         }
+
         .auth-footer a {
             color: var(--text-primary);
             font-weight: 500;
@@ -128,15 +149,22 @@
             text-decoration: none;
             border-bottom: 1px solid transparent;
         }
+
         .auth-footer a:hover {
             color: var(--gold);
             border-color: var(--gold);
         }
 
         @media (max-width: 640px) {
-            .auth-card { padding: 30px 20px; }
-            .auth-title { font-size: 2.2rem; }
+            .auth-card {
+                padding: 30px 20px;
+            }
+
+            .auth-title {
+                font-size: 2.2rem;
+            }
         }
+
         /* ═══════════════════════════════════════════
            CUSTOM BANGLA FONT
         ═══════════════════════════════════════════ */
@@ -175,7 +203,8 @@
             background: var(--bg-surface);
             border: 1px solid var(--gold);
             border-radius: 8px;
-            max-width: 580px; /* Made slightly wider to fit dynamic cards nicely */
+            max-width: 580px;
+            /* Made slightly wider to fit dynamic cards nicely */
             width: 100%;
             padding: 32px 40px;
             box-shadow: 0 20px 40px rgba(0, 0, 0, 0.6);
@@ -284,7 +313,7 @@
             display: flex;
             flex-direction: column;
         }
-        
+
         .package-card:hover {
             border-color: var(--gold);
         }
@@ -303,7 +332,8 @@
         }
 
         .package-price {
-            font-family: 'Jost', sans-serif; /* Keep numbers in Jost if preferred */
+            font-family: 'Jost', sans-serif;
+            /* Keep numbers in Jost if preferred */
             font-size: 1.4rem;
             font-weight: 600;
             color: var(--gold);
@@ -348,11 +378,12 @@
     </style>
 
     <div class="auth-container anim-fade-up">
-        
+
         <div class="auth-header">
             <div class="auth-eyebrow">Application</div>
             <h1 class="auth-title">Become a <strong>Talent</strong></h1>
-            <p class="auth-sub">Create your verified profile to get discovered by brands, casting directors, and production houses.</p>
+            <p class="auth-sub">Create your verified profile to get discovered by brands, casting directors, and
+                production houses.</p>
         </div>
 
         <div class="auth-card">
@@ -363,31 +394,72 @@
                 <div class="form-field">
                     <label class="form-field-label" for="name">Full Name</label>
                     <div class="form-input-wrap">
-                        <svg class="form-input-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" aria-hidden="true">
-                            <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path><circle cx="12" cy="7" r="4"></circle>
+                        <svg class="form-input-icon" width="16" height="16" viewBox="0 0 24 24" fill="none"
+                            stroke="currentColor" stroke-width="1.7" aria-hidden="true">
+                            <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
+                            <circle cx="12" cy="7" r="4"></circle>
                         </svg>
-                        <input id="name" type="text" name="name" value="{{ old('name') }}" class="form-input" placeholder="e.g. Tanvir Ahmed" required autofocus autocomplete="name">
+                        <input id="name" type="text" name="name" value="{{ old('name') }}" class="form-input"
+                            placeholder="e.g. Tanvir Ahmed" required autofocus autocomplete="name">
                     </div>
                     @error('name')
                         <span class="form-error">
-                            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+                            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                stroke-width="2">
+                                <circle cx="12" cy="12" r="10" />
+                                <line x1="12" y1="8" x2="12" y2="12" />
+                                <line x1="12" y1="16" x2="12.01" y2="16" />
+                            </svg>
                             {{ $message }}
                         </span>
                     @enderror
                 </div>
 
+                {{-- Phone Number --}}
+                <div class="form-field">
+                    <label class="form-field-label" for="phone">Phone Number</label>
+                    <div class="form-input-wrap">
+                        <svg class="form-input-icon" width="16" height="16" viewBox="0 0 24 24" fill="none"
+                            stroke="currentColor" stroke-width="1.7">
+                            <path
+                                d="M22 16.92v3a2 2 0 01-2.18 2 19.79 19.79 0 01-8.63-3.07A19.5 19.5 0 013.07 9.81 19.79 19.79 0 01.05 2.18 2 2 0 012 0h3a2 2 0 012 1.72c.127.96.361 1.903.7 2.81a2 2 0 01-.45 2.11L6.09 7.91a16 16 0 006 6l1.27-1.27a2 2 0 012.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0122 14.92z" />
+                        </svg>
+                        <input id="phone" type="text" name="phone" value="{{ old('phone') }}" class="form-input"
+                            placeholder="e.g. 017XXXXXXXX" autocomplete="tel">
+                    </div>
+                    @error('phone')
+                        <span class="form-error">
+                            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                stroke-width="2">
+                                <circle cx="12" cy="12" r="10" />
+                                <line x1="12" y1="8" x2="12" y2="12" />
+                                <line x1="12" y1="16" x2="12.01" y2="16" />
+                            </svg>
+                            {{ $message }}
+                        </span>
+                    @enderror
+                </div>
                 {{-- Email Address --}}
                 <div class="form-field">
                     <label class="form-field-label" for="email">Email Address</label>
                     <div class="form-input-wrap">
-                        <svg class="form-input-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" aria-hidden="true">
-                            <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"></path><polyline points="22,6 12,13 2,6"></polyline>
+                        <svg class="form-input-icon" width="16" height="16" viewBox="0 0 24 24" fill="none"
+                            stroke="currentColor" stroke-width="1.7" aria-hidden="true">
+                            <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z">
+                            </path>
+                            <polyline points="22,6 12,13 2,6"></polyline>
                         </svg>
-                        <input id="email" type="email" name="email" value="{{ old('email') }}" class="form-input" placeholder="you@example.com" required autocomplete="username">
+                        <input id="email" type="email" name="email" value="{{ old('email') }}" class="form-input"
+                            placeholder="you@example.com" required autocomplete="username">
                     </div>
                     @error('email')
                         <span class="form-error">
-                            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+                            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                stroke-width="2">
+                                <circle cx="12" cy="12" r="10" />
+                                <line x1="12" y1="8" x2="12" y2="12" />
+                                <line x1="12" y1="16" x2="12.01" y2="16" />
+                            </svg>
                             {{ $message }}
                         </span>
                     @enderror
@@ -397,14 +469,22 @@
                 <div class="form-field">
                     <label class="form-field-label" for="password">Password</label>
                     <div class="form-input-wrap">
-                        <svg class="form-input-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" aria-hidden="true">
-                            <rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect><path d="M7 11V7a5 5 0 0 1 10 0v4"></path>
+                        <svg class="form-input-icon" width="16" height="16" viewBox="0 0 24 24" fill="none"
+                            stroke="currentColor" stroke-width="1.7" aria-hidden="true">
+                            <rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect>
+                            <path d="M7 11V7a5 5 0 0 1 10 0v4"></path>
                         </svg>
-                        <input id="password" type="password" name="password" class="form-input" placeholder="Min. 8 characters" required autocomplete="new-password">
+                        <input id="password" type="password" name="password" class="form-input"
+                            placeholder="Min. 8 characters" required autocomplete="new-password">
                     </div>
                     @error('password')
                         <span class="form-error">
-                            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+                            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                stroke-width="2">
+                                <circle cx="12" cy="12" r="10" />
+                                <line x1="12" y1="8" x2="12" y2="12" />
+                                <line x1="12" y1="16" x2="12.01" y2="16" />
+                            </svg>
                             {{ $message }}
                         </span>
                     @enderror
@@ -414,14 +494,23 @@
                 <div class="form-field">
                     <label class="form-field-label" for="password_confirmation">Confirm Password</label>
                     <div class="form-input-wrap">
-                        <svg class="form-input-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" aria-hidden="true">
-                            <path d="M21 2l-2 2m-7.61 7.61a5.5 5.5 0 1 1-7.778 7.778 5.5 5.5 0 0 1 7.777-7.777zm0 0L15.5 7.5m0 0l3 3L22 7l-3-3m-3.5 3.5L19 4"></path>
+                        <svg class="form-input-icon" width="16" height="16" viewBox="0 0 24 24" fill="none"
+                            stroke="currentColor" stroke-width="1.7" aria-hidden="true">
+                            <path
+                                d="M21 2l-2 2m-7.61 7.61a5.5 5.5 0 1 1-7.778 7.778 5.5 5.5 0 0 1 7.777-7.777zm0 0L15.5 7.5m0 0l3 3L22 7l-3-3m-3.5 3.5L19 4">
+                            </path>
                         </svg>
-                        <input id="password_confirmation" type="password" name="password_confirmation" class="form-input" placeholder="Repeat your password" required autocomplete="new-password">
+                        <input id="password_confirmation" type="password" name="password_confirmation"
+                            class="form-input" placeholder="Repeat your password" required autocomplete="new-password">
                     </div>
                     @error('password_confirmation')
                         <span class="form-error">
-                            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+                            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                stroke-width="2">
+                                <circle cx="12" cy="12" r="10" />
+                                <line x1="12" y1="8" x2="12" y2="12" />
+                                <line x1="12" y1="16" x2="12.01" y2="16" />
+                            </svg>
                             {{ $message }}
                         </span>
                     @enderror
@@ -430,8 +519,10 @@
                 {{-- Submit Button --}}
                 <button type="submit" class="btn-fill auth-submit">
                     Create Account
-                    <svg width="10" height="10" viewBox="0 0 10 10" fill="none" style="margin-left:8px;" aria-hidden="true">
-                        <path d="M1 5h8M5 1l4 4-4 4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+                    <svg width="10" height="10" viewBox="0 0 10 10" fill="none" style="margin-left:8px;"
+                        aria-hidden="true">
+                        <path d="M1 5h8M5 1l4 4-4 4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"
+                            stroke-linejoin="round" />
                     </svg>
                 </button>
             </form>
@@ -443,7 +534,7 @@
 
     </div>
     {{-- ═════════════════════════════════════════
-         INSTRUCTION POPUP (DYNAMIC PACKAGES)
+    INSTRUCTION POPUP (DYNAMIC PACKAGES)
     ═════════════════════════════════════════ --}}
     @php
         // Fetch active packages directly from the database
@@ -452,16 +543,16 @@
 
     <div id="registerInstructionModal" class="modal-overlay">
         <div class="instruction-modal">
-            
+
             <div class="modal-icon">
                 <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                    <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>
-                    <path d="M9 12l2 2 4-4"/>
+                    <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" />
+                    <path d="M9 12l2 2 4-4" />
                 </svg>
             </div>
 
             <h3 class="modal-title">অ্যাকাউন্ট খোলার নিয়মাবলী</h3>
-            
+
             <p class="modal-text">
                 আমাদের ট্যালেন্ট ডিরেক্টরিতে যুক্ত হয়ে ব্র্যান্ড ও কাস্টিং ডিরেক্টরদের নজরে আসতে ৩টি ধাপ সম্পন্ন করুন।
             </p>
@@ -474,12 +565,13 @@
                         <p>সঠিক তথ্য দিয়ে আপনার প্রাথমিক প্রোফাইল তৈরি করুন।</p>
                     </div>
                 </div>
-                
+
                 <div class="step-item">
                     <div class="step-number">২</div>
                     <div class="step-content">
                         <strong>ডকুমেন্ট আপলোড (NID/Certificate)</strong>
-                        <p>অ্যাকাউন্ট ভেরিফিকেশনের জন্য আপনার ন্যাশনাল আইডি এবং কাজের বা শিক্ষাগত সার্টিফিকেট আপলোড করুন।</p>
+                        <p>অ্যাকাউন্ট ভেরিফিকেশনের জন্য আপনার ন্যাশনাল আইডি এবং কাজের বা শিক্ষাগত সার্টিফিকেট আপলোড
+                            করুন।</p>
                     </div>
                 </div>
 
@@ -493,38 +585,40 @@
             </div>
 
             @if($packages->isNotEmpty())
-            <div class="modal-packages-title">আমাদের সাবস্ক্রিপশন প্যাকেজসমূহ</div>
-            <div class="modal-packages">
-                
-                @foreach($packages as $package)
-                <div class="package-card">
-                    <div class="package-duration">
-                        {{ $package->duration_months }} মাসের প্ল্যান
-                    </div>
-                    <div class="package-name">{{ $package->name }}</div>
-                    <div class="package-price">৳{{ number_format($package->price) }}</div>
-                    
-                    <div class="package-benefits">
-                        @if(is_array($package->features) && count($package->features) > 0)
-                            <ul>
-                                @foreach($package->features as $feature)
-                                    <li>{{ $feature }}</li>
-                                @endforeach
-                            </ul>
-                        @else
-                            <p>Premium features included.</p>
-                        @endif
-                    </div>
-                </div>
-                @endforeach
+                <div class="modal-packages-title">আমাদের সাবস্ক্রিপশন প্যাকেজসমূহ</div>
+                <div class="modal-packages">
 
-            </div>
+                    @foreach($packages as $package)
+                        <div class="package-card">
+                            <div class="package-duration">
+                                {{ $package->duration_months }} মাসের প্ল্যান
+                            </div>
+                            <div class="package-name">{{ $package->name }}</div>
+                            <div class="package-price">৳{{ number_format($package->price) }}</div>
+
+                            <div class="package-benefits">
+                                @if(is_array($package->features) && count($package->features) > 0)
+                                    <ul>
+                                        @foreach($package->features as $feature)
+                                            <li>{{ $feature }}</li>
+                                        @endforeach
+                                    </ul>
+                                @else
+                                    <p>Premium features included.</p>
+                                @endif
+                            </div>
+                        </div>
+                    @endforeach
+
+                </div>
             @endif
 
-            <button type="button" id="closeInstructionBtn" class="btn-fill" style="width: 100%; justify-content: center; padding: 14px; font-family: 'SolaimanLipi', sans-serif; font-size: 1.1rem;">
+            <button type="button" id="closeInstructionBtn" class="btn-fill"
+                style="width: 100%; justify-content: center; padding: 14px; font-family: 'SolaimanLipi', sans-serif; font-size: 1.1rem;">
                 আমি বুঝতে পেরেছি — এগিয়ে যান
-                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="margin-left: 8px;">
-                    <path d="M5 12h14M12 5l7 7-7 7"/>
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                    style="margin-left: 8px;">
+                    <path d="M5 12h14M12 5l7 7-7 7" />
                 </svg>
             </button>
         </div>
@@ -532,7 +626,7 @@
 
     {{-- Script to trigger the modal ALWAYS on load --}}
     <script>
-        document.addEventListener("DOMContentLoaded", function() {
+        document.addEventListener("DOMContentLoaded", function () {
             const modal = document.getElementById('registerInstructionModal');
             const closeBtn = document.getElementById('closeInstructionBtn');
 
@@ -541,7 +635,7 @@
                 modal.classList.add('is-active');
             }, 300);
 
-            closeBtn.addEventListener('click', function() {
+            closeBtn.addEventListener('click', function () {
                 modal.classList.remove('is-active');
             });
         });

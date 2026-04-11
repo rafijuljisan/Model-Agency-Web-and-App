@@ -41,6 +41,7 @@ class ArtistAccount extends Component
     public string $country = 'Bangladesh';
     public string $district = '';
     public string $upazila = '';
+    public string $street_address = '';
     public string $bio = '';
     public array $categories = []; // Replaces the old string $category
     // public $groupedCategories;     // To hold the DB results
@@ -142,7 +143,7 @@ class ArtistAccount extends Component
             $rules['nidImage'] = 'required|image|mimes:jpg,jpeg,png,webp|max:5120';
         }
         if (in_array($user->academic_verification_status, ['unverified', 'rejected'])) {
-            $rules['academicImage'] = 'required|image|mimes:jpg,jpeg,png,webp|max:5120';
+            $rules['academicImage'] = 'nullable|image|mimes:jpg,jpeg,png,webp|max:5120';
         }
 
         $this->validate($rules);
@@ -161,7 +162,7 @@ class ArtistAccount extends Component
             $user->update($updates);
 
             $admins = User::role('Super-Admin')->get();
-            
+
             // 1. Send Email (Your existing code)
             Notification::send($admins, new AdminAlertNotification(
                 'New Documents Uploaded',
@@ -236,6 +237,7 @@ class ArtistAccount extends Component
             $this->country = $profile->country ?? 'Bangladesh';
             $this->district = $profile->district ?? '';
             $this->upazila = $profile->upazila ?? '';
+            $this->street_address = $profile->street_address ?? '';
             $this->bio = $profile->bio ?? '';
             $this->languages = $profile->languages ? implode(', ', (array) $profile->languages) : '';
             $this->facebook_url = $profile->facebook_url ?? '';
@@ -306,6 +308,7 @@ class ArtistAccount extends Component
                     'country' => $this->country ?: null,
                     'district' => $this->district ?: null,
                     'upazila' => $this->upazila ?: null,
+                    'street_address' => $this->street_address ?: null,
                     'bio' => $this->bio ?: null,
                     'facebook_url' => $this->facebook_url ?: null,
                     'instagram_url' => $this->instagram_url ?: null,
@@ -337,7 +340,7 @@ class ArtistAccount extends Component
 
             if (!empty($this->newPhotos)) {
                 $existingCount = $user->getMedia('portfolio')->count();
-                $allowedNew = max(0, 10 - $existingCount);
+                $allowedNew = max(0, 12 - $existingCount);
                 $photosToAdd = array_slice($this->newPhotos, 0, $allowedNew);
 
                 foreach ($photosToAdd as $photo) {
@@ -409,45 +412,66 @@ class ArtistAccount extends Component
             'name' => 'required|string|max:255',
             'email' => "required|email|max:255|unique:users,email,{$userId}",
             'phone' => "nullable|string|max:20|unique:users,phone,{$userId}",
+
             'categories' => 'required|array|min:1',
-            'categories.*' => 'string',
-            'gender' => 'nullable|string',
-            'date_of_birth' => 'nullable|date',
-            'height_cm' => 'nullable|numeric|min:50|max:300',
-            'hourly_rate' => 'nullable|numeric|min:0',
-            'languages' => 'nullable|string|max:255',
+            'categories.*' => 'string|max:100',
+
+            'gender' => 'nullable|in:Male,Female,Other',
+            'date_of_birth' => 'nullable|date|before:today|after:1900-01-01',
+
+            // ── Flexible height/weight as strings ──
+            'height_cm' => 'nullable|string|max:20',   // accepts "5'10\"", "5.10", "170cm"
+            'weight_kg' => 'nullable|string|max:20',   // accepts "65.5", "65", "65kg"
+
+            'hourly_rate' => 'nullable|numeric|min:0|max:999999',
+
+            'languages' => 'nullable|string|max:500',
+
             'country' => 'nullable|string|max:100',
             'district' => 'nullable|string|max:100',
             'upazila' => 'nullable|string|max:100',
+            'street_address' => 'nullable|string|max:500',  // NEW private field
+
             'bio' => 'nullable|string|max:2000',
+
+            // ── Social URLs ──
             'facebook_url' => 'nullable|url|max:255',
             'instagram_url' => 'nullable|url|max:255',
             'youtube_url' => 'nullable|url|max:255',
             'tiktok_url' => 'nullable|url|max:255',
             'linkedin_url' => 'nullable|url|max:255',
             'portfolio_url' => 'nullable|url|max:255',
+            'showreel_url' => 'nullable|url|max:255',
+
+            // ── Portfolio photos ──
             'newPhotos' => 'nullable|array|max:10',
             'newPhotos.*' => 'image|mimes:jpg,jpeg,png,webp|max:5120',
-            'weight_kg' => 'nullable|numeric|min:20|max:300',
-            'chest_bust_inches' => 'nullable|numeric|min:20|max:80',
-            'waist_inches' => 'nullable|numeric|min:20|max:80',
-            'hips_inches' => 'nullable|numeric|min:20|max:80',
-            'shoulder_inches' => 'nullable|numeric|min:10|max:60',
+
+            // ── Measurements — flexible strings ──
+            'chest_bust_inches' => 'nullable|string|max:20',
+            'waist_inches' => 'nullable|string|max:20',
+            'hips_inches' => 'nullable|string|max:20',
+            'shoulder_inches' => 'nullable|string|max:20',
             'shoe_size' => 'nullable|string|max:20',
-            'dress_size' => 'nullable|string|max:10',
-            'skin_tone' => 'nullable|string|max:50',
+            'dress_size' => 'nullable|in:XS,S,M,L,XL,XXL',
+
+            // ── Appearance ──
+            'skin_tone' => 'nullable|in:Fair,Medium,Dusky,Deep',
             'eye_color' => 'nullable|string|max:50',
             'hair_color' => 'nullable|string|max:50',
-            'hair_length' => 'nullable|string|max:20',
-            'experience_level' => 'nullable|string|max:50',
+            'hair_length' => 'nullable|in:Bald,Short,Medium,Long',
+
+            // ── Experience ──
+            'experience_level' => 'nullable|in:Fresher,1-3 Years,Professional',
             'special_skills' => 'nullable|array',
             'special_skills.*' => 'string|max:100',
-            'showreel_url' => 'nullable|url|max:255',
             'willing_to_travel' => 'boolean',
-            'availability' => 'nullable|string|max:50',
-            'instagram_followers' => 'nullable|integer|min:0',
-            'tiktok_followers' => 'nullable|integer|min:0',
-            'facebook_followers' => 'nullable|integer|min:0',
+            'availability' => 'nullable|in:Full-time,Part-time,Weekends Only,Flexible',
+
+            // ── Follower counts ──
+            'instagram_followers' => 'nullable|integer|min:0|max:999999999',
+            'tiktok_followers' => 'nullable|integer|min:0|max:999999999',
+            'facebook_followers' => 'nullable|integer|min:0|max:999999999',
         ];
     }
 }

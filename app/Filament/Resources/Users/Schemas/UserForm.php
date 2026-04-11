@@ -95,11 +95,18 @@ class UserForm
                                 Select::make('categories')
                                     ->label('Talent Categories & Skills')
                                     ->options(function (?\Illuminate\Database\Eloquent\Model $record) {
+                                        // 1. Fetch categories and format them as "CategoryName (GroupName)"
                                         $options = \App\Models\Category::orderBy('group')
                                             ->orderBy('name')
-                                            ->pluck('name', 'name')
+                                            ->get()
+                                            ->mapWithKeys(function ($category) {
+                                            // The array key is what saves to the database ($category->name)
+                                            // The array value is what the user sees in the dropdown
+                                            return [$category->name => "{$category->name} — ({$category->group})"];
+                                        })
                                             ->toArray();
 
+                                        // 2. Preserve archived/deleted categories for legacy profiles
                                         $savedCategories = [];
                                         if ($record) {
                                             if (isset($record->categories) && is_array($record->categories)) {
@@ -150,6 +157,10 @@ class UserForm
                                 TextInput::make('upazila')
                                     ->label('Thana / Upazila'),
 
+                                TextInput::make('street_address')
+                                    ->label('Street / Full Address (Private)')
+                                    ->helperText('Never shown publicly. For internal use only.')
+                                    ->columnSpanFull(),
                                 Textarea::make('bio')
                                     ->label('About Me (Bio)')
                                     ->columnSpanFull()
@@ -161,32 +172,39 @@ class UserForm
                             ->columns(4)
                             ->schema([
                                 TextInput::make('height_cm')
-                                    ->label('Height (ft)')
-                                    ->numeric(),
+                                    ->label('Height')
+                                    ->placeholder("e.g. 5'10\" or 170cm")
+                                    ->maxLength(20),
 
                                 TextInput::make('weight_kg')
                                     ->label('Weight (kg)')
-                                    ->numeric(),
+                                    ->placeholder('e.g. 65 or 65.5')
+                                    ->maxLength(20),
 
                                 TextInput::make('chest_bust_inches')
                                     ->label('Chest / Bust (in)')
-                                    ->numeric(),
+                                    ->placeholder('e.g. 36 or 36.5')
+                                    ->maxLength(20),
 
                                 TextInput::make('waist_inches')
                                     ->label('Waist (in)')
-                                    ->numeric(),
+                                    ->placeholder('e.g. 30 or 30.5')
+                                    ->maxLength(20),
 
                                 TextInput::make('hips_inches')
                                     ->label('Hips (in)')
-                                    ->numeric(),
+                                    ->placeholder('e.g. 38 or 38.5')
+                                    ->maxLength(20),
 
                                 TextInput::make('shoulder_inches')
                                     ->label('Shoulder (in) — Male')
-                                    ->numeric(),
+                                    ->placeholder('e.g. 18 or 18.5')
+                                    ->maxLength(20),
 
                                 TextInput::make('shoe_size')
                                     ->label('Shoe Size')
-                                    ->placeholder('e.g. EU 42 / UK 8'),
+                                    ->placeholder('e.g. EU 42 / UK 8')
+                                    ->maxLength(20),
 
                                 Select::make('dress_size')
                                     ->label('Dress Size')
@@ -297,7 +315,7 @@ class UserForm
                             ->multiple()
                             ->disk('public')
                             ->reorderable()
-                            ->maxFiles(10)
+                            ->maxFiles(12)
                             ->image()
                             ->imageEditor()
                             ->panelLayout('grid')

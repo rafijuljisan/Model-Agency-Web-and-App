@@ -44,6 +44,7 @@ class ArtistDirectory extends Component
 
     // ── UI STATE ──
     public $showMobileFilters = false;
+    public $perPage = 12;
 
     // Reset pagination when a filter changes
     public function updating($property)
@@ -68,6 +69,11 @@ class ArtistDirectory extends Component
         $this->resetPage();
     }
 
+    // Add this method or merge it with your existing updating() method
+    public function updatedPerPage()
+    {
+        $this->resetPage();
+    }
     public function render()
     {
         $query = User::role('Verified-Artist')
@@ -136,7 +142,10 @@ class ArtistDirectory extends Component
         ->orderByRaw("RAND({$seed})");
 
         $totalCount = (clone $query)->count();
-        $artists = $query->simplePaginate(12);
+        
+        // Use standard paginate() and handle the 'all' option
+        $limit = $this->perPage === 'all' ? ($totalCount > 0 ? $totalCount : 1) : (int) $this->perPage;
+        $artists = $query->paginate($limit);
         
         // Dynamic Sidebar Data
         $categories = \App\Models\Category::where('is_active', true)

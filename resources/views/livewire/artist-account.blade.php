@@ -582,6 +582,7 @@
         {{-- ═════════════════════════════════════════
         GATE 0: DOCUMENT UPLOAD
         ═════════════════════════════════════════ --}}
+
         @if($currentStep === 'document_upload')
             <div class="text-center py-10 anim-fade-up max-w-2xl mx-auto" style="font-family: 'SolaimanLipi', sans-serif;">
                 <div style="width: 80px; height: 80px; border-radius: 50%; background: var(--gold-bg); display: flex; align-items: center; justify-content: center; margin: 0 auto 24px; color: var(--gold);">
@@ -592,45 +593,53 @@
                         <line x1="9" y1="15" x2="15" y2="15"></line>
                     </svg>
                 </div>
-                
+
                 <h2 class="form-page-title mb-2">আপনার <strong>পরিচয়</strong> যাচাই করুন</h2>
                 <p class="form-page-sub mx-auto mb-8" style="font-size: 1.1rem; line-height: 1.5;">
-                    প্যাকেজ নির্বাচন করার আগে, আমাদের আপনার ন্যাশনাল আইডি (NID) এবং শিক্ষাগত বা প্রশিক্ষণ সার্টিফিকেট ভেরিফাই করতে হবে।
+                    আমাদের আপনার পরিচয় যাচাই করতে ন্যাশনাল আইডি (NID) বা জন্ম নিবন্ধন বা পাসপোর্ট ভেরিফাই করতে হবে।
                 </p>
 
                 <form wire:submit.prevent="submitDocuments" class="text-left" style="background: var(--bg-surface); border: 1px solid var(--border); border-radius: 8px; padding: 32px; box-shadow: var(--shadow-sm);">
-                    
-                    {{-- NID Upload --}}
+
+                    {{-- FRONT SIDE --}}
                     @if(in_array(Auth::user()->verification_status, ['unverified', 'rejected', null, '']))
                     <div style="margin-bottom: 24px;">
-                        <label class="form-field-label" style="font-size: 1.1rem; letter-spacing: normal;">পাসপোর্ট/জন্ম নিবন্ধন/ন্যাশনাল আইডি (উভয় পিঠ বা স্পষ্ট ছবি) <span class="required">*</span></label>
-                        
-                        @if(Auth::user()->verification_status === 'rejected')
-                            <div style="color: #dc2626; font-size: 1.1rem; margin-bottom: 12px; padding: 12px; background: rgba(220,38,38,0.1); border-radius: 4px; border: 1px solid rgba(220,38,38,0.2);">
-                                <strong>বাতিল করা হয়েছে:</strong> আপনার আগের এনআইডি/পাসপোর্ট/জন্ম নিবন্ধন বাতিল করা হয়েছে। অনুগ্রহ করে একটি স্পষ্ট ছবি আপলোড করুন।
-                            </div>
-                        @endif
-                        
-                        <input type="file" wire:model="nidImage" class="form-input" accept="image/*" required>
-                        <div wire:loading wire:target="nidImage" style="color: var(--gold); font-size: 0.95rem; margin-top: 4px;">ছবি প্রস্তুত করা হচ্ছে...</div>
-                        @error('nidImage') <span style="color: #dc2626; font-size: 0.95rem; display: block; margin-top: 4px;">{{ $message }}</span> @enderror
+                        <label class="form-field-label" style="font-size: 1.1rem; letter-spacing: normal;">
+                            NID / Birth Certificate / Passport (Front Side) <span class="required">*</span>
+                        </label>
+
+                        <input type="file" wire:model="academicImage" class="form-input" accept="image/*">
+
+                        <div wire:loading wire:target="academicImage" style="color: var(--gold); font-size: 0.95rem; margin-top: 4px;">
+                            ছবি আপলোড হচ্ছে...
+                        </div>
+
+                        @error('academicImage')
+                            <span style="color: #dc2626; font-size: 0.95rem; display: block; margin-top: 4px;">
+                                {{ $message }}
+                            </span>
+                        @enderror
                     </div>
                     @endif
 
-                    {{-- Academic Certificate Upload --}}
-                    @if(in_array(Auth::user()->academic_verification_status, ['unverified', 'rejected', null, '']))
+                    {{-- BACK SIDE --}}
+                    @if(in_array(Auth::user()->verification_status, ['unverified', 'rejected', null, '']))
                     <div style="margin-bottom: 32px;">
-                        <label class="form-field-label" style="font-size: 1.1rem; letter-spacing: normal;">শিক্ষাগত বা প্রশিক্ষণ সার্টিফিকেট <span class="required">*</span></label>
-                        
-                        @if(Auth::user()->academic_verification_status === 'rejected')
-                            <div style="color: #dc2626; font-size: 1.1rem; margin-bottom: 12px; padding: 12px; background: rgba(220,38,38,0.1); border-radius: 4px; border: 1px solid rgba(220,38,38,0.2);">
-                                <strong>বাতিল করা হয়েছে:</strong> আপনার আগের সার্টিফিকেটটি বাতিল করা হয়েছে। অনুগ্রহ করে একটি সঠিক ডকুমেন্ট আপলোড করুন।
-                            </div>
-                        @endif
-                        
-                        <input type="file" wire:model="academicImage" class="form-input" accept="image/*" required>
-                        <div wire:loading wire:target="academicImage" style="color: var(--gold); font-size: 0.95rem; margin-top: 4px;">ছবি প্রস্তুত করা হচ্ছে...</div>
-                        @error('academicImage') <span style="color: #dc2626; font-size: 0.95rem; display: block; margin-top: 4px;">{{ $message }}</span> @enderror
+                        <label class="form-field-label" style="font-size: 1.1rem; letter-spacing: normal;">
+                            NID / Birth Certificate / Passport (Back Side) <span class="required">*</span>
+                        </label>
+
+                        <input type="file" wire:model="academicImage" class="form-input" accept="image/*">
+
+                        <div wire:loading wire:target="academicImage" style="color: var(--gold); font-size: 0.95rem; margin-top: 4px;">
+                            ছবি আপলোড হচ্ছে...
+                        </div>
+
+                        @error('academicImage')
+                            <span style="color: #dc2626; font-size: 0.95rem; display: block; margin-top: 4px;">
+                                {{ $message }}
+                            </span>
+                        @enderror
                     </div>
                     @endif
 
@@ -638,8 +647,10 @@
                         <span wire:loading.remove wire:target="submitDocuments">ডকুমেন্ট সাবমিট করুন এবং প্যাকেজ পেজে যান</span>
                         <span wire:loading wire:target="submitDocuments">আপলোড এবং সেভ হচ্ছে...</span>
                     </button>
+
                 </form>
             </div>
+        @endif
 
         {{-- ═════════════════════════════════════════
         GATE 1: PAYMENT FAILED
@@ -1242,10 +1253,9 @@
                     <div class="form-section anim-fade-up anim-d2">
                         <div class="form-section-header">
                             <div class="form-section-icon">
-                                <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor"
-                                    stroke-width="1.7" aria-hidden="true">
-                                    <path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7z" />
-                                    <circle cx="12" cy="9" r="2.5" />
+                                <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7">
+                                    <path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7z"/>
+                                    <circle cx="12" cy="9" r="2.5"/>
                                 </svg>
                             </div>
                             <div class="form-section-title">Location</div>
@@ -1256,14 +1266,27 @@
 
                                 <div class="form-field">
                                     <label class="form-field-label" for="f-district">District</label>
-                                    <input id="f-district" type="text" class="form-input" wire:model.defer="district"
-                                        placeholder="e.g. Dhaka">
+                                    <input id="f-district" type="text" class="form-input" wire:model.defer="district" placeholder="e.g. Dhaka">
                                 </div>
 
                                 <div class="form-field">
                                     <label class="form-field-label" for="f-upazila">Thana / Upazila</label>
-                                    <input id="f-upazila" type="text" class="form-input" wire:model.defer="upazila"
-                                        placeholder="e.g. Mirpur">
+                                    <input id="f-upazila" type="text" class="form-input" wire:model.defer="upazila" placeholder="e.g. Mirpur">
+                                </div>
+
+                                {{-- Street address — private, full width --}}
+                                <div class="form-field form-grid-full">
+                                    <label class="form-field-label" for="f-street">
+                                        Street / Full Address
+                                        <span style="font-size: 0.65rem; font-weight: 600; letter-spacing: 0.1em; text-transform: uppercase; color: #fff; background: #6b7280; padding: 2px 7px; border-radius: 999px; margin-left: 8px; vertical-align: middle;">
+                                            🔒 Private
+                                        </span>
+                                    </label>
+                                    <textarea id="f-street" class="form-input form-textarea" wire:model.defer="street_address"
+                                        placeholder="e.g. House 12, Road 4, Block B, Mirpur-10" rows="2"></textarea>
+                                    <div class="form-hint">
+                                        This is <strong>never shown publicly</strong> on your profile. Used only for internal verification purposes.
+                                    </div>
                                 </div>
 
                             </div>
@@ -1422,7 +1445,7 @@
                                 </svg>
                             </div>
                             <div class="form-section-title">Portfolio Images</div>
-                            <div class="form-section-desc">Max 10 images · JPG/PNG/WEBP</div>
+                            <div class="form-section-desc">Max 12 images · JPG/PNG/WEBP</div>
                         </div>
                         <div class="form-section-body">
 
@@ -1436,7 +1459,7 @@
                                     <path d="M20.39 18.39A5 5 0 0018 9h-1.26A8 8 0 103 16.3" />
                                 </svg>
                                 <div class="upload-zone-title">Drop images here or click to browse</div>
-                                <div class="upload-zone-sub">Accepts JPG, PNG, WEBP &nbsp;·&nbsp; <span>Up to 10
+                                <div class="upload-zone-sub">Accepts JPG, PNG, WEBP &nbsp;·&nbsp; <span>Up to 12
                                         files</span></div>
                             </label>
 
