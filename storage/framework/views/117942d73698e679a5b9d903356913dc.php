@@ -1591,14 +1591,13 @@
             <div>
                 <div class="footer-col-title">Platform</div>
                 <ul class="footer-col-links">
+                    <li><a href="/editorial">Blog</a></li>
+                    <li><a href="/videos">Videos</a></li>
+                    <li><a href="/artists">Hire Talent</a></li>
                     <li><a href="/casting">Casting Calls</a></li>
                     <li><a href="/register">Join as Talent</a></li>
-                    <li><a href="/hire">Hire Talent</a></li>
-                    <li><a href="/pricing">Pricing Plans</a></li>
-                    <li><a href="/editorial">Blog</a></li>
                     <li><a href="/about">About Us</a></li>
-                    <li><a href="/contact">Contact Us</a></li>
-                    <li><a href="/videos">Videos</a></li>
+
                 </ul>
             </div>
 

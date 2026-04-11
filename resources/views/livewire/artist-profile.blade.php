@@ -129,7 +129,6 @@
 .ap-tag {
     font-size: 0.72rem;
     font-weight: 700;
-    letter-spacing: 0.2em;
     text-transform: uppercase;
     color: var(--gold);
     background: var(--gold-bg);
@@ -141,7 +140,6 @@
 .ap-tag-verified {
     font-size: 0.72rem;
     font-weight: 700;
-    letter-spacing: 0.2em;
     text-transform: uppercase;
     color: #16a34a;
     background: rgba(22,163,74,0.08);
@@ -704,6 +702,46 @@
     display: flex;
     margin-bottom: 12px; /* Adds space between the ID and the Category tags */
 }
+/* Bio Truncation */
+.ap-bio-clamped {
+    display: -webkit-box;
+    -webkit-line-clamp: 3; /* Limit to 3 lines */
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+    transition: max-height 0.3s ease;
+}
+
+/* Read More Button */
+.ap-bio-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    margin-top: 14px;
+    font-size: 0.75rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    color: var(--gold);
+    background: none;
+    border: none;
+    cursor: pointer;
+    padding: 0;
+    transition: color 0.2s;
+}
+.ap-bio-btn:hover {
+    color: var(--text-primary);
+}
+.ap-bio-btn svg {
+    transition: transform 0.3s ease;
+}
+.mobile-only {
+    display: none;
+}
+
+@media (max-width: 768px) {
+    .mobile-only {
+        display: inline-flex;
+    }
+}
 </style>
 
 {{-- ══════════════════════════════════════════
@@ -754,6 +792,12 @@
                     <span class="ap-tag" style="color: var(--text-primary); background: var(--bg-secondary); border-color: var(--border-strong);">
                         ID: {{ $artist->member_id }}
                     </span>
+                    <span class="ap-tag-verified">
+                        <svg width="10" height="10" viewBox="0 0 24 24" fill="currentColor">
+                            <path d="M12 2L3 7v5c0 5.55 3.84 10.74 9 12 5.16-1.26 9-6.45 9-12V7L12 2zm-2 15l-4-4 1.41-1.41L10 14.17l6.59-6.59L18 9l-8 8z"/>
+                        </svg>
+                        Verified
+                    </span>
                 </div>
             @endif
 
@@ -767,12 +811,6 @@
                         <span class="ap-tag" style="opacity: 0.6;">+{{ count($artist->profile->categories) - 3 }} more</span>
                     @endif
                 @endif
-                <span class="ap-tag-verified">
-                    <svg width="10" height="10" viewBox="0 0 24 24" fill="currentColor">
-                        <path d="M12 2L3 7v5c0 5.55 3.84 10.74 9 12 5.16-1.26 9-6.45 9-12V7L12 2zm-2 15l-4-4 1.41-1.41L10 14.17l6.59-6.59L18 9l-8 8z"/>
-                    </svg>
-                    Verified
-                </span>
             </div>
 
             <div class="ap-meta">
@@ -803,15 +841,6 @@
                     </div>
                 @endif
 
-                @if(!empty($artist->profile?->languages))
-                    <div class="ap-meta-dot"></div>
-                    <div class="ap-meta-item">
-                        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                            <path d="M5 8l6 6M4 14l6-6 2-3M2 5h12M7 2h1M22 22l-5-10-5 10M14 18h6"/>
-                        </svg>
-                        {{ implode(' · ', array_slice((array)$artist->profile->languages, 0, 2)) }}
-                    </div>
-                @endif
             </div>
         </div>
 
@@ -830,11 +859,15 @@
             @endauth
 
             @if(!auth()->check() || auth()->id() !== $artist->id)
-                <button wire:click="revealContact" class="btn-fill" style="font-size: 0.78rem; min-width: 160px; justify-content: center;">
+                <button wire:click="revealContact"
+                    class="btn-fill mobile-only"
+                    style="font-size: 0.78rem; min-width: 160px; justify-content: center;">
+                    
                     <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="margin-right: 4px;">
                         <path d="M22 16.92v3a2 2 0 01-2.18 2 19.79 19.79 0 01-8.63-3.07A19.5 19.5 0 013.07 9.81 19.79 19.79 0 01.05 2.18 2 2 0 012 0h3a2 2 0 012 1.72c.127.96.361 1.903.7 2.81a2 2 0 01-.45 2.11L6.09 7.91a16 16 0 006 6l1.27-1.27a2 2 0 012.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0122 14.92z"/>
                     </svg>
-                    Book Talent
+
+                    Contact Talent
                 </button>
             @endif
         </div>
@@ -901,8 +934,8 @@
             <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                 <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/>
             </svg>
-            Skills
-            <span class="ap-tab-count">{{ count($artist->profile?->categories ?? []) }}</span>
+            Experience
+            <span class="ap-tab-count">{{ $artist->experiences->count() }}</span>
         </button>
     </div>
 
@@ -917,7 +950,10 @@
             {{-- TAB: ABOUT ── --}}
             <div class="ap-panel" :class="activeTab === 'about' ? 'is-active' : ''">
 
-                <div class="ap-card">
+                <div class="ap-card" 
+                    x-data="{ expanded: false, isOverflowing: false }" 
+                    x-init="$nextTick(() => { isOverflowing = $refs.bio.scrollHeight > $refs.bio.clientHeight })">
+                    
                     <div class="ap-card-head">
                         <div class="ap-card-head-icon">
                             <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
@@ -927,10 +963,28 @@
                         </div>
                         <div class="ap-card-title">Professional Bio</div>
                     </div>
+                    
                     <div class="ap-card-body">
-                        <div class="ap-bio">
+                        {{-- The text container (toggles the clamped class based on state) --}}
+                        <div class="ap-bio" x-ref="bio" :class="expanded ? '' : 'ap-bio-clamped'">
                             {!! nl2br(e($artist->profile?->bio ?? 'This talent has not added a professional bio yet.')) !!}
                         </div>
+                        
+                        {{-- The Button (Only shows if text exceeds 5 lines) --}}
+                        <button 
+                            type="button"
+                            class="ap-bio-btn" 
+                            x-show="isOverflowing" 
+                            @click="expanded = !expanded" 
+                            style="display: none;" 
+                            :style="isOverflowing ? 'display: inline-flex;' : 'display: none;'"
+                        >
+                            <span x-text="expanded ? 'Show Less' : 'Read More'"></span>
+                            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" 
+                                :style="expanded ? 'transform: rotate(180deg);' : ''">
+                                <polyline points="6 9 12 15 18 9"></polyline>
+                            </svg>
+                        </button>
                     </div>
                 </div>
                 {{-- Showreel ── --}}
@@ -952,6 +1006,27 @@
                 </div>
                 @endif
 
+                <div class="ap-card">
+                    <div class="ap-card-head">
+                        <div class="ap-card-head-icon">
+                            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/>
+                            </svg>
+                        </div>
+                        <div class="ap-card-title">Skills & Expertise</div>
+                    </div>
+                    <div class="ap-card-body">
+                        @if(!empty($artist->profile?->categories))
+                            <div class="ap-skills">
+                                @foreach($artist->profile->categories as $category)
+                                    <span class="ap-skill">{{ $category }}</span>
+                                @endforeach
+                            </div>
+                        @else
+                            <p style="color: var(--text-muted); font-size: 0.9rem;">No skills listed yet.</p>
+                        @endif
+                    </div>
+                </div>
                 {{-- Special Skills ── --}}
                 @if(!empty($artist->profile?->special_skills))
                 <div class="ap-card">
@@ -1118,29 +1193,113 @@
             </div>
 
             {{-- TAB: SKILLS ── --}}
+            {{-- TAB: SKILLS / EXPERIENCE ── --}}
             <div class="ap-panel" :class="activeTab === 'skills' ? 'is-active' : ''">
 
-                <div class="ap-card">
-                    <div class="ap-card-head">
-                        <div class="ap-card-head-icon">
-                            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                                <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/>
-                            </svg>
+                @php
+                    $groupedExp = $artist->experiences->groupBy('type');
+                    $expTypeLabels = [
+                        'film' => 'Films', 'tv_drama' => 'TV / Drama',
+                        'commercial' => 'Commercials', 'theater' => 'Theater',
+                        'music_video' => 'Music Videos', 'award' => 'Awards',
+                        'jury' => 'Jury Activity', 'other' => 'Other',
+                    ];
+                @endphp
+
+                @if($groupedExp->isEmpty())
+                    <div class="ap-card">
+                        <div class="ap-card-body">
+                            <p style="color: var(--text-muted); font-size: 0.9rem;">No credits added yet.</p>
                         </div>
-                        <div class="ap-card-title">Skills & Expertise</div>
                     </div>
-                    <div class="ap-card-body">
-                        @if(!empty($artist->profile?->categories))
-                            <div class="ap-skills">
-                                @foreach($artist->profile->categories as $category)
-                                    <span class="ap-skill">{{ $category }}</span>
-                                @endforeach
+                @else
+                    @foreach($groupedExp as $type => $entries)
+                        <div class="ap-card" style="margin-bottom: 20px;">
+                            <div class="ap-card-head">
+                                <div class="ap-card-head-icon">
+                                    <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                        <path d="M15 3h6v6M9 21H3v-6M21 3l-7 7M3 21l7-7"/>
+                                    </svg>
+                                </div>
+                                <div class="ap-card-title">{{ $expTypeLabels[$type] ?? ucfirst($type) }}</div>
                             </div>
-                        @else
-                            <p style="color: var(--text-muted); font-size: 0.9rem;">No skills listed yet.</p>
-                        @endif
-                    </div>
-                </div>
+                            <div class="ap-card-body" style="padding: 0; overflow-x: auto;">
+
+                                @if($type === 'award')
+                                    <table style="width: 100%; border-collapse: collapse; font-size: 0.88rem;">
+                                        <thead>
+                                            <tr style="border-bottom: 1px solid var(--border); background: var(--bg-primary);">
+                                                <th style="text-align: left; padding: 10px 20px; color: var(--text-muted); font-size: 0.65rem; letter-spacing: 0.15em; text-transform: uppercase;">Year</th>
+                                                <th style="text-align: left; padding: 10px 20px; color: var(--text-muted); font-size: 0.65rem; letter-spacing: 0.15em; text-transform: uppercase;">Award</th>
+                                                <th style="text-align: left; padding: 10px 20px; color: var(--text-muted); font-size: 0.65rem; letter-spacing: 0.15em; text-transform: uppercase;">Category</th>
+                                                <th style="text-align: left; padding: 10px 20px; color: var(--text-muted); font-size: 0.65rem; letter-spacing: 0.15em; text-transform: uppercase;">For</th>
+                                                <th style="text-align: left; padding: 10px 20px; color: var(--text-muted); font-size: 0.65rem; letter-spacing: 0.15em; text-transform: uppercase;">Result</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            @foreach($entries as $exp)
+                                                <tr style="border-bottom: 1px solid var(--border);">
+                                                    <td style="padding: 12px 20px; color: var(--text-muted);">{{ $exp->year ?? '—' }}</td>
+                                                    <td style="padding: 12px 20px; color: var(--text-primary); font-weight: 500;">{{ $exp->title }}</td>
+                                                    <td style="padding: 12px 20px; color: var(--text-secondary);">{{ $exp->award_category ?? '—' }}</td>
+                                                    <td style="padding: 12px 20px; color: var(--text-secondary); font-style: italic;">{{ $exp->award_work ?? '—' }}</td>
+                                                    <td style="padding: 12px 20px;">
+                                                        <span style="font-size: 0.68rem; font-weight: 700; padding: 3px 10px; border-radius: 999px; {{ $exp->award_result === 'Won' ? 'background: rgba(22,163,74,0.1); color: #16a34a; border: 1px solid rgba(22,163,74,0.3);' : 'background: rgba(234,179,8,0.1); color: #ca8a04; border: 1px solid rgba(234,179,8,0.3);' }}">
+                                                            {{ $exp->award_result ?? '—' }}
+                                                        </span>
+                                                    </td>
+                                                </tr>
+                                            @endforeach
+                                        </tbody>
+                                    </table>
+
+                                @elseif($type === 'jury')
+                                    <div style="padding: 16px 20px;">
+                                        @foreach($entries as $exp)
+                                            <div style="padding: 10px 0; border-bottom: 1px solid var(--border); display: flex; gap: 12px; align-items: flex-start;">
+                                                @if($exp->year)
+                                                    <span style="font-size: 0.75rem; color: var(--gold); font-weight: 700; background: var(--gold-bg); padding: 2px 8px; border-radius: 2px; flex-shrink: 0; margin-top: 2px;">{{ $exp->year }}</span>
+                                                @endif
+                                                <div>
+                                                    <span style="font-weight: 600; color: var(--text-primary);">{{ $exp->title }}</span>
+                                                    @if($exp->jury_category)
+                                                        <span style="color: var(--text-muted); font-size: 0.85rem;">, {{ $exp->jury_category }}</span>
+                                                    @endif
+                                                    @if($exp->jury_festival)
+                                                        <div style="font-size: 0.82rem; color: var(--text-muted); margin-top: 2px;">{{ $exp->jury_festival }}{{ $exp->jury_location ? ', ' . $exp->jury_location : '' }}</div>
+                                                    @endif
+                                                </div>
+                                            </div>
+                                        @endforeach
+                                    </div>
+
+                                @else
+                                    <table style="width: 100%; border-collapse: collapse; font-size: 0.88rem;">
+                                        <thead>
+                                            <tr style="border-bottom: 1px solid var(--border); background: var(--bg-primary);">
+                                                <th style="text-align: left; padding: 10px 20px; color: var(--text-muted); font-size: 0.65rem; letter-spacing: 0.15em; text-transform: uppercase;">Year</th>
+                                                <th style="text-align: left; padding: 10px 20px; color: var(--text-muted); font-size: 0.65rem; letter-spacing: 0.15em; text-transform: uppercase;">Title</th>
+                                                <th style="text-align: left; padding: 10px 20px; color: var(--text-muted); font-size: 0.65rem; letter-spacing: 0.15em; text-transform: uppercase;">Role</th>
+                                                <th style="text-align: left; padding: 10px 20px; color: var(--text-muted); font-size: 0.65rem; letter-spacing: 0.15em; text-transform: uppercase;">Notes</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            @foreach($entries as $exp)
+                                                <tr style="border-bottom: 1px solid var(--border);">
+                                                    <td style="padding: 12px 20px; color: var(--text-muted);">{{ $exp->year ?? '—' }}</td>
+                                                    <td style="padding: 12px 20px; color: var(--text-primary); font-weight: 500;">{{ $exp->title }}</td>
+                                                    <td style="padding: 12px 20px; color: var(--text-secondary);">{{ $exp->role ?? '—' }}</td>
+                                                    <td style="padding: 12px 20px; color: var(--text-muted); font-size: 0.8rem; font-style: italic;">{{ $exp->notes ?? '' }}</td>
+                                                </tr>
+                                            @endforeach
+                                        </tbody>
+                                    </table>
+                                @endif
+
+                            </div>
+                        </div>
+                    @endforeach
+                @endif
 
             </div>
 

@@ -13,6 +13,10 @@ use Filament\Schemas\Components\Group;
 use Filament\Schemas\Schema;
 use Illuminate\Support\Facades\Hash;
 use Filament\Forms\Components\SpatieMediaLibraryFileUpload;
+use Filament\Schemas\Get;
+use Filament\Infolists\Components\TextEntry;
+use Filament\Forms\Components\Repeater;
+use Filament\Schemas\Components\Utilities\Get as SchemaGet;
 
 class UserForm
 {
@@ -384,6 +388,143 @@ class UserForm
                             ->required()                   // ← ADD THIS
                             ->selectablePlaceholder(false) // ← ADD THIS
                             ->native(false),
+                    ]),
+                // 8. Artist Experience & Credits
+                Section::make('Experience & Credits')
+                    ->description('Films, TV shows, awards, jury activity, and other professional credits.')
+                    ->schema([
+                        \Filament\Forms\Components\Repeater::make('experiences')
+                            ->relationship('experiences')
+                            ->schema([
+                                \Filament\Forms\Components\Select::make('type')
+                                    ->label('Type')
+                                    ->options(\App\Models\ArtistExperience::$typeLabels)
+                                    ->required()
+                                    ->live()
+                                    ->columnSpan(1),
+
+                                TextInput::make('year')
+                                    ->label('Year')
+                                    ->placeholder('e.g. 2021 or 2021–2023')
+                                    ->maxLength(10)
+                                    ->columnSpan(1),
+
+                                TextInput::make('title')
+                                    ->label('Title / Name')
+                                    ->placeholder('e.g. Rehana Maryam Noor')
+                                    ->required()
+                                    ->maxLength(255)
+                                    ->columnSpan(2),
+
+                                // ── Film / TV / Commercial fields ──
+                                TextInput::make('role')
+                                    ->label('Role / Character')
+                                    ->placeholder('e.g. Rehana Maryam Noor')
+                                    ->maxLength(255)
+                                    ->columnSpan(1)
+                                    ->visible(fn(SchemaGet $get) => in_array($get('type'), [  
+                                        'film',
+                                        'tv_drama',
+                                        'commercial',
+                                        'theater',
+                                        'music_video',
+                                        'other'
+                                    ])),
+
+                                TextInput::make('director')
+                                    ->label('Director')
+                                    ->maxLength(255)
+                                    ->columnSpan(1)
+                                    ->visible(fn(SchemaGet $get) => in_array($get('type'), [
+                                        'film',
+                                        'tv_drama',
+                                        'commercial',
+                                        'theater',
+                                        'music_video'
+                                    ])),
+
+                                TextInput::make('production')
+                                    ->label('Production House / Channel')
+                                    ->maxLength(255)
+                                    ->columnSpan(1)
+                                    ->visible(fn(SchemaGet $get) => in_array($get('type'), [
+                                        'film',
+                                        'tv_drama',
+                                        'commercial',
+                                        'theater',
+                                        'music_video'
+                                    ])),
+
+                                TextInput::make('notes')
+                                    ->label('Notes')
+                                    ->placeholder('e.g. Debut Film')
+                                    ->maxLength(255)
+                                    ->columnSpan(1)
+                                    ->visible(fn(SchemaGet $get) => in_array($get('type'), [
+                                        'film',
+                                        'tv_drama',
+                                        'commercial',
+                                        'theater',
+                                        'music_video',
+                                        'other'
+                                    ])),
+
+                                // ── Award fields ──
+                                TextInput::make('award_category')
+                                    ->label('Award Category')
+                                    ->placeholder('e.g. Best Actress')
+                                    ->maxLength(255)
+                                    ->columnSpan(1)
+                                    ->visible(fn(SchemaGet $get) => in_array($get('type'), ['award'])),
+
+                                TextInput::make('award_work')
+                                    ->label('For the Work')
+                                    ->placeholder('e.g. Rehana Maryam Noor')
+                                    ->maxLength(255)
+                                    ->columnSpan(1)
+                                    ->visible(fn(SchemaGet $get) => in_array($get('type'), ['award'])),
+
+                                \Filament\Forms\Components\Select::make('award_result')
+                                    ->label('Result')
+                                    ->options(['Won' => 'Won', 'Nominated' => 'Nominated'])
+                                    ->columnSpan(1)
+                                    ->visible(fn(SchemaGet $get) => in_array($get('type'), ['award'])),
+
+                                // ── Jury fields ──
+                                TextInput::make('jury_festival')
+                                    ->label('Festival Name')
+                                    ->placeholder('e.g. I Am Tomorrow Film Festival')
+                                    ->maxLength(255)
+                                    ->columnSpan(1)
+                                    ->visible(fn(SchemaGet $get) => in_array($get('type'), ['jury'])),
+
+                                TextInput::make('jury_location')
+                                    ->label('Location')
+                                    ->placeholder('e.g. Brussels')
+                                    ->maxLength(255)
+                                    ->columnSpan(1)
+                                    ->visible(fn(SchemaGet $get) => in_array($get('type'), ['jury'])),
+
+                                TextInput::make('jury_category')
+                                    ->label('Jury Category')
+                                    ->placeholder('e.g. Asian films Competition')
+                                    ->maxLength(255)
+                                    ->columnSpan(1)
+                                    ->visible(fn(SchemaGet $get) => in_array($get('type'), ['jury'])),
+                            ])
+                            ->columns(4)
+                            ->reorderable()
+                            ->orderColumn('sort_order')
+                            ->collapsible()
+                            ->collapsed()
+                            ->itemLabel(
+                                fn(array $state): ?string =>
+                                ($state['year'] ? '[' . $state['year'] . '] ' : '') .
+                                ($state['title'] ?? 'New Entry') .
+                                ($state['type'] ? ' — ' . (\App\Models\ArtistExperience::$typeLabels[$state['type']] ?? '') : '')
+                            )
+                            ->addActionLabel('Add Experience / Credit')
+                            ->columnSpanFull(),
                     ]),
             ]);
     }

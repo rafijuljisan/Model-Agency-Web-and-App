@@ -86,6 +86,24 @@ class ArtistAccount extends Component
     public $tiktok_followers = '';
     public $facebook_followers = '';
 
+    // ── Experiences ──
+    public array $experiences = [];
+    public string $newExpType = 'film';
+    public string $newExpYear = '';
+    public string $newExpTitle = '';
+    public string $newExpRole = '';
+    public string $newExpDirector = '';
+    public string $newExpProduction = '';
+    public string $newExpNotes = '';
+    public string $newExpAwardCategory = '';
+    public string $newExpAwardWork = '';
+    public string $newExpAwardResult = 'Won';
+    public string $newExpJuryFestival = '';
+    public string $newExpJuryLocation = '';
+    public string $newExpJuryCategory = '';
+    public bool $showExpForm = false;
+    public ?int $editingExpId = null;
+
     public function mount()
     {
         /** @var \App\Models\User $user */
@@ -275,6 +293,7 @@ class ArtistAccount extends Component
         }
 
         $this->portfolioImages = $user->getMedia('portfolio');
+        $this->loadExperiences($user);
     }
 
     public function saveProfile(): void
@@ -389,6 +408,96 @@ class ArtistAccount extends Component
         }
     }
 
+    public function loadExperiences(User $user): void
+    {
+        $this->experiences = $user->experiences()->get()->toArray();
+    }
+
+    public function saveExperience(): void
+    {
+        /** @var \App\Models\User $user */
+        $user = Auth::user();
+
+        $data = [
+            'user_id' => $user->id,
+            'type' => $this->newExpType,
+            'year' => $this->newExpYear ?: null,
+            'title' => $this->newExpTitle,
+            'role' => $this->newExpRole ?: null,
+            'director' => $this->newExpDirector ?: null,
+            'production' => $this->newExpProduction ?: null,
+            'notes' => $this->newExpNotes ?: null,
+            'award_category' => $this->newExpAwardCategory ?: null,
+            'award_work' => $this->newExpAwardWork ?: null,
+            'award_result' => $this->newExpAwardResult ?: null,
+            'jury_festival' => $this->newExpJuryFestival ?: null,
+            'jury_location' => $this->newExpJuryLocation ?: null,
+            'jury_category' => $this->newExpJuryCategory ?: null,
+        ];
+
+        $this->validate([
+            'newExpType' => 'required|in:film,tv_drama,commercial,theater,music_video,award,jury,other',
+            'newExpTitle' => 'required|string|max:255',
+            'newExpYear' => 'nullable|string|max:10',
+        ]);
+
+        if ($this->editingExpId) {
+            \App\Models\ArtistExperience::where('id', $this->editingExpId)
+                ->where('user_id', $user->id)
+                ->update($data);
+        } else {
+            \App\Models\ArtistExperience::create($data);
+        }
+
+        $this->resetExpForm();
+        $this->loadExperiences($user);
+        session()->flash('message', 'Experience saved!');
+    }
+
+    public function editExperience(int $id): void
+    {
+        $exp = \App\Models\ArtistExperience::where('id', $id)
+            ->where('user_id', Auth::id())
+            ->firstOrFail();
+
+        $this->editingExpId = $exp->id;
+        $this->newExpType = $exp->type;
+        $this->newExpYear = $exp->year ?? '';
+        $this->newExpTitle = $exp->title;
+        $this->newExpRole = $exp->role ?? '';
+        $this->newExpDirector = $exp->director ?? '';
+        $this->newExpProduction = $exp->production ?? '';
+        $this->newExpNotes = $exp->notes ?? '';
+        $this->newExpAwardCategory = $exp->award_category ?? '';
+        $this->newExpAwardWork = $exp->award_work ?? '';
+        $this->newExpAwardResult = $exp->award_result ?? 'Won';
+        $this->newExpJuryFestival = $exp->jury_festival ?? '';
+        $this->newExpJuryLocation = $exp->jury_location ?? '';
+        $this->newExpJuryCategory = $exp->jury_category ?? '';
+        $this->showExpForm = true;
+    }
+
+    public function deleteExperience(int $id): void
+    {
+        \App\Models\ArtistExperience::where('id', $id)
+            ->where('user_id', Auth::id())
+            ->delete();
+
+        $this->loadExperiences(Auth::user());
+        session()->flash('message', 'Entry deleted.');
+    }
+
+    public function resetExpForm(): void
+    {
+        $this->editingExpId = null;
+        $this->newExpType = 'film';
+        $this->newExpYear = $this->newExpTitle = $this->newExpRole = '';
+        $this->newExpDirector = $this->newExpProduction = $this->newExpNotes = '';
+        $this->newExpAwardCategory = $this->newExpAwardWork = '';
+        $this->newExpAwardResult = 'Won';
+        $this->newExpJuryFestival = $this->newExpJuryLocation = $this->newExpJuryCategory = '';
+        $this->showExpForm = false;
+    }
     public function render()
     {
         /** @var \App\Models\User $user */

@@ -1494,6 +1494,255 @@
 
                         </div>
                     </div>
+                    {{-- ── Section: Credits & Experience ── --}}
+                    <div class="form-section anim-fade-up anim-d2">
+                        <div class="form-section-header">
+                            <div class="form-section-icon">
+                                <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7">
+                                    <path d="M15 3h6v6M9 21H3v-6M21 3l-7 7M3 21l7-7"/>
+                                </svg>
+                            </div>
+                            <div class="form-section-title">Credits & Experience</div>
+                            <div class="form-section-desc">Films, Awards, TV Shows & More</div>
+                        </div>
+                        <div class="form-section-body">
+
+                            {{-- Existing entries grouped by type --}}
+                            @php
+                                $groupedExp = collect($experiences)->groupBy('type');
+                                $typeLabels = [
+                                    'film' => 'Films', 'tv_drama' => 'TV / Drama',
+                                    'commercial' => 'Commercials', 'theater' => 'Theater',
+                                    'music_video' => 'Music Videos', 'award' => 'Awards',
+                                    'jury' => 'Jury Activity', 'other' => 'Other',
+                                ];
+                            @endphp
+
+                            @if($groupedExp->isNotEmpty())
+                                @foreach($groupedExp as $type => $entries)
+                                    <div style="margin-bottom: 24px;">
+                                        <h4 style="font-size: 0.75rem; font-weight: 700; letter-spacing: 0.2em; text-transform: uppercase; color: var(--gold); margin-bottom: 12px; padding-bottom: 8px; border-bottom: 1px solid var(--border);">
+                                            {{ $typeLabels[$type] ?? ucfirst($type) }}
+                                        </h4>
+
+                                        @if(in_array($type, ['award']))
+                                            {{-- Awards Table --}}
+                                            <div style="overflow-x: auto;">
+                                                <table style="width: 100%; border-collapse: collapse; font-size: 0.85rem;">
+                                                    <thead>
+                                                        <tr style="border-bottom: 1px solid var(--border);">
+                                                            <th style="text-align: left; padding: 8px 12px; color: var(--text-muted); font-size: 0.7rem; letter-spacing: 0.1em; text-transform: uppercase;">Year</th>
+                                                            <th style="text-align: left; padding: 8px 12px; color: var(--text-muted); font-size: 0.7rem; letter-spacing: 0.1em; text-transform: uppercase;">Award</th>
+                                                            <th style="text-align: left; padding: 8px 12px; color: var(--text-muted); font-size: 0.7rem; letter-spacing: 0.1em; text-transform: uppercase;">Category</th>
+                                                            <th style="text-align: left; padding: 8px 12px; color: var(--text-muted); font-size: 0.7rem; letter-spacing: 0.1em; text-transform: uppercase;">For</th>
+                                                            <th style="text-align: left; padding: 8px 12px; color: var(--text-muted); font-size: 0.7rem; letter-spacing: 0.1em; text-transform: uppercase;">Result</th>
+                                                            <th style="padding: 8px 12px;"></th>
+                                                        </tr>
+                                                    </thead>
+                                                    <tbody>
+                                                        @foreach($entries as $exp)
+                                                            <tr style="border-bottom: 1px solid var(--border);">
+                                                                <td style="padding: 10px 12px; color: var(--text-muted);">{{ $exp['year'] ?? '—' }}</td>
+                                                                <td style="padding: 10px 12px; color: var(--text-primary); font-weight: 500;">{{ $exp['title'] }}</td>
+                                                                <td style="padding: 10px 12px; color: var(--text-secondary);">{{ $exp['award_category'] ?? '—' }}</td>
+                                                                <td style="padding: 10px 12px; color: var(--text-secondary);">{{ $exp['award_work'] ?? '—' }}</td>
+                                                                <td style="padding: 10px 12px;">
+                                                                    <span style="font-size: 0.7rem; font-weight: 700; padding: 3px 8px; border-radius: 999px; {{ ($exp['award_result'] ?? '') === 'Won' ? 'background: rgba(22,163,74,0.1); color: #16a34a;' : 'background: rgba(234,179,8,0.1); color: #ca8a04;' }}">
+                                                                        {{ $exp['award_result'] ?? '—' }}
+                                                                    </span>
+                                                                </td>
+                                                                <td style="padding: 10px 12px; white-space: nowrap;">
+                                                                    <button type="button" wire:click="editExperience({{ $exp['id'] }})" style="background: none; border: none; color: var(--gold); cursor: pointer; font-size: 0.75rem; margin-right: 8px;">Edit</button>
+                                                                    <button type="button" wire:click="deleteExperience({{ $exp['id'] }})" onclick="return confirm('Delete this entry?')" style="background: none; border: none; color: #dc2626; cursor: pointer; font-size: 0.75rem;">Delete</button>
+                                                                </td>
+                                                            </tr>
+                                                        @endforeach
+                                                    </tbody>
+                                                </table>
+                                            </div>
+                                        @elseif($type === 'jury')
+                                            {{-- Jury List --}}
+                                            @foreach($entries as $exp)
+                                                <div style="display: flex; justify-content: space-between; align-items: flex-start; padding: 10px 0; border-bottom: 1px solid var(--border);">
+                                                    <div>
+                                                        <span style="font-weight: 600; color: var(--text-primary);">{{ $exp['title'] }}</span>
+                                                        @if($exp['jury_festival'])
+                                                            <span style="color: var(--text-muted); font-size: 0.85rem;"> · {{ $exp['jury_festival'] }}</span>
+                                                        @endif
+                                                        @if($exp['jury_location'])
+                                                            <span style="color: var(--text-muted); font-size: 0.85rem;">, {{ $exp['jury_location'] }}</span>
+                                                        @endif
+                                                        @if($exp['year'])
+                                                            <span style="color: var(--text-muted); font-size: 0.8rem; margin-left: 8px;">({{ $exp['year'] }})</span>
+                                                        @endif
+                                                    </div>
+                                                    <div style="white-space: nowrap; margin-left: 16px;">
+                                                        <button type="button" wire:click="editExperience({{ $exp['id'] }})" style="background: none; border: none; color: var(--gold); cursor: pointer; font-size: 0.75rem; margin-right: 8px;">Edit</button>
+                                                        <button type="button" wire:click="deleteExperience({{ $exp['id'] }})" onclick="return confirm('Delete this entry?')" style="background: none; border: none; color: #dc2626; cursor: pointer; font-size: 0.75rem;">Delete</button>
+                                                    </div>
+                                                </div>
+                                            @endforeach
+                                        @else
+                                            {{-- Films / TV / Others Table --}}
+                                            <div style="overflow-x: auto;">
+                                                <table style="width: 100%; border-collapse: collapse; font-size: 0.85rem;">
+                                                    <thead>
+                                                        <tr style="border-bottom: 1px solid var(--border);">
+                                                            <th style="text-align: left; padding: 8px 12px; color: var(--text-muted); font-size: 0.7rem; letter-spacing: 0.1em; text-transform: uppercase;">Year</th>
+                                                            <th style="text-align: left; padding: 8px 12px; color: var(--text-muted); font-size: 0.7rem; letter-spacing: 0.1em; text-transform: uppercase;">Title</th>
+                                                            <th style="text-align: left; padding: 8px 12px; color: var(--text-muted); font-size: 0.7rem; letter-spacing: 0.1em; text-transform: uppercase;">Role</th>
+                                                            <th style="text-align: left; padding: 8px 12px; color: var(--text-muted); font-size: 0.7rem; letter-spacing: 0.1em; text-transform: uppercase;">Notes</th>
+                                                            <th style="padding: 8px 12px;"></th>
+                                                        </tr>
+                                                    </thead>
+                                                    <tbody>
+                                                        @foreach($entries as $exp)
+                                                            <tr style="border-bottom: 1px solid var(--border);">
+                                                                <td style="padding: 10px 12px; color: var(--text-muted);">{{ $exp['year'] ?? '—' }}</td>
+                                                                <td style="padding: 10px 12px; color: var(--text-primary); font-weight: 500;">{{ $exp['title'] }}</td>
+                                                                <td style="padding: 10px 12px; color: var(--text-secondary);">{{ $exp['role'] ?? '—' }}</td>
+                                                                <td style="padding: 10px 12px; color: var(--text-muted); font-size: 0.8rem;">{{ $exp['notes'] ?? '' }}</td>
+                                                                <td style="padding: 10px 12px; white-space: nowrap;">
+                                                                    <button type="button" wire:click="editExperience({{ $exp['id'] }})" style="background: none; border: none; color: var(--gold); cursor: pointer; font-size: 0.75rem; margin-right: 8px;">Edit</button>
+                                                                    <button type="button" wire:click="deleteExperience({{ $exp['id'] }})" onclick="return confirm('Delete this entry?')" style="background: none; border: none; color: #dc2626; cursor: pointer; font-size: 0.75rem;">Delete</button>
+                                                                </td>
+                                                            </tr>
+                                                        @endforeach
+                                                    </tbody>
+                                                </table>
+                                            </div>
+                                        @endif
+                                    </div>
+                                @endforeach
+                            @else
+                                <p style="color: var(--text-muted); font-size: 0.9rem; margin-bottom: 20px;">No credits added yet. Add your films, TV shows, awards, and other experience below.</p>
+                            @endif
+
+                            {{-- Add / Edit Form --}}
+                            <button type="button" wire:click="$toggle('showExpForm')"
+                                style="display: flex; align-items: center; gap: 8px; padding: 10px 20px; border: 1px dashed var(--border-strong); background: var(--bg-primary); color: var(--text-secondary); font-family: 'Jost', sans-serif; font-size: 0.8rem; font-weight: 600; letter-spacing: 0.1em; text-transform: uppercase; cursor: pointer; margin-bottom: 20px; transition: border-color 0.2s, color 0.2s;"
+                                onmouseover="this.style.borderColor='var(--gold)';this.style.color='var(--gold)'"
+                                onmouseout="this.style.borderColor='var(--border-strong)';this.style.color='var(--text-secondary)'">
+                                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/>
+                                </svg>
+                                {{ $editingExpId ? 'Edit Entry' : 'Add Credit / Experience' }}
+                            </button>
+
+                            @if($showExpForm)
+                                <div style="background: var(--bg-primary); border: 1px solid var(--border); padding: 24px; border-radius: 4px;">
+                                    <div class="form-grid-2" style="margin-bottom: 16px;">
+
+                                        {{-- Type --}}
+                                        <div class="form-field">
+                                            <label class="form-field-label">Type <span class="required">*</span></label>
+                                            <div class="form-select-wrap">
+                                                <select class="form-select" wire:model.live="newExpType">
+                                                    <option value="film">Film</option>
+                                                    <option value="tv_drama">TV / Drama</option>
+                                                    <option value="commercial">Commercial / TVC</option>
+                                                    <option value="theater">Theater</option>
+                                                    <option value="music_video">Music Video</option>
+                                                    <option value="award">Award</option>
+                                                    <option value="jury">Jury Activity</option>
+                                                    <option value="other">Other</option>
+                                                </select>
+                                            </div>
+                                        </div>
+
+                                        {{-- Year --}}
+                                        <div class="form-field">
+                                            <label class="form-field-label">Year</label>
+                                            <input type="text" class="form-input" wire:model.defer="newExpYear" placeholder="e.g. 2021 or 2021–2023">
+                                        </div>
+
+                                        {{-- Title --}}
+                                        <div class="form-field form-grid-full">
+                                            <label class="form-field-label">
+                                                @if($newExpType === 'award') Award Name
+                                                @elseif($newExpType === 'jury') Your Role / Title (e.g. "Jury Member")
+                                                @else Title / Name
+                                                @endif
+                                                <span class="required">*</span>
+                                            </label>
+                                            <input type="text" class="form-input" wire:model.defer="newExpTitle"
+                                                placeholder="{{ $newExpType === 'award' ? 'e.g. National Film Award' : ($newExpType === 'jury' ? 'e.g. Jury Member' : 'e.g. Rehana Maryam Noor') }}">
+                                        </div>
+
+                                        {{-- Film / TV fields --}}
+                                        @if(in_array($newExpType, ['film', 'tv_drama', 'commercial', 'theater', 'music_video', 'other']))
+                                            <div class="form-field">
+                                                <label class="form-field-label">Role / Character</label>
+                                                <input type="text" class="form-input" wire:model.defer="newExpRole" placeholder="e.g. Rehana">
+                                            </div>
+                                            <div class="form-field">
+                                                <label class="form-field-label">Director</label>
+                                                <input type="text" class="form-input" wire:model.defer="newExpDirector" placeholder="e.g. Abdullah Mohammad Saad">
+                                            </div>
+                                            <div class="form-field">
+                                                <label class="form-field-label">Production / Channel</label>
+                                                <input type="text" class="form-input" wire:model.defer="newExpProduction" placeholder="e.g. Fable Pictures">
+                                            </div>
+                                            <div class="form-field">
+                                                <label class="form-field-label">Notes</label>
+                                                <input type="text" class="form-input" wire:model.defer="newExpNotes" placeholder="e.g. Debut Film">
+                                            </div>
+                                        @endif
+
+                                        {{-- Award fields --}}
+                                        @if($newExpType === 'award')
+                                            <div class="form-field">
+                                                <label class="form-field-label">Category</label>
+                                                <input type="text" class="form-input" wire:model.defer="newExpAwardCategory" placeholder="e.g. Best Actress">
+                                            </div>
+                                            <div class="form-field">
+                                                <label class="form-field-label">For the Work</label>
+                                                <input type="text" class="form-input" wire:model.defer="newExpAwardWork" placeholder="e.g. Rehana Maryam Noor">
+                                            </div>
+                                            <div class="form-field">
+                                                <label class="form-field-label">Result</label>
+                                                <div class="form-select-wrap">
+                                                    <select class="form-select" wire:model.defer="newExpAwardResult">
+                                                        <option value="Won">Won</option>
+                                                        <option value="Nominated">Nominated</option>
+                                                    </select>
+                                                </div>
+                                            </div>
+                                        @endif
+
+                                        {{-- Jury fields --}}
+                                        @if($newExpType === 'jury')
+                                            <div class="form-field">
+                                                <label class="form-field-label">Festival Name</label>
+                                                <input type="text" class="form-input" wire:model.defer="newExpJuryFestival" placeholder="e.g. I Am Tomorrow Film Festival">
+                                            </div>
+                                            <div class="form-field">
+                                                <label class="form-field-label">Location</label>
+                                                <input type="text" class="form-input" wire:model.defer="newExpJuryLocation" placeholder="e.g. Brussels">
+                                            </div>
+                                            <div class="form-field form-grid-full">
+                                                <label class="form-field-label">Jury Category / Competition</label>
+                                                <input type="text" class="form-input" wire:model.defer="newExpJuryCategory" placeholder="e.g. Asian films Competition">
+                                            </div>
+                                        @endif
+
+                                    </div>
+
+                                    <div style="display: flex; gap: 12px; justify-content: flex-end;">
+                                        <button type="button" wire:click="resetExpForm"
+                                            style="padding: 10px 20px; border: 1px solid var(--border-strong); background: var(--bg-surface); color: var(--text-secondary); font-family: 'Jost', sans-serif; font-size: 0.8rem; cursor: pointer;">
+                                            Cancel
+                                        </button>
+                                        <button type="button" wire:click="saveExperience" class="btn-fill" style="font-size: 0.85rem; padding: 10px 24px;">
+                                            <span wire:loading.remove wire:target="saveExperience">{{ $editingExpId ? 'Update Entry' : 'Save Entry' }}</span>
+                                            <span wire:loading wire:target="saveExperience">Saving...</span>
+                                        </button>
+                                    </div>
+                                </div>
+                            @endif
+
+                        </div>
+                    </div>
 
                     {{-- ── Sticky submit bar ── --}}
                     {{-- ── Sticky submit bar ── --}}

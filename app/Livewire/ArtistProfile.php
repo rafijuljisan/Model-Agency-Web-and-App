@@ -15,11 +15,11 @@ class ArtistProfile extends Component
     public function mount($id)
     {
         $this->artist = User::role('Verified-Artist')
-            ->with(['profile', 'media'])
+            ->with(['profile', 'media', 'experiences'])  // ← add 'experiences'
             ->whereHas('subscriptions', function ($q) {
                 $q->where('status', 'active');
             })
-            ->findOrFail($id); 
+            ->findOrFail($id);
     }
 
     public function revealContact()

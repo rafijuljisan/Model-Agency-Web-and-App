@@ -37,8 +37,8 @@ class User extends Authenticatable implements HasMedia, FilamentUser
 
                 // Find the latest user created this year
                 $lastUser = self::where('member_id', 'like', $prefix . '%')
-                                ->orderBy('member_id', 'desc')
-                                ->first();
+                    ->orderBy('member_id', 'desc')
+                    ->first();
 
                 if ($lastUser) {
                     // Extract the last 4 digits and increment by 1
@@ -73,7 +73,7 @@ class User extends Authenticatable implements HasMedia, FilamentUser
         if ($panel->getId() === 'admin') {
             return $this->hasRole('Super-Admin') || $this->role === 'Super-Admin';
         }
-        
+
         // 2. Artist Panel: Only Verified Artists
         if ($panel->getId() === 'artist') {
             return $this->hasRole('Verified-Artist') || $this->role === 'Verified-Artist';
@@ -101,6 +101,10 @@ class User extends Authenticatable implements HasMedia, FilamentUser
         return $this->hasOne(Profile::class, 'user_id', 'id');
     }
 
+    public function experiences()
+    {
+        return $this->hasMany(ArtistExperience::class)->orderBy('year', 'desc')->orderBy('sort_order');
+    }
     public function subscriptions()
     {
         return $this->hasMany(Subscription::class);
