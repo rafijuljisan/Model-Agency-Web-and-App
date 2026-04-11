@@ -1351,7 +1351,7 @@
                 <li><a href="/about">About</a></li>
                 <li><a href="/contact">Contact</a></li>
                 <li><a href="/videos">Videos</a></li>
-                <li><a href="/editorial">Editorial</a></li>
+                <li><a href="/editorial">Blog</a></li>
             </ul>
 
             {{-- Right controls --}}
@@ -1437,7 +1437,7 @@
         <a href="/about">About</a>
         <a href="/contact">Contact</a>
         <a href="/videos">Videos</a>
-        <a href="/editorial">Editorial</a>
+        <a href="/editorial">Blog</a>
 
         <div class="drawer-actions">
             @auth
@@ -1599,7 +1599,7 @@
                     <li><a href="/register">Join as Talent</a></li>
                     <li><a href="/hire">Hire Talent</a></li>
                     <li><a href="/pricing">Pricing Plans</a></li>
-                    <li><a href="/editorial">Editorial</a></li>
+                    <li><a href="/editorial">Blog</a></li>
                     <li><a href="/about">About Us</a></li>
                     <li><a href="/contact">Contact Us</a></li>
                     <li><a href="/videos">Videos</a></li>

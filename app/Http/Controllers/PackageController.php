@@ -11,20 +11,17 @@ use App\Models\User;
 use Illuminate\Support\Facades\Notification;
 use App\Notifications\AdminAlertNotification;
 use Filament\Notifications\Notification as FilamentNotification;
-use Filament\Actions\Action; // ← Correct v5 namespace!
 
 class PackageController extends Controller
 {
-    // Shows the package selection and payment form
     public function index()
     {
         return view('packages', [
-            'packages' => Package::where('is_active', true)->get(), // Only show active packages
+            'packages' => Package::where('is_active', true)->get(),
             'settings' => Setting::first(),
         ]);
     }
 
-    // Handles the form submission
     public function pay(Request $request)
     {
         $request->validate([
@@ -37,9 +34,8 @@ class PackageController extends Controller
         $package = Package::findOrFail($request->package_id);
 
         /** @var \App\Models\User $user */
-        $user = Auth::user(); // ← PHPDoc fixes the "Undefined method 'user'" IDE error
+        $user = Auth::user();
 
-        // Create the subscription record
         Subscription::create([
             'user_id'        => $user->id,
             'package_id'     => $package->id,
@@ -49,14 +45,14 @@ class PackageController extends Controller
             'status'         => 'pending',
             'payment_method' => $request->payment_method,
             'starts_at'      => now(),
-            'expires_at'     => now()->addMonths($package->duration_months),
+            'expires_at'     => now()->addMonths((int) $package->duration_months), // ← cast fix
         ]);
 
         $admins = User::role('Super-Admin')->get();
         $formattedPrice = number_format($package->price);
-        $userName = $user->name; 
+        $userName = $user->name;
 
-        // 1. Send Email Notification
+        // Email notification
         Notification::send($admins, new AdminAlertNotification(
             'New Payment Submitted',
             "{$userName} ({$request->sender_number}) has submitted a payment of {$formattedPrice} BDT (TrxID: {$request->trx_id}).",
@@ -64,17 +60,11 @@ class PackageController extends Controller
             url('/admin/subscriptions')
         ));
 
-        // 2. Send Real-Time Filament Panel Notification (Bell Icon)
+        // Filament bell notification — no ->actions() here, just title + body + url
         FilamentNotification::make()
             ->title('New Payment Submitted 💰')
-            ->body("{$userName} submitted {$formattedPrice} BDT from {$request->sender_number}. TrxID: {$request->trx_id}")
+            ->body("{$userName} submitted {$formattedPrice} BDT from {$request->sender_number}. TrxID: {$request->trx_id}. [Review](/admin/subscriptions)")
             ->success()
-            ->actions([
-                Action::make('view') // ← V5 Syntax
-                    ->label('Review Payment')
-                    ->button()
-                    ->url('/admin/subscriptions')
-            ])
             ->sendToDatabase($admins);
 
         return redirect()->route('account.dashboard')->with('message', 'Payment submitted! Waiting for Admin approval.');

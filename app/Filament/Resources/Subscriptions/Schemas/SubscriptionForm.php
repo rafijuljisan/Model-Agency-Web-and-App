@@ -27,7 +27,12 @@ class SubscriptionForm
                 TextInput::make('trx_id')
                     ->label('Transaction ID')
                     ->required()
-                    ->maxLength(255),
+                    ->maxLength(255)
+                    ->unique(
+                        table: 'subscriptions',
+                        column: 'trx_id',
+                        ignoreRecord: true, // allows editing existing records without false conflicts
+                    ),
                 TextInput::make('sender_number')       // ← add after trx_id
                     ->label('Sender Mobile Number')
                     ->required()

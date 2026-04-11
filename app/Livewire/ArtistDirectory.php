@@ -9,11 +9,13 @@ use Carbon\Carbon;
 use Livewire\Attributes\Title;
 use Livewire\Attributes\Url;
 
+
 #[Title('Browse Verified Talent')]
 class ArtistDirectory extends Component
 {
     use WithPagination;
 
+    protected $paginationTheme = 'tailwind';
     // ── PRIMARY FILTERS ──
     public $search = '';
     #[Url]
@@ -133,7 +135,8 @@ class ArtistDirectory extends Component
         ->orderByRaw("CASE WHEN users.created_at >= ? THEN users.created_at ELSE NULL END DESC", [$newThreshold])
         ->orderByRaw("RAND({$seed})");
 
-        $artists = $query->paginate(12);
+        $totalCount = (clone $query)->count();
+        $artists = $query->simplePaginate(12);
         
         // Dynamic Sidebar Data
         $categories = \App\Models\Category::where('is_active', true)
@@ -155,6 +158,7 @@ class ArtistDirectory extends Component
 
         return view('livewire.artist-directory', [
             'artists' => $artists,
+            'totalCount'  => $totalCount,
             'categories' => $categories,
             'locations' => $locations,
             'upazilas' => $upazilas,

@@ -838,7 +838,7 @@
                 Find Your <strong>Perfect Talent.</strong>
             </h1>
             <p class="directory-hero-sub">
-                Browse {{ $artists->total() ?? '' }} verified professionals — models, actors, photographers &amp; more.
+                Browse <strong>{{ $totalCount }}</strong> verified professionals — models, actors, photographers &amp; more.
             </p>
         </div>
     </div>
@@ -1054,7 +1054,7 @@
             {{-- Toolbar --}}
             <div class="directory-toolbar">
                 <div class="directory-count">
-                    Showing <strong>{{ $artists->count() }}</strong> of <strong>{{ $artists->total() }}</strong> talents
+                    Showing <strong>{{ $artists->count() }}</strong> of <strong>{{ $totalCount }}</strong> talents
                 </div>
 
                 {{-- NEW: Mobile Filter Toggle Button --}}
@@ -1279,7 +1279,7 @@
 
             {{-- Pagination --}}
             <div class="pagination-wrap">
-                {{ $artists->links(data: ['scrollTo' => false]) }}
+                {{ $artists->links('vendor.pagination.simple-custom', ['total' => $totalCount]) }}
             </div>
 
         </div>
