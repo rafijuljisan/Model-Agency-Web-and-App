@@ -650,7 +650,7 @@
 
                 </form>
             </div>
-        @endif
+
 
         {{-- ═════════════════════════════════════════
         GATE 1: PAYMENT FAILED
@@ -658,33 +658,33 @@
         {{-- ═════════════════════════════════════════
         GATE 1: PAYMENT FAILED (BANGLA)
         ═════════════════════════════════════════ --}}
-        @elseif($currentStep === 'payment_failed')
-            <div class="text-center py-20 anim-fade-up" style="font-family: 'SolaimanLipi', sans-serif;">
-                <div
-                    style="width: 80px; height: 80px; border-radius: 50%; background: rgba(220, 38, 38, 0.1); display: flex; align-items: center; justify-content: center; margin: 0 auto 24px;">
-                    <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="#dc2626" stroke-width="1.5">
-                        <circle cx="12" cy="12" r="10" />
-                        <line x1="15" y1="9" x2="9" y2="15" />
-                        <line x1="9" y1="9" x2="15" y2="15" />
-                    </svg>
-                </div>
-                <h2 class="form-page-title mb-4">পেমেন্ট <strong>ব্যর্থ হয়েছে</strong></h2>
-                <p class="form-page-sub mx-auto mb-8" style="max-width: 480px; font-size: 1.1rem; line-height: 1.5;">
-                    আমরা আপনার পেমেন্ট ভেরিফাই করতে পারিনি। অনুগ্রহ করে আপনার ট্রানজেকশন আইডি (TrxID) এবং মোবাইল নম্বর পুনরায় চেক করে আবার ফর্মটি সাবমিট করুন।<br><br>
-                    যদি আপনি নিশ্চিত থাকেন যে পেমেন্ট সফল হয়েছে, তবে অনুগ্রহ করে আমাদের সাপোর্ট টিমের সাথে যোগাযোগ করুন।
-                </p>
-                <div style="display: flex; gap: 16px; justify-content: center;">
-                    <a href="/contact" class="btn-outline" style="font-size: 1rem;">সাপোর্টে যোগাযোগ করুন</a>
-                    <a href="{{ route('packages.index') }}" class="btn-fill" style="font-size: 1rem;">
-                        আবার পেমেন্ট সাবমিট করুন
-                        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
-                            style="margin-left:8px;">
-                            <line x1="5" y1="12" x2="19" y2="12"></line>
-                            <polyline points="12 5 19 12 12 19"></polyline>
+            @elseif($currentStep === 'payment_failed')
+                <div class="text-center py-20 anim-fade-up" style="font-family: 'SolaimanLipi', sans-serif;">
+                    <div
+                        style="width: 80px; height: 80px; border-radius: 50%; background: rgba(220, 38, 38, 0.1); display: flex; align-items: center; justify-content: center; margin: 0 auto 24px;">
+                        <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="#dc2626" stroke-width="1.5">
+                            <circle cx="12" cy="12" r="10" />
+                            <line x1="15" y1="9" x2="9" y2="15" />
+                            <line x1="9" y1="9" x2="15" y2="15" />
                         </svg>
-                    </a>
+                    </div>
+                    <h2 class="form-page-title mb-4">পেমেন্ট <strong>ব্যর্থ হয়েছে</strong></h2>
+                    <p class="form-page-sub mx-auto mb-8" style="max-width: 480px; font-size: 1.1rem; line-height: 1.5;">
+                        আমরা আপনার পেমেন্ট ভেরিফাই করতে পারিনি। অনুগ্রহ করে আপনার ট্রানজেকশন আইডি (TrxID) এবং মোবাইল নম্বর পুনরায় চেক করে আবার ফর্মটি সাবমিট করুন।<br><br>
+                        যদি আপনি নিশ্চিত থাকেন যে পেমেন্ট সফল হয়েছে, তবে অনুগ্রহ করে আমাদের সাপোর্ট টিমের সাথে যোগাযোগ করুন।
+                    </p>
+                    <div style="display: flex; gap: 16px; justify-content: center;">
+                        <a href="/contact" class="btn-outline" style="font-size: 1rem;">সাপোর্টে যোগাযোগ করুন</a>
+                        <a href="{{ route('packages.index') }}" class="btn-fill" style="font-size: 1rem;">
+                            আবার পেমেন্ট সাবমিট করুন
+                            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                                style="margin-left:8px;">
+                                <line x1="5" y1="12" x2="19" y2="12"></line>
+                                <polyline points="12 5 19 12 12 19"></polyline>
+                            </svg>
+                        </a>
+                    </div>
                 </div>
-            </div>
 
             {{-- ═════════════════════════════════════════
             GATE 2: PAYMENT EXPIRED (BANGLA)
