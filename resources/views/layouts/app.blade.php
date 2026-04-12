@@ -1335,9 +1335,6 @@
                             @foreach($navGroups as $group)
                                 <a href="/artists?group={{ urlencode($group) }}" class="mega-menu-card">
                                     <div class="mega-menu-card-title">{{ $group }}</div>
-                                    <div class="mega-menu-card-sub">
-                                        Browse all {{ $group }} talent
-                                    </div>
                                 </a>
                             @endforeach
                         </div>
