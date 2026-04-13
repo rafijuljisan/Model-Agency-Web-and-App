@@ -6,6 +6,8 @@ use App\Models\Editorial;
 use App\Models\Setting;
 use App\Livewire\ArtistDirectory;
 use App\Livewire\ArtistProfile;
+use App\Livewire\PhotoGalleryPage;
+use App\Models\PhotoGallery;
 
 /*
 |--------------------------------------------------------------------------
@@ -13,7 +15,6 @@ use App\Livewire\ArtistProfile;
 |--------------------------------------------------------------------------
 */
 
-// 1. The Homepage
 // 1. The Homepage
 Route::get('/', function () {
     $featuredArtists = App\Models\User::role('Verified-Artist')
@@ -60,7 +61,14 @@ Route::get('/', function () {
     $testimonials = App\Models\Testimonial::where('is_active', true)->orderBy('sort_order')->get();
     $teamMembers = App\Models\TeamMember::where('is_active', true)->orderBy('sort_order')->get();
 
-    return view('welcome', compact('featuredArtists', 'clients', 'testimonials', 'teamMembers'));
+    // 🔴 NEW: Fetch the latest 12 active gallery photos for the slider
+    $galleryPhotos = App\Models\PhotoGallery::where('is_active', true)
+        ->latest()
+        ->take(12)
+        ->get();
+
+    // 🔴 NEW: Added 'galleryPhotos' to compact()
+    return view('welcome', compact('featuredArtists', 'clients', 'testimonials', 'teamMembers', 'galleryPhotos'));
 });
 // SEO Routes (public, no auth)
 Route::get('/sitemap.xml', [App\Http\Controllers\SitemapController::class, 'index'])
@@ -104,11 +112,13 @@ Route::middleware('auth')->group(function () {
     })->name('admin.document.view');
 });
 // 2. Standard Pages & Livewire Components
+Route::get('/gallery', PhotoGalleryPage::class)->name('photo-gallery');
 Route::get('/videos', App\Livewire\VideoGallery::class)->name('videos.index');
 Route::get('/contact', App\Livewire\ContactPage::class)->name('contact');
 Route::get('/casting', App\Livewire\CastingPage::class)->name('casting');
 Route::get('/artists', ArtistDirectory::class)->name('artists.index');
 Route::get('/artist/{id}', ArtistProfile::class)->name('artist.show');
+Route::get('/grooming-class', App\Livewire\GroomingPage::class)->name('grooming');
 
 // 3. About Page
 Route::get('/about', function () {

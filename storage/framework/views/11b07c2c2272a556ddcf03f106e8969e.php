@@ -1,0 +1,1289 @@
+<div x-data="{ applyModalOpen: false }">
+<style>
+/* ═══════════════════════════════════════════
+   GROOMING CLASS PAGE
+═══════════════════════════════════════════ */
+/* ── Layout Update: Gallery & Sidebar ── */
+.gc-content-wrapper {
+    display: grid;
+    grid-template-columns: 1fr 350px; /* Gallery takes remaining space, Sidebar is 350px */
+    gap: 40px;
+    margin-bottom: 64px;
+    align-items: start;
+}
+
+/* Sidebar Styles */
+.gc-sidebar {
+    background: var(--bg-surface);
+    border: 1px solid var(--border);
+    padding: 24px;
+    position: sticky;
+    top: 24px; /* Sticks to top when scrolling */
+}
+.gc-sidebar-title {
+    font-family: 'SolaimanLipi', 'Jost', sans-serif;
+    font-size: 1.2rem;
+    font-weight: 600;
+    color: var(--text-primary);
+    margin-bottom: 16px;
+    padding-bottom: 12px;
+    border-bottom: 1px solid var(--border);
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+.gc-notices-scroll {
+    max-height: 650px; /* Fixed height */
+    overflow-y: auto; /* Enables scrolling */
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    padding-right: 8px;
+}
+
+/* Custom Scrollbar for Sidebar */
+.gc-notices-scroll::-webkit-scrollbar { width: 6px; }
+.gc-notices-scroll::-webkit-scrollbar-track { background: transparent; }
+.gc-notices-scroll::-webkit-scrollbar-thumb { background: var(--border-strong); border-radius: 4px; }
+.gc-notices-scroll::-webkit-scrollbar-thumb:hover { background: var(--gold); }
+
+/* Notice Card inside Sidebar */
+.gc-notice-card {
+    padding: 16px;
+    font-size: 1.125rem;
+    font-family: 'SolaimanLipi', 'Jost', sans-serif;
+    line-height: 1.5;
+    border: 1px solid var(--border);
+}
+.gc-notice-card.critical { background: rgba(197,0,0,0.05); border-color: rgba(197,0,0,0.2); color: var(--gold); }
+.gc-notice-card.normal { background: var(--bg-secondary); }
+.gc-notice-card.low { background: var(--bg-primary); }
+
+/* Update Gallery Grid to 3 Columns */
+.gc-gallery-grid-3x4 {
+    column-count: 3;
+    column-gap: 8px;
+    margin-bottom: 32px;
+}
+/* ── Sidebar Stats & Apply Box ── */
+.gc-sidebar-stats {
+    margin-top: 24px;
+    padding-top: 24px;
+    border-top: 1px dashed var(--border-strong);
+}
+.gc-stats-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 12px;
+    margin-bottom: 16px;
+}
+.gc-stat-box {
+    background: var(--bg-primary);
+    border: 1px solid var(--border);
+    padding: 16px 12px;
+    text-align: center;
+    border-radius: 4px;
+}
+.gc-stat-number {
+    font-size: 1.6rem;
+    font-weight: 700;
+    color: var(--gold);
+    font-family: 'SolaimanLipi', 'Jost', sans-serif;
+    line-height: 1;
+    margin-bottom: 4px;
+}
+.gc-stat-label {
+    font-size: 0.75rem;
+    color: var(--text-muted);
+    font-weight: 600;
+}
+.gc-sidebar-apply-btn {
+    width: 100%;
+    padding: 14px;
+    background: var(--gold);
+    color: #fff;
+    border: none;
+    font-size: 1.1rem;
+    font-weight: 600;
+    font-family: 'SolaimanLipi', 'Jost', sans-serif;
+    cursor: pointer;
+    transition: all 0.2s;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+}
+.gc-sidebar-apply-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 24px rgba(197,0,0,0.25);
+}
+/* Responsive fix for smaller screens */
+@media (max-width: 992px) {
+    .gc-content-wrapper { grid-template-columns: 1fr; } /* Stack vertically on mobile */
+    .gc-gallery-grid-3x4 { column-count: 2; }
+}
+@media (max-width: 576px) {
+    .gc-gallery-grid-3x4 { column-count: 1; }
+}
+/* ── Hero ── */
+.gc-hero {
+    background: var(--bg-secondary);
+    border-bottom: 1px solid var(--border);
+    padding: 72px 40px 64px;
+    text-align: center;
+    position: relative;
+    overflow: hidden;
+}
+.gc-hero::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background-image:
+        radial-gradient(circle at 20% 50%, var(--gold-bg) 0%, transparent 50%),
+        radial-gradient(circle at 80% 50%, var(--gold-bg) 0%, transparent 50%);
+    pointer-events: none;
+}
+.gc-hero-eyebrow {
+    font-size: 0.72rem;
+    font-weight: 600;
+    letter-spacing: 0.32em;
+    text-transform: uppercase;
+    color: var(--gold);
+    margin-bottom: 14px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 12px;
+    position: relative;
+}
+.gc-hero-eyebrow::before, .gc-hero-eyebrow::after {
+    content: ''; width: 28px; height: 1px; background: var(--gold);
+}
+.gc-hero-title {
+    font-family: 'SolaimanLipi', 'Jost', sans-serif;
+    font-size: clamp(2.2rem, 5vw, 3.8rem);
+    font-weight: 300;
+    color: var(--text-primary);
+    line-height: 1.15;
+    position: relative;
+    margin-bottom: 16px;
+}
+.gc-hero-title strong { font-weight: 600; }
+.gc-hero-sub {
+    font-family: 'SolaimanLipi', 'Jost', sans-serif;
+    font-size: 1.3rem;
+    color: var(--text-muted);
+    max-width: 580px;
+    margin: 0 auto 32px;
+    line-height: 1.7;
+    position: relative;
+}
+.gc-hero-cta {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    padding: 16px 36px;
+    background: var(--gold);
+    color: #fff;
+    font-family: 'SolaimanLipi', 'Jost', sans-serif;
+    font-size: 1.125rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.12em;
+    border: none;
+    cursor: pointer;
+    transition: transform 0.2s, box-shadow 0.2s;
+    position: relative;
+}
+.gc-hero-cta:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 24px rgba(197,0,0,0.25);
+}
+
+/* ── Notice Bar ── */
+.gc-notice {
+    padding: 14px 40px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 12px;
+    font-size: 1rem;
+    font-weight: 500;
+    letter-spacing: 0.04em;
+    text-align: center;
+}
+.gc-notice.critical { background: rgba(197,0,0,0.1); color: var(--gold); border-bottom: 1px solid rgba(197,0,0,0.2); }
+.gc-notice.normal   { background: var(--bg-secondary); color: var(--text-secondary); border-bottom: 1px solid var(--border); }
+.gc-notice.low      { background: var(--bg-primary); color: var(--text-muted); border-bottom: 1px solid var(--border); }
+
+/* ── Page body ── */
+.gc-body {
+    max-width: 1440px; /* Increased from 1200px to match wide menus */
+    margin: 0 auto;
+    padding: 56px 40px 80px;
+}
+
+/* ── Section header ── */
+.gc-section-head {
+    text-align: center;
+    margin-bottom: 36px;
+}
+.gc-section-eyebrow {
+    font-size: 0.68rem;
+    font-weight: 700;
+    letter-spacing: 0.28em;
+    text-transform: uppercase;
+    color: var(--gold);
+    margin-bottom: 8px;
+}
+.gc-section-title {
+    font-family: 'SolaimanLipi', 'Jost', sans-serif;
+    font-size: 2rem;
+    font-weight: 300;
+    color: var(--text-primary);
+}
+.gc-section-title strong { font-weight: 600; }
+
+/* ── Batch Cards ── */
+.gc-batches {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center; /* This perfectly centers the cards */
+    gap: 24px;
+    margin-bottom: 64px;
+}
+.gc-batch-card {
+    background: var(--bg-surface);
+    border: 1px solid var(--border);
+    padding: 28px;
+    transition: border-color 0.25s, transform 0.25s;
+    position: relative;
+    /* Added for Flexbox centering: */
+    width: 100%;
+    flex: 1 1 320px; /* Allows the card to grow/shrink smoothly */
+    max-width: 380px; /* Prevents a single card from becoming giant if there's only 1 batch */
+}
+.gc-batch-card:hover {
+    border-color: var(--gold);
+    transform: translateY(-3px);
+}
+.gc-batch-status {
+    position: absolute;
+    top: 16px; right: 16px;
+    font-size: 0.65rem;
+    font-weight: 700;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    padding: 4px 10px;
+    border-radius: 2px;
+}
+.gc-batch-status.open         { background: rgba(22,163,74,0.1); color: #16a34a; }
+.gc-batch-status.filling_fast { background: rgba(234,179,8,0.1);  color: #ca8a04; }
+.gc-batch-status.full         { background: rgba(197,0,0,0.1);    color: var(--gold); }
+
+.gc-batch-name {
+    font-family: 'SolaimanLipi', 'Jost', sans-serif;
+    font-size: 1.4rem;
+    font-weight: 600;
+    color: var(--text-primary);
+    margin-bottom: 16px;
+    padding-right: 60px;
+}
+.gc-batch-meta {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    margin-bottom: 20px;
+}
+.gc-batch-meta-row {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 0.88rem;
+    color: var(--text-secondary);
+}
+.gc-batch-meta-row svg { color: var(--gold); flex-shrink: 0; }
+
+/* Seat bar */
+.gc-seat-bar-wrap {
+    margin-bottom: 20px;
+}
+.gc-seat-bar-label {
+    display: flex;
+    justify-content: space-between;
+    font-size: 0.72rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    color: var(--text-muted);
+    margin-bottom: 6px;
+}
+.gc-seat-bar {
+    height: 5px;
+    background: var(--border);
+    border-radius: 999px;
+    overflow: hidden;
+}
+.gc-seat-bar-fill {
+    height: 100%;
+    border-radius: 999px;
+    background: var(--gold);
+    transition: width 0.5s ease;
+}
+
+.gc-batch-fee {
+    font-family: 'SolaimanLipi', 'Jost', sans-serif;
+    font-size: 1.8rem;
+    font-weight: 600;
+    color: var(--text-primary);
+    margin-bottom: 16px;
+}
+.gc-batch-fee span { font-size: 1rem; color: var(--text-muted); font-weight: 300; }
+
+.gc-apply-btn {
+    width: 100%;
+    padding: 12px;
+    background: var(--gold);
+    color: #fff;
+    font-family: 'SolaimanLipi', 'Jost', sans-serif;
+    font-size: 1.125rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.12em;
+    border: none;
+    cursor: pointer;
+    transition: background 0.2s;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+}
+.gc-apply-btn:disabled {
+    background: var(--border-strong);
+    cursor: not-allowed;
+}
+
+/* ── Benefits ── */
+.gc-benefits {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center; /* This perfectly centers the benefit cards */
+    gap: 20px;
+    margin-bottom: 64px;
+}
+.gc-benefit {
+    background: var(--bg-surface);
+    border: 1px solid var(--border);
+    padding: 24px;
+    display: flex;
+    gap: 14px;
+    align-items: flex-start;
+    transition: border-color 0.22s;
+    /* Added for Flexbox centering: */
+    width: 100%;
+    flex: 1 1 300px; /* Base width of 300px, allows smooth shrinking/growing */
+    max-width: 400px; /* Prevents cards from stretching too wide */
+}
+.gc-benefit:hover { border-color: var(--gold); }
+.gc-benefit-icon {
+    width: 36px; height: 36px;
+    background: var(--gold-bg);
+    border: 1px solid var(--border-strong);
+    display: flex; align-items: center; justify-content: center;
+    color: var(--gold);
+    flex-shrink: 0;
+}
+.gc-benefit-text { font-size: 1.3rem; font-family: 'SolaimanLipi', 'Jost', sans-serif; color: var(--text-secondary); line-height: 1.6; }
+.gc-benefit-text strong { display: block; color: var(--text-primary); font-family: 'SolaimanLipi', 'Jost', sans-serif; font-weight: 600; font-size: 1rem; margin-bottom: 3px; }
+
+/* ── Gallery ── */
+.gc-gallery-filters {
+    display: flex;
+    gap: 8px;
+    justify-content: center;
+    margin-bottom: 24px;
+    flex-wrap: wrap;
+}
+.gc-gallery-filter {
+    padding: 6px 18px;
+    border: 1px solid var(--border-strong);
+    background: transparent;
+    color: var(--text-muted);
+    font-family: 'SolaimanLipi', 'Jost', sans-serif;
+    font-size: 0.72rem;
+    font-weight: 600;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    cursor: pointer;
+    transition: all 0.2s;
+}
+.gc-gallery-filter.active,
+.gc-gallery-filter:hover {
+    border-color: var(--gold);
+    color: var(--gold);
+    background: var(--gold-bg);
+}
+.gc-gallery-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 3px;
+    margin-bottom: 64px;
+}
+.gc-gallery-item {
+    break-inside: avoid; /* Prevents splitting across columns */
+    margin-bottom: 8px;  /* Adds vertical gap between images */
+    overflow: hidden;
+    background: var(--bg-secondary);
+    cursor: pointer;
+    position: relative;
+    border-radius: 4px; /* Optional: adds a nice soft edge to masonry items */
+}
+.gc-gallery-item img {
+    width: 100%;
+    height: auto; /* Allows the image to keep its natural height */
+    display: block; /* Removes weird spacing at the bottom of the image */
+    transition: transform 0.5s ease;
+}
+.gc-gallery-item:hover img { transform: scale(1.08); }
+
+/* ── CTA Banner ── */
+.gc-cta-banner {
+    background: var(--bg-secondary);
+    border: 1px solid var(--border);
+    padding: 56px 40px;
+    text-align: center;
+    margin-bottom: 64px;
+    position: relative;
+    overflow: hidden;
+}
+.gc-cta-banner::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: radial-gradient(circle at 50% 50%, var(--gold-bg) 0%, transparent 70%);
+}
+.gc-cta-banner-title {
+    font-family: 'SolaimanLipi', 'Jost', sans-serif;
+    font-size: 2rem;
+    font-weight: 600;
+    color: var(--text-primary);
+    margin-bottom: 12px;
+    position: relative;
+}
+.gc-cta-banner-sub {
+    font-size: 1rem;
+    color: var(--text-muted);
+    margin-bottom: 28px;
+    position: relative;
+}
+
+/* ── Multi-step Form Modal ── */
+.gc-modal-overlay {
+    position: fixed;
+    inset: 0;
+    z-index: 9999;
+    background: rgba(4,3,2,0.88);
+    backdrop-filter: blur(6px);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 24px;
+}
+.gc-modal {
+    background: var(--bg-surface);
+    border: 1px solid var(--border-strong);
+    width: 100%;
+    max-width: 580px;
+    max-height: 90vh;
+    overflow-y: auto;
+    position: relative;
+    box-shadow: 0 32px 80px rgba(0,0,0,0.4);
+    animation: gc-modal-in 0.3s ease both;
+}
+@keyframes gc-modal-in {
+    from { opacity: 0; transform: translateY(20px); }
+    to   { opacity: 1; transform: translateY(0); }
+}
+.gc-modal-header {
+    padding: 24px 28px 20px;
+    border-bottom: 1px solid var(--border);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+.gc-modal-title {
+    font-family: 'SolaimanLipi', 'Jost', sans-serif;
+    font-size: 1.3rem;
+    font-weight: 600;
+    color: var(--text-primary);
+}
+.gc-modal-close {
+    width: 32px; height: 32px;
+    background: none; border: none;
+    color: var(--text-muted);
+    cursor: pointer;
+    display: flex; align-items: center; justify-content: center;
+    border-radius: 50%;
+    transition: background 0.2s;
+}
+.gc-modal-close:hover { background: var(--bg-secondary); color: var(--gold); }
+
+/* Step progress */
+.gc-steps-bar {
+    display: flex;
+    align-items: center;
+    padding: 16px 28px;
+    border-bottom: 1px solid var(--border);
+    gap: 0;
+    overflow-x: auto;
+}
+.gc-step-dot {
+    width: 28px; height: 28px;
+    border-radius: 50%;
+    border: 2px solid var(--border-strong);
+    background: var(--bg-primary);
+    color: var(--text-muted);
+    font-size: 0.72rem;
+    font-weight: 700;
+    display: flex; align-items: center; justify-content: center;
+    flex-shrink: 0;
+    transition: all 0.25s;
+}
+.gc-step-dot.done   { background: var(--gold); border-color: var(--gold); color: #fff; }
+.gc-step-dot.active { border-color: var(--gold); color: var(--gold); }
+.gc-step-line {
+    flex: 1; height: 2px;
+    background: var(--border);
+    min-width: 16px;
+    transition: background 0.25s;
+}
+.gc-step-line.done { background: var(--gold); }
+
+.gc-modal-body { padding: 28px; }
+
+/* Form fields inside modal */
+.gc-field { margin-bottom: 20px; }
+.gc-field label {
+    display: block;
+    font-size: 0.75rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.12em;
+    color: var(--text-secondary);
+    margin-bottom: 7px;
+}
+.gc-field input,
+.gc-field select,
+.gc-field textarea {
+    width: 100%;
+    padding: 11px 14px;
+    background: var(--bg-primary);
+    border: 1px solid var(--border-strong);
+    color: var(--text-primary);
+    font-family: 'SolaimanLipi', 'Jost', sans-serif;
+    font-size: 0.95rem;
+    font-weight: 300;
+    outline: none;
+    border-radius: 0;
+    appearance: none;
+    transition: border-color 0.22s, box-shadow 0.22s;
+}
+.gc-field input:focus,
+.gc-field select:focus { border-color: var(--gold); box-shadow: 0 0 0 3px var(--gold-bg); }
+.gc-field-hint { font-size: 0.78rem; color: var(--text-muted); margin-top: 5px; }
+.gc-field-error { font-size: 0.78rem; color: #dc2626; margin-top: 5px; }
+
+.gc-grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+
+/* Checkbox group */
+.gc-check-group {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 10px;
+}
+.gc-check-item {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 10px 14px;
+    border: 1px solid var(--border-strong);
+    cursor: pointer;
+    font-size: 0.88rem;
+    color: var(--text-secondary);
+    transition: all 0.2s;
+}
+.gc-check-item:has(input:checked) {
+    border-color: var(--gold);
+    color: var(--gold);
+    background: var(--gold-bg);
+}
+.gc-check-item input { accent-color: var(--gold); }
+
+/* Modal footer */
+.gc-modal-footer {
+    padding: 20px 28px;
+    border-top: 1px solid var(--border);
+    display: flex;
+    gap: 12px;
+    justify-content: space-between;
+    align-items: center;
+}
+.gc-btn-prev {
+    padding: 10px 24px;
+    border: 1px solid var(--border-strong);
+    background: transparent;
+    color: var(--text-secondary);
+    font-family: 'SolaimanLipi', 'Jost', sans-serif;
+    font-size: 0.8rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    cursor: pointer;
+    transition: all 0.2s;
+}
+.gc-btn-prev:hover { border-color: var(--gold); color: var(--gold); }
+.gc-btn-next {
+    padding: 10px 28px;
+    background: var(--gold);
+    color: #fff;
+    font-family: 'SolaimanLipi', 'Jost', sans-serif;
+    font-size: 0.8rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    border: none;
+    cursor: pointer;
+    transition: background 0.2s;
+    display: flex; align-items: center; gap: 8px;
+}
+.gc-btn-next:hover { background: var(--btn-fill-hover); }
+
+/* Batch select cards */
+.gc-batch-select-grid {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+.gc-batch-select-card {
+    padding: 16px;
+    border: 2px solid var(--border-strong);
+    cursor: pointer;
+    transition: all 0.2s;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+.gc-batch-select-card:hover { border-color: var(--gold); }
+.gc-batch-select-card.selected {
+    border-color: var(--gold);
+    background: var(--gold-bg);
+}
+.gc-batch-select-name { font-weight: 600; color: var(--text-primary); margin-bottom: 3px; }
+.gc-batch-select-meta { font-size: 0.8rem; color: var(--text-muted); }
+.gc-batch-select-fee { font-size: 1.2rem; font-weight: 700; color: var(--gold); }
+
+/* Success screen */
+.gc-success {
+    text-align: center;
+    padding: 48px 28px;
+}
+.gc-success-icon {
+    width: 72px; height: 72px;
+    background: rgba(22,163,74,0.1);
+    border: 1px solid rgba(22,163,74,0.3);
+    border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    margin: 0 auto 20px;
+    color: #16a34a;
+}
+.gc-success-title {
+    font-family: 'SolaimanLipi', 'Jost', sans-serif;
+    font-size: 1.6rem;
+    font-weight: 600;
+    color: var(--text-primary);
+    margin-bottom: 10px;
+}
+.gc-success-sub {
+    font-size: 0.9rem;
+    color: var(--text-muted);
+    line-height: 1.7;
+    margin-bottom: 24px;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+    .gc-hero { padding: 48px 20px 40px; }
+    .gc-body { padding: 40px 20px 60px; }
+    .gc-gallery-grid { grid-template-columns: repeat(2, 1fr); }
+    .gc-grid-2 { grid-template-columns: 1fr; }
+    .gc-check-group { grid-template-columns: 1fr; }
+    .gc-notice { padding: 12px 20px; }
+    .gc-cta-banner { padding: 40px 20px; }
+}
+</style>
+
+
+<div class="gc-hero">
+    <div class="gc-hero-eyebrow">Dhaka Model Agency</div>
+    <h1 class="gc-hero-title">
+        প্রফেশনাল <strong>গ্রুমিং ক্লাস</strong>
+    </h1>
+    <p class="gc-hero-sub">
+        ইন্ডাস্ট্রি-লেভেল ট্রেনিং, ক্যামেরা কনফিডেন্স, পোর্টফোলিও ডেভেলপমেন্ট এবং এজেন্সি-রেডি স্কিল ডেভেলপমেন্ট।
+    </p>
+    <button class="gc-hero-cta" onclick="document.getElementById('batches-section').scrollIntoView({behavior:'smooth'})">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M12 5v14M5 12l7 7 7-7"/>
+        </svg>
+        ব্যাচ দেখুন ও আবেদন করুন
+    </button>
+</div>
+
+<div class="gc-body">
+    
+    <div class="gc-content-wrapper">
+        
+        
+        <div class="gc-gallery-side" x-data="{ filter: 'all' }">
+            <div class="gc-section-head" style="text-align: left;">
+                <div class="gc-section-eyebrow">Gallery</div>
+                <h2 class="gc-section-title">ক্লাসের <strong>মুহূর্তসমূহ</strong></h2>
+            </div>
+
+            <?php if(\Livewire\Mechanisms\ExtendBlade\ExtendBlade::isRenderingLivewireComponent()): ?><!--[if BLOCK]><![endif]--><?php endif; ?><?php if($gallery->isNotEmpty()): ?>
+                <div class="gc-gallery-filters" style="justify-content: flex-start;">
+                    <button class="gc-gallery-filter" :class="filter==='all'?'active':''" @click="filter='all'">সব</button>
+                    <button class="gc-gallery-filter" :class="filter==='training'?'active':''" @click="filter='training'">ট্রেনিং</button>
+                    <button class="gc-gallery-filter" :class="filter==='graduation'?'active':''" @click="filter='graduation'">গ্র্যাজুয়েশন</button>
+                    <button class="gc-gallery-filter" :class="filter==='event'?'active':''" @click="filter='event'">ইভেন্ট</button>
+                </div>
+
+                <div class="gc-gallery-grid-3x4">
+                    <?php if(\Livewire\Mechanisms\ExtendBlade\ExtendBlade::isRenderingLivewireComponent()): ?><!--[if BLOCK]><![endif]--><?php \Livewire\Features\SupportCompiledWireKeys\SupportCompiledWireKeys::openLoop(); ?><?php endif; ?><?php $__currentLoopData = $gallery; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $photo): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?><?php if(\Livewire\Mechanisms\ExtendBlade\ExtendBlade::isRenderingLivewireComponent()): ?><?php \Livewire\Features\SupportCompiledWireKeys\SupportCompiledWireKeys::startLoopIteration(); ?><?php endif; ?>
+                    <div class="gc-gallery-item"
+                        x-show="filter === 'all' || filter === '<?php echo e($photo->category); ?>'"
+                        x-transition>
+                        <img src="<?php echo e(asset('storage/' . $photo->image)); ?>" alt="<?php echo e($photo->title); ?>" loading="lazy">
+                    </div>
+                    <?php if(\Livewire\Mechanisms\ExtendBlade\ExtendBlade::isRenderingLivewireComponent()): ?><?php \Livewire\Features\SupportCompiledWireKeys\SupportCompiledWireKeys::endLoop(); ?><?php endif; ?><?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?><?php if(\Livewire\Mechanisms\ExtendBlade\ExtendBlade::isRenderingLivewireComponent()): ?><!--[if ENDBLOCK]><![endif]--><?php \Livewire\Features\SupportCompiledWireKeys\SupportCompiledWireKeys::closeLoop(); ?><?php endif; ?>
+                </div>
+                
+                
+                <div>
+                    <?php echo e($gallery->links('vendor.pagination.custom-numbered')); ?>
+
+                </div>
+            <?php else: ?>
+                <p style="color:var(--text-muted); font-size: 0.9rem;">কোনো ছবি উপলব্ধ নেই।</p>
+            <?php endif; ?><?php if(\Livewire\Mechanisms\ExtendBlade\ExtendBlade::isRenderingLivewireComponent()): ?><!--[if ENDBLOCK]><![endif]--><?php endif; ?>
+        </div>
+
+        
+        <div class="gc-sidebar">
+            <div class="gc-sidebar-title">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"></path><path d="M13.73 21a2 2 0 0 1-3.46 0"></path>
+                </svg>
+                নোটিশ বোর্ড
+            </div>
+
+            <div class="gc-notices-scroll">
+                <?php if(\Livewire\Mechanisms\ExtendBlade\ExtendBlade::isRenderingLivewireComponent()): ?><!--[if BLOCK]><![endif]--><?php endif; ?><?php if($notices->isNotEmpty()): ?>
+                    <?php if(\Livewire\Mechanisms\ExtendBlade\ExtendBlade::isRenderingLivewireComponent()): ?><!--[if BLOCK]><![endif]--><?php \Livewire\Features\SupportCompiledWireKeys\SupportCompiledWireKeys::openLoop(); ?><?php endif; ?><?php $__currentLoopData = $notices; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $notice): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?><?php if(\Livewire\Mechanisms\ExtendBlade\ExtendBlade::isRenderingLivewireComponent()): ?><?php \Livewire\Features\SupportCompiledWireKeys\SupportCompiledWireKeys::startLoopIteration(); ?><?php endif; ?>
+                        <div class="gc-notice-card <?php echo e($notice->priority); ?>">
+                            <strong style="display:block; margin-bottom:4px; font-size:0.95rem;">
+                                <?php echo e($notice->title); ?>
+
+                            </strong>
+                            <span style="color: inherit;"><?php echo e($notice->message); ?></span>
+                        </div>
+                    <?php if(\Livewire\Mechanisms\ExtendBlade\ExtendBlade::isRenderingLivewireComponent()): ?><?php \Livewire\Features\SupportCompiledWireKeys\SupportCompiledWireKeys::endLoop(); ?><?php endif; ?><?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?><?php if(\Livewire\Mechanisms\ExtendBlade\ExtendBlade::isRenderingLivewireComponent()): ?><!--[if ENDBLOCK]><![endif]--><?php \Livewire\Features\SupportCompiledWireKeys\SupportCompiledWireKeys::closeLoop(); ?><?php endif; ?>
+                <?php else: ?>
+                    <p style="color:var(--text-muted); font-size: 0.85rem;">এই মুহূর্তে নতুন কোনো নোটিশ নেই।</p>
+                <?php endif; ?><?php if(\Livewire\Mechanisms\ExtendBlade\ExtendBlade::isRenderingLivewireComponent()): ?><!--[if ENDBLOCK]><![endif]--><?php endif; ?>
+            </div>
+            
+            <div class="gc-sidebar-stats">
+                <div class="gc-stats-grid">
+                    <div class="gc-stat-box">
+                        <div class="gc-stat-number">200+</div>
+                        <div class="gc-stat-label">সফল শিক্ষার্থী</div>
+                    </div>
+                    <div class="gc-stat-box">
+                        <div class="gc-stat-number">100%</div>
+                        <div class="gc-stat-label">প্র্যাক্টিক্যাল</div>
+                    </div>
+                </div>
+                
+                <button class="gc-sidebar-apply-btn" @click="applyModalOpen = true">
+                    এখনই আবেদন করুন
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/>
+                    </svg>
+                </button>
+            </div>
+        </div>
+        
+
+    </div>
+
+    
+    <div id="batches-section">
+        <div class="gc-section-head">
+            <div class="gc-section-eyebrow">Upcoming Batches</div>
+            <h2 class="gc-section-title">আসন্ন <strong>ব্যাচসমূহ</strong></h2>
+        </div>
+
+        <?php if(\Livewire\Mechanisms\ExtendBlade\ExtendBlade::isRenderingLivewireComponent()): ?><!--[if BLOCK]><![endif]--><?php endif; ?><?php if($batches->isEmpty()): ?>
+            <div style="text-align:center; padding: 48px; background: var(--bg-surface); border: 1px dashed var(--border-strong); margin-bottom: 64px;">
+                <p style="color: var(--text-muted); font-size: 0.9rem;">এই মুহূর্তে কোনো ব্যাচ উপলব্ধ নেই। শীঘ্রই আসছে!</p>
+            </div>
+        <?php else: ?>
+            <div class="gc-batches">
+                <?php if(\Livewire\Mechanisms\ExtendBlade\ExtendBlade::isRenderingLivewireComponent()): ?><!--[if BLOCK]><![endif]--><?php \Livewire\Features\SupportCompiledWireKeys\SupportCompiledWireKeys::openLoop(); ?><?php endif; ?><?php $__currentLoopData = $batches; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $batch): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?><?php if(\Livewire\Mechanisms\ExtendBlade\ExtendBlade::isRenderingLivewireComponent()): ?><?php \Livewire\Features\SupportCompiledWireKeys\SupportCompiledWireKeys::startLoopIteration(); ?><?php endif; ?>
+                    <div class="gc-batch-card">
+                        <div class="gc-batch-status <?php echo e($batch->status); ?>">
+                            <?php if(\Livewire\Mechanisms\ExtendBlade\ExtendBlade::isRenderingLivewireComponent()): ?><!--[if BLOCK]><![endif]--><?php endif; ?><?php if($batch->status === 'open'): ?> Open
+                            <?php elseif($batch->status === 'filling_fast'): ?> Filling Fast
+                            <?php else: ?> Full <?php endif; ?><?php if(\Livewire\Mechanisms\ExtendBlade\ExtendBlade::isRenderingLivewireComponent()): ?><!--[if ENDBLOCK]><![endif]--><?php endif; ?>
+                        </div>
+
+                        <div class="gc-batch-name"><?php echo e($batch->title); ?></div>
+
+                        <div class="gc-batch-meta">
+                            <div class="gc-batch-meta-row">
+                                <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
+                                শুরু: <?php echo e($batch->start_date->format('d M Y')); ?>
+
+                            </div>
+                            <?php if(\Livewire\Mechanisms\ExtendBlade\ExtendBlade::isRenderingLivewireComponent()): ?><!--[if BLOCK]><![endif]--><?php endif; ?><?php if($batch->trainer): ?>
+                            <div class="gc-batch-meta-row">
+                                <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="8" r="4"/><path d="M4 20c0-4 3.58-7 8-7s8 3 8 7"/></svg>
+                                ট্রেইনার: <?php echo e($batch->trainer); ?>
+
+                            </div>
+                            <?php endif; ?><?php if(\Livewire\Mechanisms\ExtendBlade\ExtendBlade::isRenderingLivewireComponent()): ?><!--[if ENDBLOCK]><![endif]--><?php endif; ?>
+                            <?php if(\Livewire\Mechanisms\ExtendBlade\ExtendBlade::isRenderingLivewireComponent()): ?><!--[if BLOCK]><![endif]--><?php endif; ?><?php if(!empty($batch->schedule_json)): ?>
+                            <div class="gc-batch-meta-row">
+                                <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></svg>
+                                <?php echo e(collect($batch->schedule_json)->map(fn($s) => ($s['day'] ?? '') . ' ' . ($s['time'] ?? ''))->implode(', ')); ?>
+
+                            </div>
+                            <?php endif; ?><?php if(\Livewire\Mechanisms\ExtendBlade\ExtendBlade::isRenderingLivewireComponent()): ?><!--[if ENDBLOCK]><![endif]--><?php endif; ?>
+                        </div>
+
+                        
+                        <div class="gc-seat-bar-wrap">
+                            <div class="gc-seat-bar-label">
+                                <span>আসন পূর্ণতা</span>
+                                <span><?php echo e($batch->filled_seats); ?>/<?php echo e($batch->seat_limit); ?> টি</span>
+                            </div>
+                            <div class="gc-seat-bar">
+                                <div class="gc-seat-bar-fill" style="width: <?php echo e($batch->fill_percentage); ?>%"></div>
+                            </div>
+                            <?php if(\Livewire\Mechanisms\ExtendBlade\ExtendBlade::isRenderingLivewireComponent()): ?><!--[if BLOCK]><![endif]--><?php endif; ?><?php if($batch->remaining_seats <= 5 && $batch->remaining_seats > 0): ?>
+                                <div style="font-size:0.72rem; color:var(--gold); font-weight:700; margin-top:5px;">
+                                    ⚡ মাত্র <?php echo e($batch->remaining_seats); ?>টি আসন বাকি!
+                                </div>
+                            <?php endif; ?><?php if(\Livewire\Mechanisms\ExtendBlade\ExtendBlade::isRenderingLivewireComponent()): ?><!--[if ENDBLOCK]><![endif]--><?php endif; ?>
+                        </div>
+
+                        <div class="gc-batch-fee">
+                            ৳<?php echo e(number_format($batch->fee)); ?>
+
+                            <span>/ একজন</span>
+                        </div>
+
+                        <button
+                            class="gc-apply-btn"
+                            wire:click="$set('batch_id', '<?php echo e($batch->id); ?>')"
+                            <?php if($batch->status === 'full'): ?> disabled <?php endif; ?>
+                            @click="applyModalOpen = true"
+                        >
+                            <?php if(\Livewire\Mechanisms\ExtendBlade\ExtendBlade::isRenderingLivewireComponent()): ?><!--[if BLOCK]><![endif]--><?php endif; ?><?php if($batch->status === 'full'): ?>
+                                আসন পূর্ণ
+                            <?php else: ?>
+                                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+                                আবেদন করুন
+                            <?php endif; ?><?php if(\Livewire\Mechanisms\ExtendBlade\ExtendBlade::isRenderingLivewireComponent()): ?><!--[if ENDBLOCK]><![endif]--><?php endif; ?>
+                        </button>
+                    </div>
+                <?php if(\Livewire\Mechanisms\ExtendBlade\ExtendBlade::isRenderingLivewireComponent()): ?><?php \Livewire\Features\SupportCompiledWireKeys\SupportCompiledWireKeys::endLoop(); ?><?php endif; ?><?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?><?php if(\Livewire\Mechanisms\ExtendBlade\ExtendBlade::isRenderingLivewireComponent()): ?><!--[if ENDBLOCK]><![endif]--><?php \Livewire\Features\SupportCompiledWireKeys\SupportCompiledWireKeys::closeLoop(); ?><?php endif; ?>
+            </div>
+        <?php endif; ?><?php if(\Livewire\Mechanisms\ExtendBlade\ExtendBlade::isRenderingLivewireComponent()): ?><!--[if ENDBLOCK]><![endif]--><?php endif; ?>
+    </div>
+
+    
+    <div class="gc-section-head">
+        <div class="gc-section-eyebrow">What You Learn</div>
+        <h2 class="gc-section-title">কী শিখবেন এই <strong>ক্লাসে?</strong></h2>
+    </div>
+
+    <div class="gc-benefits">
+        <?php if(\Livewire\Mechanisms\ExtendBlade\ExtendBlade::isRenderingLivewireComponent()): ?><!--[if BLOCK]><![endif]--><?php \Livewire\Features\SupportCompiledWireKeys\SupportCompiledWireKeys::openLoop(); ?><?php endif; ?><?php $__currentLoopData = [
+            ['ইন্ডাস্ট্রি-লেভেল গ্রুমিং', 'পেশাদার মানের ব্যক্তিত্ব ও উপস্থাপনা দক্ষতা অর্জন করুন।'],
+            ['ক্যামেরা কনফিডেন্স', 'ক্যামেরার সামনে আত্মবিশ্বাসী হওয়ার কৌশল।'],
+            ['পোর্টফোলিও ডেভেলপমেন্ট', 'পেশাদার পোর্টফোলিও তৈরির সম্পূর্ণ গাইডেন্স।'],
+            ['কাস্টিং প্রিপারেশন', 'রিয়েল মডেল কাস্টিংয়ের জন্য প্রস্তুতি।'],
+            ['যোগাযোগ দক্ষতা', 'ব্যক্তিত্ব ও যোগাযোগ উন্নয়ন প্রশিক্ষণ।'],
+            ['এজেন্সি-রেডি স্কিল', 'এজেন্সিতে কাজ করার উপযোগী স্কিল ডেভেলপমেন্ট।'],
+        ]; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as [$title, $desc]): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?><?php if(\Livewire\Mechanisms\ExtendBlade\ExtendBlade::isRenderingLivewireComponent()): ?><?php \Livewire\Features\SupportCompiledWireKeys\SupportCompiledWireKeys::startLoopIteration(); ?><?php endif; ?>
+        <div class="gc-benefit">
+            <div class="gc-benefit-icon">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M12 2L3 7v5c0 5.55 3.84 10.74 9 12 5.16-1.26 9-6.45 9-12V7L12 2zm-2 15l-4-4 1.41-1.41L10 14.17l6.59-6.59L18 9l-8 8z"/>
+                </svg>
+            </div>
+            <div class="gc-benefit-text">
+                <strong><?php echo e($title); ?></strong>
+                <?php echo e($desc); ?>
+
+            </div>
+        </div>
+        <?php if(\Livewire\Mechanisms\ExtendBlade\ExtendBlade::isRenderingLivewireComponent()): ?><?php \Livewire\Features\SupportCompiledWireKeys\SupportCompiledWireKeys::endLoop(); ?><?php endif; ?><?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?><?php if(\Livewire\Mechanisms\ExtendBlade\ExtendBlade::isRenderingLivewireComponent()): ?><!--[if ENDBLOCK]><![endif]--><?php \Livewire\Features\SupportCompiledWireKeys\SupportCompiledWireKeys::closeLoop(); ?><?php endif; ?>
+    </div>
+
+    
+    <div class="gc-cta-banner">
+        <div class="gc-cta-banner-title">আপনার ক্যারিয়ার শুরু হোক আজই</div>
+        <p class="gc-cta-banner-sub">সীমিত আসন। এখনই আবেদন করুন।</p>
+        <button class="gc-hero-cta" @click="applyModalOpen = true">
+            আবেদন শুরু করুন
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/>
+            </svg>
+        </button>
+    </div>
+
+</div>
+
+
+<div id="gc-apply-modal" x-show="applyModalOpen" style="display: none;" class="gc-modal-overlay">
+    <div class="gc-modal">
+
+        <?php if(\Livewire\Mechanisms\ExtendBlade\ExtendBlade::isRenderingLivewireComponent()): ?><!--[if BLOCK]><![endif]--><?php endif; ?><?php if($submitted): ?>
+            
+            <div class="gc-success">
+                <div class="gc-success-icon">
+                    <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M12 2L3 7v5c0 5.55 3.84 10.74 9 12 5.16-1.26 9-6.45 9-12V7L12 2zm-2 15l-4-4 1.41-1.41L10 14.17l6.59-6.59L18 9l-8 8z"/>
+                    </svg>
+                </div>
+                <div class="gc-success-title">আবেদন সফলভাবে জমা হয়েছে! 🎉</div>
+                <p class="gc-success-sub">
+                    আপনার আবেদন নম্বর: <strong>#<?php echo e($applicationId); ?></strong><br>
+                    আমাদের টিম শীঘ্রই আপনার পেমেন্ট যাচাই করবে এবং আপনাকে নিশ্চিত করবে।
+                </p>
+
+                <?php if(\Livewire\Mechanisms\ExtendBlade\ExtendBlade::isRenderingLivewireComponent()): ?><!--[if BLOCK]><![endif]--><?php endif; ?><?php if($settings?->contact_phone): ?>
+                <?php
+                    $wa = preg_replace('/[^0-9]/', '', $settings->contact_phone);
+                ?>
+                <a href="https://wa.me/<?php echo e($wa); ?>?text=আমি%20গ্রুমিং%20ক্লাসে%20আবেদন%20করেছি।%20আমার%20আবেদন%20নম্বর%20%23<?php echo e($applicationId); ?>"
+                   target="_blank"
+                   style="display:inline-flex;align-items:center;gap:10px;padding:14px 28px;background:#25D366;color:#fff;font-weight:600;font-size:0.9rem;border-radius:4px;text-decoration:none;margin-top:8px;">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.422-.272.347-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413Z"/></svg>
+                    হোয়াটসঅ্যাপে নিশ্চিত করুন
+                </a>
+
+                <br><br>
+                <button @click="applyModalOpen = false"
+                    style="padding:10px 24px;border:1px solid var(--border-strong);background:transparent;color:var(--text-secondary);font-family:'Jost',sans-serif;font-size:0.8rem;cursor:pointer;">
+                    বন্ধ করুন
+                </button>
+                <?php endif; ?><?php if(\Livewire\Mechanisms\ExtendBlade\ExtendBlade::isRenderingLivewireComponent()): ?><!--[if ENDBLOCK]><![endif]--><?php endif; ?>
+            </div>
+
+        <?php else: ?>
+            
+            <div class="gc-modal-header">
+                <div class="gc-modal-title">
+                    <?php if(\Livewire\Mechanisms\ExtendBlade\ExtendBlade::isRenderingLivewireComponent()): ?><!--[if BLOCK]><![endif]--><?php endif; ?><?php if($step === 1): ?> ব্যক্তিগত তথ্য
+                    <?php elseif($step === 2): ?> শারীরিক তথ্য
+                    <?php elseif($step === 3): ?> ক্যারিয়ার আগ্রহ
+                    <?php elseif($step === 4): ?> ব্যাচ নির্বাচন
+                    <?php else: ?> পেমেন্ট তথ্য
+                    <?php endif; ?><?php if(\Livewire\Mechanisms\ExtendBlade\ExtendBlade::isRenderingLivewireComponent()): ?><!--[if ENDBLOCK]><![endif]--><?php endif; ?>
+                </div>
+                <button class="gc-modal-close" @click="applyModalOpen = false">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/>
+                    </svg>
+                </button>
+            </div>
+
+            
+            <div class="gc-steps-bar">
+                <?php if(\Livewire\Mechanisms\ExtendBlade\ExtendBlade::isRenderingLivewireComponent()): ?><!--[if BLOCK]><![endif]--><?php \Livewire\Features\SupportCompiledWireKeys\SupportCompiledWireKeys::openLoop(); ?><?php endif; ?><?php for($i = 1; $i <= $totalSteps; $i++): ?><?php if(\Livewire\Mechanisms\ExtendBlade\ExtendBlade::isRenderingLivewireComponent()): ?><?php \Livewire\Features\SupportCompiledWireKeys\SupportCompiledWireKeys::startLoopIteration(); ?><?php endif; ?>
+                    <div class="gc-step-dot <?php echo e($i < $step ? 'done' : ($i === $step ? 'active' : '')); ?>">
+                        <?php if(\Livewire\Mechanisms\ExtendBlade\ExtendBlade::isRenderingLivewireComponent()): ?><!--[if BLOCK]><![endif]--><?php endif; ?><?php if($i < $step): ?>
+                            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg>
+                        <?php else: ?>
+                            <?php echo e($i); ?>
+
+                        <?php endif; ?><?php if(\Livewire\Mechanisms\ExtendBlade\ExtendBlade::isRenderingLivewireComponent()): ?><!--[if ENDBLOCK]><![endif]--><?php endif; ?>
+                    </div>
+                    <?php if(\Livewire\Mechanisms\ExtendBlade\ExtendBlade::isRenderingLivewireComponent()): ?><!--[if BLOCK]><![endif]--><?php endif; ?><?php if($i < $totalSteps): ?>
+                        <div class="gc-step-line <?php echo e($i < $step ? 'done' : ''); ?>"></div>
+                    <?php endif; ?><?php if(\Livewire\Mechanisms\ExtendBlade\ExtendBlade::isRenderingLivewireComponent()): ?><!--[if ENDBLOCK]><![endif]--><?php endif; ?>
+                <?php if(\Livewire\Mechanisms\ExtendBlade\ExtendBlade::isRenderingLivewireComponent()): ?><?php \Livewire\Features\SupportCompiledWireKeys\SupportCompiledWireKeys::endLoop(); ?><?php endif; ?><?php endfor; ?><?php if(\Livewire\Mechanisms\ExtendBlade\ExtendBlade::isRenderingLivewireComponent()): ?><!--[if ENDBLOCK]><![endif]--><?php \Livewire\Features\SupportCompiledWireKeys\SupportCompiledWireKeys::closeLoop(); ?><?php endif; ?>
+            </div>
+
+            
+            <div class="gc-modal-body">
+
+                
+                <?php if(\Livewire\Mechanisms\ExtendBlade\ExtendBlade::isRenderingLivewireComponent()): ?><!--[if BLOCK]><![endif]--><?php endif; ?><?php if($step === 1): ?>
+                    <div class="gc-field">
+                        <label>পূর্ণ নাম <span style="color:var(--gold)">*</span></label>
+                        <input type="text" wire:model.defer="full_name" placeholder="আপনার পূর্ণ নাম">
+                        <?php if(\Livewire\Mechanisms\ExtendBlade\ExtendBlade::isRenderingLivewireComponent()): ?><!--[if BLOCK]><![endif]--><?php endif; ?><?php $__errorArgs = ['full_name'];
+$__bag = $errors->getBag($__errorArgs[1] ?? 'default');
+if ($__bag->has($__errorArgs[0])) :
+if (isset($message)) { $__messageOriginal = $message; }
+$message = $__bag->first($__errorArgs[0]); ?> <div class="gc-field-error"><?php echo e($message); ?></div> <?php unset($message);
+if (isset($__messageOriginal)) { $message = $__messageOriginal; }
+endif;
+unset($__errorArgs, $__bag); ?><?php if(\Livewire\Mechanisms\ExtendBlade\ExtendBlade::isRenderingLivewireComponent()): ?><!--[if ENDBLOCK]><![endif]--><?php endif; ?>
+                    </div>
+                    <div class="gc-grid-2">
+                        <div class="gc-field">
+                            <label>মোবাইল নম্বর <span style="color:var(--gold)">*</span></label>
+                            <input type="tel" wire:model.defer="phone" placeholder="01XXXXXXXXX">
+                            <?php if(\Livewire\Mechanisms\ExtendBlade\ExtendBlade::isRenderingLivewireComponent()): ?><!--[if BLOCK]><![endif]--><?php endif; ?><?php $__errorArgs = ['phone'];
+$__bag = $errors->getBag($__errorArgs[1] ?? 'default');
+if ($__bag->has($__errorArgs[0])) :
+if (isset($message)) { $__messageOriginal = $message; }
+$message = $__bag->first($__errorArgs[0]); ?> <div class="gc-field-error"><?php echo e($message); ?></div> <?php unset($message);
+if (isset($__messageOriginal)) { $message = $__messageOriginal; }
+endif;
+unset($__errorArgs, $__bag); ?><?php if(\Livewire\Mechanisms\ExtendBlade\ExtendBlade::isRenderingLivewireComponent()): ?><!--[if ENDBLOCK]><![endif]--><?php endif; ?>
+                        </div>
+                        <div class="gc-field">
+                            <label>হোয়াটসঅ্যাপ</label>
+                            <input type="tel" wire:model.defer="whatsapp" placeholder="01XXXXXXXXX">
+                        </div>
+                    </div>
+                    <div class="gc-field">
+                        <label>ইমেইল</label>
+                        <input type="email" wire:model.defer="email" placeholder="you@example.com">
+                        <?php if(\Livewire\Mechanisms\ExtendBlade\ExtendBlade::isRenderingLivewireComponent()): ?><!--[if BLOCK]><![endif]--><?php endif; ?><?php $__errorArgs = ['email'];
+$__bag = $errors->getBag($__errorArgs[1] ?? 'default');
+if ($__bag->has($__errorArgs[0])) :
+if (isset($message)) { $__messageOriginal = $message; }
+$message = $__bag->first($__errorArgs[0]); ?> <div class="gc-field-error"><?php echo e($message); ?></div> <?php unset($message);
+if (isset($__messageOriginal)) { $message = $__messageOriginal; }
+endif;
+unset($__errorArgs, $__bag); ?><?php if(\Livewire\Mechanisms\ExtendBlade\ExtendBlade::isRenderingLivewireComponent()): ?><!--[if ENDBLOCK]><![endif]--><?php endif; ?>
+                    </div>
+
+                
+                <?php elseif($step === 2): ?>
+                    <div class="gc-grid-2">
+                        <div class="gc-field">
+                            <label>বয়স</label>
+                            <input type="number" wire:model.defer="age" placeholder="e.g. 22">
+                            <?php if(\Livewire\Mechanisms\ExtendBlade\ExtendBlade::isRenderingLivewireComponent()): ?><!--[if BLOCK]><![endif]--><?php endif; ?><?php $__errorArgs = ['age'];
+$__bag = $errors->getBag($__errorArgs[1] ?? 'default');
+if ($__bag->has($__errorArgs[0])) :
+if (isset($message)) { $__messageOriginal = $message; }
+$message = $__bag->first($__errorArgs[0]); ?> <div class="gc-field-error"><?php echo e($message); ?></div> <?php unset($message);
+if (isset($__messageOriginal)) { $message = $__messageOriginal; }
+endif;
+unset($__errorArgs, $__bag); ?><?php if(\Livewire\Mechanisms\ExtendBlade\ExtendBlade::isRenderingLivewireComponent()): ?><!--[if ENDBLOCK]><![endif]--><?php endif; ?>
+                        </div>
+                        <div class="gc-field">
+                            <label>লিঙ্গ</label>
+                            <select wire:model.defer="gender">
+                                <option value="">নির্বাচন করুন</option>
+                                <option value="Male">Male</option>
+                                <option value="Female">Female</option>
+                                <option value="Other">Other</option>
+                            </select>
+                        </div>
+                        <div class="gc-field">
+                            <label>উচ্চতা</label>
+                            <input type="text" wire:model.defer="height" placeholder='e.g. 5&apos;6"'>
+                        </div>
+                        <div class="gc-field">
+                            <label>ওজন</label>
+                            <input type="text" wire:model.defer="weight" placeholder="e.g. 55 kg">
+                        </div>
+                    </div>
+                    <div class="gc-field">
+                        <label>ঠিকানা</label>
+                        <input type="text" wire:model.defer="address" placeholder="আপনার সম্পূর্ণ ঠিকানা">
+                    </div>
+
+                
+                <?php elseif($step === 3): ?>
+                    <div class="gc-field">
+                        <label>ক্যারিয়ার আগ্রহ (একাধিক বেছে নিন)</label>
+                        <div class="gc-check-group">
+                            <?php if(\Livewire\Mechanisms\ExtendBlade\ExtendBlade::isRenderingLivewireComponent()): ?><!--[if BLOCK]><![endif]--><?php \Livewire\Features\SupportCompiledWireKeys\SupportCompiledWireKeys::openLoop(); ?><?php endif; ?><?php $__currentLoopData = ['Modeling', 'Acting', 'Personality Development', 'Fashion Industry']; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $interest): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?><?php if(\Livewire\Mechanisms\ExtendBlade\ExtendBlade::isRenderingLivewireComponent()): ?><?php \Livewire\Features\SupportCompiledWireKeys\SupportCompiledWireKeys::startLoopIteration(); ?><?php endif; ?>
+                            <label class="gc-check-item">
+                                <input type="checkbox" wire:model.defer="career_interests" value="<?php echo e($interest); ?>">
+                                <?php echo e($interest); ?>
+
+                            </label>
+                            <?php if(\Livewire\Mechanisms\ExtendBlade\ExtendBlade::isRenderingLivewireComponent()): ?><?php \Livewire\Features\SupportCompiledWireKeys\SupportCompiledWireKeys::endLoop(); ?><?php endif; ?><?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?><?php if(\Livewire\Mechanisms\ExtendBlade\ExtendBlade::isRenderingLivewireComponent()): ?><!--[if ENDBLOCK]><![endif]--><?php \Livewire\Features\SupportCompiledWireKeys\SupportCompiledWireKeys::closeLoop(); ?><?php endif; ?>
+                        </div>
+                    </div>
+                    <div class="gc-field">
+                        <label>অভিজ্ঞতার স্তর</label>
+                        <select wire:model.defer="experience_level">
+                            <option value="">নির্বাচন করুন</option>
+                            <option value="Beginner">Beginner (নতুন)</option>
+                            <option value="Intermediate">Intermediate (কিছুটা অভিজ্ঞ)</option>
+                            <option value="Experienced">Experienced (অভিজ্ঞ)</option>
+                        </select>
+                    </div>
+
+                
+                <?php elseif($step === 4): ?>
+                    <div class="gc-batch-select-grid">
+                        <?php if(\Livewire\Mechanisms\ExtendBlade\ExtendBlade::isRenderingLivewireComponent()): ?><!--[if BLOCK]><![endif]--><?php \Livewire\Features\SupportCompiledWireKeys\SupportCompiledWireKeys::openLoop(); ?><?php endif; ?><?php $__empty_1 = true; $__currentLoopData = $batches; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $batch): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); $__empty_1 = false; ?><?php if(\Livewire\Mechanisms\ExtendBlade\ExtendBlade::isRenderingLivewireComponent()): ?><?php \Livewire\Features\SupportCompiledWireKeys\SupportCompiledWireKeys::startLoopIteration(); ?><?php endif; ?>
+                            <div class="gc-batch-select-card <?php echo e($batch_id == $batch->id ? 'selected' : ''); ?>"
+                                wire:click="$set('batch_id', '<?php echo e($batch->id); ?>')">
+                                <div>
+                                    <div class="gc-batch-select-name"><?php echo e($batch->title); ?></div>
+                                    <div class="gc-batch-select-meta">
+                                        শুরু: <?php echo e($batch->start_date->format('d M Y')); ?>
+
+                                        · আসন বাকি: <?php echo e($batch->remaining_seats); ?>টি
+                                    </div>
+                                </div>
+                                <div class="gc-batch-select-fee">৳<?php echo e(number_format($batch->fee)); ?></div>
+                            </div>
+                        <?php if(\Livewire\Mechanisms\ExtendBlade\ExtendBlade::isRenderingLivewireComponent()): ?><?php \Livewire\Features\SupportCompiledWireKeys\SupportCompiledWireKeys::endLoop(); ?><?php endif; ?><?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); if ($__empty_1): ?><?php if(\Livewire\Mechanisms\ExtendBlade\ExtendBlade::isRenderingLivewireComponent()): ?><?php \Livewire\Features\SupportCompiledWireKeys\SupportCompiledWireKeys::closeLoop(); ?><?php endif; ?>
+                            <p style="color:var(--text-muted);font-size:0.9rem;">কোনো ব্যাচ উপলব্ধ নেই।</p>
+                        <?php endif; ?><?php if(\Livewire\Mechanisms\ExtendBlade\ExtendBlade::isRenderingLivewireComponent()): ?><!--[if ENDBLOCK]><![endif]--><?php endif; ?>
+                    </div>
+                    <?php if(\Livewire\Mechanisms\ExtendBlade\ExtendBlade::isRenderingLivewireComponent()): ?><!--[if BLOCK]><![endif]--><?php endif; ?><?php $__errorArgs = ['batch_id'];
+$__bag = $errors->getBag($__errorArgs[1] ?? 'default');
+if ($__bag->has($__errorArgs[0])) :
+if (isset($message)) { $__messageOriginal = $message; }
+$message = $__bag->first($__errorArgs[0]); ?> <div class="gc-field-error" style="margin-top:8px;"><?php echo e($message); ?></div> <?php unset($message);
+if (isset($__messageOriginal)) { $message = $__messageOriginal; }
+endif;
+unset($__errorArgs, $__bag); ?><?php if(\Livewire\Mechanisms\ExtendBlade\ExtendBlade::isRenderingLivewireComponent()): ?><!--[if ENDBLOCK]><![endif]--><?php endif; ?>
+
+                
+                <?php elseif($step === 5): ?>
+                    <?php if(\Livewire\Mechanisms\ExtendBlade\ExtendBlade::isRenderingLivewireComponent()): ?><!--[if BLOCK]><![endif]--><?php endif; ?><?php if($selectedBatch): ?>
+                    <div style="background:var(--gold-bg);border:1px solid var(--border-strong);padding:16px;margin-bottom:20px;display:flex;justify-content:space-between;align-items:center;">
+                        <div>
+                            <div style="font-size:0.72rem;font-weight:700;text-transform:uppercase;color:var(--text-muted);margin-bottom:3px;">নির্বাচিত ব্যাচ</div>
+                            <div style="font-weight:600;color:var(--text-primary);"><?php echo e($selectedBatch->title); ?></div>
+                        </div>
+                        <div style="font-size:1.6rem;font-weight:700;color:var(--gold);">৳<?php echo e(number_format($selectedBatch->fee)); ?></div>
+                    </div>
+                    <?php endif; ?><?php if(\Livewire\Mechanisms\ExtendBlade\ExtendBlade::isRenderingLivewireComponent()): ?><!--[if ENDBLOCK]><![endif]--><?php endif; ?>
+
+                    <div class="gc-field">
+                        <label>পেমেন্ট মেথড <span style="color:var(--gold)">*</span></label>
+                        <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-bottom:4px;">
+                            <?php if(\Livewire\Mechanisms\ExtendBlade\ExtendBlade::isRenderingLivewireComponent()): ?><!--[if BLOCK]><![endif]--><?php \Livewire\Features\SupportCompiledWireKeys\SupportCompiledWireKeys::openLoop(); ?><?php endif; ?><?php $__currentLoopData = ['bKash' => 'বিকাশ', 'Nagad' => 'নগদ', 'Rocket' => 'রকেট']; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $val => $label): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?><?php if(\Livewire\Mechanisms\ExtendBlade\ExtendBlade::isRenderingLivewireComponent()): ?><?php \Livewire\Features\SupportCompiledWireKeys\SupportCompiledWireKeys::startLoopIteration(); ?><?php endif; ?>
+                            <label style="display:flex;align-items:center;justify-content:center;padding:12px;border:2px solid <?php echo e($payment_method === $val ? 'var(--gold)' : 'var(--border-strong)'); ?>;background:<?php echo e($payment_method === $val ? 'var(--gold-bg)' : 'transparent'); ?>;cursor:pointer;font-weight:600;font-size:0.88rem;color:<?php echo e($payment_method === $val ? 'var(--gold)' : 'var(--text-secondary)'); ?>;transition:all 0.2s;">
+                                <input type="radio" wire:model.live="payment_method" value="<?php echo e($val); ?>" style="display:none;">
+                                <?php echo e($label); ?>
+
+                            </label>
+                            <?php if(\Livewire\Mechanisms\ExtendBlade\ExtendBlade::isRenderingLivewireComponent()): ?><?php \Livewire\Features\SupportCompiledWireKeys\SupportCompiledWireKeys::endLoop(); ?><?php endif; ?><?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?><?php if(\Livewire\Mechanisms\ExtendBlade\ExtendBlade::isRenderingLivewireComponent()): ?><!--[if ENDBLOCK]><![endif]--><?php \Livewire\Features\SupportCompiledWireKeys\SupportCompiledWireKeys::closeLoop(); ?><?php endif; ?>
+                        </div>
+                        <?php if(\Livewire\Mechanisms\ExtendBlade\ExtendBlade::isRenderingLivewireComponent()): ?><!--[if BLOCK]><![endif]--><?php endif; ?><?php $__errorArgs = ['payment_method'];
+$__bag = $errors->getBag($__errorArgs[1] ?? 'default');
+if ($__bag->has($__errorArgs[0])) :
+if (isset($message)) { $__messageOriginal = $message; }
+$message = $__bag->first($__errorArgs[0]); ?> <div class="gc-field-error"><?php echo e($message); ?></div> <?php unset($message);
+if (isset($__messageOriginal)) { $message = $__messageOriginal; }
+endif;
+unset($__errorArgs, $__bag); ?><?php if(\Livewire\Mechanisms\ExtendBlade\ExtendBlade::isRenderingLivewireComponent()): ?><!--[if ENDBLOCK]><![endif]--><?php endif; ?>
+                    </div>
+
+                    <?php if(\Livewire\Mechanisms\ExtendBlade\ExtendBlade::isRenderingLivewireComponent()): ?><!--[if BLOCK]><![endif]--><?php endif; ?><?php if($payment_method && $settings): ?>
+                    <?php
+                        $payNumber = match($payment_method) {
+                            'bKash'  => $settings->bkash_number,
+                            'Nagad'  => $settings->nagad_number,
+                            'Rocket' => $settings->rocket_number,
+                            default  => null,
+                        };
+                    ?>
+                    <?php if(\Livewire\Mechanisms\ExtendBlade\ExtendBlade::isRenderingLivewireComponent()): ?><!--[if BLOCK]><![endif]--><?php endif; ?><?php if($payNumber): ?>
+                    <div style="background:var(--bg-secondary);border:1px solid var(--border);padding:16px;margin-bottom:20px;display:flex;align-items:center;gap:12px;">
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="var(--gold)" stroke-width="2"><rect x="1" y="4" width="22" height="16" rx="2"/><line x1="1" y1="10" x2="23" y2="10"/></svg>
+                        <div>
+                            <div style="font-size:0.72rem;font-weight:700;text-transform:uppercase;color:var(--text-muted);">এই নম্বরে Send Money করুন</div>
+                            <div style="font-size:1.4rem;font-weight:700;color:var(--gold);margin-top:2px;"><?php echo e($payNumber); ?></div>
+                        </div>
+                    </div>
+                    <?php endif; ?><?php if(\Livewire\Mechanisms\ExtendBlade\ExtendBlade::isRenderingLivewireComponent()): ?><!--[if ENDBLOCK]><![endif]--><?php endif; ?>
+                    <?php endif; ?><?php if(\Livewire\Mechanisms\ExtendBlade\ExtendBlade::isRenderingLivewireComponent()): ?><!--[if ENDBLOCK]><![endif]--><?php endif; ?>
+
+                    <div class="gc-field">
+                        <label>ট্রানজেকশন আইডি (TrxID) <span style="color:var(--gold)">*</span></label>
+                        <input type="text" wire:model.defer="transaction_id" placeholder="e.g. 9J5A6B8C" style="letter-spacing:0.1em;">
+                        <?php if(\Livewire\Mechanisms\ExtendBlade\ExtendBlade::isRenderingLivewireComponent()): ?><!--[if BLOCK]><![endif]--><?php endif; ?><?php $__errorArgs = ['transaction_id'];
+$__bag = $errors->getBag($__errorArgs[1] ?? 'default');
+if ($__bag->has($__errorArgs[0])) :
+if (isset($message)) { $__messageOriginal = $message; }
+$message = $__bag->first($__errorArgs[0]); ?> <div class="gc-field-error"><?php echo e($message); ?></div> <?php unset($message);
+if (isset($__messageOriginal)) { $message = $__messageOriginal; }
+endif;
+unset($__errorArgs, $__bag); ?><?php if(\Livewire\Mechanisms\ExtendBlade\ExtendBlade::isRenderingLivewireComponent()): ?><!--[if ENDBLOCK]><![endif]--><?php endif; ?>
+                    </div>
+
+                    <div class="gc-field">
+                        <label>পেমেন্ট স্ক্রিনশট (ঐচ্ছিক)</label>
+                        <input type="file" wire:model="payment_screenshot" accept="image/*">
+                        <div class="gc-field-hint">JPG, PNG — সর্বোচ্চ 3MB</div>
+                        <?php if(\Livewire\Mechanisms\ExtendBlade\ExtendBlade::isRenderingLivewireComponent()): ?><!--[if BLOCK]><![endif]--><?php endif; ?><?php $__errorArgs = ['payment_screenshot'];
+$__bag = $errors->getBag($__errorArgs[1] ?? 'default');
+if ($__bag->has($__errorArgs[0])) :
+if (isset($message)) { $__messageOriginal = $message; }
+$message = $__bag->first($__errorArgs[0]); ?> <div class="gc-field-error"><?php echo e($message); ?></div> <?php unset($message);
+if (isset($__messageOriginal)) { $message = $__messageOriginal; }
+endif;
+unset($__errorArgs, $__bag); ?><?php if(\Livewire\Mechanisms\ExtendBlade\ExtendBlade::isRenderingLivewireComponent()): ?><!--[if ENDBLOCK]><![endif]--><?php endif; ?>
+                        <div wire:loading wire:target="payment_screenshot" style="font-size:0.78rem;color:var(--gold);margin-top:4px;">আপলোড হচ্ছে...</div>
+                    </div>
+                <?php endif; ?><?php if(\Livewire\Mechanisms\ExtendBlade\ExtendBlade::isRenderingLivewireComponent()): ?><!--[if ENDBLOCK]><![endif]--><?php endif; ?>
+
+            </div>
+
+            
+            <div class="gc-modal-footer">
+                <div>
+                    <?php if(\Livewire\Mechanisms\ExtendBlade\ExtendBlade::isRenderingLivewireComponent()): ?><!--[if BLOCK]><![endif]--><?php endif; ?><?php if($step > 1): ?>
+                        <button class="gc-btn-prev" wire:click="prevStep">
+                            ← পূর্ববর্তী
+                        </button>
+                    <?php else: ?>
+                        <div></div>
+                    <?php endif; ?><?php if(\Livewire\Mechanisms\ExtendBlade\ExtendBlade::isRenderingLivewireComponent()): ?><!--[if ENDBLOCK]><![endif]--><?php endif; ?>
+                </div>
+
+                <div style="font-size:0.72rem;color:var(--text-muted);">
+                    ধাপ <?php echo e($step); ?> / <?php echo e($totalSteps); ?>
+
+                </div>
+
+                <?php if(\Livewire\Mechanisms\ExtendBlade\ExtendBlade::isRenderingLivewireComponent()): ?><!--[if BLOCK]><![endif]--><?php endif; ?><?php if($step < $totalSteps): ?>
+                    <button class="gc-btn-next" wire:click="nextStep">
+                        পরবর্তী →
+                        <div wire:loading wire:target="nextStep">
+                            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="animation:spin 0.8s linear infinite;"><circle cx="12" cy="12" r="10" opacity="0.25"/><path d="M12 2a10 10 0 0110 10" stroke-linecap="round"/></svg>
+                        </div>
+                    </button>
+                <?php else: ?>
+                    <button class="gc-btn-next" wire:click="submit">
+                        <span wire:loading.remove wire:target="submit">আবেদন জমা দিন ✓</span>
+                        <span wire:loading wire:target="submit">জমা হচ্ছে...</span>
+                    </button>
+                <?php endif; ?><?php if(\Livewire\Mechanisms\ExtendBlade\ExtendBlade::isRenderingLivewireComponent()): ?><!--[if ENDBLOCK]><![endif]--><?php endif; ?>
+            </div>
+        <?php endif; ?><?php if(\Livewire\Mechanisms\ExtendBlade\ExtendBlade::isRenderingLivewireComponent()): ?><!--[if ENDBLOCK]><![endif]--><?php endif; ?>
+
+    </div>
+</div>
+
+</div><?php /**PATH H:\agency-app\resources\views/livewire/grooming-page.blade.php ENDPATH**/ ?>

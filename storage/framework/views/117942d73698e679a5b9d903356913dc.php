@@ -1335,9 +1335,6 @@
                             <?php if(\Livewire\Mechanisms\ExtendBlade\ExtendBlade::isRenderingLivewireComponent()): ?><!--[if BLOCK]><![endif]--><?php \Livewire\Features\SupportCompiledWireKeys\SupportCompiledWireKeys::openLoop(); ?><?php endif; ?><?php $__currentLoopData = $navGroups; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $group): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?><?php if(\Livewire\Mechanisms\ExtendBlade\ExtendBlade::isRenderingLivewireComponent()): ?><?php \Livewire\Features\SupportCompiledWireKeys\SupportCompiledWireKeys::startLoopIteration(); ?><?php endif; ?>
                                 <a href="/artists?group=<?php echo e(urlencode($group)); ?>" class="mega-menu-card">
                                     <div class="mega-menu-card-title"><?php echo e($group); ?></div>
-                                    <div class="mega-menu-card-sub">
-                                        Browse all <?php echo e($group); ?> talent
-                                    </div>
                                 </a>
                             <?php if(\Livewire\Mechanisms\ExtendBlade\ExtendBlade::isRenderingLivewireComponent()): ?><?php \Livewire\Features\SupportCompiledWireKeys\SupportCompiledWireKeys::endLoop(); ?><?php endif; ?><?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?><?php if(\Livewire\Mechanisms\ExtendBlade\ExtendBlade::isRenderingLivewireComponent()): ?><!--[if ENDBLOCK]><![endif]--><?php \Livewire\Features\SupportCompiledWireKeys\SupportCompiledWireKeys::closeLoop(); ?><?php endif; ?>
                         </div>
@@ -1347,11 +1344,32 @@
                     </div>
                 </li>
 
-                <li><a href="/casting">Casting Calls</a></li>
                 <li><a href="/about">About</a></li>
-                <li><a href="/contact">Contact</a></li>
-                <li><a href="/videos">Videos</a></li>
+                <li><a href="/casting">Casting Calls</a></li>
+                <li class="nav-dropdown">
+                    <button class="nav-drop-btn" type="button" aria-haspopup="listbox" aria-expanded="false">
+                        Gallery
+                        <svg class="chevron" viewBox="0 0 10 6" fill="none" aria-hidden="true">
+                            <path d="M1 1l4 4 4-4" stroke="currentColor" stroke-width="1.5"
+                                stroke-linecap="round" stroke-linejoin="round"/>
+                        </svg>
+                    </button>
+
+                    <div class="nav-drop-panel mega-menu-modern" role="listbox">
+                        <div class="mega-menu-cards">
+                            <a href="/videos" class="mega-menu-card">
+                                <div class="mega-menu-card-title">Video Gallery</div>
+                            </a>
+                            
+                            <a href="/gallery" class="mega-menu-card">
+                                <div class="mega-menu-card-title">Photo Gallery</div>
+                            </a>
+                        </div>
+                    </div>
+                </li>
                 <li><a href="/editorial">Blog</a></li>
+                <li><a href="/grooming-class">Grooming</a></li>
+                <li><a href="/contact">Contact</a></li>
             </ul>
 
             
@@ -1434,8 +1452,10 @@
 
         <a href="/casting">Casting Calls</a>
         <a href="/about">About</a>
+        <a href="/videos">Video Gallery</a>
+        <a href="/gallery">Photo Gallery</a>
         <a href="/contact">Contact</a>
-        <a href="/videos">Videos</a>
+        <a href="/grooming-class">Grooming</a>
         <a href="/editorial">Blog</a>
 
         <div class="drawer-actions">
@@ -1455,8 +1475,7 @@
                     </button>
                 </form>
             <?php else: ?>
-                <a href="/login" class="btn-outline" style="width: 100%; justify-content: center; margin-bottom: 10px;">Sign
-                    In</a>
+                <a href="/login" class="btn-outline" style="width: 100%; justify-content: center; margin-bottom: 10px;">Sign In</a>
                 <a href="/register" class="btn-fill" style="width: 100%; justify-content: center;">Join as Talent</a>
             <?php endif; ?><?php if(\Livewire\Mechanisms\ExtendBlade\ExtendBlade::isRenderingLivewireComponent()): ?><!--[if ENDBLOCK]><![endif]--><?php endif; ?>
         </div>

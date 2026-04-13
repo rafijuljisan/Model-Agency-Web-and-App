@@ -884,6 +884,30 @@
             transform: scale(1.05);
         }
 
+        /* ── Responsive Design Updates ── */
+        @media (max-width: 768px) {
+            .clients-grid {
+                flex-direction: row; /* Forces them to stay inline instead of stacking */
+                flex-wrap: wrap; /* Allows them to drop to the next line naturally */
+                justify-content: center;
+                gap: 24px 32px; /* Tighter spacing (row-gap column-gap) */
+                margin-top: 32px;
+            }
+            .client-logo {
+                max-width: 90px; /* Smaller width for mobile */
+                max-height: 45px; /* Smaller height for mobile */
+            }
+        }
+
+        @media (max-width: 480px) {
+            .clients-grid {
+                gap: 20px 24px; /* Even tighter spacing for small phones */
+            }
+            .client-logo {
+                max-width: 75px; /* Extra small width for tiny screens */
+                max-height: 35px; /* Extra small height */
+            }
+        }
         /* ── Testimonials Section ── */
         .testi-section {
             padding: 100px 0;
@@ -1037,6 +1061,69 @@
             color: #fff;
         }
 
+        /* ── Gallery Slider Section ── */
+        .home-gallery-section {
+            padding: 100px 0;
+            background: var(--bg-secondary); /* Alternating background color */
+            border-top: 1px solid var(--border);
+        }
+        
+        .gallery-slide-card {
+            position: relative;
+            aspect-ratio: 4 / 5; /* Professional portrait ratio */
+            overflow: hidden;
+            background: var(--bg-surface);
+            border-radius: 4px;
+            cursor: grab;
+        }
+        
+        .gallery-slide-card:active {
+            cursor: grabbing;
+        }
+
+        .gallery-slide-img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: transform 0.6s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+        }
+
+        .gallery-slide-card:hover .gallery-slide-img {
+            transform: scale(1.05);
+        }
+
+        .gallery-slide-caption {
+            position: absolute;
+            bottom: 0; left: 0; right: 0;
+            padding: 40px 20px 20px;
+            background: linear-gradient(to top, rgba(0,0,0,0.85) 0%, rgba(0,0,0,0.4) 60%, transparent 100%);
+            color: #ffffff;
+            font-family: 'Jost', sans-serif;
+            font-size: 1.1rem;
+            font-weight: 500;
+            letter-spacing: 0.02em;
+            transform: translateY(10px);
+            opacity: 0;
+            transition: transform 0.4s ease, opacity 0.4s ease;
+        }
+
+        .gallery-slide-card:hover .gallery-slide-caption {
+            transform: translateY(0);
+            opacity: 1;
+        }
+
+        /* Swiper specific overrides */
+        .gallerySwiper {
+            padding-bottom: 50px !important; /* Space for pagination bullets */
+        }
+        .swiper-pagination-bullet {
+            background: var(--text-muted) !important;
+            opacity: 0.5;
+        }
+        .swiper-pagination-bullet-active {
+            background: var(--gold) !important;
+            opacity: 1;
+        }
         /* Responsive Additions */
         
         /* Small Desktop / Laptop - 3 Columns */
@@ -1406,6 +1493,71 @@
     </section>
 
     
+    <?php if(\Livewire\Mechanisms\ExtendBlade\ExtendBlade::isRenderingLivewireComponent()): ?><!--[if BLOCK]><![endif]--><?php endif; ?><?php if(isset($galleryPhotos) && $galleryPhotos->count() > 0): ?>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css" />
+
+    <section class="home-gallery-section anim-fade-up" aria-labelledby="gallery-heading">
+        <div class="section-inner">
+            <div class="section-header">
+                <div class="section-header-left">
+                    <div class="section-eyebrow">Our Portfolio</div>
+                    <h2 class="section-title" id="gallery-heading">
+                        Recent <strong>Shoots</strong>
+                    </h2>
+                </div>
+                <a href="/gallery" class="btn-outline">View Full Gallery</a>
+            </div>
+
+            <div class="swiper gallerySwiper">
+                <div class="swiper-wrapper">
+                    <?php if(\Livewire\Mechanisms\ExtendBlade\ExtendBlade::isRenderingLivewireComponent()): ?><!--[if BLOCK]><![endif]--><?php \Livewire\Features\SupportCompiledWireKeys\SupportCompiledWireKeys::openLoop(); ?><?php endif; ?><?php $__currentLoopData = $galleryPhotos; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $photo): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?><?php if(\Livewire\Mechanisms\ExtendBlade\ExtendBlade::isRenderingLivewireComponent()): ?><?php \Livewire\Features\SupportCompiledWireKeys\SupportCompiledWireKeys::startLoopIteration(); ?><?php endif; ?>
+                        <div class="swiper-slide">
+                            <div class="gallery-slide-card">
+                                <img src="<?php echo e(Storage::url($photo->image)); ?>" class="gallery-slide-img" alt="<?php echo e($photo->caption ?? 'Gallery Image'); ?>" loading="lazy">
+                                
+                                <?php if(\Livewire\Mechanisms\ExtendBlade\ExtendBlade::isRenderingLivewireComponent()): ?><!--[if BLOCK]><![endif]--><?php endif; ?><?php if($photo->caption): ?>
+                                    <div class="gallery-slide-caption">
+                                        <?php echo e($photo->caption); ?>
+
+                                    </div>
+                                <?php endif; ?><?php if(\Livewire\Mechanisms\ExtendBlade\ExtendBlade::isRenderingLivewireComponent()): ?><!--[if ENDBLOCK]><![endif]--><?php endif; ?>
+                            </div>
+                        </div>
+                    <?php if(\Livewire\Mechanisms\ExtendBlade\ExtendBlade::isRenderingLivewireComponent()): ?><?php \Livewire\Features\SupportCompiledWireKeys\SupportCompiledWireKeys::endLoop(); ?><?php endif; ?><?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?><?php if(\Livewire\Mechanisms\ExtendBlade\ExtendBlade::isRenderingLivewireComponent()): ?><!--[if ENDBLOCK]><![endif]--><?php \Livewire\Features\SupportCompiledWireKeys\SupportCompiledWireKeys::closeLoop(); ?><?php endif; ?>
+                </div>
+                <div class="swiper-pagination"></div>
+            </div>
+        </div>
+    </section>
+
+    <script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            var swiper = new Swiper(".gallerySwiper", {
+                slidesPerView: 2, /* 2 Columns on Mobile */
+                spaceBetween: 12,
+                grabCursor: true,
+                pagination: {
+                    el: ".swiper-pagination",
+                    clickable: true,
+                },
+                breakpoints: {
+                    /* Tablet */
+                    768: {
+                        slidesPerView: 3,
+                        spaceBetween: 20,
+                    },
+                    /* Desktop */
+                    1024: {
+                        slidesPerView: 4, /* 4 Columns on Desktop */
+                        spaceBetween: 24,
+                    },
+                },
+            });
+        });
+    </script>
+    <?php endif; ?><?php if(\Livewire\Mechanisms\ExtendBlade\ExtendBlade::isRenderingLivewireComponent()): ?><!--[if ENDBLOCK]><![endif]--><?php endif; ?>
+    
     <?php if(\Livewire\Mechanisms\ExtendBlade\ExtendBlade::isRenderingLivewireComponent()): ?><!--[if BLOCK]><![endif]--><?php endif; ?><?php if($clients->count() > 0): ?>
     <section class="clients-section anim-fade-up" aria-label="Our Clients">
         <div class="section-inner">
@@ -1413,7 +1565,8 @@
             <h2 class="section-title">Our <strong>Partners & Clients</strong></h2>
             
             <div class="clients-grid">
-                <?php if(\Livewire\Mechanisms\ExtendBlade\ExtendBlade::isRenderingLivewireComponent()): ?><!--[if BLOCK]><![endif]--><?php \Livewire\Features\SupportCompiledWireKeys\SupportCompiledWireKeys::openLoop(); ?><?php endif; ?><?php $__currentLoopData = $clients; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $client): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?><?php if(\Livewire\Mechanisms\ExtendBlade\ExtendBlade::isRenderingLivewireComponent()): ?><?php \Livewire\Features\SupportCompiledWireKeys\SupportCompiledWireKeys::startLoopIteration(); ?><?php endif; ?>
+                
+                <?php if(\Livewire\Mechanisms\ExtendBlade\ExtendBlade::isRenderingLivewireComponent()): ?><!--[if BLOCK]><![endif]--><?php \Livewire\Features\SupportCompiledWireKeys\SupportCompiledWireKeys::openLoop(); ?><?php endif; ?><?php $__currentLoopData = $clients->shuffle(); $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $client): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?><?php if(\Livewire\Mechanisms\ExtendBlade\ExtendBlade::isRenderingLivewireComponent()): ?><?php \Livewire\Features\SupportCompiledWireKeys\SupportCompiledWireKeys::startLoopIteration(); ?><?php endif; ?>
                     <?php if(\Livewire\Mechanisms\ExtendBlade\ExtendBlade::isRenderingLivewireComponent()): ?><!--[if BLOCK]><![endif]--><?php endif; ?><?php if($client->website_url): ?>
                         <a href="<?php echo e($client->website_url); ?>" target="_blank" rel="noopener">
                             <img src="<?php echo e(Storage::url($client->logo)); ?>" alt="<?php echo e($client->name); ?>" class="client-logo">

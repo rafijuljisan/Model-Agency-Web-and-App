@@ -18,7 +18,7 @@ class CategoryForm
                         'Artist' => 'Artist',
                         'Brand Promoter' => 'Brand Promoter',
                         'Model' => 'Model',
-                        'Influencer & Content Creator' => 'Influencer & Content Creator',
+                        'Content Creator' => 'Content Creator', // Updated this line
                         'Director' => 'Director',
                         'Creative Crew' => 'Creative Crew',
                     ])
