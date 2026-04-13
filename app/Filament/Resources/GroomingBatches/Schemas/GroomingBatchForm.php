@@ -8,6 +8,8 @@ use Filament\Forms\Components\Select;
 use Filament\Forms\Components\TextInput;
 use Filament\Forms\Components\Toggle;
 use Filament\Schemas\Schema;
+use Filament\Forms\Components\RichEditor;
+use Filament\Forms\Components\Textarea;
 
 
 class GroomingBatchForm
@@ -18,8 +20,33 @@ class GroomingBatchForm
 
             TextInput::make('title')
                 ->required()
-                ->placeholder('e.g. Batch 12 — Summer 2025')
+                ->placeholder('e.g. Basic Grooming Course')
                 ->columnSpanFull(),
+
+            RichEditor::make('description')
+                ->label('Course Overview / Description')
+                ->columnSpanFull()
+                ->nullable(),
+
+            Repeater::make('benefits')
+                ->label('What You Will Learn (Benefits)')
+                ->schema([
+                    TextInput::make('title')->required()->placeholder('e.g. Camera Confidence'),
+                    Textarea::make('description')->required()->placeholder('Learn how to face the camera naturally...'),
+                ])
+                ->columns(2)
+                ->columnSpanFull()
+                ->nullable(),
+
+            Repeater::make('course_modules')
+                ->label('Course Modules / Syllabus')
+                ->schema([
+                    TextInput::make('module_name')->required()->placeholder('e.g. Class 1: Introduction to Modeling'),
+                    Textarea::make('topics')->required()->placeholder('Posture, Diet, Industry Basics...'),
+                ])
+                ->columns(2)
+                ->columnSpanFull()
+                ->nullable(),
 
             DatePicker::make('start_date')->required(),
             DatePicker::make('end_date')->nullable(),

@@ -186,10 +186,9 @@
     background: var(--gold);
     color: #fff;
     font-family: 'SolaimanLipi', 'Jost', sans-serif;
-    font-size: 1.125rem;
+    font-size: 1.25rem;
     font-weight: 600;
     text-transform: uppercase;
-    letter-spacing: 0.12em;
     border: none;
     cursor: pointer;
     transition: transform 0.2s, box-shadow 0.2s;
@@ -394,7 +393,7 @@
     flex-shrink: 0;
 }
 .gc-benefit-text { font-size: 1.3rem; font-family: 'SolaimanLipi', 'Jost', sans-serif; color: var(--text-secondary); line-height: 1.6; }
-.gc-benefit-text strong { display: block; color: var(--text-primary); font-family: 'SolaimanLipi', 'Jost', sans-serif; font-weight: 600; font-size: 1rem; margin-bottom: 3px; }
+.gc-benefit-text strong { display: block; color: var(--text-primary); font-family: 'SolaimanLipi', 'Jost', sans-serif; font-weight: 600; font-size: 1.25rem; margin-bottom: 3px; }
 
 /* ── Gallery ── */
 .gc-gallery-filters {
@@ -410,9 +409,8 @@
     background: transparent;
     color: var(--text-muted);
     font-family: 'SolaimanLipi', 'Jost', sans-serif;
-    font-size: 0.72rem;
+    font-size: 1.25rem;
     font-weight: 600;
-    letter-spacing: 0.12em;
     text-transform: uppercase;
     cursor: pointer;
     transition: all 0.2s;
@@ -461,6 +459,7 @@
     position: absolute;
     inset: 0;
     background: radial-gradient(circle at 50% 50%, var(--gold-bg) 0%, transparent 70%);
+    pointer-events: none; /* <-- Add this line */
 }
 .gc-cta-banner-title {
     font-family: 'SolaimanLipi', 'Jost', sans-serif;
@@ -471,7 +470,8 @@
     position: relative;
 }
 .gc-cta-banner-sub {
-    font-size: 1rem;
+    font-size: 1.25rem;
+    font-family: 'SolaimanLipi', 'Jost', sans-serif;
     color: var(--text-muted);
     margin-bottom: 28px;
     position: relative;
@@ -792,7 +792,7 @@
                 @if($notices->isNotEmpty())
                     @foreach($notices as $notice)
                         <div class="gc-notice-card {{ $notice->priority }}">
-                            <strong style="display:block; margin-bottom:4px; font-size:0.95rem;">
+                            <strong style="display:block; margin-bottom:4px; font-size:1.25rem; font-weight: 600;">
                                 {{ $notice->title }}
                             </strong>
                             <span style="color: inherit;">{{ $notice->message }}</span>
@@ -850,7 +850,14 @@
                             @else Full @endif
                         </div>
 
-                        <div class="gc-batch-name">{{ $batch->title }}</div>
+                        <a href="{{ route('grooming.show', $batch->id) }}" style="text-decoration: none;">
+                            <div class="gc-batch-name" 
+                                style="transition: color 0.2s;" 
+                                onmouseover="this.style.color='var(--gold)'" 
+                                onmouseout="this.style.color='var(--text-primary)'">
+                                {{ $batch->title }}
+                            </div>
+                        </a>
 
                         <div class="gc-batch-meta">
                             <div class="gc-batch-meta-row">
@@ -892,19 +899,30 @@
                             <span>/ একজন</span>
                         </div>
 
-                        <button
-                            class="gc-apply-btn"
-                            wire:click="$set('batch_id', '{{ $batch->id }}')"
-                            @if($batch->status === 'full') disabled @endif
-                            @click="applyModalOpen = true"
-                        >
-                            @if($batch->status === 'full')
-                                আসন পূর্ণ
-                            @else
-                                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
-                                আবেদন করুন
-                            @endif
-                        </button>
+                        <div style="display: flex; gap: 12px; margin-top: 16px;">
+                            {{-- View Details Button --}}
+                            <a href="{{ route('grooming.show', $batch->id) }}"
+                            style="flex: 1; padding: 12px; border: 1px solid var(--gold); color: var(--gold); text-align: center; font-family: 'SolaimanLipi', 'Jost', sans-serif; font-size: 1.125rem; font-weight: 600; text-transform: uppercase; letter-spacing: 0.05em; text-decoration: none; transition: all 0.2s; display: flex; align-items: center; justify-content: center;"
+                            onmouseover="this.style.background='var(--gold)'; this.style.color='#fff';"
+                            onmouseout="this.style.background='transparent'; this.style.color='var(--gold)';">
+                                বিস্তারিত
+                            </a>
+
+                            {{-- Quick Apply Button (Your existing button, modified to fit) --}}
+                            <button
+                                class="gc-apply-btn"
+                                style="flex: 1; margin: 0; width: auto;"
+                                wire:click="$set('batch_id', '{{ $batch->id }}')"
+                                @if($batch->status === 'full') disabled @endif
+                                @click="applyModalOpen = true"
+                            >
+                                @if($batch->status === 'full')
+                                    আসন পূর্ণ
+                                @else
+                                    আবেদন করুন
+                                @endif
+                            </button>
+                        </div>
                     </div>
                 @endforeach
             </div>
@@ -912,48 +930,39 @@
     </div>
 
     {{-- ══════════════════════════════════
-         BENEFITS
-    ══════════════════════════════════ --}}
-    <div class="gc-section-head">
-        <div class="gc-section-eyebrow">What You Learn</div>
-        <h2 class="gc-section-title">কী শিখবেন এই <strong>ক্লাসে?</strong></h2>
-    </div>
-
-    <div class="gc-benefits">
-        @foreach([
-            ['ইন্ডাস্ট্রি-লেভেল গ্রুমিং', 'পেশাদার মানের ব্যক্তিত্ব ও উপস্থাপনা দক্ষতা অর্জন করুন।'],
-            ['ক্যামেরা কনফিডেন্স', 'ক্যামেরার সামনে আত্মবিশ্বাসী হওয়ার কৌশল।'],
-            ['পোর্টফোলিও ডেভেলপমেন্ট', 'পেশাদার পোর্টফোলিও তৈরির সম্পূর্ণ গাইডেন্স।'],
-            ['কাস্টিং প্রিপারেশন', 'রিয়েল মডেল কাস্টিংয়ের জন্য প্রস্তুতি।'],
-            ['যোগাযোগ দক্ষতা', 'ব্যক্তিত্ব ও যোগাযোগ উন্নয়ন প্রশিক্ষণ।'],
-            ['এজেন্সি-রেডি স্কিল', 'এজেন্সিতে কাজ করার উপযোগী স্কিল ডেভেলপমেন্ট।'],
-        ] as [$title, $desc])
-        <div class="gc-benefit">
-            <div class="gc-benefit-icon">
-                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                    <path d="M12 2L3 7v5c0 5.55 3.84 10.74 9 12 5.16-1.26 9-6.45 9-12V7L12 2zm-2 15l-4-4 1.41-1.41L10 14.17l6.59-6.59L18 9l-8 8z"/>
-                </svg>
-            </div>
-            <div class="gc-benefit-text">
-                <strong>{{ $title }}</strong>
-                {{ $desc }}
-            </div>
-        </div>
-        @endforeach
-    </div>
-
-    {{-- ══════════════════════════════════
          CTA BANNER
     ══════════════════════════════════ --}}
     <div class="gc-cta-banner">
         <div class="gc-cta-banner-title">আপনার ক্যারিয়ার শুরু হোক আজই</div>
-        <p class="gc-cta-banner-sub">সীমিত আসন। এখনই আবেদন করুন।</p>
-        <button class="gc-hero-cta" @click="applyModalOpen = true">
-            আবেদন শুরু করুন
-            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                <line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/>
-            </svg>
-        </button>
+        <p class="gc-cta-banner-sub">সীমিত আসন। এখনই আবেদন করুন বা বিস্তারিত জানতে যোগাযোগ করুন।</p>
+        
+        <div style="position: relative; z-index: 10; display: flex; gap: 16px; justify-content: center; align-items: center; flex-wrap: wrap;">
+            
+            {{-- আবেদন বাটন --}}
+            <button class="gc-hero-cta" @click="applyModalOpen = true" style="margin: 0;">
+                আবেদন শুরু করুন
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/>
+                </svg>
+            </button>
+
+            {{-- হোয়াটসঅ্যাপ বাটন --}}
+            @if($settings?->contact_phone)
+            @php
+                $wa = preg_replace('/[^0-9]/', '', $settings->contact_phone);
+            @endphp
+            <a href="https://wa.me/{{ $wa }}?text=আমি%20গ্রুমিং%20ক্লাস%20সম্পর্কে%20বিস্তারিত%20জানতে%20চাই।"
+               target="_blank"
+               style="display: inline-flex; align-items: center; gap: 10px; padding: 15px 32px; background: #25D366; color: #fff; font-family: 'SolaimanLipi', 'Jost', sans-serif; font-size: 1.125rem; font-weight: 600; text-transform: uppercase; letter-spacing: 0.12em; border-radius: 2px; text-decoration: none; transition: transform 0.2s, box-shadow 0.2s;"
+               onmouseover="this.style.transform='translateY(-2px)'; this.style.boxShadow='0 8px 24px rgba(37, 211, 102, 0.25)';"
+               onmouseout="this.style.transform='translateY(0)'; this.style.boxShadow='none';">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
+                    <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.422-.272.347-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413Z"/>
+                </svg>
+                হোয়াটসঅ্যাপ
+            </a>
+            @endif
+        </div>
     </div>
 
 </div>

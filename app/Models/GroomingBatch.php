@@ -6,14 +6,16 @@ use Illuminate\Database\Eloquent\Model;
 class GroomingBatch extends Model
 {
     protected $fillable = [
-        'title', 'start_date', 'end_date', 'schedule_json',
+        'title', 'benefits', 'course_modules', 'start_date', 'end_date', 'schedule_json',
         'trainer', 'seat_limit', 'filled_seats', 'fee', 'status', 'is_active'
     ];
 
     protected $casts = [
-        'schedule_json' => 'array',
         'start_date' => 'date',
         'end_date' => 'date',
+        'schedule_json' => 'array',
+        'benefits' => 'array',         // <-- Add this
+        'course_modules' => 'array',   // <-- Add this
         'is_active' => 'boolean',
     ];
 

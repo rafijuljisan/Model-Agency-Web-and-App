@@ -119,6 +119,7 @@ Route::get('/casting', App\Livewire\CastingPage::class)->name('casting');
 Route::get('/artists', ArtistDirectory::class)->name('artists.index');
 Route::get('/artist/{id}', ArtistProfile::class)->name('artist.show');
 Route::get('/grooming-class', App\Livewire\GroomingPage::class)->name('grooming');
+Route::get('/grooming-class/{id}', \App\Livewire\GroomingBatchShow::class)->name('grooming.show');
 
 // 3. About Page
 Route::get('/about', function () {

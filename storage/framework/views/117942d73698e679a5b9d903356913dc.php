@@ -442,10 +442,11 @@
             padding: 6px 15px;
 
             /* --- UPDATED FONT SIZE --- */
-            font-size: 1rem;
+            font-size: 0.95rem;
             /* Increased from 0.68rem */
 
-            font-weight: 500;
+            font-weight: 600;
+            letter-spacing: 0.05em;
             text-transform: uppercase;
             color: var(--text-secondary);
             background: none;
@@ -540,12 +541,10 @@
             align-items: center;
             gap: 10px;
             padding: 10px 18px;
-
-            /* --- UPDATED FONT SIZE --- */
-            font-size: 1.00rem;
-            /* Increased from 0.90rem */
-
-            font-weight: 400;
+            font-family: 'Jost', sans-serif;
+            font-size: 0.95rem; /* Matches the top level */
+            font-weight: 500; /* Better readability inside dropdowns */
+            letter-spacing: 0.02em;
             color: var(--text-secondary);
             transition: background 0.18s, color 0.18s;
         }
@@ -726,11 +725,12 @@
 
         .nav-drawer a {
             display: block;
-            padding: 15px 0;
+            padding: 16px 0;
             font-family: 'Jost', sans-serif;
-            font-size: 1.45rem;
-            font-weight: 400;
-            letter-spacing: 0.04em;
+            font-size: 1.25rem; /* Cleaner, standard mobile size */
+            font-weight: 500; /* Slightly bolder for crisp readability */
+            letter-spacing: 0.02em;
+            /* ... keep existing color, border, and transitions ... */
             color: var(--text-primary);
             border-bottom: 1px solid var(--border);
             transition: color 0.22s, padding-left 0.22s;
@@ -1057,9 +1057,8 @@
    MODERN CARD MEGA MENU
 ═══════════════════════════════════════════ */
         .nav-drop-panel.mega-menu-modern {
-            width: 640px;
+            width: 350px; /* Reduced for a vertical list */
             max-width: 90vw;
-            /* Removed redundant left, padding-top, and margin-top */
             transform: translateX(-50%) translateY(10px);
             padding: 0;
             cursor: default;
@@ -1073,29 +1072,22 @@
         }
 
         .mega-menu-cards {
-            display: grid;
-            grid-template-columns: repeat(2, 1fr);
-            /* 2x3 Grid */
+            display: flex;
+            flex-direction: column; /* Stacks items vertically */
             background: var(--bg-surface);
         }
 
         .mega-menu-card {
-            padding: 24px 32px;
+            display: block; /* Ensures the whole row is clickable */
+            padding: 16px 24px; /* Slightly tighter padding for a list */
             border-bottom: 1px solid var(--border);
-            border-right: 1px solid var(--border);
             text-decoration: none;
             transition: background 0.3s;
         }
 
-        .mega-menu-card:nth-child(even) {
-            border-right: none;
+        .mega-menu-card:last-child {
+            border-bottom: none; /* Removes border only from the very last item */
         }
-
-        .mega-menu-card:nth-last-child(-n+2) {
-            border-bottom: none;
-        }
-
-        /* Hide bottom borders on last row */
 
         .mega-menu-card:hover {
             background: var(--gold-bg);
@@ -1142,17 +1134,6 @@
 
         /* Responsive adjustments */
         @media (max-width: 768px) {
-            .mega-menu-cards {
-                grid-template-columns: 1fr;
-            }
-
-            .mega-menu-card {
-                border-right: none;
-            }
-
-            .mega-menu-card:nth-last-child(2) {
-                border-bottom: 1px solid var(--border);
-            }
 
             .nav-drop-panel.mega-menu-modern {
                 width: 100%;
@@ -1431,24 +1412,47 @@
         <a href="/artists" style="font-weight: 600;">Browse All Talent</a>
 
         
-        <div style="font-size:0.65rem; font-weight:700; letter-spacing:0.15em;
-                    text-transform:uppercase; color:var(--gold);
-                    margin:16px 0 4px 20px; opacity:0.8;">
-            Categories
+        
+        <div x-data="{ catOpen: false }">
+            
+            
+            
+            <button @click="catOpen = !catOpen" 
+                    style="width: 100%; display: flex; align-items: center; justify-content: space-between; 
+                           background: transparent; border: none; border-bottom: 1px solid var(--border); text-align: left; 
+                           font-family: 'Jost', sans-serif; font-size: 1.25rem; font-weight: 500; letter-spacing: 0.02em; 
+                           color: var(--text-primary); margin: 0; padding: 16px 0; cursor: pointer; transition: color 0.22s;">
+                Categories
+                
+                
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" 
+                     style="transition: transform 0.3s ease; color: var(--text-muted);" 
+                     :style="catOpen ? 'transform: rotate(180deg); color: var(--gold);' : ''">
+                    <polyline points="6 9 12 15 18 9"></polyline>
+                </svg>
+            </button>
+
+            
+            <div x-show="catOpen" style="display: none;" x-collapse>
+                <?php if(\Livewire\Mechanisms\ExtendBlade\ExtendBlade::isRenderingLivewireComponent()): ?><!--[if BLOCK]><![endif]--><?php \Livewire\Features\SupportCompiledWireKeys\SupportCompiledWireKeys::openLoop(); ?><?php endif; ?><?php $__currentLoopData = $navGroups; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $group): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?><?php if(\Livewire\Mechanisms\ExtendBlade\ExtendBlade::isRenderingLivewireComponent()): ?><?php \Livewire\Features\SupportCompiledWireKeys\SupportCompiledWireKeys::startLoopIteration(); ?><?php endif; ?>
+                    <a href="/artists?group=<?php echo e(urlencode($group)); ?>"
+                    style="padding-left: 24px;
+                            display: block;
+                            font-size: 1.1rem; /* Standardized size for sub-items */
+                            padding-top: 12px;
+                            padding-bottom: 12px;
+                            font-family: 'Jost', sans-serif; /* Unified clean font */
+                            font-weight: 400; /* Regular weight for sub-items */
+                            color: var(--text-secondary);
+                            border-bottom: 1px solid var(--border); /* Matches the main links */
+                            opacity: 0.9;">
+                        <?php echo e($group); ?>
+
+                    </a>
+                <?php if(\Livewire\Mechanisms\ExtendBlade\ExtendBlade::isRenderingLivewireComponent()): ?><?php \Livewire\Features\SupportCompiledWireKeys\SupportCompiledWireKeys::endLoop(); ?><?php endif; ?><?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?><?php if(\Livewire\Mechanisms\ExtendBlade\ExtendBlade::isRenderingLivewireComponent()): ?><!--[if ENDBLOCK]><![endif]--><?php \Livewire\Features\SupportCompiledWireKeys\SupportCompiledWireKeys::closeLoop(); ?><?php endif; ?>
+            </div>
+            
         </div>
-
-        <?php if(\Livewire\Mechanisms\ExtendBlade\ExtendBlade::isRenderingLivewireComponent()): ?><!--[if BLOCK]><![endif]--><?php \Livewire\Features\SupportCompiledWireKeys\SupportCompiledWireKeys::openLoop(); ?><?php endif; ?><?php $__currentLoopData = $navGroups; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $group): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?><?php if(\Livewire\Mechanisms\ExtendBlade\ExtendBlade::isRenderingLivewireComponent()): ?><?php \Livewire\Features\SupportCompiledWireKeys\SupportCompiledWireKeys::startLoopIteration(); ?><?php endif; ?>
-            <a href="/artists?group=<?php echo e(urlencode($group)); ?>"
-            style="padding-left:28px;
-                    font-size:1.25rem;
-                    padding-top:8px;
-                    padding-bottom:8px;
-                    font-family:'Cormorant Garamond', serif;
-                    font-weight:500;">
-                <?php echo e($group); ?>
-
-            </a>
-        <?php if(\Livewire\Mechanisms\ExtendBlade\ExtendBlade::isRenderingLivewireComponent()): ?><?php \Livewire\Features\SupportCompiledWireKeys\SupportCompiledWireKeys::endLoop(); ?><?php endif; ?><?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?><?php if(\Livewire\Mechanisms\ExtendBlade\ExtendBlade::isRenderingLivewireComponent()): ?><!--[if ENDBLOCK]><![endif]--><?php \Livewire\Features\SupportCompiledWireKeys\SupportCompiledWireKeys::closeLoop(); ?><?php endif; ?>
 
         <a href="/casting">Casting Calls</a>
         <a href="/about">About</a>
