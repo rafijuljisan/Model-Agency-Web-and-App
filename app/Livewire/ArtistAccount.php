@@ -157,10 +157,13 @@ class ArtistAccount extends Component
         $rules = [];
         $updates = [];
 
-        if (in_array($user->verification_status, ['unverified', 'rejected'])) {
+        $needsNid = in_array($user->verification_status, ['unverified', 'rejected', null, ''], true);
+        $needsAcademic = in_array($user->academic_verification_status, ['unverified', 'rejected', null, ''], true);
+
+        if ($needsNid) {
             $rules['nidImage'] = 'required|image|mimes:jpg,jpeg,png,webp|max:5120';
         }
-        if (in_array($user->academic_verification_status, ['unverified', 'rejected'])) {
+        if ($needsAcademic) {
             $rules['academicImage'] = 'nullable|image|mimes:jpg,jpeg,png,webp|max:5120';
         }
 
@@ -176,37 +179,38 @@ class ArtistAccount extends Component
             $updates['academic_verification_status'] = 'pending';
         }
 
-        if (!empty($updates)) {
-            $user->update($updates);
+        if (empty($updates)) {
+            $this->addError('nidImage', 'Please upload at least your NID/Passport image.');
+            return;
+        }
 
-            $admins = User::role('Super-Admin')->get();
+        $user->update($updates);
 
-            // 1. Send Email (Your existing code)
+        $admins = User::role('Super-Admin')->get();
+
+        try {
             Notification::send($admins, new AdminAlertNotification(
                 'New Documents Uploaded',
                 "{$user->name} has uploaded new verification documents.",
                 'Review Documents',
                 url('/admin/users')
             ));
-
-            // 2. Send Filament Panel Notification (NEW)
-            FilamentNotification::make()
-                ->title('New Documents Uploaded 📄')
-                ->body("{$user->name} just uploaded their NID/Academic certificates for review.")
-                ->warning() // Shows a yellow/orange icon
-                ->sendToDatabase($admins);
+        } catch (\Exception $e) {
+            Log::error('Admin document notification failed: ' . $e->getMessage());
         }
 
-        // ── NEW LOGIC: Check if they already paid before redirecting ──
+        FilamentNotification::make()
+            ->title('New Documents Uploaded 📄')
+            ->body("{$user->name} just uploaded their NID/Academic certificates for review.")
+            ->warning()
+            ->sendToDatabase($admins);
+
         $subscription = $user->subscriptions()->latest()->first();
 
-        // If they have no subscription, or it failed/expired, send them to pay
         if (!$subscription || in_array($subscription->status, ['failed', 'expired'])) {
             return redirect()->route('packages.index');
         }
 
-        // If they already paid (status is pending or active), reload the dashboard.
-        // The mount() method will catch them and put them in the 'under_review' gate!
         return redirect()->route('account.dashboard');
     }
 

@@ -608,13 +608,13 @@
                             NID / Birth Certificate / Passport (Front Side) <span class="required">*</span>
                         </label>
 
-                        <input type="file" wire:model="academicImage" class="form-input" accept="image/*">
+                        <input type="file" wire:model="nidImage" class="form-input" accept="image/*">
 
-                        <div wire:loading wire:target="academicImage" style="color: var(--gold); font-size: 0.95rem; margin-top: 4px;">
+                        <div wire:loading wire:target="nidImage" style="color: var(--gold); font-size: 0.95rem; margin-top: 4px;">
                             ছবি আপলোড হচ্ছে...
                         </div>
 
-                        @error('academicImage')
+                        @error('nidImage')
                             <span style="color: #dc2626; font-size: 0.95rem; display: block; margin-top: 4px;">
                                 {{ $message }}
                             </span>

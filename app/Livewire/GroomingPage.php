@@ -12,6 +12,11 @@ use Livewire\Attributes\Title;
 use Livewire\Component;
 use Livewire\WithFileUploads;
 use Livewire\WithPagination;
+use Illuminate\Support\Facades\Notification;
+use App\Notifications\AdminAlertNotification;
+use Filament\Notifications\Notification as FilamentNotification;
+use App\Models\User;
+use Illuminate\Support\Facades\Log;
 
 #[Title('Grooming Class | Dhaka Model Agency')]
 #[Layout('layouts.app')]
@@ -45,6 +50,7 @@ class GroomingPage extends Component
 
     // ── Step 5: Payment ──
     public string $payment_method = '';
+    public string $sender_number = '';
     public string $transaction_id = '';
     public $payment_screenshot = null;
 
@@ -78,6 +84,7 @@ class GroomingPage extends Component
             ],
             5 => [
                 'payment_method' => 'required|string',
+                'sender_number' => 'required|string|max:20',
                 'transaction_id' => 'required|string|unique:grooming_applications,transaction_id',
                 'payment_screenshot' => 'nullable|image|max:3072',
             ],
@@ -100,7 +107,6 @@ class GroomingPage extends Component
     {
         $this->validate($this->rulesForStep());
 
-        // Save screenshot
         $screenshotPath = null;
         if ($this->payment_screenshot) {
             $screenshotPath = $this->payment_screenshot->store('grooming/payments', 'public');
@@ -120,14 +126,34 @@ class GroomingPage extends Component
             'career_interests' => !empty($this->career_interests) ? $this->career_interests : null,
             'experience_level' => $this->experience_level ?: null,
             'payment_method' => $this->payment_method,
+            'sender_number' => $this->sender_number,
             'transaction_id' => $this->transaction_id,
             'payment_screenshot' => $screenshotPath,
             'status' => 'pending',
             'payment_status' => 'unpaid',
         ]);
 
-        // Increment filled_seats on the batch
         GroomingBatch::where('id', $this->batch_id)->increment('filled_seats');
+
+        // ── Notify Admins ──
+        $admins = User::role('Super-Admin')->get();
+
+        try {
+            Notification::send($admins, new AdminAlertNotification(
+                'New Grooming Application',
+                "{$this->full_name} ({$this->phone}) has applied for a grooming class. TrxID: {$this->transaction_id}.",
+                'Review Application',
+                url('/admin/grooming-applications')
+            ));
+        } catch (\Exception $e) {
+            Log::error('Grooming admin email notification failed: ' . $e->getMessage());
+        }
+
+        FilamentNotification::make()
+            ->title('New Grooming Application 🎓')
+            ->body("{$this->full_name} ({$this->phone}) applied. TrxID: {$this->transaction_id}. [Review](/admin/grooming-applications)")
+            ->success()
+            ->sendToDatabase($admins);
 
         $this->applicationId = $application->id;
         $this->submitted = true;

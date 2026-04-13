@@ -11,6 +11,7 @@ use App\Models\User;
 use Illuminate\Support\Facades\Notification;
 use App\Notifications\AdminAlertNotification;
 use Filament\Notifications\Notification as FilamentNotification;
+use Illuminate\Support\Facades\Log;
 
 class PackageController extends Controller
 {
@@ -49,16 +50,21 @@ class PackageController extends Controller
         ]);
 
         $admins = User::role('Super-Admin')->get();
-        $formattedPrice = number_format($package->price);
+        $formattedPrice = number_format((float) $package->price);
         $userName = $user->name;
 
         // Email notification
-        Notification::send($admins, new AdminAlertNotification(
-            'New Payment Submitted',
-            "{$userName} ({$request->sender_number}) has submitted a payment of {$formattedPrice} BDT (TrxID: {$request->trx_id}).",
-            'Review Payment',
-            url('/admin/subscriptions')
-        ));
+        // Email notification
+        try {
+            Notification::send($admins, new AdminAlertNotification(
+                'New Payment Submitted',
+                "{$userName} ({$request->sender_number}) has submitted a payment of {$formattedPrice} BDT (TrxID: {$request->trx_id}).",
+                'Review Payment',
+                url('/admin/subscriptions')
+            ));
+        } catch (\Exception $e) {
+            \Illuminate\Support\Facades\Log::error('Admin email notification failed: ' . $e->getMessage());
+        }
 
         // Filament bell notification — no ->actions() here, just title + body + url
         FilamentNotification::make()

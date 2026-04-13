@@ -1128,24 +1128,71 @@ unset($__errorArgs, $__bag); ?><?php if(\Livewire\Mechanisms\ExtendBlade\ExtendB
                 <?php elseif($step === 3): ?>
                     <div class="gc-field">
                         <label>ক্যারিয়ার আগ্রহ (একাধিক বেছে নিন)</label>
-                        <div class="gc-check-group">
+                        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px;">
                             <?php if(\Livewire\Mechanisms\ExtendBlade\ExtendBlade::isRenderingLivewireComponent()): ?><!--[if BLOCK]><![endif]--><?php \Livewire\Features\SupportCompiledWireKeys\SupportCompiledWireKeys::openLoop(); ?><?php endif; ?><?php $__currentLoopData = ['Modeling', 'Acting', 'Personality Development', 'Fashion Industry']; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $interest): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?><?php if(\Livewire\Mechanisms\ExtendBlade\ExtendBlade::isRenderingLivewireComponent()): ?><?php \Livewire\Features\SupportCompiledWireKeys\SupportCompiledWireKeys::startLoopIteration(); ?><?php endif; ?>
-                            <label class="gc-check-item">
-                                <input type="checkbox" wire:model.defer="career_interests" value="<?php echo e($interest); ?>">
-                                <?php echo e($interest); ?>
-
+                            <label style="
+                                display: flex;
+                                align-items: center;
+                                gap: 10px;
+                                padding: 12px 16px;
+                                border: 2px solid <?php echo e(in_array($interest, $career_interests) ? '#16a34a' : 'var(--border-strong)'); ?>;
+                                background: <?php echo e(in_array($interest, $career_interests) ? 'rgba(22,163,74,0.08)' : 'var(--bg-primary)'); ?>;
+                                cursor: pointer;
+                                font-size: 0.92rem;
+                                font-weight: 600;
+                                color: <?php echo e(in_array($interest, $career_interests) ? '#16a34a' : 'var(--text-secondary)'); ?>;
+                                transition: all 0.2s;
+                                border-radius: 4px;
+                            ">
+                                <input type="checkbox" wire:model.live="career_interests" value="<?php echo e($interest); ?>"
+                                    style="width: 18px; height: 18px; accent-color: #16a34a; cursor: pointer; flex-shrink: 0;">
+                                <span><?php echo e($interest); ?></span>
+                                <?php if(\Livewire\Mechanisms\ExtendBlade\ExtendBlade::isRenderingLivewireComponent()): ?><!--[if BLOCK]><![endif]--><?php endif; ?><?php if(in_array($interest, $career_interests)): ?>
+                                    <svg style="margin-left: auto; flex-shrink: 0;" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#16a34a" stroke-width="3">
+                                        <polyline points="20 6 9 17 4 12"/>
+                                    </svg>
+                                <?php endif; ?><?php if(\Livewire\Mechanisms\ExtendBlade\ExtendBlade::isRenderingLivewireComponent()): ?><!--[if ENDBLOCK]><![endif]--><?php endif; ?>
                             </label>
                             <?php if(\Livewire\Mechanisms\ExtendBlade\ExtendBlade::isRenderingLivewireComponent()): ?><?php \Livewire\Features\SupportCompiledWireKeys\SupportCompiledWireKeys::endLoop(); ?><?php endif; ?><?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?><?php if(\Livewire\Mechanisms\ExtendBlade\ExtendBlade::isRenderingLivewireComponent()): ?><!--[if ENDBLOCK]><![endif]--><?php \Livewire\Features\SupportCompiledWireKeys\SupportCompiledWireKeys::closeLoop(); ?><?php endif; ?>
                         </div>
                     </div>
                     <div class="gc-field">
                         <label>অভিজ্ঞতার স্তর</label>
-                        <select wire:model.defer="experience_level">
-                            <option value="">নির্বাচন করুন</option>
-                            <option value="Beginner">Beginner (নতুন)</option>
-                            <option value="Intermediate">Intermediate (কিছুটা অভিজ্ঞ)</option>
-                            <option value="Experienced">Experienced (অভিজ্ঞ)</option>
-                        </select>
+                        <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px;">
+                            <?php if(\Livewire\Mechanisms\ExtendBlade\ExtendBlade::isRenderingLivewireComponent()): ?><!--[if BLOCK]><![endif]--><?php \Livewire\Features\SupportCompiledWireKeys\SupportCompiledWireKeys::openLoop(); ?><?php endif; ?><?php $__currentLoopData = [
+                                'Beginner' => ['label' => 'Beginner', 'sub' => 'নতুন', 'icon' => '🌱'],
+                                'Intermediate' => ['label' => 'Intermediate', 'sub' => 'কিছুটা অভিজ্ঞ', 'icon' => '⭐'],
+                                'Experienced' => ['label' => 'Experienced', 'sub' => 'অভিজ্ঞ', 'icon' => '🏆'],
+                            ]; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $val => $info): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?><?php if(\Livewire\Mechanisms\ExtendBlade\ExtendBlade::isRenderingLivewireComponent()): ?><?php \Livewire\Features\SupportCompiledWireKeys\SupportCompiledWireKeys::startLoopIteration(); ?><?php endif; ?>
+                            <label style="
+                                display: flex;
+                                flex-direction: column;
+                                align-items: center;
+                                justify-content: center;
+                                gap: 4px;
+                                padding: 16px 8px;
+                                border: 2px solid <?php echo e($experience_level === $val ? '#16a34a' : 'var(--border-strong)'); ?>;
+                                background: <?php echo e($experience_level === $val ? 'rgba(22,163,74,0.08)' : 'var(--bg-primary)'); ?>;
+                                cursor: pointer;
+                                text-align: center;
+                                border-radius: 4px;
+                                transition: all 0.2s;
+                            ">
+                                <input type="radio" wire:model.live="experience_level" value="<?php echo e($val); ?>" style="display: none;">
+                                <span style="font-size: 1.5rem;"><?php echo e($info['icon']); ?></span>
+                                <span style="font-size: 0.82rem; font-weight: 700; color: <?php echo e($experience_level === $val ? '#16a34a' : 'var(--text-primary)'); ?>;">
+                                    <?php echo e($info['label']); ?>
+
+                                </span>
+                                <span style="font-size: 0.75rem; color: var(--text-muted);"><?php echo e($info['sub']); ?></span>
+                                <?php if(\Livewire\Mechanisms\ExtendBlade\ExtendBlade::isRenderingLivewireComponent()): ?><!--[if BLOCK]><![endif]--><?php endif; ?><?php if($experience_level === $val): ?>
+                                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#16a34a" stroke-width="3">
+                                        <polyline points="20 6 9 17 4 12"/>
+                                    </svg>
+                                <?php endif; ?><?php if(\Livewire\Mechanisms\ExtendBlade\ExtendBlade::isRenderingLivewireComponent()): ?><!--[if ENDBLOCK]><![endif]--><?php endif; ?>
+                            </label>
+                            <?php if(\Livewire\Mechanisms\ExtendBlade\ExtendBlade::isRenderingLivewireComponent()): ?><?php \Livewire\Features\SupportCompiledWireKeys\SupportCompiledWireKeys::endLoop(); ?><?php endif; ?><?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?><?php if(\Livewire\Mechanisms\ExtendBlade\ExtendBlade::isRenderingLivewireComponent()): ?><!--[if ENDBLOCK]><![endif]--><?php \Livewire\Features\SupportCompiledWireKeys\SupportCompiledWireKeys::closeLoop(); ?><?php endif; ?>
+                        </div>
                     </div>
 
                 
@@ -1230,6 +1277,18 @@ unset($__errorArgs, $__bag); ?><?php if(\Livewire\Mechanisms\ExtendBlade\ExtendB
                     <?php endif; ?><?php if(\Livewire\Mechanisms\ExtendBlade\ExtendBlade::isRenderingLivewireComponent()): ?><!--[if ENDBLOCK]><![endif]--><?php endif; ?>
                     <?php endif; ?><?php if(\Livewire\Mechanisms\ExtendBlade\ExtendBlade::isRenderingLivewireComponent()): ?><!--[if ENDBLOCK]><![endif]--><?php endif; ?>
 
+                    <div class="gc-field">
+                        <label>পেমেন্ট প্রেরণকারীর নম্বর <span style="color:var(--gold)">*</span></label>
+                        <input type="tel" wire:model.defer="sender_number" placeholder="01XXXXXXXXX">
+                        <?php if(\Livewire\Mechanisms\ExtendBlade\ExtendBlade::isRenderingLivewireComponent()): ?><!--[if BLOCK]><![endif]--><?php endif; ?><?php $__errorArgs = ['sender_number'];
+$__bag = $errors->getBag($__errorArgs[1] ?? 'default');
+if ($__bag->has($__errorArgs[0])) :
+if (isset($message)) { $__messageOriginal = $message; }
+$message = $__bag->first($__errorArgs[0]); ?> <div class="gc-field-error"><?php echo e($message); ?></div> <?php unset($message);
+if (isset($__messageOriginal)) { $message = $__messageOriginal; }
+endif;
+unset($__errorArgs, $__bag); ?><?php if(\Livewire\Mechanisms\ExtendBlade\ExtendBlade::isRenderingLivewireComponent()): ?><!--[if ENDBLOCK]><![endif]--><?php endif; ?>
+                    </div>
                     <div class="gc-field">
                         <label>ট্রানজেকশন আইডি (TrxID) <span style="color:var(--gold)">*</span></label>
                         <input type="text" wire:model.defer="transaction_id" placeholder="e.g. 9J5A6B8C" style="letter-spacing:0.1em;">

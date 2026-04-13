@@ -58,6 +58,11 @@ class GroomingApplicationForm
                 ])
                 ->nullable(),
 
+            TextInput::make('sender_number')
+                ->label('Sender Number')
+                ->required()
+                ->tel(),
+                
             TextInput::make('transaction_id')
                 ->label('Transaction ID')
                 ->nullable()

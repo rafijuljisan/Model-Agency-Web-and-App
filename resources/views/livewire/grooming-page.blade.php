@@ -1102,23 +1102,70 @@
                 @elseif($step === 3)
                     <div class="gc-field">
                         <label>ক্যারিয়ার আগ্রহ (একাধিক বেছে নিন)</label>
-                        <div class="gc-check-group">
+                        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px;">
                             @foreach(['Modeling', 'Acting', 'Personality Development', 'Fashion Industry'] as $interest)
-                            <label class="gc-check-item">
-                                <input type="checkbox" wire:model.defer="career_interests" value="{{ $interest }}">
-                                {{ $interest }}
+                            <label style="
+                                display: flex;
+                                align-items: center;
+                                gap: 10px;
+                                padding: 12px 16px;
+                                border: 2px solid {{ in_array($interest, $career_interests) ? '#16a34a' : 'var(--border-strong)' }};
+                                background: {{ in_array($interest, $career_interests) ? 'rgba(22,163,74,0.08)' : 'var(--bg-primary)' }};
+                                cursor: pointer;
+                                font-size: 0.92rem;
+                                font-weight: 600;
+                                color: {{ in_array($interest, $career_interests) ? '#16a34a' : 'var(--text-secondary)' }};
+                                transition: all 0.2s;
+                                border-radius: 4px;
+                            ">
+                                <input type="checkbox" wire:model.live="career_interests" value="{{ $interest }}"
+                                    style="width: 18px; height: 18px; accent-color: #16a34a; cursor: pointer; flex-shrink: 0;">
+                                <span>{{ $interest }}</span>
+                                @if(in_array($interest, $career_interests))
+                                    <svg style="margin-left: auto; flex-shrink: 0;" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#16a34a" stroke-width="3">
+                                        <polyline points="20 6 9 17 4 12"/>
+                                    </svg>
+                                @endif
                             </label>
                             @endforeach
                         </div>
                     </div>
                     <div class="gc-field">
                         <label>অভিজ্ঞতার স্তর</label>
-                        <select wire:model.defer="experience_level">
-                            <option value="">নির্বাচন করুন</option>
-                            <option value="Beginner">Beginner (নতুন)</option>
-                            <option value="Intermediate">Intermediate (কিছুটা অভিজ্ঞ)</option>
-                            <option value="Experienced">Experienced (অভিজ্ঞ)</option>
-                        </select>
+                        <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px;">
+                            @foreach([
+                                'Beginner' => ['label' => 'Beginner', 'sub' => 'নতুন', 'icon' => '🌱'],
+                                'Intermediate' => ['label' => 'Intermediate', 'sub' => 'কিছুটা অভিজ্ঞ', 'icon' => '⭐'],
+                                'Experienced' => ['label' => 'Experienced', 'sub' => 'অভিজ্ঞ', 'icon' => '🏆'],
+                            ] as $val => $info)
+                            <label style="
+                                display: flex;
+                                flex-direction: column;
+                                align-items: center;
+                                justify-content: center;
+                                gap: 4px;
+                                padding: 16px 8px;
+                                border: 2px solid {{ $experience_level === $val ? '#16a34a' : 'var(--border-strong)' }};
+                                background: {{ $experience_level === $val ? 'rgba(22,163,74,0.08)' : 'var(--bg-primary)' }};
+                                cursor: pointer;
+                                text-align: center;
+                                border-radius: 4px;
+                                transition: all 0.2s;
+                            ">
+                                <input type="radio" wire:model.live="experience_level" value="{{ $val }}" style="display: none;">
+                                <span style="font-size: 1.5rem;">{{ $info['icon'] }}</span>
+                                <span style="font-size: 0.82rem; font-weight: 700; color: {{ $experience_level === $val ? '#16a34a' : 'var(--text-primary)' }};">
+                                    {{ $info['label'] }}
+                                </span>
+                                <span style="font-size: 0.75rem; color: var(--text-muted);">{{ $info['sub'] }}</span>
+                                @if($experience_level === $val)
+                                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#16a34a" stroke-width="3">
+                                        <polyline points="20 6 9 17 4 12"/>
+                                    </svg>
+                                @endif
+                            </label>
+                            @endforeach
+                        </div>
                     </div>
 
                 {{-- STEP 4: Batch Selection --}}
@@ -1187,6 +1234,11 @@
                     @endif
                     @endif
 
+                    <div class="gc-field">
+                        <label>পেমেন্ট প্রেরণকারীর নম্বর <span style="color:var(--gold)">*</span></label>
+                        <input type="tel" wire:model.defer="sender_number" placeholder="01XXXXXXXXX">
+                        @error('sender_number') <div class="gc-field-error">{{ $message }}</div> @enderror
+                    </div>
                     <div class="gc-field">
                         <label>ট্রানজেকশন আইডি (TrxID) <span style="color:var(--gold)">*</span></label>
                         <input type="text" wire:model.defer="transaction_id" placeholder="e.g. 9J5A6B8C" style="letter-spacing:0.1em;">
