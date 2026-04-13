@@ -229,7 +229,7 @@
         
         <div class="auth-header">
             <div class="auth-eyebrow">Welcome Back</div>
-            <h1 class="auth-title">Sign In to <strong>AgencyMarket</strong></h1>
+            <h1 class="auth-title">Sign In to <strong>{{ config('app.name') }}</strong></h1>
             <p class="auth-sub">Access your verified talent dashboard or agency account.</p>
         </div>
 
@@ -254,7 +254,19 @@
                         <svg class="form-input-icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" aria-hidden="true">
                             <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"></path><polyline points="22,6 12,13 2,6"></polyline>
                         </svg>
-                        <input id="email" type="email" name="email" value="{{ old('email') }}" class="form-input" placeholder="you@example.com" required autofocus autocomplete="username">
+                        <input 
+                            id="email" 
+                            type="email" 
+                            name="email" 
+                            value="{{ old('email') }}" 
+                            class="form-input" 
+                            placeholder="you@example.com" 
+                            required 
+                            autofocus 
+                            autocomplete="username"
+                            autocapitalize="off"  {{-- Stops mobile keyboards from capitalizing the first letter --}}
+                            autocorrect="off"     {{-- Stops mobile keyboards from "fixing" the spelling --}}
+                        >
                     </div>
                     @error('email')
                         <span class="form-error">

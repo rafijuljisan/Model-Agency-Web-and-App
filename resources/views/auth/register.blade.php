@@ -450,7 +450,9 @@
                             <polyline points="22,6 12,13 2,6"></polyline>
                         </svg>
                         <input id="email" type="email" name="email" value="{{ old('email') }}" class="form-input"
-                            placeholder="you@example.com" required autocomplete="username">
+                            placeholder="you@example.com" required autocomplete="username"
+                            autocapitalize="off" 
+                            autocorrect="off">
                     </div>
                     @error('email')
                         <span class="form-error">
