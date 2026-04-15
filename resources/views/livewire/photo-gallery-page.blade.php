@@ -216,6 +216,8 @@
         <div style="margin-top: 40px;">
             {{ $photos->links('vendor.pagination.custom-numbered') }}
         </div>
+        {{-- AD SLOT 3: Bottom of Gallery Page --}}
+        <x-ad-banner position="gallery_bottom" />
 
         {{-- Empty State --}}
         @if($photos->isEmpty())

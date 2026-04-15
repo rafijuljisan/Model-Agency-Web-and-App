@@ -34,7 +34,7 @@ class UsersTable
                     ->searchable(),
 
                 TextColumn::make('verification_status')
-                    ->label('NID Status')
+                    ->label('NID Front')
                     ->badge()
                     ->color(fn(string $state): string => match ($state) {
                         'verified' => 'success',
@@ -44,7 +44,7 @@ class UsersTable
                     }),
 
                 TextColumn::make('academic_verification_status')
-                    ->label('Academic Status')
+                    ->label('NID Back')
                     ->badge()
                     ->color(fn(string $state): string => match ($state) {
                         'verified' => 'success',

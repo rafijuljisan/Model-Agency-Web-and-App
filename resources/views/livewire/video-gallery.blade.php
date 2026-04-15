@@ -267,6 +267,14 @@
                         </div>
                         
                     </div>
+
+                    {{-- AD SLOT: In-Feed Video Ad (Shows every 6th video / 2 rows) --}}
+                    @if($loop->iteration % 6 == 0)
+                        <div style="grid-column: 1 / -1; width: 100%; padding: 10px 0;">
+                            <x-ad-banner position="video_in_feed" />
+                        </div>
+                    @endif
+
                 @endif
             @endforeach
         </div>
@@ -275,6 +283,8 @@
         <div style="margin-top: 40px;">
             {{ $videos->links('vendor.pagination.custom-numbered') }}
         </div>
+        {{-- AD SLOT 3: Bottom of Video Page --}}
+        <x-ad-banner position="video_bottom" />
         {{-- Empty State Design --}}
         @if($videos->isEmpty())
             <div class="video-empty anim-fade-up anim-d2">

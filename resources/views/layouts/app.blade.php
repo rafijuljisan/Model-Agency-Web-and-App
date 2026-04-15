@@ -1749,6 +1749,8 @@
             });
         })();
     </script>
+    {{-- Dynamic Site Popup Ad --}}
+    <x-ad-popup />
 </body>
 
 </html>

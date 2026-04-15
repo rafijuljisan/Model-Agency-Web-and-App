@@ -269,6 +269,35 @@
                         </div>
                         
                     </div>
+
+                    
+                    <?php if(\Livewire\Mechanisms\ExtendBlade\ExtendBlade::isRenderingLivewireComponent()): ?><!--[if BLOCK]><![endif]--><?php endif; ?><?php if($loop->iteration % 6 == 0): ?>
+                        <div style="grid-column: 1 / -1; width: 100%; padding: 10px 0;">
+                            <?php if (isset($component)) { $__componentOriginaled4987d3f6007db3445a6067a328a16c = $component; } ?>
+<?php if (isset($attributes)) { $__attributesOriginaled4987d3f6007db3445a6067a328a16c = $attributes; } ?>
+<?php $component = App\View\Components\AdBanner::resolve(['position' => 'video_in_feed'] + (isset($attributes) && $attributes instanceof Illuminate\View\ComponentAttributeBag ? $attributes->all() : [])); ?>
+<?php $component->withName('ad-banner'); ?>
+<?php if ($component->shouldRender()): ?>
+<?php $__env->startComponent($component->resolveView(), $component->data()); ?>
+<?php if (isset($attributes) && $attributes instanceof Illuminate\View\ComponentAttributeBag): ?>
+<?php $attributes = $attributes->except(\App\View\Components\AdBanner::ignoredParameterNames()); ?>
+<?php endif; ?>
+<?php $component->withAttributes([]); ?>
+<?php \Livewire\Features\SupportCompiledWireKeys\SupportCompiledWireKeys::processComponentKey($component); ?>
+
+<?php echo $__env->renderComponent(); ?>
+<?php endif; ?>
+<?php if (isset($__attributesOriginaled4987d3f6007db3445a6067a328a16c)): ?>
+<?php $attributes = $__attributesOriginaled4987d3f6007db3445a6067a328a16c; ?>
+<?php unset($__attributesOriginaled4987d3f6007db3445a6067a328a16c); ?>
+<?php endif; ?>
+<?php if (isset($__componentOriginaled4987d3f6007db3445a6067a328a16c)): ?>
+<?php $component = $__componentOriginaled4987d3f6007db3445a6067a328a16c; ?>
+<?php unset($__componentOriginaled4987d3f6007db3445a6067a328a16c); ?>
+<?php endif; ?>
+                        </div>
+                    <?php endif; ?><?php if(\Livewire\Mechanisms\ExtendBlade\ExtendBlade::isRenderingLivewireComponent()): ?><!--[if ENDBLOCK]><![endif]--><?php endif; ?>
+
                 <?php endif; ?><?php if(\Livewire\Mechanisms\ExtendBlade\ExtendBlade::isRenderingLivewireComponent()): ?><!--[if ENDBLOCK]><![endif]--><?php endif; ?>
             <?php if(\Livewire\Mechanisms\ExtendBlade\ExtendBlade::isRenderingLivewireComponent()): ?><?php \Livewire\Features\SupportCompiledWireKeys\SupportCompiledWireKeys::endLoop(); ?><?php endif; ?><?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?><?php if(\Livewire\Mechanisms\ExtendBlade\ExtendBlade::isRenderingLivewireComponent()): ?><!--[if ENDBLOCK]><![endif]--><?php \Livewire\Features\SupportCompiledWireKeys\SupportCompiledWireKeys::closeLoop(); ?><?php endif; ?>
         </div>
@@ -278,6 +307,29 @@
             <?php echo e($videos->links('vendor.pagination.custom-numbered')); ?>
 
         </div>
+        
+        <?php if (isset($component)) { $__componentOriginaled4987d3f6007db3445a6067a328a16c = $component; } ?>
+<?php if (isset($attributes)) { $__attributesOriginaled4987d3f6007db3445a6067a328a16c = $attributes; } ?>
+<?php $component = App\View\Components\AdBanner::resolve(['position' => 'video_bottom'] + (isset($attributes) && $attributes instanceof Illuminate\View\ComponentAttributeBag ? $attributes->all() : [])); ?>
+<?php $component->withName('ad-banner'); ?>
+<?php if ($component->shouldRender()): ?>
+<?php $__env->startComponent($component->resolveView(), $component->data()); ?>
+<?php if (isset($attributes) && $attributes instanceof Illuminate\View\ComponentAttributeBag): ?>
+<?php $attributes = $attributes->except(\App\View\Components\AdBanner::ignoredParameterNames()); ?>
+<?php endif; ?>
+<?php $component->withAttributes([]); ?>
+<?php \Livewire\Features\SupportCompiledWireKeys\SupportCompiledWireKeys::processComponentKey($component); ?>
+
+<?php echo $__env->renderComponent(); ?>
+<?php endif; ?>
+<?php if (isset($__attributesOriginaled4987d3f6007db3445a6067a328a16c)): ?>
+<?php $attributes = $__attributesOriginaled4987d3f6007db3445a6067a328a16c; ?>
+<?php unset($__attributesOriginaled4987d3f6007db3445a6067a328a16c); ?>
+<?php endif; ?>
+<?php if (isset($__componentOriginaled4987d3f6007db3445a6067a328a16c)): ?>
+<?php $component = $__componentOriginaled4987d3f6007db3445a6067a328a16c; ?>
+<?php unset($__componentOriginaled4987d3f6007db3445a6067a328a16c); ?>
+<?php endif; ?>
         
         <?php if(\Livewire\Mechanisms\ExtendBlade\ExtendBlade::isRenderingLivewireComponent()): ?><!--[if BLOCK]><![endif]--><?php endif; ?><?php if($videos->isEmpty()): ?>
             <div class="video-empty anim-fade-up anim-d2">

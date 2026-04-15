@@ -1746,6 +1746,29 @@
             });
         })();
     </script>
+    
+    <?php if (isset($component)) { $__componentOriginal249c7b6428f02901f949808ecd7e5012 = $component; } ?>
+<?php if (isset($attributes)) { $__attributesOriginal249c7b6428f02901f949808ecd7e5012 = $attributes; } ?>
+<?php $component = App\View\Components\AdPopup::resolve([] + (isset($attributes) && $attributes instanceof Illuminate\View\ComponentAttributeBag ? $attributes->all() : [])); ?>
+<?php $component->withName('ad-popup'); ?>
+<?php if ($component->shouldRender()): ?>
+<?php $__env->startComponent($component->resolveView(), $component->data()); ?>
+<?php if (isset($attributes) && $attributes instanceof Illuminate\View\ComponentAttributeBag): ?>
+<?php $attributes = $attributes->except(\App\View\Components\AdPopup::ignoredParameterNames()); ?>
+<?php endif; ?>
+<?php $component->withAttributes([]); ?>
+<?php \Livewire\Features\SupportCompiledWireKeys\SupportCompiledWireKeys::processComponentKey($component); ?>
+
+<?php echo $__env->renderComponent(); ?>
+<?php endif; ?>
+<?php if (isset($__attributesOriginal249c7b6428f02901f949808ecd7e5012)): ?>
+<?php $attributes = $__attributesOriginal249c7b6428f02901f949808ecd7e5012; ?>
+<?php unset($__attributesOriginal249c7b6428f02901f949808ecd7e5012); ?>
+<?php endif; ?>
+<?php if (isset($__componentOriginal249c7b6428f02901f949808ecd7e5012)): ?>
+<?php $component = $__componentOriginal249c7b6428f02901f949808ecd7e5012; ?>
+<?php unset($__componentOriginal249c7b6428f02901f949808ecd7e5012); ?>
+<?php endif; ?>
 </body>
 
 </html><?php /**PATH H:\agency-app\resources\views/layouts/app.blade.php ENDPATH**/ ?>

@@ -56,7 +56,29 @@
         <div class="editorial-eyebrow">Latest Updates</div>
         <h1 class="editorial-title">Agency <strong>Editorial</strong></h1>
     </div>
+    
+    <?php if (isset($component)) { $__componentOriginaled4987d3f6007db3445a6067a328a16c = $component; } ?>
+<?php if (isset($attributes)) { $__attributesOriginaled4987d3f6007db3445a6067a328a16c = $attributes; } ?>
+<?php $component = App\View\Components\AdBanner::resolve(['position' => 'editorial_index_top'] + (isset($attributes) && $attributes instanceof Illuminate\View\ComponentAttributeBag ? $attributes->all() : [])); ?>
+<?php $component->withName('ad-banner'); ?>
+<?php if ($component->shouldRender()): ?>
+<?php $__env->startComponent($component->resolveView(), $component->data()); ?>
+<?php if (isset($attributes) && $attributes instanceof Illuminate\View\ComponentAttributeBag): ?>
+<?php $attributes = $attributes->except(\App\View\Components\AdBanner::ignoredParameterNames()); ?>
+<?php endif; ?>
+<?php $component->withAttributes([]); ?>
+<?php \Livewire\Features\SupportCompiledWireKeys\SupportCompiledWireKeys::processComponentKey($component); ?>
 
+<?php echo $__env->renderComponent(); ?>
+<?php endif; ?>
+<?php if (isset($__attributesOriginaled4987d3f6007db3445a6067a328a16c)): ?>
+<?php $attributes = $__attributesOriginaled4987d3f6007db3445a6067a328a16c; ?>
+<?php unset($__attributesOriginaled4987d3f6007db3445a6067a328a16c); ?>
+<?php endif; ?>
+<?php if (isset($__componentOriginaled4987d3f6007db3445a6067a328a16c)): ?>
+<?php $component = $__componentOriginaled4987d3f6007db3445a6067a328a16c; ?>
+<?php unset($__componentOriginaled4987d3f6007db3445a6067a328a16c); ?>
+<?php endif; ?>
     <div class="editorial-grid anim-fade-up anim-d1">
         <?php if(\Livewire\Mechanisms\ExtendBlade\ExtendBlade::isRenderingLivewireComponent()): ?><!--[if BLOCK]><![endif]--><?php \Livewire\Features\SupportCompiledWireKeys\SupportCompiledWireKeys::openLoop(); ?><?php endif; ?><?php $__currentLoopData = $editorials; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $index => $post): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?><?php if(\Livewire\Mechanisms\ExtendBlade\ExtendBlade::isRenderingLivewireComponent()): ?><?php \Livewire\Features\SupportCompiledWireKeys\SupportCompiledWireKeys::startLoopIteration(); ?><?php endif; ?>
             <a href="<?php echo e(route('editorial.show', $post)); ?>" class="editorial-card <?php echo e($index === 0 ? 'featured' : ''); ?>">
@@ -80,9 +102,59 @@
                     <p class="editorial-excerpt"><?php echo e($post->excerpt); ?></p>
                 </div>
             </a>
+            
+            <?php if(\Livewire\Mechanisms\ExtendBlade\ExtendBlade::isRenderingLivewireComponent()): ?><!--[if BLOCK]><![endif]--><?php endif; ?><?php if($loop->iteration == 2): ?>
+                <div style="grid-column: 1 / -1; width: 100%; padding: 20px 0;">
+                    <?php if (isset($component)) { $__componentOriginaled4987d3f6007db3445a6067a328a16c = $component; } ?>
+<?php if (isset($attributes)) { $__attributesOriginaled4987d3f6007db3445a6067a328a16c = $attributes; } ?>
+<?php $component = App\View\Components\AdBanner::resolve(['position' => 'editorial_index_in_feed'] + (isset($attributes) && $attributes instanceof Illuminate\View\ComponentAttributeBag ? $attributes->all() : [])); ?>
+<?php $component->withName('ad-banner'); ?>
+<?php if ($component->shouldRender()): ?>
+<?php $__env->startComponent($component->resolveView(), $component->data()); ?>
+<?php if (isset($attributes) && $attributes instanceof Illuminate\View\ComponentAttributeBag): ?>
+<?php $attributes = $attributes->except(\App\View\Components\AdBanner::ignoredParameterNames()); ?>
+<?php endif; ?>
+<?php $component->withAttributes([]); ?>
+<?php \Livewire\Features\SupportCompiledWireKeys\SupportCompiledWireKeys::processComponentKey($component); ?>
+
+<?php echo $__env->renderComponent(); ?>
+<?php endif; ?>
+<?php if (isset($__attributesOriginaled4987d3f6007db3445a6067a328a16c)): ?>
+<?php $attributes = $__attributesOriginaled4987d3f6007db3445a6067a328a16c; ?>
+<?php unset($__attributesOriginaled4987d3f6007db3445a6067a328a16c); ?>
+<?php endif; ?>
+<?php if (isset($__componentOriginaled4987d3f6007db3445a6067a328a16c)): ?>
+<?php $component = $__componentOriginaled4987d3f6007db3445a6067a328a16c; ?>
+<?php unset($__componentOriginaled4987d3f6007db3445a6067a328a16c); ?>
+<?php endif; ?>
+                </div>
+            <?php endif; ?><?php if(\Livewire\Mechanisms\ExtendBlade\ExtendBlade::isRenderingLivewireComponent()): ?><!--[if ENDBLOCK]><![endif]--><?php endif; ?>
         <?php if(\Livewire\Mechanisms\ExtendBlade\ExtendBlade::isRenderingLivewireComponent()): ?><?php \Livewire\Features\SupportCompiledWireKeys\SupportCompiledWireKeys::endLoop(); ?><?php endif; ?><?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?><?php if(\Livewire\Mechanisms\ExtendBlade\ExtendBlade::isRenderingLivewireComponent()): ?><!--[if ENDBLOCK]><![endif]--><?php \Livewire\Features\SupportCompiledWireKeys\SupportCompiledWireKeys::closeLoop(); ?><?php endif; ?>
     </div>
 
+    
+    <?php if (isset($component)) { $__componentOriginaled4987d3f6007db3445a6067a328a16c = $component; } ?>
+<?php if (isset($attributes)) { $__attributesOriginaled4987d3f6007db3445a6067a328a16c = $attributes; } ?>
+<?php $component = App\View\Components\AdBanner::resolve(['position' => 'editorial_index_bottom'] + (isset($attributes) && $attributes instanceof Illuminate\View\ComponentAttributeBag ? $attributes->all() : [])); ?>
+<?php $component->withName('ad-banner'); ?>
+<?php if ($component->shouldRender()): ?>
+<?php $__env->startComponent($component->resolveView(), $component->data()); ?>
+<?php if (isset($attributes) && $attributes instanceof Illuminate\View\ComponentAttributeBag): ?>
+<?php $attributes = $attributes->except(\App\View\Components\AdBanner::ignoredParameterNames()); ?>
+<?php endif; ?>
+<?php $component->withAttributes([]); ?>
+<?php \Livewire\Features\SupportCompiledWireKeys\SupportCompiledWireKeys::processComponentKey($component); ?>
+
+<?php echo $__env->renderComponent(); ?>
+<?php endif; ?>
+<?php if (isset($__attributesOriginaled4987d3f6007db3445a6067a328a16c)): ?>
+<?php $attributes = $__attributesOriginaled4987d3f6007db3445a6067a328a16c; ?>
+<?php unset($__attributesOriginaled4987d3f6007db3445a6067a328a16c); ?>
+<?php endif; ?>
+<?php if (isset($__componentOriginaled4987d3f6007db3445a6067a328a16c)): ?>
+<?php $component = $__componentOriginaled4987d3f6007db3445a6067a328a16c; ?>
+<?php unset($__componentOriginaled4987d3f6007db3445a6067a328a16c); ?>
+<?php endif; ?>
     
     <div style="max-width:1440px; margin: 0 auto 100px; padding: 0 40px;">
         <?php echo e($editorials->links()); ?>

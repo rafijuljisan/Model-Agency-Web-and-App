@@ -739,6 +739,10 @@
 </div>
 
 <div class="gc-body">
+    {{-- AD SLOT 1: Grooming Page Top --}}
+    <div style="margin-bottom: 40px;">
+        <x-ad-banner position="grooming_top" />
+    </div>
     {{-- ══════════════════════════════════
         GALLERY & NOTICES SIDEBAR
     ══════════════════════════════════ --}}
@@ -826,6 +830,10 @@
 
     </div>
 
+    {{-- AD SLOT 2: Grooming Page Middle --}}
+    <div style="margin-bottom: 64px;">
+        <x-ad-banner position="grooming_middle" />
+    </div>
     {{-- ══════════════════════════════════
          UPCOMING BATCHES
     ══════════════════════════════════ --}}
@@ -928,6 +936,10 @@
         @endif
     </div>
 
+    {{-- AD SLOT 3: Grooming Page Bottom --}}
+    <div style="margin-bottom: 40px;">
+        <x-ad-banner position="grooming_bottom" />
+    </div>
     {{-- ══════════════════════════════════
          CTA BANNER
     ══════════════════════════════════ --}}

@@ -1573,6 +1573,8 @@
     </section>
     @endif
 
+    {{-- AD SLOT 2: Mid Homepage Banner --}}
+    <x-ad-banner position="homepage_middle" />
 
     {{-- ══════════════════════════════════════════
          LEADERSHIP TEAM
@@ -1732,6 +1734,8 @@
         </div>
     </section>
     @endif
+    {{-- AD SLOT 3: Bottom Homepage Banner --}}
+    <x-ad-banner position="homepage_bottom" />
     {{-- ══════════════════════════════════════════
          CTA BANNER
     ══════════════════════════════════════════ --}}

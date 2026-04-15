@@ -738,6 +738,31 @@
 
 <div class="gc-body">
     
+    <div style="margin-bottom: 40px;">
+        <?php if (isset($component)) { $__componentOriginaled4987d3f6007db3445a6067a328a16c = $component; } ?>
+<?php if (isset($attributes)) { $__attributesOriginaled4987d3f6007db3445a6067a328a16c = $attributes; } ?>
+<?php $component = App\View\Components\AdBanner::resolve(['position' => 'grooming_top'] + (isset($attributes) && $attributes instanceof Illuminate\View\ComponentAttributeBag ? $attributes->all() : [])); ?>
+<?php $component->withName('ad-banner'); ?>
+<?php if ($component->shouldRender()): ?>
+<?php $__env->startComponent($component->resolveView(), $component->data()); ?>
+<?php if (isset($attributes) && $attributes instanceof Illuminate\View\ComponentAttributeBag): ?>
+<?php $attributes = $attributes->except(\App\View\Components\AdBanner::ignoredParameterNames()); ?>
+<?php endif; ?>
+<?php $component->withAttributes([]); ?>
+<?php \Livewire\Features\SupportCompiledWireKeys\SupportCompiledWireKeys::processComponentKey($component); ?>
+
+<?php echo $__env->renderComponent(); ?>
+<?php endif; ?>
+<?php if (isset($__attributesOriginaled4987d3f6007db3445a6067a328a16c)): ?>
+<?php $attributes = $__attributesOriginaled4987d3f6007db3445a6067a328a16c; ?>
+<?php unset($__attributesOriginaled4987d3f6007db3445a6067a328a16c); ?>
+<?php endif; ?>
+<?php if (isset($__componentOriginaled4987d3f6007db3445a6067a328a16c)): ?>
+<?php $component = $__componentOriginaled4987d3f6007db3445a6067a328a16c; ?>
+<?php unset($__componentOriginaled4987d3f6007db3445a6067a328a16c); ?>
+<?php endif; ?>
+    </div>
+    
     <div class="gc-content-wrapper">
         
         
@@ -824,6 +849,31 @@
 
     </div>
 
+    
+    <div style="margin-bottom: 64px;">
+        <?php if (isset($component)) { $__componentOriginaled4987d3f6007db3445a6067a328a16c = $component; } ?>
+<?php if (isset($attributes)) { $__attributesOriginaled4987d3f6007db3445a6067a328a16c = $attributes; } ?>
+<?php $component = App\View\Components\AdBanner::resolve(['position' => 'grooming_middle'] + (isset($attributes) && $attributes instanceof Illuminate\View\ComponentAttributeBag ? $attributes->all() : [])); ?>
+<?php $component->withName('ad-banner'); ?>
+<?php if ($component->shouldRender()): ?>
+<?php $__env->startComponent($component->resolveView(), $component->data()); ?>
+<?php if (isset($attributes) && $attributes instanceof Illuminate\View\ComponentAttributeBag): ?>
+<?php $attributes = $attributes->except(\App\View\Components\AdBanner::ignoredParameterNames()); ?>
+<?php endif; ?>
+<?php $component->withAttributes([]); ?>
+<?php \Livewire\Features\SupportCompiledWireKeys\SupportCompiledWireKeys::processComponentKey($component); ?>
+
+<?php echo $__env->renderComponent(); ?>
+<?php endif; ?>
+<?php if (isset($__attributesOriginaled4987d3f6007db3445a6067a328a16c)): ?>
+<?php $attributes = $__attributesOriginaled4987d3f6007db3445a6067a328a16c; ?>
+<?php unset($__attributesOriginaled4987d3f6007db3445a6067a328a16c); ?>
+<?php endif; ?>
+<?php if (isset($__componentOriginaled4987d3f6007db3445a6067a328a16c)): ?>
+<?php $component = $__componentOriginaled4987d3f6007db3445a6067a328a16c; ?>
+<?php unset($__componentOriginaled4987d3f6007db3445a6067a328a16c); ?>
+<?php endif; ?>
+    </div>
     
     <div id="batches-section">
         <div class="gc-section-head">
@@ -929,6 +979,31 @@
         <?php endif; ?><?php if(\Livewire\Mechanisms\ExtendBlade\ExtendBlade::isRenderingLivewireComponent()): ?><!--[if ENDBLOCK]><![endif]--><?php endif; ?>
     </div>
 
+    
+    <div style="margin-bottom: 40px;">
+        <?php if (isset($component)) { $__componentOriginaled4987d3f6007db3445a6067a328a16c = $component; } ?>
+<?php if (isset($attributes)) { $__attributesOriginaled4987d3f6007db3445a6067a328a16c = $attributes; } ?>
+<?php $component = App\View\Components\AdBanner::resolve(['position' => 'grooming_bottom'] + (isset($attributes) && $attributes instanceof Illuminate\View\ComponentAttributeBag ? $attributes->all() : [])); ?>
+<?php $component->withName('ad-banner'); ?>
+<?php if ($component->shouldRender()): ?>
+<?php $__env->startComponent($component->resolveView(), $component->data()); ?>
+<?php if (isset($attributes) && $attributes instanceof Illuminate\View\ComponentAttributeBag): ?>
+<?php $attributes = $attributes->except(\App\View\Components\AdBanner::ignoredParameterNames()); ?>
+<?php endif; ?>
+<?php $component->withAttributes([]); ?>
+<?php \Livewire\Features\SupportCompiledWireKeys\SupportCompiledWireKeys::processComponentKey($component); ?>
+
+<?php echo $__env->renderComponent(); ?>
+<?php endif; ?>
+<?php if (isset($__attributesOriginaled4987d3f6007db3445a6067a328a16c)): ?>
+<?php $attributes = $__attributesOriginaled4987d3f6007db3445a6067a328a16c; ?>
+<?php unset($__attributesOriginaled4987d3f6007db3445a6067a328a16c); ?>
+<?php endif; ?>
+<?php if (isset($__componentOriginaled4987d3f6007db3445a6067a328a16c)): ?>
+<?php $component = $__componentOriginaled4987d3f6007db3445a6067a328a16c; ?>
+<?php unset($__componentOriginaled4987d3f6007db3445a6067a328a16c); ?>
+<?php endif; ?>
+    </div>
     
     <div class="gc-cta-banner">
         <div class="gc-cta-banner-title">Get Your Career Started Today</div>

@@ -45,7 +45,8 @@
         <div class="editorial-eyebrow">Latest Updates</div>
         <h1 class="editorial-title">Agency <strong>Editorial</strong></h1>
     </div>
-
+    {{-- AD SLOT 1: Editorial Index Top --}}
+    <x-ad-banner position="editorial_index_top" />
     <div class="editorial-grid anim-fade-up anim-d1">
         @foreach($editorials as $index => $post)
             <a href="{{ route('editorial.show', $post) }}" class="editorial-card {{ $index === 0 ? 'featured' : '' }}">
@@ -69,9 +70,17 @@
                     <p class="editorial-excerpt">{{ $post->excerpt }}</p>
                 </div>
             </a>
+            {{-- AD SLOT 2: In-Feed (Shows after the top row) --}}
+            @if($loop->iteration == 2)
+                <div style="grid-column: 1 / -1; width: 100%; padding: 20px 0;">
+                    <x-ad-banner position="editorial_index_in_feed" />
+                </div>
+            @endif
         @endforeach
     </div>
 
+    {{-- AD SLOT 3: Editorial Index Bottom --}}
+    <x-ad-banner position="editorial_index_bottom" />
     {{-- Pagination --}}
     <div style="max-width:1440px; margin: 0 auto 100px; padding: 0 40px;">
         {{ $editorials->links() }}

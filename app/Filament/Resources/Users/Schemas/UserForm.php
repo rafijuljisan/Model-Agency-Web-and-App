@@ -392,7 +392,7 @@ class UserForm
                     ->columns(2)
                     ->schema([
                         \Filament\Forms\Components\Placeholder::make('nid_preview')
-                            ->label('National ID (NID)')
+                            ->label('NID/Passport/Birth Front Side')
                             ->content(function ($record): \Illuminate\Support\HtmlString {
                                 if (!$record || !$record->nid_path) {
                                     return new \Illuminate\Support\HtmlString('<span style="color:#9ca3af; font-size:0.85rem;">No document uploaded yet.</span>');
@@ -408,7 +408,7 @@ class UserForm
                             }),
 
                         \Filament\Forms\Components\Placeholder::make('academic_preview')
-                            ->label('Academic Certificate')
+                            ->label('NID/Passport/Birth Back Side')
                             ->content(function ($record): \Illuminate\Support\HtmlString {
                                 if (!$record || !$record->academic_certificate_path) {
                                     return new \Illuminate\Support\HtmlString('<span style="color:#9ca3af; font-size:0.85rem;">No document uploaded yet.</span>');
@@ -424,7 +424,7 @@ class UserForm
                             }),
 
                         Select::make('verification_status')
-                            ->label('NID Verification Status')
+                            ->label('NID/Passport/Birth Front Side Status')
                             ->options([
                                 'unverified' => 'Unverified',
                                 'pending' => 'Pending Review',
@@ -437,7 +437,7 @@ class UserForm
                             ->native(false),
 
                         Select::make('academic_verification_status')
-                            ->label('Academic Verification Status')
+                            ->label('NID/Passport/Birth Back Side Status')
                             ->options([
                                 'unverified' => 'Unverified',
                                 'pending' => 'Pending Review',

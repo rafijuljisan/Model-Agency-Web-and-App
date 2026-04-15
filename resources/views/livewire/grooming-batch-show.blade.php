@@ -175,15 +175,19 @@
     <div class="course-layout">
         {{-- LEFT: MAIN CONTENT --}}
         <div>
+            {{-- AD SLOT 1: Batch Content Top --}}
+            <div style="margin-bottom: 32px;">
+                <x-ad-banner position="batch_show_top" />
+            </div>
             @if($batch->description)
-                <h2 class="course-section-title">কোর্স ওভারভিউ</h2>
+                <h2 class="course-section-title">Course Overview</h2>
                 <div class="course-text">
                     {!! $batch->description !!}
                 </div>
             @endif
 
             @if(!empty($batch->benefits))
-                <h2 class="course-section-title">কী শিখবেন এই ক্লাসে?</h2>
+                <h2 class="course-section-title">What You Will Learn in This Class?</h2>
                 <div class="course-benefits-grid">
                     @foreach($batch->benefits as $benefit)
                         <div class="c-benefit-card">
@@ -203,8 +207,12 @@
                 </div>
             @endif
 
+            {{-- AD SLOT 2: Batch Content Middle --}}
+            <div style="margin-bottom: 32px;">
+                <x-ad-banner position="batch_show_middle" />
+            </div>
             @if(!empty($batch->course_modules))
-                <h2 class="course-section-title">কোর্স মডিউল</h2>
+                <h2 class="course-section-title">Course Modules</h2>
                 <div>
                     @foreach($batch->course_modules as $module)
                         <div class="course-module">
@@ -293,8 +301,12 @@
 
             <a href="/grooming-lab" class="btn-fill"
                 style="width: 100%; justify-content: center; padding: 16px; font-size: 1.1rem; font-family: 'SolaimanLipi', sans-serif;">
-                এখনই আবেদন করুন
+                Apply Now
             </a>
+            {{-- AD SLOT 3: Sticky Sidebar (Rectangle Ad) --}}
+            <div style="margin-top: 24px;">
+                <x-ad-banner position="batch_show_sidebar" />
+            </div>
         </div>
     </div>
 </div>

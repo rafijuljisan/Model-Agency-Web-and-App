@@ -120,11 +120,17 @@
             </div>
         @endif
 
+        {{-- AD SLOT 1: Article Top --}}
+        <div style="margin-bottom: 40px;">
+            <x-ad-banner position="editorial_show_top" />
+        </div>
         {{-- Rich Text Content --}}
         <div class="prose">
             {!! $editorial->content !!}
         </div>
 
+        {{-- AD SLOT 2: Article Bottom --}}
+        <x-ad-banner position="editorial_show_bottom" />
         {{-- Social Share Buttons --}}
         <div class="article-share">
             <span class="share-label">Share:</span>
@@ -165,5 +171,9 @@
             </div>
         @endif
 
+        {{-- AD SLOT 3: Article Footer --}}
+        <div style="margin-top: 40px;">
+            <x-ad-banner position="editorial_show_footer" />
+        </div>
     </div>
 </x-app-layout>

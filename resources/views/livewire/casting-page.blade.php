@@ -221,6 +221,8 @@
         <p class="form-page-sub">টিভিসি, ফটোশুট এবং শর্ট ফিল্মের সর্বশেষ অডিশনগুলো সম্পর্কে জানুন। আমাদের আসন্ন প্রজেক্টগুলোতে যুক্ত হতে আজই আপনার পোর্টফোলিও জমা দিন।</p>
     </div>
 
+    {{-- AD SLOT 1: Top of Casting Page --}}
+    <x-ad-banner position="casting_top" />
     {{-- Casting Calls Loop --}}
     <div class="casting-list">
         @forelse($castings as $index => $casting)
@@ -309,6 +311,10 @@
 
                 </div>
             </div>
+            {{-- AD SLOT 2: In-Feed Banner (Shows only after the 1st casting call) --}}
+            @if($loop->iteration == 1)
+                <x-ad-banner position="casting_in_feed" />
+            @endif
         @empty
             <div class="text-center text-gray-500 py-16 bg-white rounded-xl border border-gray-200">
                 <svg class="mx-auto h-12 w-12 text-gray-300 mb-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10"/></svg>
@@ -317,6 +323,8 @@
             </div>
         @endforelse
     </div>
+    {{-- AD SLOT 3: Bottom of Casting Page --}}
+    <x-ad-banner position="casting_bottom" />
 
 </div>
 </div>
