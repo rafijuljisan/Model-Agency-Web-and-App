@@ -102,7 +102,8 @@ Route::get('/', function () {
 });
 // SEO Routes (public, no auth)
 Route::get('/sitemap.xml', [App\Http\Controllers\SitemapController::class, 'index'])
-    ->name('sitemap');
+    ->name('sitemap')
+    ->middleware('cache.headers:public;max_age=3600;etag');
 
 Route::get('/robots.txt', function () {
     $settings = \App\Models\Setting::first();

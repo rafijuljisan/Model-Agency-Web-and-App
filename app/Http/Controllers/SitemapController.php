@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\User;
 use App\Models\Editorial;
 use App\Models\Setting;
+use App\Models\GroomingBatch;
 
 class SitemapController extends Controller
 {
@@ -16,6 +17,7 @@ class SitemapController extends Controller
             abort(404);
         }
 
+        // Artist profiles — verified + active subscription
         $artists = User::role('Verified-Artist')
             ->where('verification_status', 'verified')
             ->where('academic_verification_status', 'verified')
@@ -23,11 +25,17 @@ class SitemapController extends Controller
             ->select('id', 'updated_at')
             ->get();
 
+        // Editorial posts
         $editorials = Editorial::where('is_published', true)
-            ->select('id', 'slug', 'updated_at')
+            ->select('id', 'slug', 'updated_at', 'published_at')
             ->get();
 
-        return response()->view('sitemap', compact('artists', 'editorials'))
+        // Grooming batch detail pages — active batches only
+        $groomingBatches = GroomingBatch::where('is_active', true)
+            ->select('id', 'updated_at')
+            ->get();
+
+        return response()->view('sitemap', compact('artists', 'editorials', 'groomingBatches'))
             ->header('Content-Type', 'application/xml');
     }
 }
