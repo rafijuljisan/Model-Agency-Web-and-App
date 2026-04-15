@@ -564,6 +564,127 @@
             overflow: visible;
             /* ← ADD THIS */
         }
+        /* ── Experience Section Font Standardization ── */
+        
+        /* 1. Base Table Size */
+        .form-section-body table {
+            font-size: 0.95rem !important; 
+        }
+
+        /* 2. Table Headers (Year, Title, Role, etc.) */
+        .form-section-body th {
+            font-size: 0.8rem !important; 
+        }
+
+        /* 3. Standard Cell Text */
+        .form-section-body td {
+            font-size: 0.95rem !important; 
+        }
+
+        /* 4. Jury text and specific table notes */
+        .form-section-body span[style*="font-size: 0.85rem"],
+        .form-section-body span[style*="font-size: 0.8rem"],
+        .form-section-body td[style*="font-size: 0.8rem"] {
+            font-size: 0.9rem !important;
+        }
+
+        /* 5. Edit & Delete Buttons */
+        .form-section-body button[wire\:click*="editExperience"],
+        .form-section-body button[wire\:click*="deleteExperience"] {
+            font-size: 0.85rem !important;
+        }
+
+        /* 6. Result Badges (Won / Nominated) */
+        .form-section-body span[style*="border-radius: 999px"][style*="font-size: 0.7rem"] {
+            font-size: 0.75rem !important;
+            padding: 4px 10px !important;
+        }
+        /* ── Mobile Submit Bar: Single Row Force ── */
+        @media (max-width: 768px) {
+            .form-submit-bar {
+                flex-direction: row !important;
+                padding: 12px 16px !important;
+                gap: 8px !important;
+                align-items: center !important;
+            }
+            
+            .submit-actions {
+                flex-direction: row !important;
+                width: auto !important;
+                gap: 8px !important;
+                flex: 1;
+            }
+
+            /* Hide text strings on mobile, keep only icons */
+            .hide-on-mobile {
+                display: none !important;
+            }
+
+            /* Make secondary buttons square and compact */
+            .btn-mobile-icon {
+                min-width: 44px !important;
+                width: 44px !important;
+                height: 44px !important;
+                padding: 0 !important;
+                justify-content: center !important;
+            }
+
+            /* Let Save button stretch to fill the rest of the screen */
+            .btn-mobile-save {
+                flex: 1 !important;
+                min-width: 0 !important;
+                height: 44px !important;
+                padding: 0 10px !important;
+                font-size: 0.85rem !important;
+                white-space: nowrap;
+            }
+            
+            .form-submit-bar > div:first-child {
+                flex-shrink: 0;
+            }
+        }
+        /* ── Mobile Progress Steps Fix ── */
+        @media (max-width: 768px) {
+            .form-steps {
+                /* Disable horizontal scroll, force them to fit */
+                flex-wrap: nowrap !important;
+                justify-content: space-between !important;
+                width: 100% !important;
+                overflow: hidden !important;
+                gap: 0 !important;
+            }
+
+            .form-step {
+                flex-shrink: 1 !important;
+            }
+
+            .form-step-line {
+                /* Make the lines shrink/grow dynamically */
+                flex: 1 !important;
+                width: auto !important;
+                min-width: 8px !important;
+                margin: 0 6px !important;
+            }
+
+            .form-step-label {
+                /* Hide all labels by default to save space */
+                display: none !important;
+            }
+
+            .form-step.is-active .form-step-label {
+                /* Show ONLY the active label */
+                display: block !important;
+                font-size: 0.75rem !important;
+                margin-left: 6px !important;
+            }
+
+            .form-step-dot {
+                /* Make the circles slightly smaller on mobile */
+                width: 30px !important;
+                height: 30px !important;
+                font-size: 0.75rem !important;
+            }
+        }
     </style>
 
     <div class="form-page">
@@ -817,27 +938,34 @@ unset($__errorArgs, $__bag); ?><?php if(\Livewire\Mechanisms\ExtendBlade\ExtendB
                     clients.</p>
             </div>
 
-            
-            <div class="form-steps anim-fade-up anim-d1" aria-label="Form progress">
-                <div class="form-step is-active">
-                    <div class="form-step-dot">01</div>
-                    <span class="form-step-label">Basic Info</span>
-                </div>
-                <div class="form-step-line"></div>
-                <div class="form-step">
-                    <div class="form-step-dot">02</div>
-                    <span class="form-step-label">Location</span>
-                </div>
-                <div class="form-step-line"></div>
-                <div class="form-step">
-                    <div class="form-step-dot">03</div>
-                    <span class="form-step-label">About</span>
-                </div>
-                <div class="form-step-line"></div>
-                <div class="form-step">
-                    <div class="form-step-dot">04</div>
-                    <span class="form-step-label">Portfolio</span>
-                </div>
+            <form wire:submit="saveProfile" novalidate x-data="{ activeTab: 1 }">
+                <div class="form-steps anim-fade-up anim-d1" aria-label="Form progress">
+                    
+                    <button type="button" class="form-step" :class="activeTab === 1 ? 'is-active' : ''" @click="activeTab = 1">
+                        <div class="form-step-dot">01</div>
+                        <span class="form-step-label">Basic Info</span>
+                    </button>
+                    <div class="form-step-line"></div>
+                    
+                    
+                    <button type="button" class="form-step" :class="activeTab === 2 ? 'is-active' : ''" @click="activeTab = 2">
+                        <div class="form-step-dot">02</div>
+                        <span class="form-step-label">Location</span>
+                    </button>
+                    <div class="form-step-line"></div>
+                    
+                    
+                    <button type="button" class="form-step" :class="activeTab === 3 ? 'is-active' : ''" @click="activeTab = 3">
+                        <div class="form-step-dot">03</div>
+                        <span class="form-step-label">About</span>
+                    </button>
+                    <div class="form-step-line"></div>
+                    
+                    
+                    <button type="button" class="form-step" :class="activeTab === 4 ? 'is-active' : ''" @click="activeTab = 4">
+                        <div class="form-step-dot">04</div>
+                        <span class="form-step-label">Portfolio</span>
+                    </button>
             </div>
 
             
@@ -853,8 +981,8 @@ unset($__errorArgs, $__bag); ?><?php if(\Livewire\Mechanisms\ExtendBlade\ExtendB
                 </div>
             <?php endif; ?><?php if(\Livewire\Mechanisms\ExtendBlade\ExtendBlade::isRenderingLivewireComponent()): ?><!--[if ENDBLOCK]><![endif]--><?php endif; ?>
 
-            <form wire:submit="saveProfile" novalidate>
 
+                <div x-show="activeTab === 1" x-transition>
                 
                 <div class="form-section anim-fade-up" x-data="{ menuOpen: false }">
                     <div class="form-section-header">
@@ -1302,6 +1430,8 @@ unset($__errorArgs, $__bag); ?><?php if(\Livewire\Mechanisms\ExtendBlade\ExtendB
                         </div>
                     </div>
                 </div>
+                </div>
+                <div x-show="activeTab === 2" x-transition style="display: none;">
                 
                 <div class="form-section anim-fade-up anim-d2">
                     <div class="form-section-header">
@@ -1376,7 +1506,9 @@ unset($__errorArgs, $__bag); ?><?php if(\Livewire\Mechanisms\ExtendBlade\ExtendB
                         </div>
                     </div>
                 </div>
+                </div>
 
+                <div x-show="activeTab === 3" x-transition style="display: none;">
                 
                 <div class="form-section anim-fade-up anim-d2">
                     <div class="form-section-header">
@@ -1526,6 +1658,8 @@ unset($__errorArgs, $__bag); ?><?php if(\Livewire\Mechanisms\ExtendBlade\ExtendB
                         </div>
                     </div>
                 </div>
+                </div>
+                <div x-show="activeTab === 4" x-transition style="display: none;">
                 
                 <div class="form-section anim-fade-up anim-d3">
                     <div class="form-section-header">
@@ -1951,41 +2085,55 @@ unset($__errorArgs, $__bag); ?><?php if(\Livewire\Mechanisms\ExtendBlade\ExtendB
 
                     </div>
                 </div>
+                </div>
 
-                
                 
                 <div class="form-submit-bar">
-                    <span class="form-submit-status">
-                        All changes are saved automatically on submit.
-                    </span>
-
-                    <div class="submit-actions">
-                        
-                        <a href="<?php echo e(route('artist.show', $user->id)); ?>" class="btn-outline" target="_blank">
-                            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor"
-                                stroke-width="1.7" aria-hidden="true">
-                                <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z" />
-                                <circle cx="12" cy="12" r="3" />
+                    
+                    
+                    <div>
+                        <a href="<?php echo e(route('artist.show', auth()->id())); ?>" target="_blank" class="btn-outline btn-mobile-icon" style="padding: 10px 16px; font-size: 0.85rem; display: flex; align-items: center; gap: 8px; border-color: var(--border-strong);" title="View Public Profile">
+                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="flex-shrink: 0;">
+                                <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path>
+                                <circle cx="12" cy="12" r="3"></circle>
                             </svg>
-                            View Profile
+                            <span class="hide-on-mobile">View Profile</span>
                         </a>
+                    </div>
 
+                    
+                    <div class="submit-actions" style="display: flex; gap: 10px; width: 100%; justify-content: flex-end;">
                         
-                        <button type="submit" class="btn-fill" wire:loading.attr="disabled"
-                            style="min-width:200px; justify-content:center; display: flex; align-items: center;">
-                            <span wire:loading.remove>
-                                Save Profile &amp; Publish
-                                <svg width="10" height="10" viewBox="0 0 10 10" fill="none"
-                                    style="display:inline;margin-left:6px;" aria-hidden="true">
-                                    <path d="M1 5h8M5 1l4 4-4 4" stroke="currentColor" stroke-width="1.4"
-                                        stroke-linecap="round" stroke-linejoin="round" />
-                                </svg>
-                            </span>
-
-
-
+                        
+                        <button type="button" class="btn-outline btn-mobile-icon" x-show="activeTab > 1" @click="activeTab--; window.scrollTo({top: 0, behavior: 'smooth'})" style="min-width: 100px; justify-content: center; gap: 6px;" title="Previous Step">
+                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="flex-shrink: 0;">
+                                <line x1="19" y1="12" x2="5" y2="12"></line>
+                                <polyline points="12 19 5 12 12 5"></polyline>
+                            </svg>
+                            <span class="hide-on-mobile">Previous</span>
                         </button>
 
+                        
+                        <button type="button" class="btn-outline btn-mobile-icon" x-show="activeTab < 4" @click="activeTab++; window.scrollTo({top: 0, behavior: 'smooth'})" style="min-width: 100px; justify-content: center; background: var(--bg-secondary); gap: 6px;" title="Next Step">
+                            <span class="hide-on-mobile">Next Step</span>
+                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="flex-shrink: 0;">
+                                <line x1="5" y1="12" x2="19" y2="12"></line>
+                                <polyline points="12 5 19 12 12 19"></polyline>
+                            </svg>
+                        </button>
+
+                        
+                        <button type="submit" class="btn-fill btn-mobile-save" wire:loading.attr="disabled" style="min-width: 180px; justify-content: center; display: flex; align-items: center; gap: 6px;">
+                            <svg class="hide-on-mobile" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="flex-shrink: 0;">
+                                <path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"></path>
+                                <polyline points="17 21 17 13 7 13 7 21"></polyline>
+                                <polyline points="7 3 7 8 15 8"></polyline>
+                            </svg>
+                            <span wire:loading.remove>
+                                <span x-text="activeTab === 4 ? 'Save & Publish' : 'Save'"></span>
+                            </span>
+                            <span wire:loading>Saving...</span>
+                        </button>
                     </div>
                 </div>
 
