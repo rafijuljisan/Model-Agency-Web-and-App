@@ -716,9 +716,9 @@
                     </svg>
                 </div>
 
-                <h2 class="form-page-title mb-2">আপনার <strong>পরিচয়</strong> যাচাই করুন</h2>
+                <h2 class="form-page-title mb-2">Verify Your <strong>Identity</strong></h2>
                 <p class="form-page-sub mx-auto mb-8" style="font-size: 1.1rem; line-height: 1.5;">
-                    আমাদের আপনার পরিচয় যাচাই করতে ন্যাশনাল আইডি (NID) বা জন্ম নিবন্ধন বা পাসপোর্ট ভেরিফাই করতে হবে।
+                    To verify your identity, please upload your National ID (NID), Birth Certificate, or Passport.
                 </p>
 
                 <form wire:submit.prevent="submitDocuments" class="text-left"
@@ -735,7 +735,7 @@
 
                             <div wire:loading wire:target="nidImage"
                                 style="color: var(--gold); font-size: 0.95rem; margin-top: 4px;">
-                                ছবি আপলোড হচ্ছে...
+                                Uploading image...
                             </div>
 
                             @error('nidImage')
@@ -757,7 +757,7 @@
 
                             <div wire:loading wire:target="academicImage"
                                 style="color: var(--gold); font-size: 0.95rem; margin-top: 4px;">
-                                ছবি আপলোড হচ্ছে...
+                                Uploading image...
                             </div>
 
                             @error('academicImage')
@@ -768,11 +768,220 @@
                         </div>
                     @endif
 
+                    {{-- PROFILE PHOTO --}}
+                    @if(in_array(Auth::user()->verification_status, ['unverified', 'rejected', null, '']))
+                        <div style="margin-bottom: 32px;">
+                            <label class="form-field-label" style="font-size: 1.1rem; letter-spacing: normal;">
+                                Profile Photo <span style="color: var(--text-muted); font-weight: 400;">(Required)</span>
+                            </label>
+                            <p style="font-size: 0.9rem; color: var(--text-muted); margin-bottom: 10px;">
+                                Upload a clear photo of your face. You can also add or change this later from your profile.
+                            </p>
+
+                            {{-- Preview --}}
+                            @if($profilePhotoUpload)
+                                <div style="margin-bottom: 12px;">
+                                    <img src="{{ $profilePhotoUpload->temporaryUrl() }}"
+                                        style="width: 90px; height: 90px; border-radius: 50%; object-fit: cover; border: 2px solid var(--border-strong);">
+                                </div>
+                            @endif
+
+                            <input type="file" wire:model="profilePhotoUpload" class="form-input" accept="image/*">
+
+                            <div wire:loading wire:target="profilePhotoUpload"
+                                style="color: var(--gold); font-size: 0.95rem; margin-top: 4px;">
+                                Uploading photo...
+                            </div>
+
+                            @error('profilePhotoUpload')
+                                <span style="color: #dc2626; font-size: 0.95rem; display: block; margin-top: 4px;">
+                                    {{ $message }}
+                                </span>
+                            @enderror
+                        </div>
+                    @endif
                     <button type="submit" class="btn-fill"
                         style="width: 100%; justify-content: center; padding: 14px; font-size: 1.15rem; font-family: 'SolaimanLipi', sans-serif;">
-                        <span wire:loading.remove wire:target="submitDocuments">ডকুমেন্ট সাবমিট করুন এবং প্যাকেজ পেজে
-                            যান</span>
-                        <span wire:loading wire:target="submitDocuments">আপলোড এবং সেভ হচ্ছে...</span>
+                        <span wire:loading.remove wire:target="submitDocuments">Submit Documents</span>
+                        <span wire:loading wire:target="submitDocuments">Uploading and Saving...</span>
+                    </button>
+
+                </form>
+            </div>
+        @elseif($currentStep === 'basic_info')
+            <div class="anim-fade-up max-w-2xl mx-auto" style="font-family: 'SolaimanLipi', sans-serif;">
+
+                {{-- Header --}}
+                <div style="text-align: center; padding: 40px 0 28px;">
+                    <div style="width: 80px; height: 80px; border-radius: 50%; background: var(--gold-bg); display: flex; align-items: center; justify-content: center; margin: 0 auto 24px; color: var(--gold);">
+                        <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/>
+                            <circle cx="12" cy="7" r="4"/>
+                        </svg>
+                    </div>
+                    <h2 class="form-page-title mb-2">Complete Your <strong>Basic Info</strong></h2>
+                    <p class="form-page-sub mx-auto" style="font-size: 1.1rem; line-height: 1.5; max-width: 480px;">
+                        Almost there! Fill in a few details to complete your registration and submit for review.
+                    </p>
+                </div>
+
+                {{-- Step progress --}}
+                <div style="display: flex; align-items: center; gap: 0; margin-bottom: 32px;">
+                    <div style="display: flex; align-items: center; gap: 8px; font-size: 0.8rem; font-family: 'Jost', sans-serif;">
+                        <span style="width: 24px; height: 24px; border-radius: 50%; background: var(--gold); color: #000; display: inline-flex; align-items: center; justify-content: center; font-weight: 700; font-size: 0.7rem;">✓</span>
+                        <span style="color: var(--text-muted);">Payment</span>
+                    </div>
+                    <div style="flex: 1; height: 1px; background: var(--gold); margin: 0 10px;"></div>
+                    <div style="display: flex; align-items: center; gap: 8px; font-size: 0.8rem; font-family: 'Jost', sans-serif;">
+                        <span style="width: 24px; height: 24px; border-radius: 50%; background: var(--gold); color: #000; display: inline-flex; align-items: center; justify-content: center; font-weight: 700; font-size: 0.7rem;">✓</span>
+                        <span style="color: var(--text-muted);">Documents</span>
+                    </div>
+                    <div style="flex: 1; height: 1px; background: var(--gold); margin: 0 10px;"></div>
+                    <div style="display: flex; align-items: center; gap: 8px; font-size: 0.8rem; font-family: 'Jost', sans-serif;">
+                        <span style="width: 24px; height: 24px; border-radius: 50%; background: var(--gold); color: #000; display: inline-flex; align-items: center; justify-content: center; font-weight: 700; font-size: 0.7rem;">3</span>
+                        <span style="color: var(--text-primary); font-weight: 600;">Basic Info</span>
+                    </div>
+                    <div style="flex: 1; height: 1px; background: var(--border); margin: 0 10px;"></div>
+                    <div style="display: flex; align-items: center; gap: 8px; font-size: 0.8rem; font-family: 'Jost', sans-serif;">
+                        <span style="width: 24px; height: 24px; border-radius: 50%; background: var(--bg-secondary); color: var(--text-muted); display: inline-flex; align-items: center; justify-content: center; font-weight: 700; font-size: 0.7rem;">4</span>
+                        <span style="color: var(--text-muted);">Under Review</span>
+                    </div>
+                </div>
+
+                <form wire:submit.prevent="submitBasicInfo"
+                    style="background: var(--bg-surface); border: 1px solid var(--border); border-radius: 8px; padding: 32px; box-shadow: var(--shadow-sm);">
+
+                    <div class="form-grid">
+
+                        {{-- Name --}}
+                        <div class="form-field">
+                            <label class="form-field-label" for="bi-name">
+                                Full Name <span class="required">*</span>
+                            </label>
+                            <input id="bi-name" type="text" class="form-input" wire:model.defer="name" placeholder="Your full name">
+                            @error('name')
+                                <span style="color:#dc2626;font-size:0.8rem;margin-top:4px;display:block;">{{ $message }}</span>
+                            @enderror
+                        </div>
+
+                        {{-- Phone --}}
+                        <div class="form-field">
+                            <label class="form-field-label" for="bi-phone">Phone Number</label>
+                            <input id="bi-phone" type="text" class="form-input" wire:model.defer="phone" placeholder="e.g. 01700000000">
+                            @error('phone')
+                                <span style="color:#dc2626;font-size:0.8rem;margin-top:4px;display:block;">{{ $message }}</span>
+                            @enderror
+                        </div>
+
+                        {{-- Gender --}}
+                        <div class="form-field">
+                            <label class="form-field-label" for="bi-gender">Gender</label>
+                            <div class="form-select-wrap">
+                                <select id="bi-gender" class="form-select" wire:model.defer="gender">
+                                    <option value="">Prefer not to say</option>
+                                    <option value="Male">Male</option>
+                                    <option value="Female">Female</option>
+                                    <option value="Other">Other</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        {{-- Date of Birth --}}
+                        <div class="form-field">
+                            <label class="form-field-label" for="bi-dob">Date of Birth</label>
+                            <input id="bi-dob" type="date" class="form-input" wire:model.defer="date_of_birth">
+                            @error('date_of_birth')
+                                <span style="color:#dc2626;font-size:0.8rem;margin-top:4px;display:block;">{{ $message }}</span>
+                            @enderror
+                        </div>
+
+                        {{-- Height --}}
+                        <div class="form-field">
+                            <label class="form-field-label" for="bi-height">Height (ft/cm)</label>
+                            <input id="bi-height" type="text" class="form-input" wire:model.defer="height_cm" placeholder="e.g. 5'8&quot; or 172">
+                        </div>
+
+                        {{-- Languages --}}
+                        <div class="form-field">
+                            <label class="form-field-label" for="bi-languages">Languages Spoken</label>
+                            <input id="bi-languages" type="text" class="form-input" wire:model.defer="languages" placeholder="e.g. Bengali, English">
+                            <div class="form-hint">Separate with commas</div>
+                        </div>
+
+                        {{-- Experience Level --}}
+                        <div class="form-field">
+                            <label class="form-field-label">Experience Level</label>
+                            <div class="form-select-wrap">
+                                <select class="form-select" wire:model.defer="experience_level">
+                                    <option value="">Select level</option>
+                                    <option value="Fresher">Fresher (No Experience)</option>
+                                    <option value="1-3 Years">1–3 Years</option>
+                                    <option value="Professional">Professional (3+ Years)</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        {{-- Availability --}}
+                        <div class="form-field">
+                            <label class="form-field-label">Availability</label>
+                            <div class="form-select-wrap">
+                                <select class="form-select" wire:model.defer="availability">
+                                    <option value="">Select</option>
+                                    <option value="Full-time">Full-time</option>
+                                    <option value="Part-time">Part-time</option>
+                                    <option value="Weekends Only">Weekends Only</option>
+                                    <option value="Flexible">Flexible</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        {{-- District --}}
+                        <div class="form-field">
+                            <label class="form-field-label" for="bi-district">
+                                District <span class="required">*</span>
+                            </label>
+                            <input id="bi-district" type="text" class="form-input" wire:model.defer="district" placeholder="e.g. Dhaka">
+                            @error('district')
+                                <span style="color:#dc2626;font-size:0.8rem;margin-top:4px;display:block;">{{ $message }}</span>
+                            @enderror
+                        </div>
+
+                        {{-- Upazila --}}
+                        <div class="form-field">
+                            <label class="form-field-label" for="bi-upazila">
+                                Thana / Upazila <span class="required">*</span>
+                            </label>
+                            <input id="bi-upazila" type="text" class="form-input" wire:model.defer="upazila" placeholder="e.g. Mirpur">
+                            @error('upazila')
+                                <span style="color:#dc2626;font-size:0.8rem;margin-top:4px;display:block;">{{ $message }}</span>
+                            @enderror
+                        </div>
+
+                        {{-- Street Address — full width, private --}}
+                        <div class="form-field form-grid-full">
+                            <label class="form-field-label" for="bi-street">
+                                Street / Full Address
+                                <span style="font-size: 0.65rem; font-weight: 600; letter-spacing: 0.1em; text-transform: uppercase; color: #fff; background: #6b7280; padding: 2px 7px; border-radius: 999px; margin-left: 8px; vertical-align: middle;">
+                                    🔒 Private
+                                </span>
+                            </label>
+                            <textarea id="bi-street" class="form-input form-textarea" wire:model.defer="street_address"
+                                placeholder="e.g. House 12, Road 4, Block B, Mirpur-10" rows="2"></textarea>
+                            <div class="form-hint">Never shown publicly. Used for verification only.</div>
+                        </div>
+
+                    </div>
+
+                    {{-- Submit --}}
+                    <button type="submit" class="btn-fill"
+                        style="width: 100%; justify-content: center; padding: 14px; font-size: 1.15rem; margin-top: 8px; font-family: 'SolaimanLipi', sans-serif;">
+                        <span wire:loading.remove wire:target="submitBasicInfo">
+                            Save & Continue
+                            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="margin-left: 8px;">
+                                <line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/>
+                            </svg>
+                        </span>
+                        <span wire:loading wire:target="submitBasicInfo">Saving...</span>
                     </button>
 
                 </form>
@@ -781,9 +990,6 @@
 
             {{-- ═════════════════════════════════════════
             GATE 1: PAYMENT FAILED
-            ═════════════════════════════════════════ --}}
-            {{-- ═════════════════════════════════════════
-            GATE 1: PAYMENT FAILED (BANGLA)
             ═════════════════════════════════════════ --}}
         @elseif($currentStep === 'payment_failed')
             <div class="text-center py-20 anim-fade-up" style="font-family: 'SolaimanLipi', sans-serif;">
@@ -795,16 +1001,15 @@
                         <line x1="9" y1="9" x2="15" y2="15" />
                     </svg>
                 </div>
-                <h2 class="form-page-title mb-4">পেমেন্ট <strong>ব্যর্থ হয়েছে</strong></h2>
+                <h2 class="form-page-title mb-4">Payment <strong>Failed</strong></h2>
                 <p class="form-page-sub mx-auto mb-8" style="max-width: 480px; font-size: 1.1rem; line-height: 1.5;">
-                    আমরা আপনার পেমেন্ট ভেরিফাই করতে পারিনি। অনুগ্রহ করে আপনার ট্রানজেকশন আইডি (TrxID) এবং মোবাইল নম্বর
-                    পুনরায় চেক করে আবার ফর্মটি সাবমিট করুন।<br><br>
-                    যদি আপনি নিশ্চিত থাকেন যে পেমেন্ট সফল হয়েছে, তবে অনুগ্রহ করে আমাদের সাপোর্ট টিমের সাথে যোগাযোগ করুন।
+                    We could not verify your payment. Please check your transaction ID (TrxID) and mobile number, then submit the form again.<br><br>
+                    If you are sure the payment was successful, please contact our support team.
                 </p>
                 <div style="display: flex; gap: 16px; justify-content: center;">
-                    <a href="/contact" class="btn-outline" style="font-size: 1rem;">সাপোর্টে যোগাযোগ করুন</a>
+                    <a href="/contact" class="btn-outline" style="font-size: 1rem;">Contact Support</a>
                     <a href="{{ route('packages.index') }}" class="btn-fill" style="font-size: 1rem;">
-                        আবার পেমেন্ট সাবমিট করুন
+                        Submit Payment Again
                         <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
                             style="margin-left:8px;">
                             <line x1="5" y1="12" x2="19" y2="12"></line>
@@ -826,13 +1031,12 @@
                         <polyline points="12 6 12 12 16 14" />
                     </svg>
                 </div>
-                <h2 class="form-page-title mb-4">সাবস্ক্রিপশন <strong>মেয়াদোত্তীর্ণ</strong></h2>
+                <h2 class="form-page-title mb-4">Subscription <strong>Expired</strong></h2>
                 <p class="form-page-sub mx-auto mb-8" style="max-width: 480px; font-size: 1.1rem; line-height: 1.5;">
-                    আপনার ভেরিফাইড ট্যালেন্ট সাবস্ক্রিপশনের মেয়াদ শেষ হয়ে গেছে। আপনার পাবলিক প্রোফাইলটি পুনরায় লাইভ করতে এবং
-                    কাস্টিং কল পেতে অনুগ্রহ করে আপনার প্যাকেজটি রিনিউ করুন।
+                    Your verified talent subscription has expired. To reactivate your public profile and receive casting calls, please renew your package.
                 </p>
                 <a href="{{ route('packages.index') }}" class="btn-fill" style="display: inline-flex; font-size: 1.1rem;">
-                    সাবস্ক্রিপশন রিনিউ করুন
+                    Renew Subscription
                     <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
                         style="margin-left:8px;">
                         <path d="M21.5 2v6h-6M21.34 15.57a10 10 0 1 1-.92-10.26l3.08 2.69" />
@@ -849,10 +1053,10 @@
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5"
                         d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
                 </svg>
-                <h2 class="form-page-title mb-2">পেমেন্ট <strong>যাচাইয়ের অপেক্ষায়</strong></h2>
+                <h2 class="form-page-title mb-2">Payment <strong>Under Review</strong></h2>
                 <p class="form-page-sub mx-auto" style="font-size: 1.1rem; line-height: 1.5; max-width: 480px;">
-                    আমাদের অ্যাকাউন্টস টিম বর্তমানে আপনার ট্রানজেকশন আইডি যাচাই করছে। এতে সাধারণত কয়েক ঘণ্টা সময় লাগতে পারে।
-                    অনুগ্রহ করে কিছুক্ষণ পর আবার চেক করুন!
+                    Our team is currently reviewing your transaction ID. This process typically takes a few hours.
+                    Please check back later!
                 </p>
             </div>
 
@@ -865,11 +1069,10 @@
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5"
                         d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z" />
                 </svg>
-                <h2 class="form-page-title mb-2">অ্যাকাউন্ট <strong>রিভিউ করা হচ্ছে</strong></h2>
+                <h2 class="form-page-title mb-2">Account <strong>Under Review</strong></h2>
                 <p class="form-page-sub mx-auto mb-8"
                     style="color: var(--text-secondary); font-size: 1.1rem; line-height: 1.5;">
-                    আমাদের টিম বর্তমানে আপনার আপলোড করা ডকুমেন্ট এবং পেমেন্ট ট্রানজেকশন ভেরিফাই করছে। সবকিছু অনুমোদিত হওয়ার
-                    পরেই আপনার প্রোফাইল আনলক করা হবে!
+                    Our team is currently reviewing your uploaded documents and payment transaction. Your profile will be unlocked once everything is approved!
                 </p>
 
                 <div
@@ -878,8 +1081,7 @@
                     {{-- NID Status --}}
                     <div
                         style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px; padding-bottom: 16px; border-bottom: 1px solid var(--border);">
-                        <span style="font-size: 1rem; font-weight: 600; color: var(--text-primary);">ন্যাশনাল আইডি
-                            (NID)</span>
+                        <span style="font-size: 1rem; font-weight: 600; color: var(--text-primary);">NID/Passport/Birth Front</span>
                         <span
                             style="font-size: 0.75rem; padding: 4px 10px; border-radius: 999px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.05em; font-family: 'Jost', sans-serif;
                                             {{ Auth::user()->verification_status === 'verified' ? 'background: rgba(22,163,74,0.1); color: #16a34a;' : 'background: rgba(234,179,8,0.1); color: #eab308;' }}">
@@ -890,8 +1092,7 @@
                     {{-- Academic Cert Status --}}
                     <div
                         style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px; padding-bottom: 16px; border-bottom: 1px solid var(--border);">
-                        <span style="font-size: 1rem; font-weight: 600; color: var(--text-primary);">শিক্ষাগত
-                            সার্টিফিকেট</span>
+                        <span style="font-size: 1rem; font-weight: 600; color: var(--text-primary);">NID/Passport/Birth Back</span>
                         <span
                             style="font-size: 0.75rem; padding: 4px 10px; border-radius: 999px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.05em; font-family: 'Jost', sans-serif;
                                             {{ Auth::user()->academic_verification_status === 'verified' ? 'background: rgba(22,163,74,0.1); color: #16a34a;' : 'background: rgba(234,179,8,0.1); color: #eab308;' }}">
@@ -902,8 +1103,8 @@
                     {{-- Payment Status --}}
                     @php $sub = Auth::user()->subscriptions()->latest()->first(); @endphp
                     <div style="display: flex; justify-content: space-between; align-items: center;">
-                        <span style="font-size: 1rem; font-weight: 600; color: var(--text-primary);">পেমেন্ট
-                            ভেরিফিকেশন</span>
+                        <span style="font-size: 1rem; font-weight: 600; color: var(--text-primary);">Payment
+                            Verification</span>
                         <span
                             style="font-size: 0.75rem; padding: 4px 10px; border-radius: 999px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.05em; font-family: 'Jost', sans-serif;
                                             {{ $sub && $sub->status === 'active' ? 'background: rgba(22,163,74,0.1); color: #16a34a;' : 'background: rgba(234,179,8,0.1); color: #eab308;' }}">

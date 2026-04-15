@@ -25,6 +25,7 @@ class ArtistAccount extends Component
     // ── NID Fields ──
     public $nidImage;
     public $academicImage;
+    public $profilePhotoUpload = null;
 
     // ── Core User Fields ──
     public string $name = '';
@@ -114,7 +115,20 @@ class ArtistAccount extends Component
         /** @var \App\Models\User $user */
         $user = Auth::user();
 
-        // 1. FIRST GATE: Check if documents are missing, rejected, or empty (NULL)
+        // GATE 1: No subscription yet → go pick a package
+        $subscription = $user->subscriptions()->latest()->first();
+
+        if (!$subscription) {
+            return redirect()->route('packages.index');
+        } elseif ($subscription->status === 'failed') {
+            $this->currentStep = 'payment_failed';
+            return;
+        } elseif ($subscription->status === 'expired') {
+            $this->currentStep = 'payment_expired';
+            return;
+        }
+
+        // GATE 2: Documents missing/rejected
         if (
             in_array($user->verification_status, ['unverified', 'rejected', null, ''], true) ||
             in_array($user->academic_verification_status, ['unverified', 'rejected', null, ''], true)
@@ -123,24 +137,29 @@ class ArtistAccount extends Component
             return;
         }
 
-        // 2. SECOND GATE: Documents are uploaded (Pending or Verified). Now check Payment.
-        $subscription = $user->subscriptions()->latest()->first();
-
-        if (!$subscription) {
-            // Docs are uploaded, but no payment exists -> Redirect to packages
-            return redirect()->route('packages.index');
-
-        } elseif ($subscription->status === 'failed') {
-            $this->currentStep = 'payment_failed';
-            return;
-
-        } elseif ($subscription->status === 'expired') {
-            $this->currentStep = 'payment_expired';
+        // GATE 3: Basic info not yet filled
+        $profile = $user->profile;
+        if (!$profile || empty($profile->district) || empty($profile->upazila)) {
+            $this->currentStep = 'basic_info';
+            // Pre-fill whatever exists
+            $this->name = $user->name ?? '';
+            $this->email = $user->email ?? '';
+            $this->phone = $user->phone ?? '';
+            if ($profile) {
+                $this->gender = $profile->gender ?? '';
+                $this->date_of_birth = $profile->date_of_birth ? $profile->date_of_birth->format('Y-m-d') : '';
+                $this->height_cm = $profile->height_cm ?? '';
+                $this->languages = $profile->languages ? implode(', ', (array) $profile->languages) : '';
+                $this->experience_level = $profile->experience_level ?? '';
+                $this->availability = $profile->availability ?? '';
+                $this->district = $profile->district ?? '';
+                $this->upazila = $profile->upazila ?? '';
+                $this->street_address = $profile->street_address ?? '';
+            }
             return;
         }
 
-        // 3. THIRD GATE: Docs are (Pending or Verified) AND Payment is (Pending or Active).
-        // If ANYTHING is still pending, show the combined "Under Review" screen.
+        // GATE 4: Anything still pending → under review
         if (
             $user->verification_status === 'pending' ||
             $user->academic_verification_status === 'pending' ||
@@ -150,7 +169,7 @@ class ArtistAccount extends Component
             return;
         }
 
-        // 4. FINAL GATE: Everything is verified and active -> Full Access
+        // GATE 5: Everything verified & active → full profile
         $this->currentStep = 'profile';
         $this->loadProfileData($user);
     }
@@ -171,6 +190,7 @@ class ArtistAccount extends Component
         if ($needsAcademic) {
             $rules['academicImage'] = 'nullable|image|mimes:jpg,jpeg,png,webp|max:5120';
         }
+        $rules['profilePhotoUpload'] = 'nullable|image|mimes:jpg,jpeg,png,webp|max:3072';
 
         $this->validate($rules);
 
@@ -190,6 +210,13 @@ class ArtistAccount extends Component
         }
 
         $user->update($updates);
+
+        if ($this->profilePhotoUpload) {
+            $user->getMedia('avatar')->each->delete();
+            $user->addMedia($this->profilePhotoUpload->getRealPath())
+                ->usingFileName('avatar_' . $user->id . '.' . $this->profilePhotoUpload->getClientOriginalExtension())
+                ->toMediaCollection('avatar', 'public');
+        }
 
         $admins = User::role('Super-Admin')->get();
 
@@ -219,6 +246,52 @@ class ArtistAccount extends Component
         return redirect()->route('account.dashboard');
     }
 
+    public function submitBasicInfo()
+    {
+        /** @var \App\Models\User $user */
+        $user = Auth::user();
+
+        $this->validate([
+            'name' => 'required|string|max:255',
+            'phone' => "nullable|string|max:20|unique:users,phone,{$user->id}",
+            'gender' => 'nullable|in:Male,Female,Other',
+            'date_of_birth' => 'nullable|date|before:today|after:1900-01-01',
+            'height_cm' => 'nullable|string|max:20',
+            'languages' => 'nullable|string|max:500',
+            'experience_level' => 'nullable|in:Fresher,1-3 Years,Professional',
+            'availability' => 'nullable|in:Full-time,Part-time,Weekends Only,Flexible',
+            'district' => 'required|string|max:100',
+            'upazila' => 'required|string|max:100',
+            'street_address' => 'nullable|string|max:500',
+        ]);
+
+        $user->update([
+            'name' => trim($this->name),
+            'phone' => trim($this->phone) ?: null,
+        ]);
+
+        $languagesArray = $this->languages
+            ? array_values(array_filter(array_map('trim', explode(',', $this->languages))))
+            : null;
+
+        Profile::updateOrCreate(
+            ['user_id' => $user->id],
+            [
+                'gender' => $this->gender ?: null,
+                'date_of_birth' => $this->date_of_birth ?: null,
+                'height_cm' => $this->height_cm ?: null,
+                'languages' => $languagesArray,
+                'experience_level' => $this->experience_level ?: null,
+                'availability' => $this->availability ?: null,
+                'district' => $this->district,
+                'upazila' => $this->upazila,
+                'street_address' => $this->street_address ?: null,
+            ]
+        );
+
+        // Redirect back to dashboard — mount() will now route to under_review
+        return redirect()->route('account.dashboard');
+    }
     // In ArtistAccount.php - updateAvatar()
     public function updateAvatar()
     {
@@ -498,7 +571,7 @@ class ArtistAccount extends Component
         $this->newExpLanguage = $exp->language ?? '';
         $this->newExpPlatform = $exp->platform ?? '';
         $this->newExpAwardOrganizer = $exp->award_organizer ?? '';
-        $this->newExpCustomType     = $exp->custom_type_label ?? '';
+        $this->newExpCustomType = $exp->custom_type_label ?? '';
     }
 
     public function deleteExperience(int $id): void
