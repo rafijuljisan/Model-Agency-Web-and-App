@@ -91,7 +91,7 @@ class UserForm
 
                                     if ($currentCount >= 8) {
                                         $set('is_featured', false); // revert the toggle
-
+                    
                                         \Filament\Notifications\Notification::make()
                                             ->title('Featured Slots Full')
                                             ->body('All 8 featured slots are taken. Please unfeature another artist first.')
@@ -463,6 +463,13 @@ class UserForm
                                     ->live()
                                     ->columnSpan(1),
 
+                                TextInput::make('custom_type_label')
+                                    ->label('Custom Type Label')
+                                    ->placeholder('e.g. Podcast, Voice Over')
+                                    ->maxLength(100)
+                                    ->columnSpan(1)
+                                    ->visible(fn(SchemaGet $get) => $get('type') === 'custom'),
+
                                 TextInput::make('year')
                                     ->label('Year')
                                     ->placeholder('e.g. 2021 or 2021–2023')
@@ -573,6 +580,44 @@ class UserForm
                                     ->maxLength(255)
                                     ->columnSpan(1)
                                     ->visible(fn(SchemaGet $get) => in_array($get('type'), ['jury'])),
+                                // Shared description for all types
+                                \Filament\Forms\Components\Textarea::make('description')
+                                    ->label('Description')
+                                    ->rows(3)
+                                    ->maxLength(1000)
+                                    ->columnSpanFull(),
+
+                                // Film/TV extras
+                                TextInput::make('language')
+                                    ->label('Language')
+                                    ->maxLength(100)
+                                    ->columnSpan(1)
+                                    ->visible(fn(SchemaGet $get) => in_array($get('type'), [
+                                        'film',
+                                        'tv_drama',
+                                        'commercial',
+                                        'theater',
+                                        'music_video',
+                                        'other'
+                                    ])),
+
+                                TextInput::make('platform')
+                                    ->label('Platform / Channel')
+                                    ->maxLength(100)
+                                    ->columnSpan(1)
+                                    ->visible(fn(SchemaGet $get) => in_array($get('type'), [
+                                        'film',
+                                        'tv_drama',
+                                        'commercial',
+                                        'music_video'
+                                    ])),
+
+                                // Award extra
+                                TextInput::make('award_organizer')
+                                    ->label('Organizer / Institution')
+                                    ->maxLength(255)
+                                    ->columnSpan(1)
+                                    ->visible(fn(SchemaGet $get) => $get('type') === 'award'),
                             ])
                             ->columns(4)
                             ->reorderable()
@@ -583,7 +628,11 @@ class UserForm
                                 fn(array $state): ?string =>
                                 ($state['year'] ? '[' . $state['year'] . '] ' : '') .
                                 ($state['title'] ?? 'New Entry') .
-                                ($state['type'] ? ' — ' . (\App\Models\ArtistExperience::$typeLabels[$state['type']] ?? '') : '')
+                                ($state['type'] ? ' — ' . (
+                                    $state['type'] === 'custom'
+                                    ? ($state['custom_type_label'] ?? 'Custom')
+                                    : (\App\Models\ArtistExperience::$typeLabels[$state['type']] ?? '')
+                                ) : '')
                             )
                             ->addActionLabel('Add Experience / Credit')
                             ->columnSpanFull(),

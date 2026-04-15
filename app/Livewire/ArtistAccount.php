@@ -103,6 +103,11 @@ class ArtistAccount extends Component
     public string $newExpJuryCategory = '';
     public bool $showExpForm = false;
     public ?int $editingExpId = null;
+    public string $newExpCustomType = '';
+    public string $newExpDescription = '';
+    public string $newExpLanguage = '';
+    public string $newExpPlatform = '';
+    public string $newExpAwardOrganizer = '';
 
     public function mount()
     {
@@ -437,12 +442,22 @@ class ArtistAccount extends Component
             'jury_festival' => $this->newExpJuryFestival ?: null,
             'jury_location' => $this->newExpJuryLocation ?: null,
             'jury_category' => $this->newExpJuryCategory ?: null,
+            'custom_type_label' => $this->newExpType === 'custom' ? $this->newExpCustomType : null,
+            'description' => $this->newExpDescription ?: null,
+            'language' => $this->newExpLanguage ?: null,
+            'platform' => $this->newExpPlatform ?: null,
+            'award_organizer' => $this->newExpAwardOrganizer ?: null,
         ];
 
         $this->validate([
-            'newExpType' => 'required|in:film,tv_drama,commercial,theater,music_video,award,jury,other',
+            'newExpType' => 'required|in:film,tv_drama,commercial,theater,music_video,award,jury,other,custom',
+            'newExpCustomType' => 'required_if:newExpType,custom|nullable|string|max:100',
             'newExpTitle' => 'required|string|max:255',
             'newExpYear' => 'nullable|string|max:10',
+            'newExpDescription' => 'nullable|string|max:1000',
+            'newExpLanguage' => 'nullable|string|max:100',
+            'newExpPlatform' => 'nullable|string|max:100',
+            'newExpAwardOrganizer' => 'nullable|string|max:255',
         ]);
 
         if ($this->editingExpId) {
@@ -479,6 +494,11 @@ class ArtistAccount extends Component
         $this->newExpJuryLocation = $exp->jury_location ?? '';
         $this->newExpJuryCategory = $exp->jury_category ?? '';
         $this->showExpForm = true;
+        $this->newExpDescription = $exp->description ?? '';
+        $this->newExpLanguage = $exp->language ?? '';
+        $this->newExpPlatform = $exp->platform ?? '';
+        $this->newExpAwardOrganizer = $exp->award_organizer ?? '';
+        $this->newExpCustomType     = $exp->custom_type_label ?? '';
     }
 
     public function deleteExperience(int $id): void
@@ -501,6 +521,11 @@ class ArtistAccount extends Component
         $this->newExpAwardResult = 'Won';
         $this->newExpJuryFestival = $this->newExpJuryLocation = $this->newExpJuryCategory = '';
         $this->showExpForm = false;
+        $this->newExpCustomType = '';
+        $this->newExpDescription = '';
+        $this->newExpLanguage = '';
+        $this->newExpPlatform = '';
+        $this->newExpAwardOrganizer = '';
     }
     public function render()
     {

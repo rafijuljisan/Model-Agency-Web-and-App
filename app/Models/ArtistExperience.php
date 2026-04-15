@@ -23,6 +23,7 @@ class ArtistExperience extends Model
         'award'       => 'Award',
         'jury'        => 'Jury Activity',
         'other'       => 'Other',
+        'custom'      => 'Custom',
     ];
 
     public function user()
