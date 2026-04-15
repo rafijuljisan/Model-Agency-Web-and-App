@@ -1265,13 +1265,23 @@
                             <div class="form-grid-2">
 
                                 <div class="form-field">
-                                    <label class="form-field-label" for="f-district">District</label>
+                                    <label class="form-field-label" for="f-district">
+                                        District <span class="required">*</span>
+                                    </label>
                                     <input id="f-district" type="text" class="form-input" wire:model.defer="district" placeholder="e.g. Dhaka">
+                                    @error('district') 
+                                        <span style="color: #dc2626; font-size: 0.8rem; margin-top: 4px; display: block;">{{ $message }}</span> 
+                                    @enderror
                                 </div>
 
                                 <div class="form-field">
-                                    <label class="form-field-label" for="f-upazila">Thana / Upazila</label>
+                                    <label class="form-field-label" for="f-upazila">
+                                        Thana / Upazila <span class="required">*</span>
+                                    </label>
                                     <input id="f-upazila" type="text" class="form-input" wire:model.defer="upazila" placeholder="e.g. Mirpur">
+                                    @error('upazila') 
+                                        <span style="color: #dc2626; font-size: 0.8rem; margin-top: 4px; display: block;">{{ $message }}</span> 
+                                    @enderror
                                 </div>
 
                                 {{-- Street address — private, full width --}}

@@ -345,10 +345,9 @@
     background: var(--gold);
     color: #fff;
     font-family: 'SolaimanLipi', 'Jost', sans-serif;
-    font-size: 1.125rem;
+    font-size: 1rem;
     font-weight: 600;
     text-transform: uppercase;
-    letter-spacing: 0.12em;
     border: none;
     cursor: pointer;
     transition: background 0.2s;
@@ -409,7 +408,7 @@
     background: transparent;
     color: var(--text-muted);
     font-family: 'SolaimanLipi', 'Jost', sans-serif;
-    font-size: 1.25rem;
+    font-size: 1rem;
     font-weight: 600;
     text-transform: uppercase;
     cursor: pointer;
@@ -726,16 +725,16 @@
 <div class="gc-hero">
     <div class="gc-hero-eyebrow">Dhaka Model Agency</div>
     <h1 class="gc-hero-title">
-        প্রফেশনাল <strong>গ্রুমিং ক্লাস</strong>
+        Professional <strong>Grooming Classes</strong>
     </h1>
     <p class="gc-hero-sub">
-        ইন্ডাস্ট্রি-লেভেল ট্রেনিং, ক্যামেরা কনফিডেন্স, পোর্টফোলিও ডেভেলপমেন্ট এবং এজেন্সি-রেডি স্কিল ডেভেলপমেন্ট।
+        Professional training, camera confidence, portfolio development and agency-ready skill development.
     </p>
     <button class="gc-hero-cta" onclick="document.getElementById('batches-section').scrollIntoView({behavior:'smooth'})">
         <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
             <path d="M12 5v14M5 12l7 7 7-7"/>
         </svg>
-        ব্যাচ দেখুন ও আবেদন করুন
+        View Batches and Apply
     </button>
 </div>
 
@@ -749,15 +748,15 @@
         <div class="gc-gallery-side" x-data="{ filter: 'all' }">
             <div class="gc-section-head" style="text-align: left;">
                 <div class="gc-section-eyebrow">Gallery</div>
-                <h2 class="gc-section-title">ক্লাসের <strong>মুহূর্তসমূহ</strong></h2>
+                <h2 class="gc-section-title">Class <strong>Moments</strong></h2>
             </div>
 
             @if($gallery->isNotEmpty())
                 <div class="gc-gallery-filters" style="justify-content: flex-start;">
-                    <button class="gc-gallery-filter" :class="filter==='all'?'active':''" @click="filter='all'">সব</button>
-                    <button class="gc-gallery-filter" :class="filter==='training'?'active':''" @click="filter='training'">ট্রেনিং</button>
-                    <button class="gc-gallery-filter" :class="filter==='graduation'?'active':''" @click="filter='graduation'">গ্র্যাজুয়েশন</button>
-                    <button class="gc-gallery-filter" :class="filter==='event'?'active':''" @click="filter='event'">ইভেন্ট</button>
+                    <button class="gc-gallery-filter" :class="filter==='all'?'active':''" @click="filter='all'">All</button>
+                    <button class="gc-gallery-filter" :class="filter==='training'?'active':''" @click="filter='training'">Training</button>
+                    <button class="gc-gallery-filter" :class="filter==='graduation'?'active':''" @click="filter='graduation'">Graduation</button>
+                    <button class="gc-gallery-filter" :class="filter==='event'?'active':''" @click="filter='event'">Event</button>
                 </div>
 
                 <div class="gc-gallery-grid-3x4">
@@ -775,7 +774,7 @@
                     {{ $gallery->links('vendor.pagination.custom-numbered') }}
                 </div>
             @else
-                <p style="color:var(--text-muted); font-size: 0.9rem;">কোনো ছবি উপলব্ধ নেই।</p>
+                <p style="color:var(--text-muted); font-size: 0.9rem;">No images available.</p>
             @endif
         </div>
 
@@ -785,7 +784,7 @@
                 <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                     <path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"></path><path d="M13.73 21a2 2 0 0 1-3.46 0"></path>
                 </svg>
-                নোটিশ বোর্ড
+                Notice Board
             </div>
 
             <div class="gc-notices-scroll">
@@ -799,7 +798,7 @@
                         </div>
                     @endforeach
                 @else
-                    <p style="color:var(--text-muted); font-size: 0.85rem;">এই মুহূর্তে নতুন কোনো নোটিশ নেই।</p>
+                    <p style="color:var(--text-muted); font-size: 0.85rem;">There are no new notices at the moment.</p>
                 @endif
             </div>
             {{-- ADDED: Registration Stats Box --}}
@@ -807,16 +806,16 @@
                 <div class="gc-stats-grid">
                     <div class="gc-stat-box">
                         <div class="gc-stat-number">200+</div>
-                        <div class="gc-stat-label">সফল শিক্ষার্থী</div>
+                        <div class="gc-stat-label">Success Students</div>
                     </div>
                     <div class="gc-stat-box">
                         <div class="gc-stat-number">100%</div>
-                        <div class="gc-stat-label">প্র্যাক্টিক্যাল</div>
+                        <div class="gc-stat-label">Practical Training</div>
                     </div>
                 </div>
                 
                 <button class="gc-sidebar-apply-btn" @click="applyModalOpen = true">
-                    এখনই আবেদন করুন
+                    Apply Now
                     <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                         <line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/>
                     </svg>
@@ -833,12 +832,12 @@
     <div id="batches-section">
         <div class="gc-section-head">
             <div class="gc-section-eyebrow">Upcoming Batches</div>
-            <h2 class="gc-section-title">আসন্ন <strong>ব্যাচসমূহ</strong></h2>
+            <h2 class="gc-section-title">Upcoming <strong>Batches</strong></h2>
         </div>
 
         @if($batches->isEmpty())
             <div style="text-align:center; padding: 48px; background: var(--bg-surface); border: 1px dashed var(--border-strong); margin-bottom: 64px;">
-                <p style="color: var(--text-muted); font-size: 0.9rem;">এই মুহূর্তে কোনো ব্যাচ উপলব্ধ নেই। শীঘ্রই আসছে!</p>
+                <p style="color: var(--text-muted); font-size: 0.9rem;">There are no upcoming batches at the moment. Check back soon!</p>
             </div>
         @else
             <div class="gc-batches">
@@ -862,12 +861,12 @@
                         <div class="gc-batch-meta">
                             <div class="gc-batch-meta-row">
                                 <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
-                                শুরু: {{ $batch->start_date->format('d M Y') }}
+                                Start Date: {{ $batch->start_date->format('d M Y') }}
                             </div>
                             @if($batch->trainer)
                             <div class="gc-batch-meta-row">
                                 <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="8" r="4"/><path d="M4 20c0-4 3.58-7 8-7s8 3 8 7"/></svg>
-                                ট্রেইনার: {{ $batch->trainer }}
+                                Trainer: {{ $batch->trainer }}
                             </div>
                             @endif
                             @if(!empty($batch->schedule_json))
@@ -881,31 +880,31 @@
                         {{-- Seat bar --}}
                         <div class="gc-seat-bar-wrap">
                             <div class="gc-seat-bar-label">
-                                <span>আসন পূর্ণতা</span>
-                                <span>{{ $batch->filled_seats }}/{{ $batch->seat_limit }} টি</span>
+                                <span>Seat Availability</span>
+                                <span>{{ $batch->filled_seats }}/{{ $batch->seat_limit }} Seats</span>
                             </div>
                             <div class="gc-seat-bar">
                                 <div class="gc-seat-bar-fill" style="width: {{ $batch->fill_percentage }}%"></div>
                             </div>
                             @if($batch->remaining_seats <= 5 && $batch->remaining_seats > 0)
                                 <div style="font-size:0.72rem; color:var(--gold); font-weight:700; margin-top:5px;">
-                                    ⚡ মাত্র {{ $batch->remaining_seats }}টি আসন বাকি!
+                                    ⚡ Only {{ $batch->remaining_seats }} seats left!
                                 </div>
                             @endif
                         </div>
 
                         <div class="gc-batch-fee">
                             ৳{{ number_format($batch->fee) }}
-                            <span>/ একজন</span>
+                            <span>/ Person</span>
                         </div>
 
                         <div style="display: flex; gap: 12px; margin-top: 16px;">
                             {{-- View Details Button --}}
                             <a href="{{ route('grooming.show', $batch->id) }}"
-                            style="flex: 1; padding: 12px; border: 1px solid var(--gold); color: var(--gold); text-align: center; font-family: 'SolaimanLipi', 'Jost', sans-serif; font-size: 1.125rem; font-weight: 600; text-transform: uppercase; letter-spacing: 0.05em; text-decoration: none; transition: all 0.2s; display: flex; align-items: center; justify-content: center;"
+                            style="flex: 1; padding: 12px; border: 1px solid var(--gold); color: var(--gold); text-align: center; font-family: 'SolaimanLipi', 'Jost', sans-serif; font-size: 1rem; font-weight: 600; text-transform: uppercase; text-decoration: none; transition: all 0.2s; display: flex; align-items: center; justify-content: center;"
                             onmouseover="this.style.background='var(--gold)'; this.style.color='#fff';"
                             onmouseout="this.style.background='transparent'; this.style.color='var(--gold)';">
-                                বিস্তারিত
+                                View Details
                             </a>
 
                             {{-- Quick Apply Button (Your existing button, modified to fit) --}}
@@ -917,9 +916,9 @@
                                 @click="applyModalOpen = true"
                             >
                                 @if($batch->status === 'full')
-                                    আসন পূর্ণ
+                                    Seat Full
                                 @else
-                                    আবেদন করুন
+                                    Apply Now
                                 @endif
                             </button>
                         </div>
@@ -933,14 +932,14 @@
          CTA BANNER
     ══════════════════════════════════ --}}
     <div class="gc-cta-banner">
-        <div class="gc-cta-banner-title">আপনার ক্যারিয়ার শুরু হোক আজই</div>
-        <p class="gc-cta-banner-sub">সীমিত আসন। এখনই আবেদন করুন বা বিস্তারিত জানতে যোগাযোগ করুন।</p>
+        <div class="gc-cta-banner-title">Get Your Career Started Today</div>
+        <p class="gc-cta-banner-sub">Limited Seats Available. Apply Now or Contact Us for More Information.</p>
         
         <div style="position: relative; z-index: 10; display: flex; gap: 16px; justify-content: center; align-items: center; flex-wrap: wrap;">
             
             {{-- আবেদন বাটন --}}
             <button class="gc-hero-cta" @click="applyModalOpen = true" style="margin: 0;">
-                আবেদন শুরু করুন
+                Apply Now
                 <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                     <line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/>
                 </svg>
@@ -959,7 +958,7 @@
                 <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
                     <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.422-.272.347-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413Z"/>
                 </svg>
-                হোয়াটসঅ্যাপ
+                Whatsapp
             </a>
             @endif
         </div>
@@ -981,10 +980,10 @@
                         <path d="M12 2L3 7v5c0 5.55 3.84 10.74 9 12 5.16-1.26 9-6.45 9-12V7L12 2zm-2 15l-4-4 1.41-1.41L10 14.17l6.59-6.59L18 9l-8 8z"/>
                     </svg>
                 </div>
-                <div class="gc-success-title">আবেদন সফলভাবে জমা হয়েছে! 🎉</div>
+                <div class="gc-success-title">Application successfully submitted! 🎉</div>
                 <p class="gc-success-sub">
-                    আপনার আবেদন নম্বর: <strong>#{{ $applicationId }}</strong><br>
-                    আমাদের টিম শীঘ্রই আপনার পেমেন্ট যাচাই করবে এবং আপনাকে নিশ্চিত করবে।
+                    Your application number: <strong>#{{ $applicationId }}</strong><br>
+                    Our team will verify your payment shortly and confirm with you.
                 </p>
 
                 @if($settings?->contact_phone)
@@ -995,13 +994,13 @@
                    target="_blank"
                    style="display:inline-flex;align-items:center;gap:10px;padding:14px 28px;background:#25D366;color:#fff;font-weight:600;font-size:0.9rem;border-radius:4px;text-decoration:none;margin-top:8px;">
                     <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.422-.272.347-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413Z"/></svg>
-                    হোয়াটসঅ্যাপে নিশ্চিত করুন
+                    Confirm on Whatsapp
                 </a>
 
                 <br><br>
                 <button @click="applyModalOpen = false"
                     style="padding:10px 24px;border:1px solid var(--border-strong);background:transparent;color:var(--text-secondary);font-family:'Jost',sans-serif;font-size:0.8rem;cursor:pointer;">
-                    বন্ধ করুন
+                    Close
                 </button>
                 @endif
             </div>
@@ -1010,11 +1009,11 @@
             {{-- ── FORM HEADER ── --}}
             <div class="gc-modal-header">
                 <div class="gc-modal-title">
-                    @if($step === 1) ব্যক্তিগত তথ্য
-                    @elseif($step === 2) শারীরিক তথ্য
-                    @elseif($step === 3) ক্যারিয়ার আগ্রহ
-                    @elseif($step === 4) ব্যাচ নির্বাচন
-                    @else পেমেন্ট তথ্য
+                    @if($step === 1) Personal Information
+                    @elseif($step === 2) Physical Information
+                    @elseif($step === 3) Career Interest
+                    @elseif($step === 4) Batch Selection
+                    @else Payment Information
                     @endif
                 </div>
                 <button class="gc-modal-close" @click="applyModalOpen = false">
@@ -1046,23 +1045,23 @@
                 {{-- STEP 1: Personal Info --}}
                 @if($step === 1)
                     <div class="gc-field">
-                        <label>পূর্ণ নাম <span style="color:var(--gold)">*</span></label>
-                        <input type="text" wire:model.defer="full_name" placeholder="আপনার পূর্ণ নাম">
+                        <label>Full Name <span style="color:var(--gold)">*</span></label>
+                        <input type="text" wire:model.defer="full_name" placeholder="Your full name">
                         @error('full_name') <div class="gc-field-error">{{ $message }}</div> @enderror
                     </div>
                     <div class="gc-grid-2">
                         <div class="gc-field">
-                            <label>মোবাইল নম্বর <span style="color:var(--gold)">*</span></label>
+                            <label>Mobile Number <span style="color:var(--gold)">*</span></label>
                             <input type="tel" wire:model.defer="phone" placeholder="01XXXXXXXXX">
                             @error('phone') <div class="gc-field-error">{{ $message }}</div> @enderror
                         </div>
                         <div class="gc-field">
-                            <label>হোয়াটসঅ্যাপ</label>
+                            <label>WhatsApp</label>
                             <input type="tel" wire:model.defer="whatsapp" placeholder="01XXXXXXXXX">
                         </div>
                     </div>
                     <div class="gc-field">
-                        <label>ইমেইল</label>
+                        <label>Email</label>
                         <input type="email" wire:model.defer="email" placeholder="you@example.com">
                         @error('email') <div class="gc-field-error">{{ $message }}</div> @enderror
                     </div>
@@ -1071,37 +1070,37 @@
                 @elseif($step === 2)
                     <div class="gc-grid-2">
                         <div class="gc-field">
-                            <label>বয়স</label>
+                            <label>Age</label>
                             <input type="number" wire:model.defer="age" placeholder="e.g. 22">
                             @error('age') <div class="gc-field-error">{{ $message }}</div> @enderror
                         </div>
                         <div class="gc-field">
-                            <label>লিঙ্গ</label>
+                            <label>Gender</label>
                             <select wire:model.defer="gender">
-                                <option value="">নির্বাচন করুন</option>
+                                <option value="">Select</option>
                                 <option value="Male">Male</option>
                                 <option value="Female">Female</option>
                                 <option value="Other">Other</option>
                             </select>
                         </div>
                         <div class="gc-field">
-                            <label>উচ্চতা</label>
+                            <label>Height</label>
                             <input type="text" wire:model.defer="height" placeholder='e.g. 5&apos;6"'>
                         </div>
                         <div class="gc-field">
-                            <label>ওজন</label>
+                            <label>Weight</label>
                             <input type="text" wire:model.defer="weight" placeholder="e.g. 55 kg">
                         </div>
                     </div>
                     <div class="gc-field">
-                        <label>ঠিকানা</label>
-                        <input type="text" wire:model.defer="address" placeholder="আপনার সম্পূর্ণ ঠিকানা">
+                        <label>Address</label>
+                        <input type="text" wire:model.defer="address" placeholder="Your full address">
                     </div>
 
                 {{-- STEP 3: Career Interest --}}
                 @elseif($step === 3)
                     <div class="gc-field">
-                        <label>ক্যারিয়ার আগ্রহ (একাধিক বেছে নিন)</label>
+                        <label>Career Interests (Select multiple)</label>
                         <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px;">
                             @foreach(['Modeling', 'Acting', 'Personality Development', 'Fashion Industry'] as $interest)
                             <label style="
@@ -1131,7 +1130,7 @@
                         </div>
                     </div>
                     <div class="gc-field">
-                        <label>অভিজ্ঞতার স্তর</label>
+                        <label>Experience Level</label>
                         <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px;">
                             @foreach([
                                 'Beginner' => ['label' => 'Beginner', 'sub' => 'নতুন', 'icon' => '🌱'],
@@ -1177,14 +1176,14 @@
                                 <div>
                                     <div class="gc-batch-select-name">{{ $batch->title }}</div>
                                     <div class="gc-batch-select-meta">
-                                        শুরু: {{ $batch->start_date->format('d M Y') }}
-                                        · আসন বাকি: {{ $batch->remaining_seats }}টি
+                                        Start Date: {{ $batch->start_date->format('d M Y') }}
+                                        · Available Seat: {{ $batch->remaining_seats }}
                                     </div>
                                 </div>
                                 <div class="gc-batch-select-fee">৳{{ number_format($batch->fee) }}</div>
                             </div>
                         @empty
-                            <p style="color:var(--text-muted);font-size:0.9rem;">কোনো ব্যাচ উপলব্ধ নেই।</p>
+                            <p style="color:var(--text-muted);font-size:0.9rem;">No batches available.</p>
                         @endforelse
                     </div>
                     @error('batch_id') <div class="gc-field-error" style="margin-top:8px;">{{ $message }}</div> @enderror
@@ -1194,7 +1193,7 @@
                     @if($selectedBatch)
                     <div style="background:var(--gold-bg);border:1px solid var(--border-strong);padding:16px;margin-bottom:20px;display:flex;justify-content:space-between;align-items:center;">
                         <div>
-                            <div style="font-size:0.72rem;font-weight:700;text-transform:uppercase;color:var(--text-muted);margin-bottom:3px;">নির্বাচিত ব্যাচ</div>
+                            <div style="font-size:0.72rem;font-weight:700;text-transform:uppercase;color:var(--text-muted);margin-bottom:3px;">Selected Batch</div>
                             <div style="font-weight:600;color:var(--text-primary);">{{ $selectedBatch->title }}</div>
                         </div>
                         <div style="font-size:1.6rem;font-weight:700;color:var(--gold);">৳{{ number_format($selectedBatch->fee) }}</div>
@@ -1202,7 +1201,7 @@
                     @endif
 
                     <div class="gc-field">
-                        <label>পেমেন্ট মেথড <span style="color:var(--gold)">*</span></label>
+                        <label>Payment Method <span style="color:var(--gold)">*</span></label>
                         <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-bottom:4px;">
                             @foreach(['bKash' => 'বিকাশ', 'Nagad' => 'নগদ', 'Rocket' => 'রকেট'] as $val => $label)
                             <label style="display:flex;align-items:center;justify-content:center;padding:12px;border:2px solid {{ $payment_method === $val ? 'var(--gold)' : 'var(--border-strong)' }};background:{{ $payment_method === $val ? 'var(--gold-bg)' : 'transparent' }};cursor:pointer;font-weight:600;font-size:0.88rem;color:{{ $payment_method === $val ? 'var(--gold)' : 'var(--text-secondary)' }};transition:all 0.2s;">
@@ -1235,22 +1234,22 @@
                     @endif
 
                     <div class="gc-field">
-                        <label>পেমেন্ট প্রেরণকারীর নম্বর <span style="color:var(--gold)">*</span></label>
+                        <label>Sender Number <span style="color:var(--gold)">*</span></label>
                         <input type="tel" wire:model.defer="sender_number" placeholder="01XXXXXXXXX">
                         @error('sender_number') <div class="gc-field-error">{{ $message }}</div> @enderror
                     </div>
                     <div class="gc-field">
-                        <label>ট্রানজেকশন আইডি (TrxID) <span style="color:var(--gold)">*</span></label>
+                        <label>Transaction ID (TrxID) <span style="color:var(--gold)">*</span></label>
                         <input type="text" wire:model.defer="transaction_id" placeholder="e.g. 9J5A6B8C" style="letter-spacing:0.1em;">
                         @error('transaction_id') <div class="gc-field-error">{{ $message }}</div> @enderror
                     </div>
 
                     <div class="gc-field">
-                        <label>পেমেন্ট স্ক্রিনশট (ঐচ্ছিক)</label>
+                        <label>Payment Screenshot (Optional)</label>
                         <input type="file" wire:model="payment_screenshot" accept="image/*">
-                        <div class="gc-field-hint">JPG, PNG — সর্বোচ্চ 3MB</div>
+                        <div class="gc-field-hint">JPG, PNG — Maximum 3MB</div>
                         @error('payment_screenshot') <div class="gc-field-error">{{ $message }}</div> @enderror
-                        <div wire:loading wire:target="payment_screenshot" style="font-size:0.78rem;color:var(--gold);margin-top:4px;">আপলোড হচ্ছে...</div>
+                        <div wire:loading wire:target="payment_screenshot" style="font-size:0.78rem;color:var(--gold);margin-top:4px;">Uploading...</div>
                     </div>
                 @endif
 
@@ -1261,7 +1260,7 @@
                 <div>
                     @if($step > 1)
                         <button class="gc-btn-prev" wire:click="prevStep">
-                            ← পূর্ববর্তী
+                            ← Previous
                         </button>
                     @else
                         <div></div>
@@ -1269,20 +1268,20 @@
                 </div>
 
                 <div style="font-size:0.72rem;color:var(--text-muted);">
-                    ধাপ {{ $step }} / {{ $totalSteps }}
+                    Step {{ $step }} / {{ $totalSteps }}
                 </div>
 
                 @if($step < $totalSteps)
                     <button class="gc-btn-next" wire:click="nextStep">
-                        পরবর্তী →
+                        Next →
                         <div wire:loading wire:target="nextStep">
                             <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="animation:spin 0.8s linear infinite;"><circle cx="12" cy="12" r="10" opacity="0.25"/><path d="M12 2a10 10 0 0110 10" stroke-linecap="round"/></svg>
                         </div>
                     </button>
                 @else
                     <button class="gc-btn-next" wire:click="submit">
-                        <span wire:loading.remove wire:target="submit">আবেদন জমা দিন ✓</span>
-                        <span wire:loading wire:target="submit">জমা হচ্ছে...</span>
+                        <span wire:loading.remove wire:target="submit">Submit Application ✓</span>
+                        <span wire:loading wire:target="submit">Submitting...</span>
                     </button>
                 @endif
             </div>

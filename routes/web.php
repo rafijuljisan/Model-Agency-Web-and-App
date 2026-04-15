@@ -17,57 +17,87 @@ use App\Models\PhotoGallery;
 
 // 1. The Homepage
 Route::get('/', function () {
-    $featuredArtists = App\Models\User::role('Verified-Artist')
+
+    // =========================================================
+    // POOL 1: Manually featured artists — always show, relaxed
+    // media rules but still must be fully verified
+    // =========================================================
+    $manuallyFeatured = App\Models\User::role('Verified-Artist')
         ->with([
             'profile',
             'media' => fn($q) => $q->whereIn('collection_name', ['avatar', 'portfolio']),
         ])
-        // 1. MUST BE FULLY VERIFIED
+        ->where('is_featured', true)
         ->where('verification_status', 'verified')
         ->where('academic_verification_status', 'verified')
-        ->whereHas('profile')
-        
-        // 2. MUST HAVE AN AVATAR
-        ->whereHas('media', function ($q) {
-            $q->where('collection_name', 'avatar');
-        })
-        
-        // 3. MUST HAVE AT LEAST 3 PORTFOLIO IMAGES
-        ->withCount(['media as portfolio_count' => function ($q) {
-            $q->where('collection_name', 'portfolio');
-        }])
-        ->having('portfolio_count', '>=', 3)
-        
-        // 4. GET THE HIGHEST ACTIVE SUBSCRIPTION TIER (Pro = 3, Verified = 2)
-        ->addSelect(['subscription_tier' => function ($query) {
-            $query->select('package_id')
-                  ->from('subscriptions')
-                  ->whereColumn('user_id', 'users.id')
-                  ->where('status', 'active')
-                  ->orderByDesc('package_id')
-                  ->limit(1);
-        }])
-        
-        // 5. THE WEIGHTED SORTING ALGORITHM
-        ->orderByDesc('is_featured')       // Priority 1: Admin manually toggled "is_featured"
-        ->orderByDesc('subscription_tier') // Priority 2: Pro Artists (ID 3) beat Verified (ID 2)
-        ->orderByDesc('last_active_at')    // Priority 3: Recently active users
-        ->orderByDesc('created_at')        // Priority 4: Newest accounts fallback
-        ->take(8)
         ->get();
 
-    // Fetch the dynamic content for the rest of the page
-    $clients = App\Models\Client::where('is_active', true)->orderBy('sort_order')->get();
-    $testimonials = App\Models\Testimonial::where('is_active', true)->orderBy('sort_order')->get();
-    $teamMembers = App\Models\TeamMember::where('is_active', true)->orderBy('sort_order')->get();
+    $slotsRemaining = 8 - $manuallyFeatured->count();
 
-    // 🔴 NEW: Fetch the latest 12 active gallery photos for the slider
+    // =========================================================
+    // POOL 2: Algorithm-selected artists to fill remaining slots
+    // Strict rules: avatar + 3 portfolio images required
+    // =========================================================
+    $algorithmFeatured = collect();
+
+    if ($slotsRemaining > 0) {
+        $excludeIds = $manuallyFeatured->pluck('id');
+
+        $algorithmFeatured = App\Models\User::role('Verified-Artist')
+            ->with([
+                'profile',
+                'media' => fn($q) => $q->whereIn('collection_name', ['avatar', 'portfolio']),
+            ])
+
+            // 1. MUST BE FULLY VERIFIED
+            ->where('verification_status', 'verified')
+            ->where('academic_verification_status', 'verified')
+            ->whereHas('profile')
+
+            // 2. EXCLUDE MANUALLY FEATURED (already in Pool 1)
+            ->whereNotIn('id', $excludeIds)
+
+            // 3. MUST HAVE AN AVATAR
+            ->whereHas('media', fn($q) => $q->where('collection_name', 'avatar'))
+
+            // 4. MUST HAVE AT LEAST 3 PORTFOLIO IMAGES
+            ->withCount(['media as portfolio_count' => fn($q) => $q->where('collection_name', 'portfolio')])
+            ->having('portfolio_count', '>=', 3)
+
+            // 5. GET THE HIGHEST ACTIVE SUBSCRIPTION TIER (Pro = 3, Verified = 2)
+            ->addSelect(['subscription_tier' => function ($query) {
+                $query->select('package_id')
+                      ->from('subscriptions')
+                      ->whereColumn('user_id', 'users.id')
+                      ->where('status', 'active')
+                      ->orderByDesc('package_id')
+                      ->limit(1);
+            }])
+
+            // 6. THE WEIGHTED SORTING ALGORITHM
+            ->orderByDesc('subscription_tier') // Priority 1: Pro Artists (ID 3) beat Verified (ID 2)
+            ->orderByDesc('last_active_at')    // Priority 2: Recently active users
+            ->orderByDesc('created_at')        // Priority 3: Newest accounts fallback
+            ->take($slotsRemaining)
+            ->get();
+    }
+
+    // Pool 1 always comes first, algorithm fills the rest
+    $featuredArtists = $manuallyFeatured->concat($algorithmFeatured);
+
+    // =========================================================
+    // Fetch the dynamic content for the rest of the page
+    // =========================================================
+    $clients      = App\Models\Client::where('is_active', true)->orderBy('sort_order')->get();
+    $testimonials = App\Models\Testimonial::where('is_active', true)->orderBy('sort_order')->get();
+    $teamMembers  = App\Models\TeamMember::where('is_active', true)->orderBy('sort_order')->get();
+
+    // Fetch the latest 12 active gallery photos for the slider
     $galleryPhotos = App\Models\PhotoGallery::where('is_active', true)
         ->latest()
         ->take(12)
         ->get();
 
-    // 🔴 NEW: Added 'galleryPhotos' to compact()
     return view('welcome', compact('featuredArtists', 'clients', 'testimonials', 'teamMembers', 'galleryPhotos'));
 });
 // SEO Routes (public, no auth)
@@ -118,8 +148,8 @@ Route::get('/contact', App\Livewire\ContactPage::class)->name('contact');
 Route::get('/casting', App\Livewire\CastingPage::class)->name('casting');
 Route::get('/artists', ArtistDirectory::class)->name('artists.index');
 Route::get('/artist/{id}', ArtistProfile::class)->name('artist.show');
-Route::get('/grooming-class', App\Livewire\GroomingPage::class)->name('grooming');
-Route::get('/grooming-class/{id}', \App\Livewire\GroomingBatchShow::class)->name('grooming.show');
+Route::get('/grooming-lab', App\Livewire\GroomingPage::class)->name('grooming');
+Route::get('/grooming-lab/{id}', \App\Livewire\GroomingBatchShow::class)->name('grooming.show');
 
 // 3. About Page
 Route::get('/about', function () {

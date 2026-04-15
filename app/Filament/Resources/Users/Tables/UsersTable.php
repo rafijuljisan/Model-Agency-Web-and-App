@@ -52,8 +52,14 @@ class UsersTable
                         'unverified' => 'danger',
                         default => 'gray',
                     }),
+                \Filament\Tables\Columns\IconColumn::make('is_featured')
+                    ->label('Featured')
+                    ->boolean()
+                    ->trueIcon('heroicon-o-star')
+                    ->falseIcon('heroicon-o-star') // dim star
+                    ->trueColor('warning'),
             ])
-            
+
             // =========================
             // ✅ ALL POSSIBLE FILTERS
             // =========================
@@ -65,6 +71,8 @@ class UsersTable
                     ->preload()
                     ->searchable(),
 
+                TernaryFilter::make('is_featured')
+                    ->label('Featured on Homepage'),
                 // 2. NID Status Filter
                 SelectFilter::make('verification_status')
                     ->label('NID Verification')
@@ -96,7 +104,7 @@ class UsersTable
                     ->query(function (Builder $query, array $data): Builder {
                         return $query->when(
                             $data['value'],
-                            fn (Builder $query, $value): Builder => $query->whereHas('profile', fn ($q) => $q->where('gender', $value))
+                            fn(Builder $query, $value): Builder => $query->whereHas('profile', fn($q) => $q->where('gender', $value))
                         );
                     }),
 
@@ -111,7 +119,7 @@ class UsersTable
                     ->query(function (Builder $query, array $data): Builder {
                         return $query->when(
                             $data['value'],
-                            fn (Builder $query, $value): Builder => $query->whereHas('profile', fn ($q) => $q->where('experience_level', $value))
+                            fn(Builder $query, $value): Builder => $query->whereHas('profile', fn($q) => $q->where('experience_level', $value))
                         );
                     }),
 
@@ -119,9 +127,9 @@ class UsersTable
                 TernaryFilter::make('willing_to_travel')
                     ->label('Willing to Travel')
                     ->queries(
-                        true: fn (Builder $query) => $query->whereHas('profile', fn($q) => $q->where('willing_to_travel', true)),
-                        false: fn (Builder $query) => $query->whereHas('profile', fn($q) => $q->where('willing_to_travel', false)),
-                        blank: fn (Builder $query) => $query,
+                        true: fn(Builder $query) => $query->whereHas('profile', fn($q) => $q->where('willing_to_travel', true)),
+                        false: fn(Builder $query) => $query->whereHas('profile', fn($q) => $q->where('willing_to_travel', false)),
+                        blank: fn(Builder $query) => $query,
                     ),
             ])
 

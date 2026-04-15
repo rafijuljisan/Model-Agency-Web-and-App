@@ -114,7 +114,7 @@
 
     <div class="course-hero">
         <div style="max-width: 1440px; margin: 0 auto;">
-            <a href="/grooming-class" style="color: var(--gold); font-size: 0.9rem; text-decoration: none; font-weight: 600; display: inline-flex; align-items: center; gap: 6px; margin-bottom: 16px;">
+            <a href="/grooming-lab" style="color: var(--gold); font-size: 0.9rem; text-decoration: none; font-weight: 600; display: inline-flex; align-items: center; gap: 6px; margin-bottom: 16px;">
                 &larr; Back to All Courses
             </a>
             <h1 class="course-title"><?php echo e($batch->title); ?></h1>
@@ -210,7 +210,7 @@
                 </div>
             </div>
 
-            <a href="/grooming-class" class="btn-fill" style="width: 100%; justify-content: center; padding: 16px; font-size: 1.1rem; font-family: 'SolaimanLipi', sans-serif;">
+            <a href="/grooming-lab" class="btn-fill" style="width: 100%; justify-content: center; padding: 16px; font-size: 1.1rem; font-family: 'SolaimanLipi', sans-serif;">
                 এখনই আবেদন করুন
             </a>
         </div>

@@ -1349,7 +1349,7 @@
                     </div>
                 </li>
                 <li><a href="/editorial">Blog</a></li>
-                <li><a href="/grooming-class">Grooming</a></li>
+                <li><a href="/grooming-lab">Grooming</a></li>
                 <li><a href="/contact">Contact</a></li>
             </ul>
 
@@ -1460,7 +1460,7 @@
         <a href="/videos">Video Gallery</a>
         <a href="/gallery">Photo Gallery</a>
         <a href="/contact">Contact</a>
-        <a href="/grooming-class">Grooming</a>
+        <a href="/grooming-lab">Grooming</a>
         <a href="/editorial">Blog</a>
 
         <div class="drawer-actions">

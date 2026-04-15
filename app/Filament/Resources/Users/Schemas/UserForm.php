@@ -60,7 +60,8 @@ class UserForm
                         TextInput::make('phone')
                             ->tel()
                             ->maxLength(20)
-                            ->unique(ignoreRecord: true),
+                            ->unique(ignoreRecord: true)
+                            ->autocomplete('off'),
 
                         Select::make('roles')
                             ->relationship('roles', 'name')
@@ -80,7 +81,26 @@ class UserForm
 
                         Toggle::make('is_featured')
                             ->label('Feature on Homepage')
-                            ->helperText('Override the algorithm and force this talent to the top of the homepage.')
+                            ->helperText('Override the algorithm and force this talent to the top of the homepage. Max 8 slots.')
+                            ->live()
+                            ->afterStateUpdated(function ($state, $set, $record) {
+                                if ($state === true) {
+                                    $currentCount = \App\Models\User::where('is_featured', true)
+                                        ->when($record?->id, fn($q) => $q->where('id', '!=', $record->id))
+                                        ->count();
+
+                                    if ($currentCount >= 8) {
+                                        $set('is_featured', false); // revert the toggle
+
+                                        \Filament\Notifications\Notification::make()
+                                            ->title('Featured Slots Full')
+                                            ->body('All 8 featured slots are taken. Please unfeature another artist first.')
+                                            ->danger()
+                                            ->persistent()
+                                            ->send();
+                                    }
+                                }
+                            })
                             ->columnSpanFull(),
                     ]),
 
@@ -150,24 +170,30 @@ class UserForm
                                     ->prefix('৳'),
 
                                 TagsInput::make('languages')
+                                    ->placeholder('e.g. English, Hindi, Bengali')
                                     ->label('Languages Spoken'),
 
                                 TextInput::make('country')
+                                    ->label('Country')
                                     ->default('Bangladesh'),
 
                                 TextInput::make('district')
+                                    ->autocomplete('off')
                                     ->label('District'),
 
                                 TextInput::make('upazila')
+                                    ->autocomplete('off')
                                     ->label('Thana / Upazila'),
 
                                 TextInput::make('street_address')
                                     ->label('Street / Full Address (Private)')
                                     ->helperText('Never shown publicly. For internal use only.')
+                                    ->autocomplete('off')
                                     ->columnSpanFull(),
                                 Textarea::make('bio')
                                     ->label('About Me (Bio)')
                                     ->columnSpanFull()
+                                    ->autocomplete('off')
                                     ->rows(4),
                             ]),
 
@@ -178,36 +204,43 @@ class UserForm
                                 TextInput::make('height_cm')
                                     ->label('Height')
                                     ->placeholder("e.g. 5'10\" or 170cm")
+                                    ->autocomplete('off')
                                     ->maxLength(20),
 
                                 TextInput::make('weight_kg')
                                     ->label('Weight (kg)')
                                     ->placeholder('e.g. 65 or 65.5')
+                                    ->autocomplete('off')
                                     ->maxLength(20),
 
                                 TextInput::make('chest_bust_inches')
                                     ->label('Chest / Bust (in)')
                                     ->placeholder('e.g. 36 or 36.5')
+                                    ->autocomplete('off')
                                     ->maxLength(20),
 
                                 TextInput::make('waist_inches')
                                     ->label('Waist (in)')
                                     ->placeholder('e.g. 30 or 30.5')
+                                    ->autocomplete('off')
                                     ->maxLength(20),
 
                                 TextInput::make('hips_inches')
                                     ->label('Hips (in)')
                                     ->placeholder('e.g. 38 or 38.5')
+                                    ->autocomplete('off')
                                     ->maxLength(20),
 
                                 TextInput::make('shoulder_inches')
                                     ->label('Shoulder (in) — Male')
                                     ->placeholder('e.g. 18 or 18.5')
+                                    ->autocomplete('off')
                                     ->maxLength(20),
 
                                 TextInput::make('shoe_size')
                                     ->label('Shoe Size')
                                     ->placeholder('e.g. EU 42 / UK 8')
+                                    ->autocomplete('off')
                                     ->maxLength(20),
 
                                 Select::make('dress_size')
@@ -232,10 +265,12 @@ class UserForm
 
                                 TextInput::make('eye_color')
                                     ->label('Eye Color')
+                                    ->autocomplete('off')
                                     ->placeholder('e.g. Brown'),
 
                                 TextInput::make('hair_color')
                                     ->label('Hair Color')
+                                    ->autocomplete('off')
                                     ->placeholder('e.g. Black'),
 
                                 Select::make('hair_length')
@@ -289,19 +324,44 @@ class UserForm
                         Section::make('Social Media & Follower Counts')
                             ->columns(2)
                             ->schema([
-                                TextInput::make('facebook_url')->url()->label('Facebook URL')->prefixIcon('heroicon-o-globe-alt'),
-                                TextInput::make('facebook_followers')->numeric()->label('Facebook Followers'),
+                                TextInput::make('facebook_url')->url()
+                                    ->label('Facebook URL')
+                                    ->placeholder('https://www.facebook.com/username')
+                                    ->prefixIcon('heroicon-o-globe-alt'),
+                                TextInput::make('facebook_followers')
+                                    ->placeholder('e.g. 15000')
+                                    ->numeric()
+                                    ->label('Facebook Followers'),
 
-                                TextInput::make('instagram_url')->url()->label('Instagram URL'),
-                                TextInput::make('instagram_followers')->numeric()->label('Instagram Followers'),
+                                TextInput::make('instagram_url')
+                                    ->placeholder('https://www.instagram.com/username')
+                                    ->url()
+                                    ->label('Instagram URL'),
+                                TextInput::make('instagram_followers')
+                                    ->placeholder('e.g. 20000')
+                                    ->numeric()
+                                    ->label('Instagram Followers'),
 
-                                TextInput::make('tiktok_url')->url()->label('TikTok URL'),
-                                TextInput::make('tiktok_followers')->numeric()->label('TikTok Followers'),
+                                TextInput::make('tiktok_url')
+                                    ->placeholder('https://www.tiktok.com/@username')
+                                    ->url()
+                                    ->label('TikTok URL'),
+                                TextInput::make('tiktok_followers')
+                                    ->placeholder('e.g. 25000')
+                                    ->numeric()
+                                    ->label('TikTok Followers'),
 
-                                TextInput::make('youtube_url')->url()->label('YouTube URL'),
-                                TextInput::make('linkedin_url')->url()->label('LinkedIn URL'),
+                                TextInput::make('youtube_url')
+                                    ->placeholder('https://www.youtube.com/username')
+                                    ->url()
+                                    ->label('YouTube URL'),
+                                TextInput::make('linkedin_url')
+                                    ->placeholder('https://www.linkedin.com/in/username')
+                                    ->url()
+                                    ->label('LinkedIn URL'),
 
                                 TextInput::make('portfolio_url')
+                                    ->placeholder('https://yourportfolio.com')
                                     ->label('Portfolio Website')
                                     ->url()
                                     ->columnSpanFull()
@@ -407,6 +467,7 @@ class UserForm
                                     ->label('Year')
                                     ->placeholder('e.g. 2021 or 2021–2023')
                                     ->maxLength(10)
+                                    ->autocomplete('off')
                                     ->columnSpan(1),
 
                                 TextInput::make('title')
@@ -414,6 +475,7 @@ class UserForm
                                     ->placeholder('e.g. Rehana Maryam Noor')
                                     ->required()
                                     ->maxLength(255)
+                                    ->autocomplete('off')
                                     ->columnSpan(2),
 
                                 // ── Film / TV / Commercial fields ──
@@ -422,7 +484,7 @@ class UserForm
                                     ->placeholder('e.g. Rehana Maryam Noor')
                                     ->maxLength(255)
                                     ->columnSpan(1)
-                                    ->visible(fn(SchemaGet $get) => in_array($get('type'), [  
+                                    ->visible(fn(SchemaGet $get) => in_array($get('type'), [
                                         'film',
                                         'tv_drama',
                                         'commercial',

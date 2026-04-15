@@ -541,8 +541,8 @@ class ArtistAccount extends Component
             'languages' => 'nullable|string|max:500',
 
             'country' => 'nullable|string|max:100',
-            'district' => 'nullable|string|max:100',
-            'upazila' => 'nullable|string|max:100',
+            'district' => 'required|string|max:100',
+            'upazila' => 'required|string|max:100',
             'street_address' => 'nullable|string|max:500',  // NEW private field
 
             'bio' => 'nullable|string|max:2000',
