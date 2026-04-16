@@ -325,6 +325,7 @@
     </div>
     {{-- AD SLOT 3: Bottom of Casting Page --}}
     <x-ad-banner position="casting_bottom" />
+    <x-warning-notice />
 
 </div>
 </div>

@@ -450,8 +450,7 @@
                             <polyline points="22,6 12,13 2,6"></polyline>
                         </svg>
                         <input id="email" type="email" name="email" value="{{ old('email') }}" class="form-input"
-                            placeholder="you@example.com" required autocomplete="username"
-                            autocapitalize="off" 
+                            placeholder="you@example.com" required autocomplete="username" autocapitalize="off"
                             autocorrect="off">
                     </div>
                     @error('email')
@@ -539,13 +538,13 @@
     INSTRUCTION POPUP (DYNAMIC PACKAGES)
     ═════════════════════════════════════════ --}}
     @php
-        // Fetch active packages directly from the database
         $packages = \App\Models\Package::where('is_active', true)->orderBy('price', 'asc')->get();
     @endphp
 
     <div id="registerInstructionModal" class="modal-overlay">
         <div class="instruction-modal">
 
+            {{-- Icon --}}
             <div class="modal-icon">
                 <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                     <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" />
@@ -553,18 +552,59 @@
                 </svg>
             </div>
 
-            <h3 class="modal-title">অ্যাকাউন্ট খোলার নিয়মাবলী</h3>
+            {{-- Title --}}
+            <h3 class="modal-title">অ্যাকাউন্ট খোলার নিয়মাবলী</h3>
 
+            {{-- Intro --}}
             <p class="modal-text">
-                আমাদের ট্যালেন্ট ডিরেক্টরিতে যুক্ত হয়ে ব্র্যান্ড ও কাস্টিং ডিরেক্টরদের নজরে আসতে ৩টি ধাপ সম্পন্ন করুন।
+                আপনি কি মডেলিং, অভিনয়, নাচ-গান বা ফটোগ্রাফিতে স্বপ্ন দেখছেন?
+                তাহলে আজই <strong>Dhaka Model Agency</strong>-তে রেজিস্ট্রেশন করুন, আর শুরু করুন আপনার নতুন যাত্রা! 🎉
             </p>
 
+            {{-- YouTube Video --}}
+            <div
+                style="position: relative; padding-bottom: 56.25%; height: 0; overflow: hidden; border-radius: 10px; margin: 16px 0;">
+                <iframe src="https://www.youtube.com/embed/57Q9hgvXpHQ?si=GNNF5ayZd9C6lD9V&controls=0"
+                    title="Dhaka Model Agency" frameborder="0"
+                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+                    referrerpolicy="strict-origin-when-cross-origin" allowfullscreen
+                    style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; border-radius: 10px;">
+                </iframe>
+            </div>
+
+            {{-- Promo Block --}}
+            <div
+                style="background: #faf7ff; border-radius: 12px; padding: 18px; margin-bottom: 16px; font-family: 'SolaimanLipi', sans-serif; font-size: 0.95rem; line-height: 1.9; color: #2d2d2d; text-align: left;">
+
+                {{-- Branding Header --}}
+                <div style="text-align: center; margin-bottom: 14px;">
+                    <span style="font-size: 1.1rem; font-weight: 700; color: #5b21b6;">🎬 Dhaka Model Agency</span><br>
+                    <span style="font-size: 0.85rem; color: #6b7280;">আপনার স্বপ্নের সঠিক প্ল্যাটফর্ম</span>
+                </div>
+
+                <hr style="border: none; border-top: 1px solid #e5e7eb; margin: 12px 0;">
+
+                {{-- Benefits --}}
+                <div style="margin-bottom: 14px;">
+                    <div style="font-weight: 700; color: #4c1d95; margin-bottom: 8px;">✨ আপনি যা পাবেন</div>
+                    <div style="display: flex; flex-direction: column; gap: 6px;">
+                        <div>🎭 &nbsp;নিয়মিত <strong>Casting Opportunities</strong></div>
+                        <div>📸 &nbsp;<strong>Model Profile Showcase</strong> — প্রফেশনাল ছবি ও তথ্যসহ</div>
+                        <div>💎 &nbsp;<strong>Exclusive Features</strong> — শুধুমাত্র মেম্বারদের জন্য</div>
+                        <div>🔍 &nbsp;বিভিন্ন এজেন্সি সহজেই আপনাকে <strong>খুঁজে পাবে</strong></div>
+                        <div>🎬 &nbsp;সহজেই পাবেন <strong>Casting Call</strong></div>
+                    </div>
+                </div>
+
+            </div>
+
+            {{-- Steps --}}
             <div class="modal-steps">
                 <div class="step-item">
                     <div class="step-number">১</div>
                     <div class="step-content">
                         <strong>রেজিস্ট্রেশন করুন</strong>
-                        <p>সঠিক তথ্য দিয়ে আপনার প্রাথমিক প্রোফাইল তৈরি করুন।</p>
+                        <p>সঠিক তথ্য দিয়ে আপনার প্রাথমিক প্রোফাইল তৈরি করুন।</p>
                     </div>
                 </div>
 
@@ -586,18 +626,15 @@
                 </div>
             </div>
 
+            {{-- Dynamic Packages from DB --}}
             @if($packages->isNotEmpty())
                 <div class="modal-packages-title">আমাদের সাবস্ক্রিপশন প্যাকেজসমূহ</div>
                 <div class="modal-packages">
-
                     @foreach($packages as $package)
                         <div class="package-card">
-                            <div class="package-duration">
-                                {{ $package->duration_months }} মাসের প্ল্যান
-                            </div>
+                            <div class="package-duration">{{ $package->duration_months }} মাসের প্ল্যান</div>
                             <div class="package-name">{{ $package->name }}</div>
                             <div class="package-price">৳{{ number_format($package->price) }}</div>
-
                             <div class="package-benefits">
                                 @if(is_array($package->features) && count($package->features) > 0)
                                     <ul>
@@ -611,28 +648,28 @@
                             </div>
                         </div>
                     @endforeach
-
                 </div>
             @endif
 
+            {{-- Close Button --}}
             <button type="button" id="closeInstructionBtn" class="btn-fill"
-                style="width: 100%; justify-content: center; padding: 14px; font-family: 'SolaimanLipi', sans-serif; font-size: 1.1rem;">
-                আমি বুঝতে পেরেছি — এগিয়ে যান
+                style="width: 100%; justify-content: center; padding: 14px; font-family: 'SolaimanLipi', sans-serif; font-size: 1.1rem; margin-top: 8px;">
+                আমি বুঝতে পেরেছি — এগিয়ে যান
                 <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
                     style="margin-left: 8px;">
                     <path d="M5 12h14M12 5l7 7-7 7" />
                 </svg>
             </button>
+
         </div>
     </div>
 
-    {{-- Script to trigger the modal ALWAYS on load --}}
+    {{-- Modal Script --}}
     <script>
         document.addEventListener("DOMContentLoaded", function () {
             const modal = document.getElementById('registerInstructionModal');
             const closeBtn = document.getElementById('closeInstructionBtn');
 
-            // ALWAYS show the modal with a slight delay for animation
             setTimeout(() => {
                 modal.classList.add('is-active');
             }, 300);
