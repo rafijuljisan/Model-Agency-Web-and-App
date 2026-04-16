@@ -715,9 +715,9 @@
                     </svg>
                 </div>
 
-                <h2 class="form-page-title mb-2">আপনার <strong>পরিচয়</strong> যাচাই করুন</h2>
+                <h2 class="form-page-title mb-2">Verify Your <strong>Identity</strong></h2>
                 <p class="form-page-sub mx-auto mb-8" style="font-size: 1.1rem; line-height: 1.5;">
-                    আমাদের আপনার পরিচয় যাচাই করতে ন্যাশনাল আইডি (NID) বা জন্ম নিবন্ধন বা পাসপোর্ট ভেরিফাই করতে হবে।
+                    To verify your identity, please upload your National ID (NID), Birth Certificate, or Passport.
                 </p>
 
                 <form wire:submit.prevent="submitDocuments" class="text-left"
@@ -734,7 +734,7 @@
 
                             <div wire:loading wire:target="nidImage"
                                 style="color: var(--gold); font-size: 0.95rem; margin-top: 4px;">
-                                ছবি আপলোড হচ্ছে...
+                                Uploading image...
                             </div>
 
                             <?php if(\Livewire\Mechanisms\ExtendBlade\ExtendBlade::isRenderingLivewireComponent()): ?><!--[if BLOCK]><![endif]--><?php endif; ?><?php $__errorArgs = ['nidImage'];
@@ -764,7 +764,7 @@ unset($__errorArgs, $__bag); ?><?php if(\Livewire\Mechanisms\ExtendBlade\ExtendB
 
                             <div wire:loading wire:target="academicImage"
                                 style="color: var(--gold); font-size: 0.95rem; margin-top: 4px;">
-                                ছবি আপলোড হচ্ছে...
+                                Uploading image...
                             </div>
 
                             <?php if(\Livewire\Mechanisms\ExtendBlade\ExtendBlade::isRenderingLivewireComponent()): ?><!--[if BLOCK]><![endif]--><?php endif; ?><?php $__errorArgs = ['academicImage'];
@@ -783,18 +783,269 @@ unset($__errorArgs, $__bag); ?><?php if(\Livewire\Mechanisms\ExtendBlade\ExtendB
                         </div>
                     <?php endif; ?><?php if(\Livewire\Mechanisms\ExtendBlade\ExtendBlade::isRenderingLivewireComponent()): ?><!--[if ENDBLOCK]><![endif]--><?php endif; ?>
 
+                    
+                    <?php if(\Livewire\Mechanisms\ExtendBlade\ExtendBlade::isRenderingLivewireComponent()): ?><!--[if BLOCK]><![endif]--><?php endif; ?><?php if(in_array(Auth::user()->verification_status, ['unverified', 'rejected', null, ''])): ?>
+                        <div style="margin-bottom: 32px;">
+                            <label class="form-field-label" style="font-size: 1.1rem; letter-spacing: normal;">
+                                Profile Photo <span style="color: var(--text-muted); font-weight: 400;">(Required)</span>
+                            </label>
+                            <p style="font-size: 0.9rem; color: var(--text-muted); margin-bottom: 10px;">
+                                Upload a clear photo of your face. You can also add or change this later from your profile.
+                            </p>
+
+                            
+                            <?php if(\Livewire\Mechanisms\ExtendBlade\ExtendBlade::isRenderingLivewireComponent()): ?><!--[if BLOCK]><![endif]--><?php endif; ?><?php if($profilePhotoUpload): ?>
+                                <div style="margin-bottom: 12px;">
+                                    <img src="<?php echo e($profilePhotoUpload->temporaryUrl()); ?>"
+                                        style="width: 90px; height: 90px; border-radius: 50%; object-fit: cover; border: 2px solid var(--border-strong);">
+                                </div>
+                            <?php endif; ?><?php if(\Livewire\Mechanisms\ExtendBlade\ExtendBlade::isRenderingLivewireComponent()): ?><!--[if ENDBLOCK]><![endif]--><?php endif; ?>
+
+                            <input type="file" wire:model="profilePhotoUpload" class="form-input" accept="image/*">
+
+                            <div wire:loading wire:target="profilePhotoUpload"
+                                style="color: var(--gold); font-size: 0.95rem; margin-top: 4px;">
+                                Uploading photo...
+                            </div>
+
+                            <?php if(\Livewire\Mechanisms\ExtendBlade\ExtendBlade::isRenderingLivewireComponent()): ?><!--[if BLOCK]><![endif]--><?php endif; ?><?php $__errorArgs = ['profilePhotoUpload'];
+$__bag = $errors->getBag($__errorArgs[1] ?? 'default');
+if ($__bag->has($__errorArgs[0])) :
+if (isset($message)) { $__messageOriginal = $message; }
+$message = $__bag->first($__errorArgs[0]); ?>
+                                <span style="color: #dc2626; font-size: 0.95rem; display: block; margin-top: 4px;">
+                                    <?php echo e($message); ?>
+
+                                </span>
+                            <?php unset($message);
+if (isset($__messageOriginal)) { $message = $__messageOriginal; }
+endif;
+unset($__errorArgs, $__bag); ?><?php if(\Livewire\Mechanisms\ExtendBlade\ExtendBlade::isRenderingLivewireComponent()): ?><!--[if ENDBLOCK]><![endif]--><?php endif; ?>
+                        </div>
+                    <?php endif; ?><?php if(\Livewire\Mechanisms\ExtendBlade\ExtendBlade::isRenderingLivewireComponent()): ?><!--[if ENDBLOCK]><![endif]--><?php endif; ?>
                     <button type="submit" class="btn-fill"
                         style="width: 100%; justify-content: center; padding: 14px; font-size: 1.15rem; font-family: 'SolaimanLipi', sans-serif;">
-                        <span wire:loading.remove wire:target="submitDocuments">ডকুমেন্ট সাবমিট করুন এবং প্যাকেজ পেজে
-                            যান</span>
-                        <span wire:loading wire:target="submitDocuments">আপলোড এবং সেভ হচ্ছে...</span>
+                        <span wire:loading.remove wire:target="submitDocuments">Submit Documents</span>
+                        <span wire:loading wire:target="submitDocuments">Uploading and Saving...</span>
+                    </button>
+
+                </form>
+            </div>
+        <?php elseif($currentStep === 'basic_info'): ?>
+            <div class="anim-fade-up max-w-2xl mx-auto" style="font-family: 'SolaimanLipi', sans-serif;">
+
+                
+                <div style="text-align: center; padding: 40px 0 28px;">
+                    <div style="width: 80px; height: 80px; border-radius: 50%; background: var(--gold-bg); display: flex; align-items: center; justify-content: center; margin: 0 auto 24px; color: var(--gold);">
+                        <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/>
+                            <circle cx="12" cy="7" r="4"/>
+                        </svg>
+                    </div>
+                    <h2 class="form-page-title mb-2">Complete Your <strong>Basic Info</strong></h2>
+                    <p class="form-page-sub mx-auto" style="font-size: 1.1rem; line-height: 1.5; max-width: 480px;">
+                        Almost there! Fill in a few details to complete your registration and submit for review.
+                    </p>
+                </div>
+
+                
+                <div style="display: flex; align-items: center; gap: 0; margin-bottom: 32px;">
+                    <div style="display: flex; align-items: center; gap: 8px; font-size: 0.8rem; font-family: 'Jost', sans-serif;">
+                        <span style="width: 24px; height: 24px; border-radius: 50%; background: var(--gold); color: #000; display: inline-flex; align-items: center; justify-content: center; font-weight: 700; font-size: 0.7rem;">✓</span>
+                        <span style="color: var(--text-muted);">Payment</span>
+                    </div>
+                    <div style="flex: 1; height: 1px; background: var(--gold); margin: 0 10px;"></div>
+                    <div style="display: flex; align-items: center; gap: 8px; font-size: 0.8rem; font-family: 'Jost', sans-serif;">
+                        <span style="width: 24px; height: 24px; border-radius: 50%; background: var(--gold); color: #000; display: inline-flex; align-items: center; justify-content: center; font-weight: 700; font-size: 0.7rem;">✓</span>
+                        <span style="color: var(--text-muted);">Documents</span>
+                    </div>
+                    <div style="flex: 1; height: 1px; background: var(--gold); margin: 0 10px;"></div>
+                    <div style="display: flex; align-items: center; gap: 8px; font-size: 0.8rem; font-family: 'Jost', sans-serif;">
+                        <span style="width: 24px; height: 24px; border-radius: 50%; background: var(--gold); color: #000; display: inline-flex; align-items: center; justify-content: center; font-weight: 700; font-size: 0.7rem;">3</span>
+                        <span style="color: var(--text-primary); font-weight: 600;">Basic Info</span>
+                    </div>
+                    <div style="flex: 1; height: 1px; background: var(--border); margin: 0 10px;"></div>
+                    <div style="display: flex; align-items: center; gap: 8px; font-size: 0.8rem; font-family: 'Jost', sans-serif;">
+                        <span style="width: 24px; height: 24px; border-radius: 50%; background: var(--bg-secondary); color: var(--text-muted); display: inline-flex; align-items: center; justify-content: center; font-weight: 700; font-size: 0.7rem;">4</span>
+                        <span style="color: var(--text-muted);">Under Review</span>
+                    </div>
+                </div>
+
+                <form wire:submit.prevent="submitBasicInfo"
+                    style="background: var(--bg-surface); border: 1px solid var(--border); border-radius: 8px; padding: 32px; box-shadow: var(--shadow-sm);">
+
+                    <div class="form-grid">
+
+                        
+                        <div class="form-field">
+                            <label class="form-field-label" for="bi-name">
+                                Full Name <span class="required">*</span>
+                            </label>
+                            <input id="bi-name" type="text" class="form-input" wire:model.defer="name" placeholder="Your full name">
+                            <?php if(\Livewire\Mechanisms\ExtendBlade\ExtendBlade::isRenderingLivewireComponent()): ?><!--[if BLOCK]><![endif]--><?php endif; ?><?php $__errorArgs = ['name'];
+$__bag = $errors->getBag($__errorArgs[1] ?? 'default');
+if ($__bag->has($__errorArgs[0])) :
+if (isset($message)) { $__messageOriginal = $message; }
+$message = $__bag->first($__errorArgs[0]); ?>
+                                <span style="color:#dc2626;font-size:0.8rem;margin-top:4px;display:block;"><?php echo e($message); ?></span>
+                            <?php unset($message);
+if (isset($__messageOriginal)) { $message = $__messageOriginal; }
+endif;
+unset($__errorArgs, $__bag); ?><?php if(\Livewire\Mechanisms\ExtendBlade\ExtendBlade::isRenderingLivewireComponent()): ?><!--[if ENDBLOCK]><![endif]--><?php endif; ?>
+                        </div>
+
+                        
+                        <div class="form-field">
+                            <label class="form-field-label" for="bi-phone">Phone Number</label>
+                            <input id="bi-phone" type="text" class="form-input" wire:model.defer="phone" placeholder="e.g. 01700000000">
+                            <?php if(\Livewire\Mechanisms\ExtendBlade\ExtendBlade::isRenderingLivewireComponent()): ?><!--[if BLOCK]><![endif]--><?php endif; ?><?php $__errorArgs = ['phone'];
+$__bag = $errors->getBag($__errorArgs[1] ?? 'default');
+if ($__bag->has($__errorArgs[0])) :
+if (isset($message)) { $__messageOriginal = $message; }
+$message = $__bag->first($__errorArgs[0]); ?>
+                                <span style="color:#dc2626;font-size:0.8rem;margin-top:4px;display:block;"><?php echo e($message); ?></span>
+                            <?php unset($message);
+if (isset($__messageOriginal)) { $message = $__messageOriginal; }
+endif;
+unset($__errorArgs, $__bag); ?><?php if(\Livewire\Mechanisms\ExtendBlade\ExtendBlade::isRenderingLivewireComponent()): ?><!--[if ENDBLOCK]><![endif]--><?php endif; ?>
+                        </div>
+
+                        
+                        <div class="form-field">
+                            <label class="form-field-label" for="bi-gender">Gender</label>
+                            <div class="form-select-wrap">
+                                <select id="bi-gender" class="form-select" wire:model.defer="gender">
+                                    <option value="">Prefer not to say</option>
+                                    <option value="Male">Male</option>
+                                    <option value="Female">Female</option>
+                                    <option value="Other">Other</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        
+                        <div class="form-field">
+                            <label class="form-field-label" for="bi-dob">Date of Birth</label>
+                            <input id="bi-dob" type="date" class="form-input" wire:model.defer="date_of_birth">
+                            <?php if(\Livewire\Mechanisms\ExtendBlade\ExtendBlade::isRenderingLivewireComponent()): ?><!--[if BLOCK]><![endif]--><?php endif; ?><?php $__errorArgs = ['date_of_birth'];
+$__bag = $errors->getBag($__errorArgs[1] ?? 'default');
+if ($__bag->has($__errorArgs[0])) :
+if (isset($message)) { $__messageOriginal = $message; }
+$message = $__bag->first($__errorArgs[0]); ?>
+                                <span style="color:#dc2626;font-size:0.8rem;margin-top:4px;display:block;"><?php echo e($message); ?></span>
+                            <?php unset($message);
+if (isset($__messageOriginal)) { $message = $__messageOriginal; }
+endif;
+unset($__errorArgs, $__bag); ?><?php if(\Livewire\Mechanisms\ExtendBlade\ExtendBlade::isRenderingLivewireComponent()): ?><!--[if ENDBLOCK]><![endif]--><?php endif; ?>
+                        </div>
+
+                        
+                        <div class="form-field">
+                            <label class="form-field-label" for="bi-height">Height (ft/cm)</label>
+                            <input id="bi-height" type="text" class="form-input" wire:model.defer="height_cm" placeholder="e.g. 5'8&quot; or 172">
+                        </div>
+
+                        
+                        <div class="form-field">
+                            <label class="form-field-label" for="bi-languages">Languages Spoken</label>
+                            <input id="bi-languages" type="text" class="form-input" wire:model.defer="languages" placeholder="e.g. Bengali, English">
+                            <div class="form-hint">Separate with commas</div>
+                        </div>
+
+                        
+                        <div class="form-field">
+                            <label class="form-field-label">Experience Level</label>
+                            <div class="form-select-wrap">
+                                <select class="form-select" wire:model.defer="experience_level">
+                                    <option value="">Select level</option>
+                                    <option value="Fresher">Fresher (No Experience)</option>
+                                    <option value="1-3 Years">1–3 Years</option>
+                                    <option value="Professional">Professional (3+ Years)</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        
+                        <div class="form-field">
+                            <label class="form-field-label">Availability</label>
+                            <div class="form-select-wrap">
+                                <select class="form-select" wire:model.defer="availability">
+                                    <option value="">Select</option>
+                                    <option value="Full-time">Full-time</option>
+                                    <option value="Part-time">Part-time</option>
+                                    <option value="Weekends Only">Weekends Only</option>
+                                    <option value="Flexible">Flexible</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        
+                        <div class="form-field">
+                            <label class="form-field-label" for="bi-district">
+                                District <span class="required">*</span>
+                            </label>
+                            <input id="bi-district" type="text" class="form-input" wire:model.defer="district" placeholder="e.g. Dhaka">
+                            <?php if(\Livewire\Mechanisms\ExtendBlade\ExtendBlade::isRenderingLivewireComponent()): ?><!--[if BLOCK]><![endif]--><?php endif; ?><?php $__errorArgs = ['district'];
+$__bag = $errors->getBag($__errorArgs[1] ?? 'default');
+if ($__bag->has($__errorArgs[0])) :
+if (isset($message)) { $__messageOriginal = $message; }
+$message = $__bag->first($__errorArgs[0]); ?>
+                                <span style="color:#dc2626;font-size:0.8rem;margin-top:4px;display:block;"><?php echo e($message); ?></span>
+                            <?php unset($message);
+if (isset($__messageOriginal)) { $message = $__messageOriginal; }
+endif;
+unset($__errorArgs, $__bag); ?><?php if(\Livewire\Mechanisms\ExtendBlade\ExtendBlade::isRenderingLivewireComponent()): ?><!--[if ENDBLOCK]><![endif]--><?php endif; ?>
+                        </div>
+
+                        
+                        <div class="form-field">
+                            <label class="form-field-label" for="bi-upazila">
+                                Thana / Upazila <span class="required">*</span>
+                            </label>
+                            <input id="bi-upazila" type="text" class="form-input" wire:model.defer="upazila" placeholder="e.g. Mirpur">
+                            <?php if(\Livewire\Mechanisms\ExtendBlade\ExtendBlade::isRenderingLivewireComponent()): ?><!--[if BLOCK]><![endif]--><?php endif; ?><?php $__errorArgs = ['upazila'];
+$__bag = $errors->getBag($__errorArgs[1] ?? 'default');
+if ($__bag->has($__errorArgs[0])) :
+if (isset($message)) { $__messageOriginal = $message; }
+$message = $__bag->first($__errorArgs[0]); ?>
+                                <span style="color:#dc2626;font-size:0.8rem;margin-top:4px;display:block;"><?php echo e($message); ?></span>
+                            <?php unset($message);
+if (isset($__messageOriginal)) { $message = $__messageOriginal; }
+endif;
+unset($__errorArgs, $__bag); ?><?php if(\Livewire\Mechanisms\ExtendBlade\ExtendBlade::isRenderingLivewireComponent()): ?><!--[if ENDBLOCK]><![endif]--><?php endif; ?>
+                        </div>
+
+                        
+                        <div class="form-field form-grid-full">
+                            <label class="form-field-label" for="bi-street">
+                                Street / Full Address
+                                <span style="font-size: 0.65rem; font-weight: 600; letter-spacing: 0.1em; text-transform: uppercase; color: #fff; background: #6b7280; padding: 2px 7px; border-radius: 999px; margin-left: 8px; vertical-align: middle;">
+                                    🔒 Private
+                                </span>
+                            </label>
+                            <textarea id="bi-street" class="form-input form-textarea" wire:model.defer="street_address"
+                                placeholder="e.g. House 12, Road 4, Block B, Mirpur-10" rows="2"></textarea>
+                            <div class="form-hint">Never shown publicly. Used for verification only.</div>
+                        </div>
+
+                    </div>
+
+                    
+                    <button type="submit" class="btn-fill"
+                        style="width: 100%; justify-content: center; padding: 14px; font-size: 1.15rem; margin-top: 8px; font-family: 'SolaimanLipi', sans-serif;">
+                        <span wire:loading.remove wire:target="submitBasicInfo">
+                            Save & Continue
+                            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="margin-left: 8px;">
+                                <line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/>
+                            </svg>
+                        </span>
+                        <span wire:loading wire:target="submitBasicInfo">Saving...</span>
                     </button>
 
                 </form>
             </div>
 
 
-            
             
         <?php elseif($currentStep === 'payment_failed'): ?>
             <div class="text-center py-20 anim-fade-up" style="font-family: 'SolaimanLipi', sans-serif;">
@@ -806,16 +1057,15 @@ unset($__errorArgs, $__bag); ?><?php if(\Livewire\Mechanisms\ExtendBlade\ExtendB
                         <line x1="9" y1="9" x2="15" y2="15" />
                     </svg>
                 </div>
-                <h2 class="form-page-title mb-4">পেমেন্ট <strong>ব্যর্থ হয়েছে</strong></h2>
+                <h2 class="form-page-title mb-4">Payment <strong>Failed</strong></h2>
                 <p class="form-page-sub mx-auto mb-8" style="max-width: 480px; font-size: 1.1rem; line-height: 1.5;">
-                    আমরা আপনার পেমেন্ট ভেরিফাই করতে পারিনি। অনুগ্রহ করে আপনার ট্রানজেকশন আইডি (TrxID) এবং মোবাইল নম্বর
-                    পুনরায় চেক করে আবার ফর্মটি সাবমিট করুন।<br><br>
-                    যদি আপনি নিশ্চিত থাকেন যে পেমেন্ট সফল হয়েছে, তবে অনুগ্রহ করে আমাদের সাপোর্ট টিমের সাথে যোগাযোগ করুন।
+                    We could not verify your payment. Please check your transaction ID (TrxID) and mobile number, then submit the form again.<br><br>
+                    If you are sure the payment was successful, please contact our support team.
                 </p>
                 <div style="display: flex; gap: 16px; justify-content: center;">
-                    <a href="/contact" class="btn-outline" style="font-size: 1rem;">সাপোর্টে যোগাযোগ করুন</a>
+                    <a href="/contact" class="btn-outline" style="font-size: 1rem;">Contact Support</a>
                     <a href="<?php echo e(route('packages.index')); ?>" class="btn-fill" style="font-size: 1rem;">
-                        আবার পেমেন্ট সাবমিট করুন
+                        Submit Payment Again
                         <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
                             style="margin-left:8px;">
                             <line x1="5" y1="12" x2="19" y2="12"></line>
@@ -835,13 +1085,12 @@ unset($__errorArgs, $__bag); ?><?php if(\Livewire\Mechanisms\ExtendBlade\ExtendB
                         <polyline points="12 6 12 12 16 14" />
                     </svg>
                 </div>
-                <h2 class="form-page-title mb-4">সাবস্ক্রিপশন <strong>মেয়াদোত্তীর্ণ</strong></h2>
+                <h2 class="form-page-title mb-4">Subscription <strong>Expired</strong></h2>
                 <p class="form-page-sub mx-auto mb-8" style="max-width: 480px; font-size: 1.1rem; line-height: 1.5;">
-                    আপনার ভেরিফাইড ট্যালেন্ট সাবস্ক্রিপশনের মেয়াদ শেষ হয়ে গেছে। আপনার পাবলিক প্রোফাইলটি পুনরায় লাইভ করতে এবং
-                    কাস্টিং কল পেতে অনুগ্রহ করে আপনার প্যাকেজটি রিনিউ করুন।
+                    Your verified talent subscription has expired. To reactivate your public profile and receive casting calls, please renew your package.
                 </p>
                 <a href="<?php echo e(route('packages.index')); ?>" class="btn-fill" style="display: inline-flex; font-size: 1.1rem;">
-                    সাবস্ক্রিপশন রিনিউ করুন
+                    Renew Subscription
                     <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
                         style="margin-left:8px;">
                         <path d="M21.5 2v6h-6M21.34 15.57a10 10 0 1 1-.92-10.26l3.08 2.69" />
@@ -856,10 +1105,10 @@ unset($__errorArgs, $__bag); ?><?php if(\Livewire\Mechanisms\ExtendBlade\ExtendB
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5"
                         d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
                 </svg>
-                <h2 class="form-page-title mb-2">পেমেন্ট <strong>যাচাইয়ের অপেক্ষায়</strong></h2>
+                <h2 class="form-page-title mb-2">Payment <strong>Under Review</strong></h2>
                 <p class="form-page-sub mx-auto" style="font-size: 1.1rem; line-height: 1.5; max-width: 480px;">
-                    আমাদের অ্যাকাউন্টস টিম বর্তমানে আপনার ট্রানজেকশন আইডি যাচাই করছে। এতে সাধারণত কয়েক ঘণ্টা সময় লাগতে পারে।
-                    অনুগ্রহ করে কিছুক্ষণ পর আবার চেক করুন!
+                    Our team is currently reviewing your transaction ID. This process typically takes a few hours.
+                    Please check back later!
                 </p>
             </div>
 
@@ -870,11 +1119,10 @@ unset($__errorArgs, $__bag); ?><?php if(\Livewire\Mechanisms\ExtendBlade\ExtendB
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5"
                         d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z" />
                 </svg>
-                <h2 class="form-page-title mb-2">অ্যাকাউন্ট <strong>রিভিউ করা হচ্ছে</strong></h2>
+                <h2 class="form-page-title mb-2">Account <strong>Under Review</strong></h2>
                 <p class="form-page-sub mx-auto mb-8"
                     style="color: var(--text-secondary); font-size: 1.1rem; line-height: 1.5;">
-                    আমাদের টিম বর্তমানে আপনার আপলোড করা ডকুমেন্ট এবং পেমেন্ট ট্রানজেকশন ভেরিফাই করছে। সবকিছু অনুমোদিত হওয়ার
-                    পরেই আপনার প্রোফাইল আনলক করা হবে!
+                    Our team is currently reviewing your uploaded documents and payment transaction. Your profile will be unlocked once everything is approved!
                 </p>
 
                 <div
@@ -883,8 +1131,7 @@ unset($__errorArgs, $__bag); ?><?php if(\Livewire\Mechanisms\ExtendBlade\ExtendB
                     
                     <div
                         style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px; padding-bottom: 16px; border-bottom: 1px solid var(--border);">
-                        <span style="font-size: 1rem; font-weight: 600; color: var(--text-primary);">ন্যাশনাল আইডি
-                            (NID)</span>
+                        <span style="font-size: 1rem; font-weight: 600; color: var(--text-primary);">NID/Passport/Birth Front</span>
                         <span
                             style="font-size: 0.75rem; padding: 4px 10px; border-radius: 999px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.05em; font-family: 'Jost', sans-serif;
                                             <?php echo e(Auth::user()->verification_status === 'verified' ? 'background: rgba(22,163,74,0.1); color: #16a34a;' : 'background: rgba(234,179,8,0.1); color: #eab308;'); ?>">
@@ -896,8 +1143,7 @@ unset($__errorArgs, $__bag); ?><?php if(\Livewire\Mechanisms\ExtendBlade\ExtendB
                     
                     <div
                         style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px; padding-bottom: 16px; border-bottom: 1px solid var(--border);">
-                        <span style="font-size: 1rem; font-weight: 600; color: var(--text-primary);">শিক্ষাগত
-                            সার্টিফিকেট</span>
+                        <span style="font-size: 1rem; font-weight: 600; color: var(--text-primary);">NID/Passport/Birth Back</span>
                         <span
                             style="font-size: 0.75rem; padding: 4px 10px; border-radius: 999px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.05em; font-family: 'Jost', sans-serif;
                                             <?php echo e(Auth::user()->academic_verification_status === 'verified' ? 'background: rgba(22,163,74,0.1); color: #16a34a;' : 'background: rgba(234,179,8,0.1); color: #eab308;'); ?>">
@@ -909,8 +1155,8 @@ unset($__errorArgs, $__bag); ?><?php if(\Livewire\Mechanisms\ExtendBlade\ExtendB
                     
                     <?php $sub = Auth::user()->subscriptions()->latest()->first(); ?>
                     <div style="display: flex; justify-content: space-between; align-items: center;">
-                        <span style="font-size: 1rem; font-weight: 600; color: var(--text-primary);">পেমেন্ট
-                            ভেরিফিকেশন</span>
+                        <span style="font-size: 1rem; font-weight: 600; color: var(--text-primary);">Payment
+                            Verification</span>
                         <span
                             style="font-size: 0.75rem; padding: 4px 10px; border-radius: 999px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.05em; font-family: 'Jost', sans-serif;
                                             <?php echo e($sub && $sub->status === 'active' ? 'background: rgba(22,163,74,0.1); color: #16a34a;' : 'background: rgba(234,179,8,0.1); color: #eab308;'); ?>">
@@ -1904,28 +2150,175 @@ unset($__errorArgs, $__bag); ?><?php if(\Livewire\Mechanisms\ExtendBlade\ExtendB
                                     <?php endif; ?><?php if(\Livewire\Mechanisms\ExtendBlade\ExtendBlade::isRenderingLivewireComponent()): ?><!--[if ENDBLOCK]><![endif]--><?php endif; ?>
                                 </div>
                             <?php if(\Livewire\Mechanisms\ExtendBlade\ExtendBlade::isRenderingLivewireComponent()): ?><?php \Livewire\Features\SupportCompiledWireKeys\SupportCompiledWireKeys::endLoop(); ?><?php endif; ?><?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?><?php if(\Livewire\Mechanisms\ExtendBlade\ExtendBlade::isRenderingLivewireComponent()): ?><!--[if ENDBLOCK]><![endif]--><?php \Livewire\Features\SupportCompiledWireKeys\SupportCompiledWireKeys::closeLoop(); ?><?php endif; ?>
+                        <?php endif; ?><?php if(\Livewire\Mechanisms\ExtendBlade\ExtendBlade::isRenderingLivewireComponent()): ?><!--[if ENDBLOCK]><![endif]--><?php endif; ?>
+                        
+
+                        
+                        <?php if(\Livewire\Mechanisms\ExtendBlade\ExtendBlade::isRenderingLivewireComponent()): ?><!--[if BLOCK]><![endif]--><?php endif; ?><?php if(!empty($experiences)): ?>
+                            <div style="display: flex; flex-direction: column; gap: 10px; margin-bottom: 24px;">
+                                <?php if(\Livewire\Mechanisms\ExtendBlade\ExtendBlade::isRenderingLivewireComponent()): ?><!--[if BLOCK]><![endif]--><?php \Livewire\Features\SupportCompiledWireKeys\SupportCompiledWireKeys::openLoop(); ?><?php endif; ?><?php $__currentLoopData = $experiences; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $exp): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?><?php if(\Livewire\Mechanisms\ExtendBlade\ExtendBlade::isRenderingLivewireComponent()): ?><?php \Livewire\Features\SupportCompiledWireKeys\SupportCompiledWireKeys::startLoopIteration(); ?><?php endif; ?>
+                                    <?php
+                                        $typeLabels = [
+                                            'acting_screen'          => 'Acting & Screen',
+                                            'modeling_fashion'       => 'Modeling & Fashion',
+                                            'photography_media'      => 'Photography & Media',
+                                            'advertising_promotion'  => 'Advertising & Promotion',
+                                            'event_hosting'          => 'Event & Hosting',
+                                            'digital_content'        => 'Digital Content Creation',
+                                            'competitions_pageants'  => 'Competitions & Pageants',
+                                            'awards_achievements'    => 'Awards & Achievements',
+                                            'workshop_training'      => 'Workshop & Training',
+                                            'other'                  => 'Other',
+                                            'custom'                 => $exp['custom_type_label'] ?? 'Custom',
+                                        ];
+                                        $typeLabel = $typeLabels[$exp['type']] ?? ucfirst($exp['type']);
+                                    ?>
+
+                                    <div style="display: flex; align-items: flex-start; justify-content: space-between; gap: 16px;
+                                                padding: 14px 16px; border: 1px solid var(--border); background: var(--bg-surface);
+                                                border-radius: 4px; transition: border-color 0.2s;"
+                                        onmouseover="this.style.borderColor='var(--border-strong)'"
+                                        onmouseout="this.style.borderColor='var(--border)'">
+
+                                        <div style="flex: 1; min-width: 0;">
+                                            
+                                            <div style="display: flex; align-items: center; gap: 10px; flex-wrap: wrap; margin-bottom: 4px;">
+                                                <?php if(\Livewire\Mechanisms\ExtendBlade\ExtendBlade::isRenderingLivewireComponent()): ?><!--[if BLOCK]><![endif]--><?php endif; ?><?php if(!empty($exp['year'])): ?>
+                                                    <span style="font-size: 0.7rem; font-weight: 700; letter-spacing: 0.08em;
+                                                                color: var(--gold); background: color-mix(in srgb, var(--gold) 12%, transparent);
+                                                                padding: 2px 8px; border-radius: 2px; white-space: nowrap;">
+                                                        <?php echo e($exp['year']); ?>
+
+                                                    </span>
+                                                <?php endif; ?><?php if(\Livewire\Mechanisms\ExtendBlade\ExtendBlade::isRenderingLivewireComponent()): ?><!--[if ENDBLOCK]><![endif]--><?php endif; ?>
+                                                <span style="font-size: 0.92rem; font-weight: 600; color: var(--text-primary);
+                                                            white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">
+                                                    <?php echo e($exp['title']); ?>
+
+                                                </span>
+                                            </div>
+
+                                            
+                                            <div style="display: flex; align-items: center; gap: 8px; flex-wrap: wrap;">
+                                                <span style="font-size: 0.7rem; font-weight: 600; letter-spacing: 0.06em;
+                                                            text-transform: uppercase; color: var(--text-muted);
+                                                            border: 1px solid var(--border); padding: 1px 7px; border-radius: 2px;">
+                                                    <?php echo e($typeLabel); ?>
+
+                                                </span>
+
+                                                <?php if(\Livewire\Mechanisms\ExtendBlade\ExtendBlade::isRenderingLivewireComponent()): ?><!--[if BLOCK]><![endif]--><?php endif; ?><?php if(!empty($exp['role'])): ?>
+                                                    <span style="font-size: 0.8rem; color: var(--text-secondary);">
+                                                        · <?php echo e($exp['role']); ?>
+
+                                                    </span>
+                                                <?php endif; ?><?php if(\Livewire\Mechanisms\ExtendBlade\ExtendBlade::isRenderingLivewireComponent()): ?><!--[if ENDBLOCK]><![endif]--><?php endif; ?>
+
+                                                <?php if(\Livewire\Mechanisms\ExtendBlade\ExtendBlade::isRenderingLivewireComponent()): ?><!--[if BLOCK]><![endif]--><?php endif; ?><?php if(!empty($exp['award_category'])): ?>
+                                                    <span style="font-size: 0.8rem; color: var(--text-secondary);">
+                                                        · <?php echo e($exp['award_category']); ?>
+
+                                                    </span>
+                                                <?php endif; ?><?php if(\Livewire\Mechanisms\ExtendBlade\ExtendBlade::isRenderingLivewireComponent()): ?><!--[if ENDBLOCK]><![endif]--><?php endif; ?>
+
+                                                <?php if(\Livewire\Mechanisms\ExtendBlade\ExtendBlade::isRenderingLivewireComponent()): ?><!--[if BLOCK]><![endif]--><?php endif; ?><?php if(!empty($exp['award_result'])): ?>
+                                                    <span style="font-size: 0.7rem; font-weight: 700; letter-spacing: 0.05em;
+                                                                text-transform: uppercase;
+                                                                color: <?php echo e($exp['award_result'] === 'Won' || $exp['award_result'] === 'Winner' ? 'var(--gold)' : 'var(--text-muted)'); ?>;">
+                                                        <?php echo e($exp['award_result']); ?>
+
+                                                    </span>
+                                                <?php endif; ?><?php if(\Livewire\Mechanisms\ExtendBlade\ExtendBlade::isRenderingLivewireComponent()): ?><!--[if ENDBLOCK]><![endif]--><?php endif; ?>
+
+                                                <?php if(\Livewire\Mechanisms\ExtendBlade\ExtendBlade::isRenderingLivewireComponent()): ?><!--[if BLOCK]><![endif]--><?php endif; ?><?php if(!empty($exp['production'])): ?>
+                                                    <span style="font-size: 0.8rem; color: var(--text-muted);">
+                                                        · <?php echo e($exp['production']); ?>
+
+                                                    </span>
+                                                <?php endif; ?><?php if(\Livewire\Mechanisms\ExtendBlade\ExtendBlade::isRenderingLivewireComponent()): ?><!--[if ENDBLOCK]><![endif]--><?php endif; ?>
+
+                                                <?php if(\Livewire\Mechanisms\ExtendBlade\ExtendBlade::isRenderingLivewireComponent()): ?><!--[if BLOCK]><![endif]--><?php endif; ?><?php if(!empty($exp['jury_location'])): ?>
+                                                    <span style="font-size: 0.8rem; color: var(--text-muted);">
+                                                        · <?php echo e($exp['jury_location']); ?>
+
+                                                    </span>
+                                                <?php endif; ?><?php if(\Livewire\Mechanisms\ExtendBlade\ExtendBlade::isRenderingLivewireComponent()): ?><!--[if ENDBLOCK]><![endif]--><?php endif; ?>
+                                            </div>
+                                        </div>
+
+                                        
+                                        <div style="display: flex; align-items: center; gap: 6px; flex-shrink: 0;">
+                                            <button type="button" wire:click="editExperience(<?php echo e($exp['id']); ?>)"
+                                                    title="Edit"
+                                                    style="display: flex; align-items: center; justify-content: center;
+                                                        width: 30px; height: 30px; border: 1px solid var(--border);
+                                                        background: var(--bg-primary); color: var(--text-muted);
+                                                        cursor: pointer; border-radius: 3px; transition: all 0.2s;"
+                                                    onmouseover="this.style.borderColor='var(--gold)';this.style.color='var(--gold)'"
+                                                    onmouseout="this.style.borderColor='var(--border)';this.style.color='var(--text-muted)'">
+                                                <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                                    <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/>
+                                                    <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/>
+                                                </svg>
+                                            </button>
+                                            <button type="button"
+                                                    wire:click="deleteExperience(<?php echo e($exp['id']); ?>)"
+                                                    wire:confirm="Delete this entry? This cannot be undone."
+                                                    title="Delete"
+                                                    style="display: flex; align-items: center; justify-content: center;
+                                                        width: 30px; height: 30px; border: 1px solid var(--border);
+                                                        background: var(--bg-primary); color: var(--text-muted);
+                                                        cursor: pointer; border-radius: 3px; transition: all 0.2s;"
+                                                    onmouseover="this.style.borderColor='#ef4444';this.style.color='#ef4444'"
+                                                    onmouseout="this.style.borderColor='var(--border)';this.style.color='var(--text-muted)'">
+                                                <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                                    <polyline points="3 6 5 6 21 6"/>
+                                                    <path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6"/>
+                                                    <path d="M10 11v6M14 11v6"/>
+                                                    <path d="M9 6V4a1 1 0 0 1 1-1h4a1 1 0 0 1 1 1v2"/>
+                                                </svg>
+                                            </button>
+                                        </div>
+                                    </div>
+                                <?php if(\Livewire\Mechanisms\ExtendBlade\ExtendBlade::isRenderingLivewireComponent()): ?><?php \Livewire\Features\SupportCompiledWireKeys\SupportCompiledWireKeys::endLoop(); ?><?php endif; ?><?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?><?php if(\Livewire\Mechanisms\ExtendBlade\ExtendBlade::isRenderingLivewireComponent()): ?><!--[if ENDBLOCK]><![endif]--><?php \Livewire\Features\SupportCompiledWireKeys\SupportCompiledWireKeys::closeLoop(); ?><?php endif; ?>
+                            </div>
                         <?php else: ?>
-                            <p style="color: var(--text-muted); font-size: 0.9rem; margin-bottom: 20px;">No credits added yet.
-                                Add your films, TV shows, awards, and other experience below.</p>
+                            <p style="color: var(--text-muted); font-size: 0.9rem; margin-bottom: 20px;">
+                                No credits added yet. Add your films, TV shows, awards, and other experience below.
+                            </p>
                         <?php endif; ?><?php if(\Livewire\Mechanisms\ExtendBlade\ExtendBlade::isRenderingLivewireComponent()): ?><!--[if ENDBLOCK]><![endif]--><?php endif; ?>
 
                         
                         <button type="button" wire:click="$toggle('showExpForm')"
-                            style="display: flex; align-items: center; gap: 8px; padding: 10px 20px; border: 1px dashed var(--border-strong); background: var(--bg-primary); color: var(--text-secondary); font-family: 'Jost', sans-serif; font-size: 0.8rem; font-weight: 600; letter-spacing: 0.1em; text-transform: uppercase; cursor: pointer; margin-bottom: 20px; transition: border-color 0.2s, color 0.2s;"
-                            onmouseover="this.style.borderColor='var(--gold)';this.style.color='var(--gold)'"
-                            onmouseout="this.style.borderColor='var(--border-strong)';this.style.color='var(--text-secondary)'">
-                            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor"
-                                stroke-width="2">
-                                <line x1="12" y1="5" x2="12" y2="19" />
-                                <line x1="5" y1="12" x2="19" y2="12" />
-                            </svg>
-                            <?php echo e($editingExpId ? 'Edit Entry' : 'Add Credit / Experience'); ?>
+                                style="display: flex; align-items: center; gap: 8px; padding: 10px 20px;
+                                    border: 1px dashed var(--border-strong); background: var(--bg-primary);
+                                    color: var(--text-secondary); font-family: 'Jost', sans-serif;
+                                    font-size: 0.8rem; font-weight: 600; letter-spacing: 0.1em;
+                                    text-transform: uppercase; cursor: pointer; margin-bottom: 20px;
+                                    transition: border-color 0.2s, color 0.2s;"
+                                onmouseover="this.style.borderColor='var(--gold)';this.style.color='var(--gold)'"
+                                onmouseout="this.style.borderColor='var(--border-strong)';this.style.color='var(--text-secondary)'">
+                            <?php if(\Livewire\Mechanisms\ExtendBlade\ExtendBlade::isRenderingLivewireComponent()): ?><!--[if BLOCK]><![endif]--><?php endif; ?><?php if($showExpForm): ?>
+                                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <line x1="5" y1="12" x2="19" y2="12"/>
+                                </svg>
+                                <?php echo e($editingExpId ? 'Cancel Edit' : 'Cancel'); ?>
 
+                            <?php else: ?>
+                                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <line x1="12" y1="5" x2="12" y2="19"/>
+                                    <line x1="5" y1="12" x2="19" y2="12"/>
+                                </svg>
+                                <?php echo e($editingExpId ? 'Edit Entry' : 'Add Credit / Experience'); ?>
+
+                            <?php endif; ?><?php if(\Livewire\Mechanisms\ExtendBlade\ExtendBlade::isRenderingLivewireComponent()): ?><!--[if ENDBLOCK]><![endif]--><?php endif; ?>
                         </button>
 
+                        
                         <?php if(\Livewire\Mechanisms\ExtendBlade\ExtendBlade::isRenderingLivewireComponent()): ?><!--[if BLOCK]><![endif]--><?php endif; ?><?php if($showExpForm): ?>
-                            <div
-                                style="background: var(--bg-primary); border: 1px solid var(--border); padding: 24px; border-radius: 4px;">
+                            <div style="background: var(--bg-primary); border: 1px solid var(--border);
+                                        padding: 24px; border-radius: 4px; margin-bottom: 20px;">
+
                                 <div class="form-grid-2" style="margin-bottom: 16px;">
 
                                     
@@ -1933,17 +2326,27 @@ unset($__errorArgs, $__bag); ?><?php if(\Livewire\Mechanisms\ExtendBlade\ExtendB
                                         <label class="form-field-label">Type <span class="required">*</span></label>
                                         <div class="form-select-wrap">
                                             <select class="form-select" wire:model.live="newExpType">
-                                                <option value="film">Film</option>
-                                                <option value="tv_drama">TV / Drama</option>
-                                                <option value="commercial">Commercial / TVC</option>
-                                                <option value="theater">Theater</option>
-                                                <option value="music_video">Music Video</option>
-                                                <option value="award">Award</option>
-                                                <option value="jury">Jury Activity</option>
+                                                <option value="acting_screen">Acting & Screen</option>
+                                                <option value="modeling_fashion">Modeling & Fashion</option>
+                                                <option value="photography_media">Photography & Media</option>
+                                                <option value="advertising_promotion">Advertising & Promotion</option>
+                                                <option value="event_hosting">Event & Hosting</option>
+                                                <option value="digital_content">Digital Content Creation</option>
+                                                <option value="competitions_pageants">Competitions & Pageants</option>
+                                                <option value="awards_achievements">Awards & Achievements</option>
+                                                <option value="workshop_training">Workshop & Training</option>
                                                 <option value="other">Other</option>
                                                 <option value="custom">Custom (specify below)</option>
                                             </select>
                                         </div>
+                                        <?php if(\Livewire\Mechanisms\ExtendBlade\ExtendBlade::isRenderingLivewireComponent()): ?><!--[if BLOCK]><![endif]--><?php endif; ?><?php $__errorArgs = ['newExpType'];
+$__bag = $errors->getBag($__errorArgs[1] ?? 'default');
+if ($__bag->has($__errorArgs[0])) :
+if (isset($message)) { $__messageOriginal = $message; }
+$message = $__bag->first($__errorArgs[0]); ?> <span class="form-error"><?php echo e($message); ?></span> <?php unset($message);
+if (isset($__messageOriginal)) { $message = $__messageOriginal; }
+endif;
+unset($__errorArgs, $__bag); ?><?php if(\Livewire\Mechanisms\ExtendBlade\ExtendBlade::isRenderingLivewireComponent()): ?><!--[if ENDBLOCK]><![endif]--><?php endif; ?>
                                     </div>
 
                                     
@@ -1951,27 +2354,68 @@ unset($__errorArgs, $__bag); ?><?php if(\Livewire\Mechanisms\ExtendBlade\ExtendB
                                         <label class="form-field-label">Year</label>
                                         <input type="text" class="form-input" wire:model.defer="newExpYear"
                                             placeholder="e.g. 2021 or 2021–2023">
+                                        <?php if(\Livewire\Mechanisms\ExtendBlade\ExtendBlade::isRenderingLivewireComponent()): ?><!--[if BLOCK]><![endif]--><?php endif; ?><?php $__errorArgs = ['newExpYear'];
+$__bag = $errors->getBag($__errorArgs[1] ?? 'default');
+if ($__bag->has($__errorArgs[0])) :
+if (isset($message)) { $__messageOriginal = $message; }
+$message = $__bag->first($__errorArgs[0]); ?> <span class="form-error"><?php echo e($message); ?></span> <?php unset($message);
+if (isset($__messageOriginal)) { $message = $__messageOriginal; }
+endif;
+unset($__errorArgs, $__bag); ?><?php if(\Livewire\Mechanisms\ExtendBlade\ExtendBlade::isRenderingLivewireComponent()): ?><!--[if ENDBLOCK]><![endif]--><?php endif; ?>
                                     </div>
+
+                                    
+                                    <?php if(\Livewire\Mechanisms\ExtendBlade\ExtendBlade::isRenderingLivewireComponent()): ?><!--[if BLOCK]><![endif]--><?php endif; ?><?php if($newExpType === 'custom'): ?>
+                                        <div class="form-field form-grid-full">
+                                            <label class="form-field-label">
+                                                Custom Type Label <span class="required">*</span>
+                                            </label>
+                                            <input type="text" class="form-input" wire:model.defer="newExpCustomType"
+                                                placeholder="e.g. Podcast, Voice Over, Brand Ambassador">
+                                            <?php if(\Livewire\Mechanisms\ExtendBlade\ExtendBlade::isRenderingLivewireComponent()): ?><!--[if BLOCK]><![endif]--><?php endif; ?><?php $__errorArgs = ['newExpCustomType'];
+$__bag = $errors->getBag($__errorArgs[1] ?? 'default');
+if ($__bag->has($__errorArgs[0])) :
+if (isset($message)) { $__messageOriginal = $message; }
+$message = $__bag->first($__errorArgs[0]); ?> <span class="form-error"><?php echo e($message); ?></span> <?php unset($message);
+if (isset($__messageOriginal)) { $message = $__messageOriginal; }
+endif;
+unset($__errorArgs, $__bag); ?><?php if(\Livewire\Mechanisms\ExtendBlade\ExtendBlade::isRenderingLivewireComponent()): ?><!--[if ENDBLOCK]><![endif]--><?php endif; ?>
+                                        </div>
+                                    <?php endif; ?><?php if(\Livewire\Mechanisms\ExtendBlade\ExtendBlade::isRenderingLivewireComponent()): ?><!--[if ENDBLOCK]><![endif]--><?php endif; ?>
 
                                     
                                     <div class="form-field form-grid-full">
                                         <label class="form-field-label">
-                                            <?php if(\Livewire\Mechanisms\ExtendBlade\ExtendBlade::isRenderingLivewireComponent()): ?><!--[if BLOCK]><![endif]--><?php endif; ?><?php if($newExpType === 'award'): ?> Award Name
-                                            <?php elseif($newExpType === 'jury'): ?> Your Role / Title (e.g. "Jury Member")
+                                            <?php if(\Livewire\Mechanisms\ExtendBlade\ExtendBlade::isRenderingLivewireComponent()): ?><!--[if BLOCK]><![endif]--><?php endif; ?><?php if($newExpType === 'awards_achievements'): ?> Award Name
+                                            <?php elseif($newExpType === 'workshop_training'): ?> Workshop / Course Name
+                                            <?php elseif($newExpType === 'competitions_pageants'): ?> Competition / Pageant Name
                                             <?php else: ?> Title / Name
                                             <?php endif; ?><?php if(\Livewire\Mechanisms\ExtendBlade\ExtendBlade::isRenderingLivewireComponent()): ?><!--[if ENDBLOCK]><![endif]--><?php endif; ?>
                                             <span class="required">*</span>
                                         </label>
                                         <input type="text" class="form-input" wire:model.defer="newExpTitle"
-                                            placeholder="<?php echo e($newExpType === 'award' ? 'e.g. National Film Award' : ($newExpType === 'jury' ? 'e.g. Jury Member' : 'e.g. Rehana Maryam Noor')); ?>">
+                                            placeholder="<?php if($newExpType === 'awards_achievements'): ?> e.g. National Film Award
+                                                            <?php elseif($newExpType === 'workshop_training'): ?> e.g. Advanced Acting Masterclass
+                                                            <?php elseif($newExpType === 'competitions_pageants'): ?> e.g. Lux Channel i Superstar
+                                                            <?php elseif($newExpType === 'event_hosting'): ?> e.g. Dhaka Fashion Week 2024
+                                                            <?php else: ?> e.g. Rehana Maryam Noor
+                                                            <?php endif; ?>">
+                                        <?php if(\Livewire\Mechanisms\ExtendBlade\ExtendBlade::isRenderingLivewireComponent()): ?><!--[if BLOCK]><![endif]--><?php endif; ?><?php $__errorArgs = ['newExpTitle'];
+$__bag = $errors->getBag($__errorArgs[1] ?? 'default');
+if ($__bag->has($__errorArgs[0])) :
+if (isset($message)) { $__messageOriginal = $message; }
+$message = $__bag->first($__errorArgs[0]); ?> <span class="form-error"><?php echo e($message); ?></span> <?php unset($message);
+if (isset($__messageOriginal)) { $message = $__messageOriginal; }
+endif;
+unset($__errorArgs, $__bag); ?><?php if(\Livewire\Mechanisms\ExtendBlade\ExtendBlade::isRenderingLivewireComponent()): ?><!--[if ENDBLOCK]><![endif]--><?php endif; ?>
                                     </div>
 
                                     
-                                    <?php if(\Livewire\Mechanisms\ExtendBlade\ExtendBlade::isRenderingLivewireComponent()): ?><!--[if BLOCK]><![endif]--><?php endif; ?><?php if(in_array($newExpType, ['film', 'tv_drama', 'commercial', 'theater', 'music_video', 'other', 'custom'])): ?>
+                                    <?php if(\Livewire\Mechanisms\ExtendBlade\ExtendBlade::isRenderingLivewireComponent()): ?><!--[if BLOCK]><![endif]--><?php endif; ?><?php if($newExpType === 'acting_screen'): ?>
                                         <div class="form-field">
                                             <label class="form-field-label">Role / Character</label>
                                             <input type="text" class="form-input" wire:model.defer="newExpRole"
-                                                placeholder="e.g. Rehana">
+                                                placeholder="e.g. Lead Actor, Rehana">
                                         </div>
                                         <div class="form-field">
                                             <label class="form-field-label">Director</label>
@@ -1979,39 +2423,197 @@ unset($__errorArgs, $__bag); ?><?php if(\Livewire\Mechanisms\ExtendBlade\ExtendB
                                                 placeholder="e.g. Abdullah Mohammad Saad">
                                         </div>
                                         <div class="form-field">
-                                            <label class="form-field-label">Production / Channel</label>
+                                            <label class="form-field-label">Production House / Channel</label>
                                             <input type="text" class="form-input" wire:model.defer="newExpProduction"
-                                                placeholder="e.g. Fable Pictures">
+                                                placeholder="e.g. Fable Pictures, Chorki">
                                         </div>
                                         <div class="form-field">
-                                            <label class="form-field-label">Notes</label>
-                                            <input type="text" class="form-input" wire:model.defer="newExpNotes"
-                                                placeholder="e.g. Debut Film">
+                                            <label class="form-field-label">Platform / Medium</label>
+                                            <input type="text" class="form-input" wire:model.defer="newExpPlatform"
+                                                placeholder="e.g. Cinema, Netflix, BTV">
                                         </div>
                                         <div class="form-field">
                                             <label class="form-field-label">Language</label>
                                             <input type="text" class="form-input" wire:model.defer="newExpLanguage"
                                                 placeholder="e.g. Bangla, English">
                                         </div>
-
-                                        <?php if(\Livewire\Mechanisms\ExtendBlade\ExtendBlade::isRenderingLivewireComponent()): ?><!--[if BLOCK]><![endif]--><?php endif; ?><?php if(in_array($newExpType, ['film', 'tv_drama', 'commercial', 'music_video'])): ?>
-                                            <div class="form-field">
-                                                <label class="form-field-label">Platform / Channel</label>
-                                                <input type="text" class="form-input" wire:model.defer="newExpPlatform"
-                                                    placeholder="e.g. Netflix, Chorki, Cinema Release">
-                                            </div>
-                                        <?php endif; ?><?php if(\Livewire\Mechanisms\ExtendBlade\ExtendBlade::isRenderingLivewireComponent()): ?><!--[if ENDBLOCK]><![endif]--><?php endif; ?>
+                                        <div class="form-field">
+                                            <label class="form-field-label">Notes</label>
+                                            <input type="text" class="form-input" wire:model.defer="newExpNotes"
+                                                placeholder="e.g. Debut Film, Main Lead">
+                                        </div>
                                     <?php endif; ?><?php if(\Livewire\Mechanisms\ExtendBlade\ExtendBlade::isRenderingLivewireComponent()): ?><!--[if ENDBLOCK]><![endif]--><?php endif; ?>
 
                                     
-                                    <?php if(\Livewire\Mechanisms\ExtendBlade\ExtendBlade::isRenderingLivewireComponent()): ?><!--[if BLOCK]><![endif]--><?php endif; ?><?php if($newExpType === 'award'): ?>
+                                    <?php if(\Livewire\Mechanisms\ExtendBlade\ExtendBlade::isRenderingLivewireComponent()): ?><!--[if BLOCK]><![endif]--><?php endif; ?><?php if($newExpType === 'modeling_fashion'): ?>
                                         <div class="form-field">
-                                            <label class="form-field-label">Category</label>
-                                            <input type="text" class="form-input" wire:model.defer="newExpAwardCategory"
-                                                placeholder="e.g. Best Actress">
+                                            <label class="form-field-label">Role / Position</label>
+                                            <input type="text" class="form-input" wire:model.defer="newExpRole"
+                                                placeholder="e.g. Showstopper, Runway Model">
                                         </div>
                                         <div class="form-field">
-                                            <label class="form-field-label">For the Work</label>
+                                            <label class="form-field-label">Brand / Agency / Designer</label>
+                                            <input type="text" class="form-input" wire:model.defer="newExpProduction"
+                                                placeholder="e.g. Aarong, Bibi Russell">
+                                        </div>
+                                        <div class="form-field">
+                                            <label class="form-field-label">Notes</label>
+                                            <input type="text" class="form-input" wire:model.defer="newExpNotes"
+                                                placeholder="e.g. Season Finale, Campaign Face">
+                                        </div>
+                                    <?php endif; ?><?php if(\Livewire\Mechanisms\ExtendBlade\ExtendBlade::isRenderingLivewireComponent()): ?><!--[if ENDBLOCK]><![endif]--><?php endif; ?>
+
+                                    
+                                    <?php if(\Livewire\Mechanisms\ExtendBlade\ExtendBlade::isRenderingLivewireComponent()): ?><!--[if BLOCK]><![endif]--><?php endif; ?><?php if($newExpType === 'photography_media'): ?>
+                                        <div class="form-field">
+                                            <label class="form-field-label">Role</label>
+                                            <input type="text" class="form-input" wire:model.defer="newExpRole"
+                                                placeholder="e.g. Cover Model, Editorial Subject">
+                                        </div>
+                                        <div class="form-field">
+                                            <label class="form-field-label">Photographer / Publication</label>
+                                            <input type="text" class="form-input" wire:model.defer="newExpDirector"
+                                                placeholder="e.g. Vogue India, Sagor Islam">
+                                        </div>
+                                        <div class="form-field">
+                                            <label class="form-field-label">Production / Agency</label>
+                                            <input type="text" class="form-input" wire:model.defer="newExpProduction"
+                                                placeholder="e.g. Xposure Media">
+                                        </div>
+                                        <div class="form-field">
+                                            <label class="form-field-label">Notes</label>
+                                            <input type="text" class="form-input" wire:model.defer="newExpNotes"
+                                                placeholder="e.g. Magazine Cover, Lookbook">
+                                        </div>
+                                    <?php endif; ?><?php if(\Livewire\Mechanisms\ExtendBlade\ExtendBlade::isRenderingLivewireComponent()): ?><!--[if ENDBLOCK]><![endif]--><?php endif; ?>
+
+                                    
+                                    <?php if(\Livewire\Mechanisms\ExtendBlade\ExtendBlade::isRenderingLivewireComponent()): ?><!--[if BLOCK]><![endif]--><?php endif; ?><?php if($newExpType === 'advertising_promotion'): ?>
+                                        <div class="form-field">
+                                            <label class="form-field-label">Role</label>
+                                            <input type="text" class="form-input" wire:model.defer="newExpRole"
+                                                placeholder="e.g. Brand Ambassador, TVC Lead">
+                                        </div>
+                                        <div class="form-field">
+                                            <label class="form-field-label">Director / Agency</label>
+                                            <input type="text" class="form-input" wire:model.defer="newExpDirector"
+                                                placeholder="e.g. Grey Dhaka, Asiatic JWT">
+                                        </div>
+                                        <div class="form-field">
+                                            <label class="form-field-label">Brand / Client</label>
+                                            <input type="text" class="form-input" wire:model.defer="newExpProduction"
+                                                placeholder="e.g. Grameenphone, Pran">
+                                        </div>
+                                        <div class="form-field">
+                                            <label class="form-field-label">Platform / Medium</label>
+                                            <input type="text" class="form-input" wire:model.defer="newExpPlatform"
+                                                placeholder="e.g. TV, Digital, OOH">
+                                        </div>
+                                        <div class="form-field">
+                                            <label class="form-field-label">Notes</label>
+                                            <input type="text" class="form-input" wire:model.defer="newExpNotes"
+                                                placeholder="e.g. National Campaign, Eid TVC">
+                                        </div>
+                                    <?php endif; ?><?php if(\Livewire\Mechanisms\ExtendBlade\ExtendBlade::isRenderingLivewireComponent()): ?><!--[if ENDBLOCK]><![endif]--><?php endif; ?>
+
+                                    
+                                    <?php if(\Livewire\Mechanisms\ExtendBlade\ExtendBlade::isRenderingLivewireComponent()): ?><!--[if BLOCK]><![endif]--><?php endif; ?><?php if($newExpType === 'event_hosting'): ?>
+                                        <div class="form-field">
+                                            <label class="form-field-label">Role / Position</label>
+                                            <input type="text" class="form-input" wire:model.defer="newExpRole"
+                                                placeholder="e.g. Host, Emcee, Anchor">
+                                        </div>
+                                        <div class="form-field">
+                                            <label class="form-field-label">Organizer / Brand</label>
+                                            <input type="text" class="form-input" wire:model.defer="newExpProduction"
+                                                placeholder="e.g. Channel i, RTV">
+                                        </div>
+                                        <div class="form-field">
+                                            <label class="form-field-label">Location</label>
+                                            <input type="text" class="form-input" wire:model.defer="newExpJuryLocation"
+                                                placeholder="e.g. Bashundhara Convention City, Dhaka">
+                                        </div>
+                                        <div class="form-field">
+                                            <label class="form-field-label">Notes</label>
+                                            <input type="text" class="form-input" wire:model.defer="newExpNotes"
+                                                placeholder="e.g. 5000+ audience, Live broadcast">
+                                        </div>
+                                    <?php endif; ?><?php if(\Livewire\Mechanisms\ExtendBlade\ExtendBlade::isRenderingLivewireComponent()): ?><!--[if ENDBLOCK]><![endif]--><?php endif; ?>
+
+                                    
+                                    <?php if(\Livewire\Mechanisms\ExtendBlade\ExtendBlade::isRenderingLivewireComponent()): ?><!--[if BLOCK]><![endif]--><?php endif; ?><?php if($newExpType === 'digital_content'): ?>
+                                        <div class="form-field">
+                                            <label class="form-field-label">Role</label>
+                                            <input type="text" class="form-input" wire:model.defer="newExpRole"
+                                                placeholder="e.g. Host, Creator, Presenter">
+                                        </div>
+                                        <div class="form-field">
+                                            <label class="form-field-label">Director / Collaborator</label>
+                                            <input type="text" class="form-input" wire:model.defer="newExpDirector"
+                                                placeholder="e.g. Banglalink Digital, Facto">
+                                        </div>
+                                        <div class="form-field">
+                                            <label class="form-field-label">Channel / Brand</label>
+                                            <input type="text" class="form-input" wire:model.defer="newExpProduction"
+                                                placeholder="e.g. YouTube Channel Name, TikTok Brand">
+                                        </div>
+                                        <div class="form-field">
+                                            <label class="form-field-label">Platform</label>
+                                            <input type="text" class="form-input" wire:model.defer="newExpPlatform"
+                                                placeholder="e.g. YouTube, TikTok, Facebook">
+                                        </div>
+                                        <div class="form-field">
+                                            <label class="form-field-label">Language</label>
+                                            <input type="text" class="form-input" wire:model.defer="newExpLanguage"
+                                                placeholder="e.g. Bangla, English">
+                                        </div>
+                                        <div class="form-field">
+                                            <label class="form-field-label">Notes</label>
+                                            <input type="text" class="form-input" wire:model.defer="newExpNotes"
+                                                placeholder="e.g. 1M views, Viral Series">
+                                        </div>
+                                    <?php endif; ?><?php if(\Livewire\Mechanisms\ExtendBlade\ExtendBlade::isRenderingLivewireComponent()): ?><!--[if ENDBLOCK]><![endif]--><?php endif; ?>
+
+                                    
+                                    <?php if(\Livewire\Mechanisms\ExtendBlade\ExtendBlade::isRenderingLivewireComponent()): ?><!--[if BLOCK]><![endif]--><?php endif; ?><?php if($newExpType === 'competitions_pageants'): ?>
+                                        <div class="form-field">
+                                            <label class="form-field-label">Competition Category</label>
+                                            <input type="text" class="form-input" wire:model.defer="newExpAwardCategory"
+                                                placeholder="e.g. Top Model, Best Talent">
+                                        </div>
+                                        <div class="form-field">
+                                            <label class="form-field-label">Result / Placement</label>
+                                            <div class="form-select-wrap">
+                                                <select class="form-select" wire:model.defer="newExpAwardResult">
+                                                    <option value="">— Select —</option>
+                                                    <option value="Winner">Winner</option>
+                                                    <option value="Runner-up">Runner-up</option>
+                                                    <option value="Participant">Participant</option>
+                                                    <option value="Nominated">Nominated</option>
+                                                </select>
+                                            </div>
+                                        </div>
+                                        <div class="form-field">
+                                            <label class="form-field-label">Organizer / Institution</label>
+                                            <input type="text" class="form-input" wire:model.defer="newExpAwardOrganizer"
+                                                placeholder="e.g. Channel i, Star Jalsha">
+                                        </div>
+                                        <div class="form-field">
+                                            <label class="form-field-label">Location</label>
+                                            <input type="text" class="form-input" wire:model.defer="newExpJuryLocation"
+                                                placeholder="e.g. Dhaka, Bangladesh">
+                                        </div>
+                                    <?php endif; ?><?php if(\Livewire\Mechanisms\ExtendBlade\ExtendBlade::isRenderingLivewireComponent()): ?><!--[if ENDBLOCK]><![endif]--><?php endif; ?>
+
+                                    
+                                    <?php if(\Livewire\Mechanisms\ExtendBlade\ExtendBlade::isRenderingLivewireComponent()): ?><!--[if BLOCK]><![endif]--><?php endif; ?><?php if($newExpType === 'awards_achievements'): ?>
+                                        <div class="form-field">
+                                            <label class="form-field-label">Award Category</label>
+                                            <input type="text" class="form-input" wire:model.defer="newExpAwardCategory"
+                                                placeholder="e.g. Best Actress, Best New Face">
+                                        </div>
+                                        <div class="form-field">
+                                            <label class="form-field-label">For the Work / Project</label>
                                             <input type="text" class="form-input" wire:model.defer="newExpAwardWork"
                                                 placeholder="e.g. Rehana Maryam Noor">
                                         </div>
@@ -2019,8 +2621,11 @@ unset($__errorArgs, $__bag); ?><?php if(\Livewire\Mechanisms\ExtendBlade\ExtendB
                                             <label class="form-field-label">Result</label>
                                             <div class="form-select-wrap">
                                                 <select class="form-select" wire:model.defer="newExpAwardResult">
+                                                    <option value="">— Select —</option>
                                                     <option value="Won">Won</option>
                                                     <option value="Nominated">Nominated</option>
+                                                    <option value="Winner">Winner</option>
+                                                    <option value="Runner-up">Runner-up</option>
                                                 </select>
                                             </div>
                                         </div>
@@ -2032,54 +2637,77 @@ unset($__errorArgs, $__bag); ?><?php if(\Livewire\Mechanisms\ExtendBlade\ExtendB
                                     <?php endif; ?><?php if(\Livewire\Mechanisms\ExtendBlade\ExtendBlade::isRenderingLivewireComponent()): ?><!--[if ENDBLOCK]><![endif]--><?php endif; ?>
 
                                     
-                                    <?php if(\Livewire\Mechanisms\ExtendBlade\ExtendBlade::isRenderingLivewireComponent()): ?><!--[if BLOCK]><![endif]--><?php endif; ?><?php if($newExpType === 'jury'): ?>
+                                    <?php if(\Livewire\Mechanisms\ExtendBlade\ExtendBlade::isRenderingLivewireComponent()): ?><!--[if BLOCK]><![endif]--><?php endif; ?><?php if($newExpType === 'workshop_training'): ?>
                                         <div class="form-field">
-                                            <label class="form-field-label">Festival Name</label>
-                                            <input type="text" class="form-input" wire:model.defer="newExpJuryFestival"
-                                                placeholder="e.g. I Am Tomorrow Film Festival">
+                                            <label class="form-field-label">Organizer / Institution</label>
+                                            <input type="text" class="form-input" wire:model.defer="newExpAwardOrganizer"
+                                                placeholder="e.g. Method Acting School, Nuhash Pictures">
                                         </div>
                                         <div class="form-field">
                                             <label class="form-field-label">Location</label>
                                             <input type="text" class="form-input" wire:model.defer="newExpJuryLocation"
-                                                placeholder="e.g. Brussels">
-                                        </div>
-                                        <div class="form-field form-grid-full">
-                                            <label class="form-field-label">Jury Category / Competition</label>
-                                            <input type="text" class="form-input" wire:model.defer="newExpJuryCategory"
-                                                placeholder="e.g. Asian films Competition">
+                                                placeholder="e.g. Dhaka, Bangladesh">
                                         </div>
                                     <?php endif; ?><?php if(\Livewire\Mechanisms\ExtendBlade\ExtendBlade::isRenderingLivewireComponent()): ?><!--[if ENDBLOCK]><![endif]--><?php endif; ?>
 
                                     
-                                    <?php if(\Livewire\Mechanisms\ExtendBlade\ExtendBlade::isRenderingLivewireComponent()): ?><!--[if BLOCK]><![endif]--><?php endif; ?><?php if($newExpType === 'custom'): ?>
+                                    <?php if(\Livewire\Mechanisms\ExtendBlade\ExtendBlade::isRenderingLivewireComponent()): ?><!--[if BLOCK]><![endif]--><?php endif; ?><?php if(in_array($newExpType, ['other', 'custom'])): ?>
                                         <div class="form-field">
-                                            <label class="form-field-label">
-                                                Experience Type Label <span class="required">*</span>
-                                            </label>
-                                            <input type="text" class="form-input" wire:model.defer="newExpCustomType"
-                                                placeholder="e.g. Podcast, Voice Over, Brand Ambassador">
+                                            <label class="form-field-label">Role / Position</label>
+                                            <input type="text" class="form-input" wire:model.defer="newExpRole"
+                                                placeholder="e.g. Host, Performer">
+                                        </div>
+                                        <div class="form-field">
+                                            <label class="form-field-label">Notes</label>
+                                            <input type="text" class="form-input" wire:model.defer="newExpNotes"
+                                                placeholder="Any relevant detail">
+                                        </div>
+                                        <div class="form-field">
+                                            <label class="form-field-label">Language</label>
+                                            <input type="text" class="form-input" wire:model.defer="newExpLanguage"
+                                                placeholder="e.g. Bangla, English">
                                         </div>
                                     <?php endif; ?><?php if(\Livewire\Mechanisms\ExtendBlade\ExtendBlade::isRenderingLivewireComponent()): ?><!--[if ENDBLOCK]><![endif]--><?php endif; ?>
+
+                                    
                                     <div class="form-field form-grid-full">
                                         <label class="form-field-label">Description</label>
                                         <textarea class="form-input" wire:model.defer="newExpDescription" rows="3"
-                                            placeholder="Any additional details about this entry..."
-                                            style="resize: vertical;"></textarea>
+                                                placeholder="Any additional details about this entry..."
+                                                style="resize: vertical;"></textarea>
+                                        <?php if(\Livewire\Mechanisms\ExtendBlade\ExtendBlade::isRenderingLivewireComponent()): ?><!--[if BLOCK]><![endif]--><?php endif; ?><?php $__errorArgs = ['newExpDescription'];
+$__bag = $errors->getBag($__errorArgs[1] ?? 'default');
+if ($__bag->has($__errorArgs[0])) :
+if (isset($message)) { $__messageOriginal = $message; }
+$message = $__bag->first($__errorArgs[0]); ?> <span class="form-error"><?php echo e($message); ?></span> <?php unset($message);
+if (isset($__messageOriginal)) { $message = $__messageOriginal; }
+endif;
+unset($__errorArgs, $__bag); ?><?php if(\Livewire\Mechanisms\ExtendBlade\ExtendBlade::isRenderingLivewireComponent()): ?><!--[if ENDBLOCK]><![endif]--><?php endif; ?>
                                     </div>
+
                                 </div>
 
+                                
                                 <div style="display: flex; gap: 12px; justify-content: flex-end;">
                                     <button type="button" wire:click="resetExpForm"
-                                        style="padding: 10px 20px; border: 1px solid var(--border-strong); background: var(--bg-surface); color: var(--text-secondary); font-family: 'Jost', sans-serif; font-size: 0.8rem; cursor: pointer;">
+                                            style="padding: 10px 20px; border: 1px solid var(--border-strong);
+                                                background: var(--bg-surface); color: var(--text-secondary);
+                                                font-family: 'Jost', sans-serif; font-size: 0.8rem;
+                                                cursor: pointer; border-radius: 3px; transition: all 0.2s;"
+                                            onmouseover="this.style.background='var(--bg-primary)'"
+                                            onmouseout="this.style.background='var(--bg-surface)'">
                                         Cancel
                                     </button>
                                     <button type="button" wire:click="saveExperience" class="btn-fill"
-                                        style="font-size: 0.85rem; padding: 10px 24px;">
-                                        <span wire:loading.remove
-                                            wire:target="saveExperience"><?php echo e($editingExpId ? 'Update Entry' : 'Save Entry'); ?></span>
+                                            style="font-size: 0.85rem; padding: 10px 24px;">
+                                        <span wire:loading.remove wire:target="saveExperience">
+                                            <?php echo e($editingExpId ? 'Update Entry' : 'Save Entry'); ?>
+
+                                        </span>
                                         <span wire:loading wire:target="saveExperience">Saving...</span>
                                     </button>
                                 </div>
+
                             </div>
                         <?php endif; ?><?php if(\Livewire\Mechanisms\ExtendBlade\ExtendBlade::isRenderingLivewireComponent()): ?><!--[if ENDBLOCK]><![endif]--><?php endif; ?>
 

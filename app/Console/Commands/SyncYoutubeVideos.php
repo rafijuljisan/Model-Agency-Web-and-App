@@ -60,17 +60,22 @@ class SyncYoutubeVideos extends Command
                 $videoId = $item['contentDetails']['videoId'];
                 $snippet = $item['snippet'];
 
+                // Capture the exact time the video was published on YouTube
+                $publishedAt = \Carbon\Carbon::parse($item['contentDetails']['videoPublishedAt'])
+                    ->setTimezone(config('app.timezone'))
+                    ->format('Y-m-d H:i:s');
+
                 Video::updateOrCreate(
                     ['url' => "https://www.youtube.com/watch?v={$videoId}"],
                     [
                         'title' => $snippet['title'],
                         'description' => $snippet['description'],
-                        // Use the highest available thumbnail, fallback to default if high is missing
                         'thumbnail' => $snippet['thumbnails']['high']['url'] ?? $snippet['thumbnails']['default']['url'] ?? null,
                         'is_active' => true,
+                        'created_at' => $publishedAt, // Force Laravel to use the YouTube date
                     ]
                 );
-                
+
                 $totalSynced++;
             }
 

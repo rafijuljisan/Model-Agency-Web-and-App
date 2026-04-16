@@ -13,10 +13,8 @@ use Filament\Schemas\Components\Group;
 use Filament\Schemas\Schema;
 use Illuminate\Support\Facades\Hash;
 use Filament\Forms\Components\SpatieMediaLibraryFileUpload;
-use Filament\Schemas\Get;
-use Filament\Infolists\Components\TextEntry;
+use Filament\Schemas\Components\Utilities\Get;
 use Filament\Forms\Components\Repeater;
-use Filament\Schemas\Components\Utilities\Get as SchemaGet;
 
 class UserForm
 {
@@ -450,13 +448,14 @@ class UserForm
                             ->native(false),
                     ]),
                 // 8. Artist Experience & Credits
+                // inside the repeater area
                 Section::make('Experience & Credits')
-                    ->description('Films, TV shows, awards, jury activity, and other professional credits.')
+                    ->description('Professional history including acting, modeling, awards, and other industry credits.')
                     ->schema([
-                        \Filament\Forms\Components\Repeater::make('experiences')
+                        Repeater::make('experiences')
                             ->relationship('experiences')
                             ->schema([
-                                \Filament\Forms\Components\Select::make('type')
+                                Select::make('type')
                                     ->label('Type')
                                     ->options(\App\Models\ArtistExperience::$typeLabels)
                                     ->required()
@@ -468,7 +467,7 @@ class UserForm
                                     ->placeholder('e.g. Podcast, Voice Over')
                                     ->maxLength(100)
                                     ->columnSpan(1)
-                                    ->visible(fn(SchemaGet $get) => $get('type') === 'custom'),
+                                    ->visible(fn(Get $get) => $get('type') === 'custom'),
 
                                 TextInput::make('year')
                                     ->label('Year')
@@ -479,145 +478,135 @@ class UserForm
 
                                 TextInput::make('title')
                                     ->label('Title / Name')
-                                    ->placeholder('e.g. Rehana Maryam Noor')
+                                    ->placeholder('e.g. Dhaka Fashion Week, Rehana Maryam Noor')
                                     ->required()
                                     ->maxLength(255)
                                     ->autocomplete('off')
                                     ->columnSpan(2),
 
-                                // ── Film / TV / Commercial fields ──
                                 TextInput::make('role')
-                                    ->label('Role / Character')
-                                    ->placeholder('e.g. Rehana Maryam Noor')
+                                    ->label('Role / Character / Position')
+                                    ->placeholder('e.g. Lead Actor, Showstopper, Host')
                                     ->maxLength(255)
                                     ->columnSpan(1)
-                                    ->visible(fn(SchemaGet $get) => in_array($get('type'), [
-                                        'film',
-                                        'tv_drama',
-                                        'commercial',
-                                        'theater',
-                                        'music_video',
-                                        'other'
+                                    ->visible(fn(Get $get) => in_array($get('type'), [
+                                        'acting_screen',
+                                        'modeling_fashion',
+                                        'photography_media',
+                                        'advertising_promotion',
+                                        'event_hosting',
+                                        'digital_content',
+                                        'other',
                                     ])),
 
                                 TextInput::make('director')
-                                    ->label('Director')
+                                    ->label('Director / Photographer')
                                     ->maxLength(255)
                                     ->columnSpan(1)
-                                    ->visible(fn(SchemaGet $get) => in_array($get('type'), [
-                                        'film',
-                                        'tv_drama',
-                                        'commercial',
-                                        'theater',
-                                        'music_video'
+                                    ->visible(fn(Get $get) => in_array($get('type'), [
+                                        'acting_screen',
+                                        'photography_media',
+                                        'advertising_promotion',
+                                        'digital_content',
                                     ])),
 
                                 TextInput::make('production')
-                                    ->label('Production House / Channel')
+                                    ->label('Production House / Channel / Brand')
                                     ->maxLength(255)
                                     ->columnSpan(1)
-                                    ->visible(fn(SchemaGet $get) => in_array($get('type'), [
-                                        'film',
-                                        'tv_drama',
-                                        'commercial',
-                                        'theater',
-                                        'music_video'
+                                    ->visible(fn(Get $get) => in_array($get('type'), [
+                                        'acting_screen',
+                                        'modeling_fashion',
+                                        'photography_media',
+                                        'advertising_promotion',
+                                        'event_hosting',
+                                        'digital_content',
                                     ])),
 
                                 TextInput::make('notes')
                                     ->label('Notes')
-                                    ->placeholder('e.g. Debut Film')
+                                    ->placeholder('e.g. Debut, Main Campaign')
                                     ->maxLength(255)
                                     ->columnSpan(1)
-                                    ->visible(fn(SchemaGet $get) => in_array($get('type'), [
-                                        'film',
-                                        'tv_drama',
-                                        'commercial',
-                                        'theater',
-                                        'music_video',
-                                        'other'
+                                    ->visible(fn(Get $get) => in_array($get('type'), [
+                                        'acting_screen',
+                                        'modeling_fashion',
+                                        'photography_media',
+                                        'advertising_promotion',
+                                        'event_hosting',
+                                        'digital_content',
+                                        'other',
                                     ])),
 
-                                // ── Award fields ──
                                 TextInput::make('award_category')
-                                    ->label('Award Category')
-                                    ->placeholder('e.g. Best Actress')
+                                    ->label(fn(Get $get) => $get('type') === 'competitions_pageants' ? 'Competition Category' : 'Award Category')
+                                    ->placeholder('e.g. Best Actress, Top Model')
                                     ->maxLength(255)
                                     ->columnSpan(1)
-                                    ->visible(fn(SchemaGet $get) => in_array($get('type'), ['award'])),
+                                    ->visible(fn(Get $get) => in_array($get('type'), ['awards_achievements', 'competitions_pageants'])),
 
                                 TextInput::make('award_work')
-                                    ->label('For the Work')
+                                    ->label('For the Work / Project')
                                     ->placeholder('e.g. Rehana Maryam Noor')
                                     ->maxLength(255)
                                     ->columnSpan(1)
-                                    ->visible(fn(SchemaGet $get) => in_array($get('type'), ['award'])),
+                                    ->visible(fn(Get $get) => in_array($get('type'), ['awards_achievements'])),
 
-                                \Filament\Forms\Components\Select::make('award_result')
-                                    ->label('Result')
-                                    ->options(['Won' => 'Won', 'Nominated' => 'Nominated'])
+                                Select::make('award_result')
+                                    ->label('Result / Placement')
+                                    ->options([
+                                        'Won' => 'Won',
+                                        'Nominated' => 'Nominated',
+                                        'Winner' => 'Winner',
+                                        'Runner-up' => 'Runner-up',
+                                        'Participant' => 'Participant',
+                                    ])
                                     ->columnSpan(1)
-                                    ->visible(fn(SchemaGet $get) => in_array($get('type'), ['award'])),
-
-                                // ── Jury fields ──
-                                TextInput::make('jury_festival')
-                                    ->label('Festival Name')
-                                    ->placeholder('e.g. I Am Tomorrow Film Festival')
-                                    ->maxLength(255)
-                                    ->columnSpan(1)
-                                    ->visible(fn(SchemaGet $get) => in_array($get('type'), ['jury'])),
+                                    ->visible(fn(Get $get) => in_array($get('type'), ['awards_achievements', 'competitions_pageants'])),
 
                                 TextInput::make('jury_location')
                                     ->label('Location')
-                                    ->placeholder('e.g. Brussels')
+                                    ->placeholder('e.g. Dhaka, Bangladesh')
                                     ->maxLength(255)
                                     ->columnSpan(1)
-                                    ->visible(fn(SchemaGet $get) => in_array($get('type'), ['jury'])),
+                                    ->visible(fn(Get $get) => in_array($get('type'), ['workshop_training', 'event_hosting', 'competitions_pageants'])),
 
-                                TextInput::make('jury_category')
-                                    ->label('Jury Category')
-                                    ->placeholder('e.g. Asian films Competition')
-                                    ->maxLength(255)
-                                    ->columnSpan(1)
-                                    ->visible(fn(SchemaGet $get) => in_array($get('type'), ['jury'])),
-                                // Shared description for all types
-                                \Filament\Forms\Components\Textarea::make('description')
+                                Textarea::make('description')
                                     ->label('Description')
                                     ->rows(3)
                                     ->maxLength(1000)
                                     ->columnSpanFull(),
 
-                                // Film/TV extras
                                 TextInput::make('language')
                                     ->label('Language')
                                     ->maxLength(100)
                                     ->columnSpan(1)
-                                    ->visible(fn(SchemaGet $get) => in_array($get('type'), [
-                                        'film',
-                                        'tv_drama',
-                                        'commercial',
-                                        'theater',
-                                        'music_video',
-                                        'other'
+                                    ->visible(fn(Get $get) => in_array($get('type'), [
+                                        'acting_screen',
+                                        'digital_content',
+                                        'other',
                                     ])),
 
                                 TextInput::make('platform')
-                                    ->label('Platform / Channel')
+                                    ->label('Platform / Medium')
                                     ->maxLength(100)
                                     ->columnSpan(1)
-                                    ->visible(fn(SchemaGet $get) => in_array($get('type'), [
-                                        'film',
-                                        'tv_drama',
-                                        'commercial',
-                                        'music_video'
+                                    ->visible(fn(Get $get) => in_array($get('type'), [
+                                        'acting_screen',
+                                        'digital_content',
+                                        'advertising_promotion',
                                     ])),
 
-                                // Award extra
                                 TextInput::make('award_organizer')
-                                    ->label('Organizer / Institution')
+                                    ->label('Organizer / Institution / Agency')
                                     ->maxLength(255)
                                     ->columnSpan(1)
-                                    ->visible(fn(SchemaGet $get) => $get('type') === 'award'),
+                                    ->visible(fn(Get $get) => in_array($get('type'), [
+                                        'awards_achievements',
+                                        'competitions_pageants',
+                                        'workshop_training',
+                                        'event_hosting',
+                                    ])),
                             ])
                             ->columns(4)
                             ->reorderable()

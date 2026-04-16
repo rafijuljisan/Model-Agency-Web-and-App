@@ -89,7 +89,7 @@ class ArtistAccount extends Component
 
     // ── Experiences ──
     public array $experiences = [];
-    public string $newExpType = 'film';
+    public string $newExpType = 'acting_screen';
     public string $newExpYear = '';
     public string $newExpTitle = '';
     public string $newExpRole = '';
@@ -99,9 +99,7 @@ class ArtistAccount extends Component
     public string $newExpAwardCategory = '';
     public string $newExpAwardWork = '';
     public string $newExpAwardResult = 'Won';
-    public string $newExpJuryFestival = '';
     public string $newExpJuryLocation = '';
-    public string $newExpJuryCategory = '';
     public bool $showExpForm = false;
     public ?int $editingExpId = null;
     public string $newExpCustomType = '';
@@ -512,9 +510,7 @@ class ArtistAccount extends Component
             'award_category' => $this->newExpAwardCategory ?: null,
             'award_work' => $this->newExpAwardWork ?: null,
             'award_result' => $this->newExpAwardResult ?: null,
-            'jury_festival' => $this->newExpJuryFestival ?: null,
             'jury_location' => $this->newExpJuryLocation ?: null,
-            'jury_category' => $this->newExpJuryCategory ?: null,
             'custom_type_label' => $this->newExpType === 'custom' ? $this->newExpCustomType : null,
             'description' => $this->newExpDescription ?: null,
             'language' => $this->newExpLanguage ?: null,
@@ -523,7 +519,7 @@ class ArtistAccount extends Component
         ];
 
         $this->validate([
-            'newExpType' => 'required|in:film,tv_drama,commercial,theater,music_video,award,jury,other,custom',
+            'newExpType' => 'required|in:acting_screen,modeling_fashion,photography_media,advertising_promotion,event_hosting,digital_content,competitions_pageants,awards_achievements,workshop_training,other,custom',
             'newExpCustomType' => 'required_if:newExpType,custom|nullable|string|max:100',
             'newExpTitle' => 'required|string|max:255',
             'newExpYear' => 'nullable|string|max:10',
@@ -563,9 +559,7 @@ class ArtistAccount extends Component
         $this->newExpAwardCategory = $exp->award_category ?? '';
         $this->newExpAwardWork = $exp->award_work ?? '';
         $this->newExpAwardResult = $exp->award_result ?? 'Won';
-        $this->newExpJuryFestival = $exp->jury_festival ?? '';
         $this->newExpJuryLocation = $exp->jury_location ?? '';
-        $this->newExpJuryCategory = $exp->jury_category ?? '';
         $this->showExpForm = true;
         $this->newExpDescription = $exp->description ?? '';
         $this->newExpLanguage = $exp->language ?? '';
@@ -587,12 +581,12 @@ class ArtistAccount extends Component
     public function resetExpForm(): void
     {
         $this->editingExpId = null;
-        $this->newExpType = 'film';
+        $this->newExpType = 'acting_screen';
         $this->newExpYear = $this->newExpTitle = $this->newExpRole = '';
         $this->newExpDirector = $this->newExpProduction = $this->newExpNotes = '';
         $this->newExpAwardCategory = $this->newExpAwardWork = '';
         $this->newExpAwardResult = 'Won';
-        $this->newExpJuryFestival = $this->newExpJuryLocation = $this->newExpJuryCategory = '';
+        $this->newExpJuryLocation = '';
         $this->showExpForm = false;
         $this->newExpCustomType = '';
         $this->newExpDescription = '';

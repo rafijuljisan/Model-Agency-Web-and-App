@@ -14,16 +14,18 @@ class ArtistExperience extends Model
     protected $guarded = [];
 
     // Type labels for display
-    public static array $typeLabels = [
-        'film'        => 'Film',
-        'tv_drama'    => 'TV / Drama',
-        'commercial'  => 'Commercial / TVC',
-        'theater'     => 'Theater',
-        'music_video' => 'Music Video',
-        'award'       => 'Award',
-        'jury'        => 'Jury Activity',
-        'other'       => 'Other',
-        'custom'      => 'Custom',
+    public static $typeLabels = [
+        'acting_screen' => 'Acting & Screen',
+        'modeling_fashion' => 'Modeling & Fashion',
+        'photography_media' => 'Photography & Media',
+        'advertising_promotion' => 'Advertising & Promotion',
+        'event_hosting' => 'Event & Hosting',
+        'digital_content' => 'Digital Content Creation',
+        'competitions_pageants' => 'Competitions & Pageants',
+        'awards_achievements' => 'Awards & Achievements',
+        'workshop_training' => 'Workshop & Training',
+        'other' => 'Other',
+        'custom' => 'Custom Label',
     ];
 
     public function user()

@@ -2057,73 +2057,239 @@
                                     @endif
                                 </div>
                             @endforeach
+                        @endif
+                        {{-- ═══════════════════════════════════════════════════════════
+                            EXPERIENCE & CREDITS SECTION
+                            Matches ArtistExperience::$typeLabels & ArtistAccount.php
+                            ═══════════════════════════════════════════════════════════ --}}
+
+                        {{-- Existing entries list --}}
+                        @if(!empty($experiences))
+                            <div style="display: flex; flex-direction: column; gap: 10px; margin-bottom: 24px;">
+                                @foreach($experiences as $exp)
+                                    @php
+                                        $typeLabels = [
+                                            'acting_screen'          => 'Acting & Screen',
+                                            'modeling_fashion'       => 'Modeling & Fashion',
+                                            'photography_media'      => 'Photography & Media',
+                                            'advertising_promotion'  => 'Advertising & Promotion',
+                                            'event_hosting'          => 'Event & Hosting',
+                                            'digital_content'        => 'Digital Content Creation',
+                                            'competitions_pageants'  => 'Competitions & Pageants',
+                                            'awards_achievements'    => 'Awards & Achievements',
+                                            'workshop_training'      => 'Workshop & Training',
+                                            'other'                  => 'Other',
+                                            'custom'                 => $exp['custom_type_label'] ?? 'Custom',
+                                        ];
+                                        $typeLabel = $typeLabels[$exp['type']] ?? ucfirst($exp['type']);
+                                    @endphp
+
+                                    <div style="display: flex; align-items: flex-start; justify-content: space-between; gap: 16px;
+                                                padding: 14px 16px; border: 1px solid var(--border); background: var(--bg-surface);
+                                                border-radius: 4px; transition: border-color 0.2s;"
+                                        onmouseover="this.style.borderColor='var(--border-strong)'"
+                                        onmouseout="this.style.borderColor='var(--border)'">
+
+                                        <div style="flex: 1; min-width: 0;">
+                                            {{-- Row 1: Year badge + Title --}}
+                                            <div style="display: flex; align-items: center; gap: 10px; flex-wrap: wrap; margin-bottom: 4px;">
+                                                @if(!empty($exp['year']))
+                                                    <span style="font-size: 0.7rem; font-weight: 700; letter-spacing: 0.08em;
+                                                                color: var(--gold); background: color-mix(in srgb, var(--gold) 12%, transparent);
+                                                                padding: 2px 8px; border-radius: 2px; white-space: nowrap;">
+                                                        {{ $exp['year'] }}
+                                                    </span>
+                                                @endif
+                                                <span style="font-size: 0.92rem; font-weight: 600; color: var(--text-primary);
+                                                            white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">
+                                                    {{ $exp['title'] }}
+                                                </span>
+                                            </div>
+
+                                            {{-- Row 2: Type tag + Role/Category --}}
+                                            <div style="display: flex; align-items: center; gap: 8px; flex-wrap: wrap;">
+                                                <span style="font-size: 0.7rem; font-weight: 600; letter-spacing: 0.06em;
+                                                            text-transform: uppercase; color: var(--text-muted);
+                                                            border: 1px solid var(--border); padding: 1px 7px; border-radius: 2px;">
+                                                    {{ $typeLabel }}
+                                                </span>
+
+                                                @if(!empty($exp['role']))
+                                                    <span style="font-size: 0.8rem; color: var(--text-secondary);">
+                                                        · {{ $exp['role'] }}
+                                                    </span>
+                                                @endif
+
+                                                @if(!empty($exp['award_category']))
+                                                    <span style="font-size: 0.8rem; color: var(--text-secondary);">
+                                                        · {{ $exp['award_category'] }}
+                                                    </span>
+                                                @endif
+
+                                                @if(!empty($exp['award_result']))
+                                                    <span style="font-size: 0.7rem; font-weight: 700; letter-spacing: 0.05em;
+                                                                text-transform: uppercase;
+                                                                color: {{ $exp['award_result'] === 'Won' || $exp['award_result'] === 'Winner' ? 'var(--gold)' : 'var(--text-muted)' }};">
+                                                        {{ $exp['award_result'] }}
+                                                    </span>
+                                                @endif
+
+                                                @if(!empty($exp['production']))
+                                                    <span style="font-size: 0.8rem; color: var(--text-muted);">
+                                                        · {{ $exp['production'] }}
+                                                    </span>
+                                                @endif
+
+                                                @if(!empty($exp['jury_location']))
+                                                    <span style="font-size: 0.8rem; color: var(--text-muted);">
+                                                        · {{ $exp['jury_location'] }}
+                                                    </span>
+                                                @endif
+                                            </div>
+                                        </div>
+
+                                        {{-- Actions --}}
+                                        <div style="display: flex; align-items: center; gap: 6px; flex-shrink: 0;">
+                                            <button type="button" wire:click="editExperience({{ $exp['id'] }})"
+                                                    title="Edit"
+                                                    style="display: flex; align-items: center; justify-content: center;
+                                                        width: 30px; height: 30px; border: 1px solid var(--border);
+                                                        background: var(--bg-primary); color: var(--text-muted);
+                                                        cursor: pointer; border-radius: 3px; transition: all 0.2s;"
+                                                    onmouseover="this.style.borderColor='var(--gold)';this.style.color='var(--gold)'"
+                                                    onmouseout="this.style.borderColor='var(--border)';this.style.color='var(--text-muted)'">
+                                                <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                                    <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/>
+                                                    <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/>
+                                                </svg>
+                                            </button>
+                                            <button type="button"
+                                                    wire:click="deleteExperience({{ $exp['id'] }})"
+                                                    wire:confirm="Delete this entry? This cannot be undone."
+                                                    title="Delete"
+                                                    style="display: flex; align-items: center; justify-content: center;
+                                                        width: 30px; height: 30px; border: 1px solid var(--border);
+                                                        background: var(--bg-primary); color: var(--text-muted);
+                                                        cursor: pointer; border-radius: 3px; transition: all 0.2s;"
+                                                    onmouseover="this.style.borderColor='#ef4444';this.style.color='#ef4444'"
+                                                    onmouseout="this.style.borderColor='var(--border)';this.style.color='var(--text-muted)'">
+                                                <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                                    <polyline points="3 6 5 6 21 6"/>
+                                                    <path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6"/>
+                                                    <path d="M10 11v6M14 11v6"/>
+                                                    <path d="M9 6V4a1 1 0 0 1 1-1h4a1 1 0 0 1 1 1v2"/>
+                                                </svg>
+                                            </button>
+                                        </div>
+                                    </div>
+                                @endforeach
+                            </div>
                         @else
-                            <p style="color: var(--text-muted); font-size: 0.9rem; margin-bottom: 20px;">No credits added yet.
-                                Add your films, TV shows, awards, and other experience below.</p>
+                            <p style="color: var(--text-muted); font-size: 0.9rem; margin-bottom: 20px;">
+                                No credits added yet. Add your films, TV shows, awards, and other experience below.
+                            </p>
                         @endif
 
-                        {{-- Add / Edit Form --}}
+                        {{-- ── Toggle Button ── --}}
                         <button type="button" wire:click="$toggle('showExpForm')"
-                            style="display: flex; align-items: center; gap: 8px; padding: 10px 20px; border: 1px dashed var(--border-strong); background: var(--bg-primary); color: var(--text-secondary); font-family: 'Jost', sans-serif; font-size: 0.8rem; font-weight: 600; letter-spacing: 0.1em; text-transform: uppercase; cursor: pointer; margin-bottom: 20px; transition: border-color 0.2s, color 0.2s;"
-                            onmouseover="this.style.borderColor='var(--gold)';this.style.color='var(--gold)'"
-                            onmouseout="this.style.borderColor='var(--border-strong)';this.style.color='var(--text-secondary)'">
-                            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor"
-                                stroke-width="2">
-                                <line x1="12" y1="5" x2="12" y2="19" />
-                                <line x1="5" y1="12" x2="19" y2="12" />
-                            </svg>
-                            {{ $editingExpId ? 'Edit Entry' : 'Add Credit / Experience' }}
+                                style="display: flex; align-items: center; gap: 8px; padding: 10px 20px;
+                                    border: 1px dashed var(--border-strong); background: var(--bg-primary);
+                                    color: var(--text-secondary); font-family: 'Jost', sans-serif;
+                                    font-size: 0.8rem; font-weight: 600; letter-spacing: 0.1em;
+                                    text-transform: uppercase; cursor: pointer; margin-bottom: 20px;
+                                    transition: border-color 0.2s, color 0.2s;"
+                                onmouseover="this.style.borderColor='var(--gold)';this.style.color='var(--gold)'"
+                                onmouseout="this.style.borderColor='var(--border-strong)';this.style.color='var(--text-secondary)'">
+                            @if($showExpForm)
+                                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <line x1="5" y1="12" x2="19" y2="12"/>
+                                </svg>
+                                {{ $editingExpId ? 'Cancel Edit' : 'Cancel' }}
+                            @else
+                                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <line x1="12" y1="5" x2="12" y2="19"/>
+                                    <line x1="5" y1="12" x2="19" y2="12"/>
+                                </svg>
+                                {{ $editingExpId ? 'Edit Entry' : 'Add Credit / Experience' }}
+                            @endif
                         </button>
 
+                        {{-- ── Add / Edit Form ── --}}
                         @if($showExpForm)
-                            <div
-                                style="background: var(--bg-primary); border: 1px solid var(--border); padding: 24px; border-radius: 4px;">
+                            <div style="background: var(--bg-primary); border: 1px solid var(--border);
+                                        padding: 24px; border-radius: 4px; margin-bottom: 20px;">
+
                                 <div class="form-grid-2" style="margin-bottom: 16px;">
 
-                                    {{-- Type --}}
+                                    {{-- ── Type ── --}}
                                     <div class="form-field">
                                         <label class="form-field-label">Type <span class="required">*</span></label>
                                         <div class="form-select-wrap">
                                             <select class="form-select" wire:model.live="newExpType">
-                                                <option value="film">Film</option>
-                                                <option value="tv_drama">TV / Drama</option>
-                                                <option value="commercial">Commercial / TVC</option>
-                                                <option value="theater">Theater</option>
-                                                <option value="music_video">Music Video</option>
-                                                <option value="award">Award</option>
-                                                <option value="jury">Jury Activity</option>
+                                                <option value="acting_screen">Acting & Screen</option>
+                                                <option value="modeling_fashion">Modeling & Fashion</option>
+                                                <option value="photography_media">Photography & Media</option>
+                                                <option value="advertising_promotion">Advertising & Promotion</option>
+                                                <option value="event_hosting">Event & Hosting</option>
+                                                <option value="digital_content">Digital Content Creation</option>
+                                                <option value="competitions_pageants">Competitions & Pageants</option>
+                                                <option value="awards_achievements">Awards & Achievements</option>
+                                                <option value="workshop_training">Workshop & Training</option>
                                                 <option value="other">Other</option>
                                                 <option value="custom">Custom (specify below)</option>
                                             </select>
                                         </div>
+                                        @error('newExpType') <span class="form-error">{{ $message }}</span> @enderror
                                     </div>
 
-                                    {{-- Year --}}
+                                    {{-- ── Year ── --}}
                                     <div class="form-field">
                                         <label class="form-field-label">Year</label>
                                         <input type="text" class="form-input" wire:model.defer="newExpYear"
                                             placeholder="e.g. 2021 or 2021–2023">
+                                        @error('newExpYear') <span class="form-error">{{ $message }}</span> @enderror
                                     </div>
 
-                                    {{-- Title --}}
+                                    {{-- ── Custom Type Label ── --}}
+                                    @if($newExpType === 'custom')
+                                        <div class="form-field form-grid-full">
+                                            <label class="form-field-label">
+                                                Custom Type Label <span class="required">*</span>
+                                            </label>
+                                            <input type="text" class="form-input" wire:model.defer="newExpCustomType"
+                                                placeholder="e.g. Podcast, Voice Over, Brand Ambassador">
+                                            @error('newExpCustomType') <span class="form-error">{{ $message }}</span> @enderror
+                                        </div>
+                                    @endif
+
+                                    {{-- ── Title ── --}}
                                     <div class="form-field form-grid-full">
                                         <label class="form-field-label">
-                                            @if($newExpType === 'award') Award Name
-                                            @elseif($newExpType === 'jury') Your Role / Title (e.g. "Jury Member")
+                                            @if($newExpType === 'awards_achievements') Award Name
+                                            @elseif($newExpType === 'workshop_training') Workshop / Course Name
+                                            @elseif($newExpType === 'competitions_pageants') Competition / Pageant Name
                                             @else Title / Name
                                             @endif
                                             <span class="required">*</span>
                                         </label>
                                         <input type="text" class="form-input" wire:model.defer="newExpTitle"
-                                            placeholder="{{ $newExpType === 'award' ? 'e.g. National Film Award' : ($newExpType === 'jury' ? 'e.g. Jury Member' : 'e.g. Rehana Maryam Noor') }}">
+                                            placeholder="@if($newExpType === 'awards_achievements') e.g. National Film Award
+                                                            @elseif($newExpType === 'workshop_training') e.g. Advanced Acting Masterclass
+                                                            @elseif($newExpType === 'competitions_pageants') e.g. Lux Channel i Superstar
+                                                            @elseif($newExpType === 'event_hosting') e.g. Dhaka Fashion Week 2024
+                                                            @else e.g. Rehana Maryam Noor
+                                                            @endif">
+                                        @error('newExpTitle') <span class="form-error">{{ $message }}</span> @enderror
                                     </div>
 
-                                    {{-- Film / TV fields --}}
-                                    @if(in_array($newExpType, ['film', 'tv_drama', 'commercial', 'theater', 'music_video', 'other', 'custom']))
+                                    {{-- ══════════════════════════════════════
+                                        ACTING & SCREEN
+                                        ══════════════════════════════════════ --}}
+                                    @if($newExpType === 'acting_screen')
                                         <div class="form-field">
                                             <label class="form-field-label">Role / Character</label>
                                             <input type="text" class="form-input" wire:model.defer="newExpRole"
-                                                placeholder="e.g. Rehana">
+                                                placeholder="e.g. Lead Actor, Rehana">
                                         </div>
                                         <div class="form-field">
                                             <label class="form-field-label">Director</label>
@@ -2131,39 +2297,211 @@
                                                 placeholder="e.g. Abdullah Mohammad Saad">
                                         </div>
                                         <div class="form-field">
-                                            <label class="form-field-label">Production / Channel</label>
+                                            <label class="form-field-label">Production House / Channel</label>
                                             <input type="text" class="form-input" wire:model.defer="newExpProduction"
-                                                placeholder="e.g. Fable Pictures">
+                                                placeholder="e.g. Fable Pictures, Chorki">
                                         </div>
                                         <div class="form-field">
-                                            <label class="form-field-label">Notes</label>
-                                            <input type="text" class="form-input" wire:model.defer="newExpNotes"
-                                                placeholder="e.g. Debut Film">
+                                            <label class="form-field-label">Platform / Medium</label>
+                                            <input type="text" class="form-input" wire:model.defer="newExpPlatform"
+                                                placeholder="e.g. Cinema, Netflix, BTV">
                                         </div>
                                         <div class="form-field">
                                             <label class="form-field-label">Language</label>
                                             <input type="text" class="form-input" wire:model.defer="newExpLanguage"
                                                 placeholder="e.g. Bangla, English">
                                         </div>
-
-                                        @if(in_array($newExpType, ['film', 'tv_drama', 'commercial', 'music_video']))
-                                            <div class="form-field">
-                                                <label class="form-field-label">Platform / Channel</label>
-                                                <input type="text" class="form-input" wire:model.defer="newExpPlatform"
-                                                    placeholder="e.g. Netflix, Chorki, Cinema Release">
-                                            </div>
-                                        @endif
+                                        <div class="form-field">
+                                            <label class="form-field-label">Notes</label>
+                                            <input type="text" class="form-input" wire:model.defer="newExpNotes"
+                                                placeholder="e.g. Debut Film, Main Lead">
+                                        </div>
                                     @endif
 
-                                    {{-- Award fields --}}
-                                    @if($newExpType === 'award')
+                                    {{-- ══════════════════════════════════════
+                                        MODELING & FASHION
+                                        ══════════════════════════════════════ --}}
+                                    @if($newExpType === 'modeling_fashion')
                                         <div class="form-field">
-                                            <label class="form-field-label">Category</label>
-                                            <input type="text" class="form-input" wire:model.defer="newExpAwardCategory"
-                                                placeholder="e.g. Best Actress">
+                                            <label class="form-field-label">Role / Position</label>
+                                            <input type="text" class="form-input" wire:model.defer="newExpRole"
+                                                placeholder="e.g. Showstopper, Runway Model">
                                         </div>
                                         <div class="form-field">
-                                            <label class="form-field-label">For the Work</label>
+                                            <label class="form-field-label">Brand / Agency / Designer</label>
+                                            <input type="text" class="form-input" wire:model.defer="newExpProduction"
+                                                placeholder="e.g. Aarong, Bibi Russell">
+                                        </div>
+                                        <div class="form-field">
+                                            <label class="form-field-label">Notes</label>
+                                            <input type="text" class="form-input" wire:model.defer="newExpNotes"
+                                                placeholder="e.g. Season Finale, Campaign Face">
+                                        </div>
+                                    @endif
+
+                                    {{-- ══════════════════════════════════════
+                                        PHOTOGRAPHY & MEDIA
+                                        ══════════════════════════════════════ --}}
+                                    @if($newExpType === 'photography_media')
+                                        <div class="form-field">
+                                            <label class="form-field-label">Role</label>
+                                            <input type="text" class="form-input" wire:model.defer="newExpRole"
+                                                placeholder="e.g. Cover Model, Editorial Subject">
+                                        </div>
+                                        <div class="form-field">
+                                            <label class="form-field-label">Photographer / Publication</label>
+                                            <input type="text" class="form-input" wire:model.defer="newExpDirector"
+                                                placeholder="e.g. Vogue India, Sagor Islam">
+                                        </div>
+                                        <div class="form-field">
+                                            <label class="form-field-label">Production / Agency</label>
+                                            <input type="text" class="form-input" wire:model.defer="newExpProduction"
+                                                placeholder="e.g. Xposure Media">
+                                        </div>
+                                        <div class="form-field">
+                                            <label class="form-field-label">Notes</label>
+                                            <input type="text" class="form-input" wire:model.defer="newExpNotes"
+                                                placeholder="e.g. Magazine Cover, Lookbook">
+                                        </div>
+                                    @endif
+
+                                    {{-- ══════════════════════════════════════
+                                        ADVERTISING & PROMOTION
+                                        ══════════════════════════════════════ --}}
+                                    @if($newExpType === 'advertising_promotion')
+                                        <div class="form-field">
+                                            <label class="form-field-label">Role</label>
+                                            <input type="text" class="form-input" wire:model.defer="newExpRole"
+                                                placeholder="e.g. Brand Ambassador, TVC Lead">
+                                        </div>
+                                        <div class="form-field">
+                                            <label class="form-field-label">Director / Agency</label>
+                                            <input type="text" class="form-input" wire:model.defer="newExpDirector"
+                                                placeholder="e.g. Grey Dhaka, Asiatic JWT">
+                                        </div>
+                                        <div class="form-field">
+                                            <label class="form-field-label">Brand / Client</label>
+                                            <input type="text" class="form-input" wire:model.defer="newExpProduction"
+                                                placeholder="e.g. Grameenphone, Pran">
+                                        </div>
+                                        <div class="form-field">
+                                            <label class="form-field-label">Platform / Medium</label>
+                                            <input type="text" class="form-input" wire:model.defer="newExpPlatform"
+                                                placeholder="e.g. TV, Digital, OOH">
+                                        </div>
+                                        <div class="form-field">
+                                            <label class="form-field-label">Notes</label>
+                                            <input type="text" class="form-input" wire:model.defer="newExpNotes"
+                                                placeholder="e.g. National Campaign, Eid TVC">
+                                        </div>
+                                    @endif
+
+                                    {{-- ══════════════════════════════════════
+                                        EVENT & HOSTING
+                                        ══════════════════════════════════════ --}}
+                                    @if($newExpType === 'event_hosting')
+                                        <div class="form-field">
+                                            <label class="form-field-label">Role / Position</label>
+                                            <input type="text" class="form-input" wire:model.defer="newExpRole"
+                                                placeholder="e.g. Host, Emcee, Anchor">
+                                        </div>
+                                        <div class="form-field">
+                                            <label class="form-field-label">Organizer / Brand</label>
+                                            <input type="text" class="form-input" wire:model.defer="newExpProduction"
+                                                placeholder="e.g. Channel i, RTV">
+                                        </div>
+                                        <div class="form-field">
+                                            <label class="form-field-label">Location</label>
+                                            <input type="text" class="form-input" wire:model.defer="newExpJuryLocation"
+                                                placeholder="e.g. Bashundhara Convention City, Dhaka">
+                                        </div>
+                                        <div class="form-field">
+                                            <label class="form-field-label">Notes</label>
+                                            <input type="text" class="form-input" wire:model.defer="newExpNotes"
+                                                placeholder="e.g. 5000+ audience, Live broadcast">
+                                        </div>
+                                    @endif
+
+                                    {{-- ══════════════════════════════════════
+                                        DIGITAL CONTENT CREATION
+                                        ══════════════════════════════════════ --}}
+                                    @if($newExpType === 'digital_content')
+                                        <div class="form-field">
+                                            <label class="form-field-label">Role</label>
+                                            <input type="text" class="form-input" wire:model.defer="newExpRole"
+                                                placeholder="e.g. Host, Creator, Presenter">
+                                        </div>
+                                        <div class="form-field">
+                                            <label class="form-field-label">Director / Collaborator</label>
+                                            <input type="text" class="form-input" wire:model.defer="newExpDirector"
+                                                placeholder="e.g. Banglalink Digital, Facto">
+                                        </div>
+                                        <div class="form-field">
+                                            <label class="form-field-label">Channel / Brand</label>
+                                            <input type="text" class="form-input" wire:model.defer="newExpProduction"
+                                                placeholder="e.g. YouTube Channel Name, TikTok Brand">
+                                        </div>
+                                        <div class="form-field">
+                                            <label class="form-field-label">Platform</label>
+                                            <input type="text" class="form-input" wire:model.defer="newExpPlatform"
+                                                placeholder="e.g. YouTube, TikTok, Facebook">
+                                        </div>
+                                        <div class="form-field">
+                                            <label class="form-field-label">Language</label>
+                                            <input type="text" class="form-input" wire:model.defer="newExpLanguage"
+                                                placeholder="e.g. Bangla, English">
+                                        </div>
+                                        <div class="form-field">
+                                            <label class="form-field-label">Notes</label>
+                                            <input type="text" class="form-input" wire:model.defer="newExpNotes"
+                                                placeholder="e.g. 1M views, Viral Series">
+                                        </div>
+                                    @endif
+
+                                    {{-- ══════════════════════════════════════
+                                        COMPETITIONS & PAGEANTS
+                                        ══════════════════════════════════════ --}}
+                                    @if($newExpType === 'competitions_pageants')
+                                        <div class="form-field">
+                                            <label class="form-field-label">Competition Category</label>
+                                            <input type="text" class="form-input" wire:model.defer="newExpAwardCategory"
+                                                placeholder="e.g. Top Model, Best Talent">
+                                        </div>
+                                        <div class="form-field">
+                                            <label class="form-field-label">Result / Placement</label>
+                                            <div class="form-select-wrap">
+                                                <select class="form-select" wire:model.defer="newExpAwardResult">
+                                                    <option value="">— Select —</option>
+                                                    <option value="Winner">Winner</option>
+                                                    <option value="Runner-up">Runner-up</option>
+                                                    <option value="Participant">Participant</option>
+                                                    <option value="Nominated">Nominated</option>
+                                                </select>
+                                            </div>
+                                        </div>
+                                        <div class="form-field">
+                                            <label class="form-field-label">Organizer / Institution</label>
+                                            <input type="text" class="form-input" wire:model.defer="newExpAwardOrganizer"
+                                                placeholder="e.g. Channel i, Star Jalsha">
+                                        </div>
+                                        <div class="form-field">
+                                            <label class="form-field-label">Location</label>
+                                            <input type="text" class="form-input" wire:model.defer="newExpJuryLocation"
+                                                placeholder="e.g. Dhaka, Bangladesh">
+                                        </div>
+                                    @endif
+
+                                    {{-- ══════════════════════════════════════
+                                        AWARDS & ACHIEVEMENTS
+                                        ══════════════════════════════════════ --}}
+                                    @if($newExpType === 'awards_achievements')
+                                        <div class="form-field">
+                                            <label class="form-field-label">Award Category</label>
+                                            <input type="text" class="form-input" wire:model.defer="newExpAwardCategory"
+                                                placeholder="e.g. Best Actress, Best New Face">
+                                        </div>
+                                        <div class="form-field">
+                                            <label class="form-field-label">For the Work / Project</label>
                                             <input type="text" class="form-input" wire:model.defer="newExpAwardWork"
                                                 placeholder="e.g. Rehana Maryam Noor">
                                         </div>
@@ -2171,8 +2509,11 @@
                                             <label class="form-field-label">Result</label>
                                             <div class="form-select-wrap">
                                                 <select class="form-select" wire:model.defer="newExpAwardResult">
+                                                    <option value="">— Select —</option>
                                                     <option value="Won">Won</option>
                                                     <option value="Nominated">Nominated</option>
+                                                    <option value="Winner">Winner</option>
+                                                    <option value="Runner-up">Runner-up</option>
                                                 </select>
                                             </div>
                                         </div>
@@ -2183,55 +2524,74 @@
                                         </div>
                                     @endif
 
-                                    {{-- Jury fields --}}
-                                    @if($newExpType === 'jury')
+                                    {{-- ══════════════════════════════════════
+                                        WORKSHOP & TRAINING
+                                        ══════════════════════════════════════ --}}
+                                    @if($newExpType === 'workshop_training')
                                         <div class="form-field">
-                                            <label class="form-field-label">Festival Name</label>
-                                            <input type="text" class="form-input" wire:model.defer="newExpJuryFestival"
-                                                placeholder="e.g. I Am Tomorrow Film Festival">
+                                            <label class="form-field-label">Organizer / Institution</label>
+                                            <input type="text" class="form-input" wire:model.defer="newExpAwardOrganizer"
+                                                placeholder="e.g. Method Acting School, Nuhash Pictures">
                                         </div>
                                         <div class="form-field">
                                             <label class="form-field-label">Location</label>
                                             <input type="text" class="form-input" wire:model.defer="newExpJuryLocation"
-                                                placeholder="e.g. Brussels">
-                                        </div>
-                                        <div class="form-field form-grid-full">
-                                            <label class="form-field-label">Jury Category / Competition</label>
-                                            <input type="text" class="form-input" wire:model.defer="newExpJuryCategory"
-                                                placeholder="e.g. Asian films Competition">
+                                                placeholder="e.g. Dhaka, Bangladesh">
                                         </div>
                                     @endif
 
-                                    {{-- Custom type label --}}
-                                    @if($newExpType === 'custom')
+                                    {{-- ══════════════════════════════════════
+                                        OTHER / CUSTOM
+                                        ══════════════════════════════════════ --}}
+                                    @if(in_array($newExpType, ['other', 'custom']))
                                         <div class="form-field">
-                                            <label class="form-field-label">
-                                                Experience Type Label <span class="required">*</span>
-                                            </label>
-                                            <input type="text" class="form-input" wire:model.defer="newExpCustomType"
-                                                placeholder="e.g. Podcast, Voice Over, Brand Ambassador">
+                                            <label class="form-field-label">Role / Position</label>
+                                            <input type="text" class="form-input" wire:model.defer="newExpRole"
+                                                placeholder="e.g. Host, Performer">
+                                        </div>
+                                        <div class="form-field">
+                                            <label class="form-field-label">Notes</label>
+                                            <input type="text" class="form-input" wire:model.defer="newExpNotes"
+                                                placeholder="Any relevant detail">
+                                        </div>
+                                        <div class="form-field">
+                                            <label class="form-field-label">Language</label>
+                                            <input type="text" class="form-input" wire:model.defer="newExpLanguage"
+                                                placeholder="e.g. Bangla, English">
                                         </div>
                                     @endif
+
+                                    {{-- ── Description (always shown) ── --}}
                                     <div class="form-field form-grid-full">
                                         <label class="form-field-label">Description</label>
                                         <textarea class="form-input" wire:model.defer="newExpDescription" rows="3"
-                                            placeholder="Any additional details about this entry..."
-                                            style="resize: vertical;"></textarea>
+                                                placeholder="Any additional details about this entry..."
+                                                style="resize: vertical;"></textarea>
+                                        @error('newExpDescription') <span class="form-error">{{ $message }}</span> @enderror
                                     </div>
-                                </div>
 
+                                </div>{{-- end form-grid-2 --}}
+
+                                {{-- ── Form Actions ── --}}
                                 <div style="display: flex; gap: 12px; justify-content: flex-end;">
                                     <button type="button" wire:click="resetExpForm"
-                                        style="padding: 10px 20px; border: 1px solid var(--border-strong); background: var(--bg-surface); color: var(--text-secondary); font-family: 'Jost', sans-serif; font-size: 0.8rem; cursor: pointer;">
+                                            style="padding: 10px 20px; border: 1px solid var(--border-strong);
+                                                background: var(--bg-surface); color: var(--text-secondary);
+                                                font-family: 'Jost', sans-serif; font-size: 0.8rem;
+                                                cursor: pointer; border-radius: 3px; transition: all 0.2s;"
+                                            onmouseover="this.style.background='var(--bg-primary)'"
+                                            onmouseout="this.style.background='var(--bg-surface)'">
                                         Cancel
                                     </button>
                                     <button type="button" wire:click="saveExperience" class="btn-fill"
-                                        style="font-size: 0.85rem; padding: 10px 24px;">
-                                        <span wire:loading.remove
-                                            wire:target="saveExperience">{{ $editingExpId ? 'Update Entry' : 'Save Entry' }}</span>
+                                            style="font-size: 0.85rem; padding: 10px 24px;">
+                                        <span wire:loading.remove wire:target="saveExperience">
+                                            {{ $editingExpId ? 'Update Entry' : 'Save Entry' }}
+                                        </span>
                                         <span wire:loading wire:target="saveExperience">Saving...</span>
                                     </button>
                                 </div>
+
                             </div>
                         @endif
 
