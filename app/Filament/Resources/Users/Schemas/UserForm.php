@@ -119,8 +119,8 @@ class UserForm
                                 Select::make('categories')
                                     ->label('Talent Categories & Skills')
                                     ->options(function (?\Illuminate\Database\Eloquent\Model $record) {
-                                        // 1. Fetch categories and format them as "CategoryName (GroupName)"
-                                        $options = \App\Models\Category::orderBy('group')
+                                        // 1. Fetch categories using a custom priority sort for the group, then alphabetically by name
+                                        $options = \App\Models\Category::orderByRaw("FIELD(`group`, 'Artist', 'Model', 'Brand Promoter', 'Content Creator', 'Director', 'Creative Crew')")
                                             ->orderBy('name')
                                             ->get()
                                             ->mapWithKeys(function ($category) {
