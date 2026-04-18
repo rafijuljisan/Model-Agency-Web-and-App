@@ -29,7 +29,7 @@ Route::get('/', function () {
         ])
         ->where('is_featured', true)
         ->where('verification_status', 'verified')
-        ->where('academic_verification_status', 'verified')
+        ->where('nid_back_verification_status', 'verified')
         ->get();
 
     $slotsRemaining = 8 - $manuallyFeatured->count();
@@ -51,7 +51,7 @@ Route::get('/', function () {
 
             // 1. MUST BE FULLY VERIFIED
             ->where('verification_status', 'verified')
-            ->where('academic_verification_status', 'verified')
+            ->where('nid_back_verification_status', 'verified')
             ->whereHas('profile')
 
             // 2. EXCLUDE MANUALLY FEATURED (already in Pool 1)
@@ -125,7 +125,7 @@ Route::middleware('auth')->group(function () {
 
         $path = match($type) {
             'nid'      => $user->nid_path,
-            'academic' => $user->academic_certificate_path,
+            'nid_back' => $user->nid_back_path,
             default    => null,
         };
 

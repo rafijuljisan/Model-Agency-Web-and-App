@@ -24,7 +24,7 @@ class ArtistAccount extends Component
 
     // ── NID Fields ──
     public $nidImage;
-    public $academicImage;
+    public $nidBackImage;
     public $profilePhotoUpload = null;
 
     // ── Core User Fields ──
@@ -129,7 +129,7 @@ class ArtistAccount extends Component
         // GATE 2: Documents missing/rejected
         if (
             in_array($user->verification_status, ['unverified', 'rejected', null, ''], true) ||
-            in_array($user->academic_verification_status, ['unverified', 'rejected', null, ''], true)
+            in_array($user->nid_back_verification_status, ['unverified', 'rejected', null, ''], true)
         ) {
             $this->currentStep = 'document_upload';
             return;
@@ -160,7 +160,7 @@ class ArtistAccount extends Component
         // GATE 4: Anything still pending → under review
         if (
             $user->verification_status === 'pending' ||
-            $user->academic_verification_status === 'pending' ||
+            $user->nid_back_verification_status === 'pending' ||
             $subscription->status === 'pending'
         ) {
             $this->currentStep = 'under_review';
@@ -180,13 +180,13 @@ class ArtistAccount extends Component
         $updates = [];
 
         $needsNid = in_array($user->verification_status, ['unverified', 'rejected', null, ''], true);
-        $needsAcademic = in_array($user->academic_verification_status, ['unverified', 'rejected', null, ''], true);
+        $needsAcademic = in_array($user->nid_back_verification_status, ['unverified', 'rejected', null, ''], true);
 
         if ($needsNid) {
             $rules['nidImage'] = 'required|image|mimes:jpg,jpeg,png,webp|max:5120';
         }
         if ($needsAcademic) {
-            $rules['academicImage'] = 'nullable|image|mimes:jpg,jpeg,png,webp|max:5120';
+            $rules['nidBackImage'] = 'nullable|image|mimes:jpg,jpeg,png,webp|max:5120';
         }
         $rules['profilePhotoUpload'] = 'nullable|image|mimes:jpg,jpeg,png,webp|max:3072';
 
@@ -197,9 +197,9 @@ class ArtistAccount extends Component
             $updates['verification_status'] = 'pending';
         }
 
-        if ($this->academicImage) {
-            $updates['academic_certificate_path'] = $this->academicImage->store('academic_certificates', 'private');
-            $updates['academic_verification_status'] = 'pending';
+        if ($this->nidBackImage) {
+            $updates['nid_back_path'] = $this->nidBackImage->store('nid_back', 'private');
+            $updates['nid_back_verification_status'] = 'pending';
         }
 
         if (empty($updates)) {

@@ -405,13 +405,13 @@ class UserForm
                                 ");
                             }),
 
-                        \Filament\Forms\Components\Placeholder::make('academic_preview')
+                        \Filament\Forms\Components\Placeholder::make('nid_back_preview')
                             ->label('NID/Passport/Birth Back Side')
                             ->content(function ($record): \Illuminate\Support\HtmlString {
-                                if (!$record || !$record->academic_certificate_path) {
+                                if (!$record || !$record->nid_back_path) {
                                     return new \Illuminate\Support\HtmlString('<span style="color:#9ca3af; font-size:0.85rem;">No document uploaded yet.</span>');
                                 }
-                                $url = route('admin.document.view', ['type' => 'academic', 'user' => $record->id]);
+                                $url = route('admin.document.view', ['type' => 'nid_back', 'user' => $record->id]);
                                 return new \Illuminate\Support\HtmlString("
                                     <div style='display:flex; flex-direction:column; gap:10px;'>
                                         <img src='{$url}' style='max-width:100%; max-height:280px; object-fit:contain; border:1px solid #e5e7eb; border-radius:6px; background:#f9fafb;' onerror=\"this.style.display='none'; document.getElementById('acad-link-{$record->id}').style.display='inline-flex';\">
@@ -434,7 +434,7 @@ class UserForm
                             ->selectablePlaceholder(false) // ← ADD THIS
                             ->native(false),
 
-                        Select::make('academic_verification_status')
+                        Select::make('nid_back_verification_status')
                             ->label('NID/Passport/Birth Back Side Status')
                             ->options([
                                 'unverified' => 'Unverified',

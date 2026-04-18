@@ -43,7 +43,7 @@ class UsersTable
                         default => 'gray',
                     }),
 
-                TextColumn::make('academic_verification_status')
+                TextColumn::make('nid_back_verification_status')
                     ->label('NID Back')
                     ->badge()
                     ->color(fn(string $state): string => match ($state) {
@@ -84,8 +84,8 @@ class UsersTable
                     ]),
 
                 // 3. Academic Status Filter
-                SelectFilter::make('academic_verification_status')
-                    ->label('Academic Verification')
+                SelectFilter::make('nid_back_verification_status')
+                    ->label('NID Back Verification')
                     ->options([
                         'unverified' => 'Unverified',
                         'pending' => 'Pending Review',
@@ -193,19 +193,19 @@ class UsersTable
                     ->color('success')
                     ->visible(
                         fn($record) =>
-                        $record->academic_verification_status === 'pending'
-                        && $record->academic_certificate_path
+                        $record->nid_back_verification_status === 'pending'
+                        && $record->nid_back_path
                     )
                     ->requiresConfirmation()
                     ->action(function ($record) {
                         $record->update([
-                            'academic_verification_status' => 'verified',
+                            'nid_back_verification_status' => 'verified',
                         ]);
 
                         // ── TRIGGER USER EMAIL (SUCCESS) ──
                         $record->notify(new \App\Notifications\UserStatusNotification(
-                            'Academic Certificate Approved!',
-                            'Great news! Your academic or training certificate has been successfully verified by our team.',
+                            'NID Back Approved!',
+                            'Great news! Your NID/Passport ot Birth certificate has been successfully verified by our team.',
                             true // Shows the green success button
                         ));
 
@@ -220,11 +220,11 @@ class UsersTable
                     ->color('danger')
                     ->visible(
                         fn($record) =>
-                        $record->academic_verification_status === 'pending' && $record->academic_certificate_path
+                        $record->nid_back_verification_status === 'pending' && $record->nid_back_path
                     )
                     ->requiresConfirmation()
                     ->action(function ($record) {
-                        $record->update(['academic_verification_status' => 'rejected']); // ← was 'unverified'
+                        $record->update(['nid_back_verification_status' => 'rejected']); // ← was 'unverified'
             
                         $record->notify(new \App\Notifications\UserStatusNotification(
                             'Academic Certificate Rejected',
@@ -244,7 +244,7 @@ class UsersTable
                     ->visible(
                         fn($record) =>
                         $record->verification_status === 'pending' ||
-                        $record->academic_verification_status === 'pending'
+                        $record->nid_back_verification_status === 'pending'
                     )
                     ->requiresConfirmation()
                     ->modalHeading('Approve Artist Account')
@@ -253,7 +253,7 @@ class UsersTable
                         // Approve both documents at once
                         $record->update([
                             'verification_status' => 'verified',
-                            'academic_verification_status' => 'verified',
+                            'nid_back_verification_status' => 'verified',
                         ]);
 
                         // Assign the Verified Artist role
@@ -277,7 +277,7 @@ class UsersTable
                     ->visible(
                         fn($record) =>
                         $record->verification_status === 'verified' ||
-                        $record->academic_verification_status === 'verified'
+                        $record->nid_back_verification_status === 'verified'
                     )
                     ->requiresConfirmation()
                     ->modalHeading('Revoke Verification')
@@ -287,7 +287,7 @@ class UsersTable
                         // 1. Reset the database columns to the 'unverified' string
                         $record->update([
                             'verification_status' => 'unverified',
-                            'academic_verification_status' => 'unverified',
+                            'nid_back_verification_status' => 'unverified',
                         ]);
 
                         // 2. Safely remove the Verified-Artist role

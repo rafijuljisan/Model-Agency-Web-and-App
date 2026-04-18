@@ -20,7 +20,7 @@ class SitemapController extends Controller
         // Artist profiles — verified + active subscription
         $artists = User::role('Verified-Artist')
             ->where('verification_status', 'verified')
-            ->where('academic_verification_status', 'verified')
+            ->where('nid_back_verification_status', 'verified')
             ->whereHas('subscriptions', fn($q) => $q->where('status', 'active'))
             ->select('id', 'updated_at')
             ->get();

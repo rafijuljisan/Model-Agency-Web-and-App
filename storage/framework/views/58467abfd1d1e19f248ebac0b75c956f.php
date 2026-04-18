@@ -389,6 +389,28 @@
 <?php $component = $__componentOriginaled4987d3f6007db3445a6067a328a16c; ?>
 <?php unset($__componentOriginaled4987d3f6007db3445a6067a328a16c); ?>
 <?php endif; ?>
+    <?php if (isset($component)) { $__componentOriginal5a0a0bb575ff44e4bf5d32e08d529658 = $component; } ?>
+<?php if (isset($attributes)) { $__attributesOriginal5a0a0bb575ff44e4bf5d32e08d529658 = $attributes; } ?>
+<?php $component = Illuminate\View\AnonymousComponent::resolve(['view' => 'components.warning-notice','data' => []] + (isset($attributes) && $attributes instanceof Illuminate\View\ComponentAttributeBag ? $attributes->all() : [])); ?>
+<?php $component->withName('warning-notice'); ?>
+<?php if ($component->shouldRender()): ?>
+<?php $__env->startComponent($component->resolveView(), $component->data()); ?>
+<?php if (isset($attributes) && $attributes instanceof Illuminate\View\ComponentAttributeBag): ?>
+<?php $attributes = $attributes->except(\Illuminate\View\AnonymousComponent::ignoredParameterNames()); ?>
+<?php endif; ?>
+<?php $component->withAttributes([]); ?>
+<?php \Livewire\Features\SupportCompiledWireKeys\SupportCompiledWireKeys::processComponentKey($component); ?>
+
+<?php echo $__env->renderComponent(); ?>
+<?php endif; ?>
+<?php if (isset($__attributesOriginal5a0a0bb575ff44e4bf5d32e08d529658)): ?>
+<?php $attributes = $__attributesOriginal5a0a0bb575ff44e4bf5d32e08d529658; ?>
+<?php unset($__attributesOriginal5a0a0bb575ff44e4bf5d32e08d529658); ?>
+<?php endif; ?>
+<?php if (isset($__componentOriginal5a0a0bb575ff44e4bf5d32e08d529658)): ?>
+<?php $component = $__componentOriginal5a0a0bb575ff44e4bf5d32e08d529658; ?>
+<?php unset($__componentOriginal5a0a0bb575ff44e4bf5d32e08d529658); ?>
+<?php endif; ?>
 
 </div>
 </div><?php /**PATH H:\agency-app\resources\views/livewire/casting-page.blade.php ENDPATH**/ ?>
