@@ -1,5 +1,15 @@
 <div>
     <style>
+        @font-face {
+            font-family: 'SolaimanLipi';
+            src: local('SolaimanLipi'),
+                url('/fonts/SolaimanLipi.woff2') format('woff2'),
+                url('/fonts/SolaimanLipi.ttf') format('truetype');
+            font-weight: normal;
+            font-style: normal;
+            font-display: swap;
+        }
+
         /* ═══════════════════════════════════════════
            FEATURED VIDEOS PAGE
         ═══════════════════════════════════════════ */
@@ -17,6 +27,7 @@
             margin-left: auto;
             margin-right: auto;
         }
+
         .video-eyebrow {
             font-size: 0.65rem;
             font-weight: 600;
@@ -29,13 +40,16 @@
             justify-content: center;
             gap: 12px;
         }
+
         .video-eyebrow::before,
         .video-eyebrow::after {
             content: '';
-            width: 30px; height: 1px;
+            width: 30px;
+            height: 1px;
             background: var(--gold);
             opacity: 0.6;
         }
+
         .video-title {
             font-family: 'SolaimanLipi', sans-serif;
             font-size: 3.5rem;
@@ -44,7 +58,13 @@
             line-height: 1.1;
             margin-bottom: 20px;
         }
-        .video-title strong { font-weight: 600; font-style: italic; color: var(--gold); }
+
+        .video-title strong {
+            font-weight: 600;
+            font-style: italic;
+            color: var(--gold);
+        }
+
         .video-sub {
             font-size: 1.05rem;
             color: var(--text-secondary);
@@ -68,6 +88,7 @@
             transition: border-color 0.4s, transform 0.4s, box-shadow 0.4s;
             box-shadow: var(--shadow-sm);
         }
+
         .video-card:hover {
             border-color: var(--gold);
             transform: translateY(-4px);
@@ -83,6 +104,7 @@
             overflow: hidden;
             border-bottom: 1px solid var(--border);
         }
+
         .video-thumbnail {
             position: absolute;
             inset: 0;
@@ -92,6 +114,7 @@
             opacity: 0.75;
             transition: opacity 0.4s, transform 0.6s;
         }
+
         .video-card:hover .video-thumbnail {
             opacity: 0.9;
             transform: scale(1.03);
@@ -107,6 +130,7 @@
             cursor: pointer;
             z-index: 10;
         }
+
         .play-btn {
             width: 64px;
             height: 64px;
@@ -115,26 +139,31 @@
             display: flex;
             align-items: center;
             justify-content: center;
-            box-shadow: 0 4px 20px rgba(0,0,0,0.15);
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
             transition: transform 0.3s, background 0.3s;
             color: var(--text-primary);
         }
+
         .video-card:hover .play-btn {
             transform: scale(1.1);
             color: var(--gold);
         }
+
         .play-btn svg {
             width: 20px;
             height: 20px;
             fill: currentColor;
-            margin-left: 4px; /* Optically centers the play triangle */
+            margin-left: 4px;
+            /* Optically centers the play triangle */
         }
 
         /* Iframe */
         .video-iframe {
             position: absolute;
-            top: 0; left: 0;
-            width: 100%; height: 100%;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
             border: 0;
             z-index: 20;
         }
@@ -146,6 +175,7 @@
             display: flex;
             flex-direction: column;
         }
+
         .video-card-title {
             font-family: 'SolaimanLipi', sans-serif;
             font-size: 1.6rem;
@@ -155,9 +185,11 @@
             margin-bottom: 12px;
             transition: color 0.3s;
         }
+
         .video-card:hover .video-card-title {
             color: var(--gold);
         }
+
         .video-desc {
             font-size: 0.9rem;
             color: var(--text-secondary);
@@ -176,18 +208,22 @@
             border: 1px dashed var(--border-strong);
             margin-top: 40px;
         }
+
         .video-empty svg {
-            width: 48px; height: 48px;
+            width: 48px;
+            height: 48px;
             color: var(--text-muted);
             margin: 0 auto 16px;
             opacity: 0.5;
         }
+
         .video-empty-title {
             font-family: 'SolaimanLipi', sans-serif;
             font-size: 2.2rem;
             color: var(--text-primary);
             margin-bottom: 8px;
         }
+
         .video-empty-sub {
             font-size: 0.9rem;
             color: var(--text-muted);
@@ -195,17 +231,30 @@
 
         /* ── Responsive ── */
         @media (max-width: 1024px) {
-            .video-grid { grid-template-columns: repeat(2, 1fr); gap: 30px; }
+            .video-grid {
+                grid-template-columns: repeat(2, 1fr);
+                gap: 30px;
+            }
         }
+
         @media (max-width: 768px) {
-            .video-page-container { padding: 60px 20px 80px; }
-            .video-title { font-size: 2.8rem; }
-            .video-grid { grid-template-columns: 1fr; gap: 24px; }
+            .video-page-container {
+                padding: 60px 20px 80px;
+            }
+
+            .video-title {
+                font-size: 2.8rem;
+            }
+
+            .video-grid {
+                grid-template-columns: 1fr;
+                gap: 24px;
+            }
         }
     </style>
 
     <div class="video-page-container anim-fade-up">
-        
+
         {{-- Header Section --}}
         <div class="video-header">
             <div class="video-eyebrow">Our Portfolio</div>
@@ -220,34 +269,36 @@
             @foreach($videos as $video)
                 @if($video->embed_url || $video->is_facebook)
                     <div class="video-card">
-                        
+
                         @if($video->is_facebook)
                             {{-- 🔴 FACEBOOK BEHAVIOR: Redirect to App/Website --}}
                             <a href="{{ $video->url }}" target="_blank" rel="noopener noreferrer" class="video-media-wrap">
                                 <img src="{{ $video->smart_thumbnail }}" class="video-thumbnail" alt="{{ $video->title }}">
                                 <div class="play-overlay">
                                     <div class="play-btn">
-                                        <svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>
+                                        <svg viewBox="0 0 24 24">
+                                            <path d="M8 5v14l11-7z" />
+                                        </svg>
                                     </div>
                                 </div>
                             </a>
                         @else
                             {{-- 🔴 YOUTUBE BEHAVIOR: Play in Page (Alpine.js Lazy Loader) --}}
-                            <div x-data="{ playing: false }" class="video-media-wrap"> 
+                            <div x-data="{ playing: false }" class="video-media-wrap">
                                 <template x-if="!playing">
                                     <div @click="playing = true" class="play-overlay">
                                         <img src="{{ $video->smart_thumbnail }}" class="video-thumbnail" alt="{{ $video->title }}">
                                         <div class="play-btn">
-                                            <svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>
+                                            <svg viewBox="0 0 24 24">
+                                                <path d="M8 5v14l11-7z" />
+                                            </svg>
                                         </div>
                                     </div>
                                 </template>
 
                                 <template x-if="playing">
-                                    <iframe 
-                                        src="{{ $video->embed_url }}" 
-                                        class="video-iframe"
-                                        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" 
+                                    <iframe src="{{ $video->embed_url }}" class="video-iframe"
+                                        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
                                         allowfullscreen>
                                     </iframe>
                                 </template>
@@ -265,7 +316,7 @@
                                 </p>
                             @endif
                         </div>
-                        
+
                     </div>
 
                     {{-- AD SLOT: In-Feed Video Ad (Shows every 6th video / 2 rows) --}}
@@ -289,7 +340,8 @@
         @if($videos->isEmpty())
             <div class="video-empty anim-fade-up anim-d2">
                 <svg fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M15 10l4.553-2.276A1 1 0 0121 8.618v6.764a1 1 0 01-1.447.894L15 14M5 18h8a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v8a2 2 0 002 2z" />
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5"
+                        d="M15 10l4.553-2.276A1 1 0 0121 8.618v6.764a1 1 0 01-1.447.894L15 14M5 18h8a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v8a2 2 0 002 2z" />
                 </svg>
                 <h3 class="video-empty-title">No videos published yet</h3>
                 <p class="video-empty-sub">Check back soon for new visual content and campaign reels!</p>

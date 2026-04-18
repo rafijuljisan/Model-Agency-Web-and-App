@@ -1,6 +1,15 @@
 <x-app-layout title="Help Center | {{ $settings->site_name ?? 'Dhaka Model Agency' }}">
 
     <style>
+        @font-face {
+        font-family: 'SolaimanLipi';
+        src: local('SolaimanLipi'),
+             url('/fonts/SolaimanLipi.woff2') format('woff2'),
+             url('/fonts/SolaimanLipi.ttf') format('truetype');
+        font-weight: normal;
+        font-style: normal;
+        font-display: swap;
+    }
         .help-shell { max-width: 900px; margin: 0 auto; padding: 100px 40px; }
         .help-header { text-align: center; margin-bottom: 60px; }
         .help-title { font-family: 'Jost', sans-serif; font-size: 3.5rem; font-weight: 300; color: var(--text-primary); margin-bottom: 16px; }

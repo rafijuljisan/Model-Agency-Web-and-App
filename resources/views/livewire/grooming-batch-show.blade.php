@@ -1,5 +1,15 @@
 <div>
     <style>
+        @font-face {
+            font-family: 'SolaimanLipi';
+            src: local('SolaimanLipi'),
+                url('/fonts/SolaimanLipi.woff2') format('woff2'),
+                url('/fonts/SolaimanLipi.ttf') format('truetype');
+            font-weight: normal;
+            font-style: normal;
+            font-display: swap;
+        }
+
         .course-hero {
             background: var(--bg-secondary);
             padding: 60px 40px;
@@ -148,10 +158,60 @@
         @media(max-width: 992px) {
             .course-layout {
                 grid-template-columns: 1fr;
+                padding: 32px 20px 60px;
+                gap: 32px;
             }
 
             .course-benefits-grid {
                 grid-template-columns: 1fr;
+            }
+
+            .course-sidebar {
+                position: static;
+                /* unstick on mobile — sticky is useless stacked */
+                top: auto;
+            }
+        }
+
+        @media(max-width: 768px) {
+            .course-hero {
+                padding: 32px 16px;
+            }
+
+            .course-title {
+                font-size: 1.8rem;
+            }
+
+            .course-layout {
+                padding: 24px 16px 60px;
+            }
+
+            .course-section-title {
+                font-size: 1.3rem;
+            }
+
+            .course-text {
+                font-size: 1rem;
+            }
+
+            .sidebar-price {
+                font-size: 1.8rem;
+            }
+
+            .course-sidebar {
+                padding: 20px 16px;
+            }
+
+            .c-benefit-card {
+                padding: 16px;
+            }
+
+            .c-benefit-title {
+                font-size: 1rem;
+            }
+
+            .course-module {
+                padding: 16px;
             }
         }
     </style>
@@ -163,7 +223,7 @@
                 &larr; Back to All Courses
             </a>
             <h1 class="course-title">{{ $batch->title }}</h1>
-            <div style="display: flex; gap: 16px; align-items: center;">
+            <div style="display: flex; gap: 12px; align-items: center; flex-wrap: wrap; margin-top: 8px;">
                 <span
                     style="padding: 4px 12px; background: var(--gold-bg); color: var(--gold); font-weight: 600; font-size: 0.85rem; text-transform: uppercase; letter-spacing: 0.1em;">
                     {{ $batch->status === 'open' ? 'Open for Admission' : ($batch->status === 'filling_fast' ? 'Filling Fast' : 'Admission Closed') }}
@@ -224,7 +284,7 @@
                     @endforeach
                 </div>
             @endif
-            
+
         </div>
 
         {{-- RIGHT: STICKY SIDEBAR --}}
@@ -255,7 +315,8 @@
                             <div class="s-meta-label">Class Schedule</div>
                             <div style="display: flex; flex-direction: column; gap: 6px; margin-top: 4px;">
                                 @foreach($batch->schedule_json as $s)
-                                    <div class="s-meta-value" style="display: flex; justify-content: space-between; gap: 16px;">
+                                    <div class="s-meta-value"
+                                        style="display: flex; justify-content: space-between; gap: 16px; flex-wrap: wrap;">
                                         <span>{{ $s['day'] ?? '' }}</span>
                                         <span style="color: var(--gold); font-weight: 600;">{{ $s['time'] ?? '' }}</span>
                                     </div>

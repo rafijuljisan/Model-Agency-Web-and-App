@@ -3,6 +3,15 @@
         /* ═══════════════════════════════════════════
            ABOUT US PAGE
         ═══════════════════════════════════════════ */
+        @font-face {
+        font-family: 'SolaimanLipi';
+        src: local('SolaimanLipi'),
+             url('/fonts/SolaimanLipi.woff2') format('woff2'),
+             url('/fonts/SolaimanLipi.ttf') format('truetype');
+        font-weight: normal;
+        font-style: normal;
+        font-display: swap;
+    }
         .about-hero {
             text-align: center;
             padding: 80px 20px 60px;
