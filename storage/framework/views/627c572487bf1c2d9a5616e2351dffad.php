@@ -17,6 +17,15 @@
            Inherits CSS tokens from app.blade.php
         ═══════════════════════════════════════════ */
 
+        @font-face {
+        font-family: 'SolaimanLipi';
+        src: local('SolaimanLipi'),
+             url('/fonts/SolaimanLipi.woff2') format('woff2'),
+             url('/fonts/SolaimanLipi.ttf') format('truetype');
+        font-weight: normal;
+        font-style: normal;
+        font-display: swap;
+    }
         /* ── Hero ── */
         .hero {
             position: relative;

@@ -24,11 +24,11 @@ class CastingCallForm
                             ->required()
                             ->placeholder('e.g. Nationwide TV Commercial')
                             ->columnSpanFull(),
-                        
+
                         TextInput::make('type')
                             ->label('Project Type')
                             ->placeholder('e.g. TVC & Print'),
-                            
+
                         Select::make('status')
                             ->options([
                                 'Open' => 'Open',
@@ -44,18 +44,16 @@ class CastingCallForm
                     ->schema([
                         TextInput::make('age_range')
                             ->placeholder('e.g. 18 - 25 Years'),
-                            
-                        Select::make('gender')
-                            ->options([
-                                'Male' => 'Male Only',
-                                'Female' => 'Female Only',
-                                'Male & Female' => 'Male & Female',
-                                'Any' => 'Any',
-                            ]),
-                            
+
+                        TextInput::make('gender')
+                            ->label('Gender')
+                            ->placeholder('Male/Female/Other')
+                            ->required(),
+
+
                         TextInput::make('experience')
                             ->placeholder('e.g. Fresh faces welcome'),
-                            
+
                         TextInput::make('deadline')
                             ->placeholder('e.g. Next Friday (Limited Slots)'),
                     ]),
@@ -66,7 +64,7 @@ class CastingCallForm
                             ->required()
                             ->rows(5)
                             ->placeholder('Describe the project and what kind of talent you are looking for...'),
-                            
+
                         Toggle::make('is_active')
                             ->label('Publish to Public Board')
                             ->default(true),

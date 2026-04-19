@@ -288,7 +288,7 @@
                         <h2 class="casting-title">{{ $casting->title }}</h2>
                     </div>
                     @if($casting->status === 'Urgent' || $casting->status === 'জরুরী')
-                        <div class="badge-urgent">জরুরী প্রয়োজন</div>
+                        <div class="badge-urgent">জরুরী প্রয়োজন/Urgent Call</div>
                     @endif
                 </div>
 
@@ -299,7 +299,7 @@
                         <div class="detail-block">
                             <svg class="detail-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"/></svg>
                             <div>
-                                <div class="detail-label">বয়সের প্রয়োজনীয়তা</div>
+                                <div class="detail-label">বয়স/Age</div>
                                 <div class="detail-value">{{ $casting->age_range }}</div>
                             </div>
                         </div>
@@ -307,7 +307,7 @@
                         <div class="detail-block">
                             <svg class="detail-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z"/></svg>
                             <div>
-                                <div class="detail-label">লিঙ্গ</div>
+                                <div class="detail-label">লিঙ্গ/Gender</div>
                                 <div class="detail-value">{{ $casting->gender }}</div>
                             </div>
                         </div>
@@ -315,7 +315,7 @@
                         <div class="detail-block">
                             <svg class="detail-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M9 12l2 2 4-4M7.835 4.697a3.42 3.42 0 001.946-.806 3.42 3.42 0 014.438 0 3.42 3.42 0 001.946.806 3.42 3.42 0 013.138 3.138 3.42 3.42 0 00.806 1.946 3.42 3.42 0 010 4.438 3.42 3.42 0 00-.806 1.946 3.42 3.42 0 01-3.138 3.138 3.42 3.42 0 00-1.946.806 3.42 3.42 0 01-4.438 0 3.42 3.42 0 00-1.946-.806 3.42 3.42 0 01-3.138-3.138 3.42 3.42 0 00-.806-1.946 3.42 3.42 0 010-4.438 3.42 3.42 0 00.806-1.946 3.42 3.42 0 013.138-3.138z"/></svg>
                             <div>
-                                <div class="detail-label">অভিজ্ঞতা</div>
+                                <div class="detail-label">অভিজ্ঞতা/Experience</div>
                                 <div class="detail-value">{{ $casting->experience }}</div>
                             </div>
                         </div>
@@ -323,7 +323,7 @@
                         <div class="detail-block">
                             <svg class="detail-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
                             <div>
-                                <div class="detail-label">শেষ সময়</div>
+                                <div class="detail-label">শেষ সময়/Deadline</div>
                                 <div class="detail-value text-red-600 font-bold">{{ $casting->deadline }}</div>
                             </div>
                         </div>

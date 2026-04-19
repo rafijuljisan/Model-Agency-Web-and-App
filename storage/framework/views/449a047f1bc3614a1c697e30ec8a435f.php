@@ -15,7 +15,15 @@
 /* ═══════════════════════════════════════════
    PRICING / PAYMENT PAGE
 ═══════════════════════════════════════════ */
-
+@font-face {
+        font-family: 'SolaimanLipi';
+        src: local('SolaimanLipi'),
+             url('/fonts/SolaimanLipi.woff2') format('woff2'),
+             url('/fonts/SolaimanLipi.ttf') format('truetype');
+        font-weight: normal;
+        font-style: normal;
+        font-display: swap;
+    }
 /* Page hero */
 .pricing-hero {
     background: var(--bg-secondary);
@@ -84,10 +92,10 @@
 .packages-grid {
     display: grid;
     grid-template-columns: repeat(2, 1fr);
-    gap: 3px;
+    gap: 12px;          /* was 3px — adds breathing room */
     margin-bottom: 40px;
-    background: var(--border);
-    border: 1px solid var(--border);
+    background: transparent;  /* remove gray gap lines */
+    border: none;
 }
 
 .package-label {
@@ -103,19 +111,25 @@
 
 .package-card {
     background: var(--bg-surface);
-    padding: 36px 32px;
+    border: 1.5px solid var(--border);
+    border-radius: 12px;   /* softer corners */
+    padding: 28px 24px;
     position: relative;
-    transition: background 0.25s;
-    border: 2px solid transparent;
-    margin: -1px;
+    transition: background 0.25s, border-color 0.25s, transform 0.15s;
+    cursor: pointer;
+    margin: 0;
 }
-.package-card:hover { background: var(--gold-bg); }
+.package-card:hover {
+    background: var(--gold-bg);
+    border-color: var(--border-strong);
+    transform: translateY(-2px);
+}
 
 /* Selected state */
 .package-label input:checked ~ .package-card {
     background: var(--gold-bg);
     border-color: var(--gold);
-    z-index: 1;
+    box-shadow: 0 0 0 3px color-mix(in srgb, var(--gold) 15%, transparent);
 }
 .package-label input:checked ~ .package-card .package-select-ring {
     background: var(--gold);
@@ -433,18 +447,207 @@
     font-size: 0.95rem;
     color: var(--text-muted);
 }
-
-/* Responsive */
-@media (max-width: 640px) {
-    .pricing-page { padding: 32px 20px 60px; }
-    .pricing-hero { padding: 48px 20px 40px; }
-    .packages-grid { grid-template-columns: 1fr; }
-    .payment-section-body { padding: 20px; }
-    .payment-section-header { padding: 16px 20px; }
-    .package-card { padding: 24px 20px; }
-    .payment-methods { grid-template-columns: 1fr; }
-    .order-summary { flex-direction: column; text-align: center; gap: 16px; }
+/* ── Brand Icon Payment Tabs ── */
+.payment-method-tab {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    padding: 16px 10px;
+    border: 1.5px solid var(--border-strong);
+    background: var(--bg-primary);
+    border-radius: 10px;
+    transition: all 0.22s ease;
+    user-select: none;
+    min-height: 90px;
 }
+.pm-brand-img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+    border-radius: 12px;        /* belt-and-suspenders rounding */
+}
+
+.pm-icon-wrap {
+    width: 48px;
+    height: 48px;
+    border-radius: 12px;
+    overflow: hidden;           /* clips the image to rounded corners */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: transform 0.2s;
+    flex-shrink: 0;
+}
+.pm-label {
+    font-family: 'SolaimanLipi', sans-serif;
+    font-size: 1.1rem;
+    font-weight: 600;
+    color: var(--text-secondary);
+    transition: color 0.2s;
+}
+
+/* Hover */
+.payment-method-label:hover .payment-method-tab { border-color: var(--border-strong); }
+.payment-method-label:hover .pm-icon-wrap { transform: scale(1.07); }
+
+/* Selected states per brand */
+.payment-method-label input:checked ~ .pm-bkash { border-color:#E2136E; background:#FFF0F6; }
+.payment-method-label input:checked ~ .pm-bkash .pm-label { color:#E2136E; }
+
+.payment-method-label input:checked ~ .pm-nagad  { border-color:#F15822; background:#FFF4EF; }
+.payment-method-label input:checked ~ .pm-nagad  .pm-label { color:#F15822; }
+
+.payment-method-label input:checked ~ .pm-rocket { border-color:#8C3494; background:#F8F0FF; }
+.payment-method-label input:checked ~ .pm-rocket .pm-label { color:#8C3494; }
+
+/* Mobile: keep 3-col for payment (icons are compact enough) */
+@media (max-width: 640px) {
+    .payment-method-tab { padding: 14px 8px; min-height: 82px; gap: 8px; }
+    .pm-icon-wrap { width: 42px; height: 42px; border-radius: 10px; }
+    .pm-label { font-size: 1rem; }
+    .pm-brand-img {
+        border-radius: 10px;
+    }
+    .packages-grid {
+        gap: 16px;
+    }
+}
+/* Responsive */
+/* ══════════════════════════════════════
+   MOBILE RESPONSIVE (max-width: 640px)
+══════════════════════════════════════ */
+@media (max-width: 640px) {
+    .pricing-hero {
+        padding: 40px 20px 36px;
+    }
+    .pricing-hero-title {
+        font-size: 2rem;
+    }
+    .pricing-hero-sub {
+        font-size: 1.2rem;
+    }
+
+    .pricing-page {
+        padding: 24px 16px 60px;
+    }
+
+    /* Stack package cards vertically on mobile */
+    .packages-grid {
+        grid-template-columns: 1fr;
+        gap: 16px;
+        background: transparent;   /* removes the border-color fill */
+        border: none;              /* removes outer border */
+    }
+    .package-card {
+        padding: 24px 18px;
+        margin: 0;
+    }
+    .package-name {
+        font-size: 1.25rem;
+    }
+    .package-price {
+        font-size: 2.8rem;
+    }
+    .package-price-sub {
+        font-size: 1.1rem;
+    }
+    .package-feature {
+        font-size: 1.2rem;
+        gap: 10px;
+    }
+
+    /* Payment section */
+    .payment-section {
+        border-radius: 6px;
+    }
+    .payment-section-header {
+        padding: 16px 18px;
+    }
+    .payment-section-title {
+        font-size: 1.2rem;
+    }
+    .payment-section-body {
+        padding: 18px 16px;
+    }
+
+    /* Instruction banners */
+    .payment-instruction {
+        padding: 14px;
+        gap: 12px;
+    }
+    .payment-instruction-text {
+        font-size: 1.2rem;
+        line-height: 1.55;
+    }
+    .payment-instruction-number {
+        font-size: 1.5rem;
+    }
+
+    /* Payment method tabs — ICON STYLE (3-col grid) */
+    .payment-methods {
+        grid-template-columns: repeat(3, 1fr);
+        gap: 10px;
+        margin-bottom: 20px;
+    }
+    .payment-method-tab {
+        flex-direction: column;
+        gap: 8px;
+        padding: 14px 8px;
+        font-size: 1rem;
+        border-radius: 10px;
+    }
+
+    /* Form fields */
+    .pay-field {
+        margin-bottom: 20px;
+    }
+    .pay-label {
+        font-size: 1rem;
+        margin-bottom: 7px;
+    }
+    .pay-input {
+        padding: 13px 14px;
+        font-size: 1rem;
+        border-radius: 6px;
+    }
+    .pay-hint {
+        font-size: 1.1rem;
+        margin-top: 7px;
+    }
+
+    /* Order summary */
+    .order-summary {
+        flex-direction: column;
+        text-align: center;
+        gap: 14px;
+        padding: 18px;
+        margin-bottom: 24px;
+    }
+    .order-summary-label {
+        font-size: 1rem;
+    }
+    .order-summary-note {
+        font-size: 0.9rem;
+    }
+    .order-summary-amount {
+        font-size: 1.75rem;
+    }
+
+    /* Submit button */
+    .pay-submit {
+        font-size: 1.15rem;
+        padding: 16px 24px;
+        gap: 10px;
+    }
+    .secure-note {
+        font-size: 0.9rem;
+        margin-top: 16px;
+    }
+}
+
 </style>
 
 
@@ -531,26 +734,55 @@
 
                 
                 <div class="payment-methods">
+
                     <?php if(\Livewire\Mechanisms\ExtendBlade\ExtendBlade::isRenderingLivewireComponent()): ?><!--[if BLOCK]><![endif]--><?php endif; ?><?php if($settings?->bkash_number): ?>
-                        <label class="payment-method-label">
-                            <input type="radio" name="payment_method" value="bKash" required>
-                            <div class="payment-method-tab">বিকাশ</div>
-                        </label>
+                    <label class="payment-method-label">
+                        <input type="radio" name="payment_method" value="bKash" required>
+                        <div class="payment-method-tab pm-bkash">
+                            <div class="pm-icon-wrap">
+                                <img
+                                    src="https://play-lh.googleusercontent.com/1CRcUfmtwvWxT2g-xJF8s9_btha42TLi6Lo-qVkVomXBb_citzakZX9BbeY51iholWs"
+                                    alt="bKash"
+                                    class="pm-brand-img"
+                                >
+                            </div>
+                            <span class="pm-label">বিকাশ</span>
+                        </div>
+                    </label>
                     <?php endif; ?><?php if(\Livewire\Mechanisms\ExtendBlade\ExtendBlade::isRenderingLivewireComponent()): ?><!--[if ENDBLOCK]><![endif]--><?php endif; ?>
 
                     <?php if(\Livewire\Mechanisms\ExtendBlade\ExtendBlade::isRenderingLivewireComponent()): ?><!--[if BLOCK]><![endif]--><?php endif; ?><?php if($settings?->nagad_number): ?>
-                        <label class="payment-method-label">
-                            <input type="radio" name="payment_method" value="Nagad" required>
-                            <div class="payment-method-tab">নগদ</div>
-                        </label>
+                    <label class="payment-method-label">
+                        <input type="radio" name="payment_method" value="Nagad" required>
+                        <div class="payment-method-tab pm-nagad">
+                            <div class="pm-icon-wrap">
+                                <img
+                                    src="https://play-lh.googleusercontent.com/9ps_d6nGKQzfbsJfMaFR0RkdwzEdbZV53ReYCS09Eo5MV-GtVylFD-7IHcVktlnz9Mo"
+                                    alt="Nagad"
+                                    class="pm-brand-img"
+                                >
+                            </div>
+                            <span class="pm-label">নগদ</span>
+                        </div>
+                    </label>
                     <?php endif; ?><?php if(\Livewire\Mechanisms\ExtendBlade\ExtendBlade::isRenderingLivewireComponent()): ?><!--[if ENDBLOCK]><![endif]--><?php endif; ?>
 
                     <?php if(\Livewire\Mechanisms\ExtendBlade\ExtendBlade::isRenderingLivewireComponent()): ?><!--[if BLOCK]><![endif]--><?php endif; ?><?php if($settings?->rocket_number): ?>
-                        <label class="payment-method-label">
-                            <input type="radio" name="payment_method" value="Rocket" required>
-                            <div class="payment-method-tab">রকেট</div>
-                        </label>
+                    <label class="payment-method-label">
+                        <input type="radio" name="payment_method" value="Rocket" required>
+                        <div class="payment-method-tab pm-rocket">
+                            <div class="pm-icon-wrap">
+                                <img
+                                    src="https://play-lh.googleusercontent.com/sDY6YSDobbm_rX-aozinIX5tVYBSea1nAyXYI4TJlije2_AF5_5aG3iAS7nlrgo0lk8"
+                                    alt="Rocket"
+                                    class="pm-brand-img"
+                                >
+                            </div>
+                            <span class="pm-label">রকেট</span>
+                        </div>
+                    </label>
                     <?php endif; ?><?php if(\Livewire\Mechanisms\ExtendBlade\ExtendBlade::isRenderingLivewireComponent()): ?><!--[if ENDBLOCK]><![endif]--><?php endif; ?>
+
                 </div>
 
                 
@@ -616,7 +848,7 @@
                     <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
                         <path d="M12 2L3 7v5c0 5.55 3.84 10.74 9 12 5.16-1.26 9-6.45 9-12V7L12 2zm-2 15l-4-4 1.41-1.41L10 14.17l6.59-6.59L18 9l-8 8z"/>
                     </svg>
-                    ভেরিফিকেশনের জন্য পেমেন্ট সাবমিট করুন
+                    Submit For Verification
                 </button>
 
                 <div class="secure-note">
