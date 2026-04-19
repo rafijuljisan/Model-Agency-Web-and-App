@@ -22,17 +22,25 @@
         ============================================= */
         :root {
             --font-bangla: 'SolaimanLipi', 'Jost', sans-serif;
-            --font-latin:  'Jost', 'SolaimanLipi', sans-serif;
+            --font-latin: 'Jost', 'SolaimanLipi', sans-serif;
 
             /* Fluid type scale — slightly increased across all levels */
-            --text-xs:   clamp(0.85rem,  1.8vw, 0.95rem);   /* labels, captions */
-            --text-sm:   clamp(0.95rem,  2.2vw, 1.1rem);    /* meta, tags */
-            --text-base: clamp(1.1rem,   2.4vw, 1.25rem);   /* body text */
-            --text-md:   clamp(1.15rem,  2.6vw, 1.35rem);   /* module topics, benefit desc */
-            --text-lg:   clamp(1.25rem,  2.8vw, 1.5rem);    /* benefit titles, section labels */
-            --text-xl:   clamp(1.4rem,   3.2vw, 2rem);      /* section headings */
-            --text-2xl:  clamp(1.7rem,   4.2vw, 2.6rem);    /* sidebar price */
-            --text-3xl:  clamp(1.85rem,  5.2vw, 3rem);      /* hero title */
+            --text-xs: clamp(0.85rem, 1.8vw, 0.95rem);
+            /* labels, captions */
+            --text-sm: clamp(0.95rem, 2.2vw, 1.1rem);
+            /* meta, tags */
+            --text-base: clamp(1.1rem, 2.4vw, 1.25rem);
+            /* body text */
+            --text-md: clamp(1.15rem, 2.6vw, 1.35rem);
+            /* module topics, benefit desc */
+            --text-lg: clamp(1.25rem, 2.8vw, 1.5rem);
+            /* benefit titles, section labels */
+            --text-xl: clamp(1.4rem, 3.2vw, 2rem);
+            /* section headings */
+            --text-2xl: clamp(1.7rem, 4.2vw, 2.6rem);
+            /* sidebar price */
+            --text-3xl: clamp(1.85rem, 5.2vw, 3rem);
+            /* hero title */
         }
 
         /* =============================================
@@ -97,8 +105,13 @@
             align-items: start;
         }
 
-        .course-main    { grid-area: main; }
-        .course-sidebar { grid-area: sidebar; }
+        .course-main {
+            grid-area: main;
+        }
+
+        .course-sidebar {
+            grid-area: sidebar;
+        }
 
         /* =============================================
            SECTION HEADINGS
@@ -334,7 +347,7 @@
             align-items: center;
             justify-content: space-between;
             gap: 12px;
-            box-shadow: 0 -4px 20px rgba(0,0,0,0.08);
+            box-shadow: 0 -4px 20px rgba(0, 0, 0, 0.08);
         }
 
         .mobile-cta-price {
@@ -353,6 +366,88 @@
             font-size: var(--text-base);
             font-weight: 600;
             text-decoration: none;
+        }
+
+        /* =============================================
+   SOCIAL SHARE BUTTONS
+============================================= */
+        .share-bar {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            flex-wrap: wrap;
+            margin-top: 16px;
+        }
+
+        .share-label {
+            font-size: var(--text-xs);
+            font-family: var(--font-bangla);
+            color: var(--text-muted);
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            font-weight: 600;
+            margin-right: 4px;
+        }
+
+        .share-btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 7px;
+            padding: 8px 14px;
+            border-radius: 5px;
+            font-size: var(--text-sm);
+            font-family: var(--font-bangla);
+            font-weight: 600;
+            text-decoration: none;
+            border: 1.5px solid transparent;
+            cursor: pointer;
+            background: none;
+            transition: opacity 0.15s ease, transform 0.15s ease;
+            white-space: nowrap;
+        }
+
+        .share-btn:hover {
+            opacity: 0.82;
+            transform: translateY(-1px);
+        }
+
+        .share-btn:active {
+            transform: translateY(0);
+        }
+
+        .share-btn--facebook {
+            background: #1877F2;
+            color: #fff;
+            border-color: #1877F2;
+        }
+
+        .share-btn--instagram {
+            background: linear-gradient(135deg, #f09433, #e6683c, #dc2743, #cc2366, #bc1888);
+            color: #fff;
+            border-color: transparent;
+        }
+
+        .share-btn--copy {
+            background: var(--bg-surface);
+            color: var(--text-primary);
+            border-color: var(--border-strong);
+        }
+
+        /* Copied state feedback */
+        .share-btn--copy.copied {
+            color: #16a34a;
+            border-color: #16a34a;
+        }
+
+        @media (max-width: 480px) {
+            .share-btn span {
+                display: none;
+                /* icon only on very small screens */
+            }
+
+            .share-btn {
+                padding: 8px 10px;
+            }
         }
 
         /* =============================================
@@ -425,6 +520,38 @@
                 &larr; Back to All Courses
             </a>
             <h1 class="course-title">{{ $batch->title }}</h1>
+            <div class="share-bar">
+                <span class="share-label">Share:</span>
+
+                {{-- Facebook --}}
+                <a class="share-btn share-btn--facebook"
+                    href="https://www.facebook.com/sharer/sharer.php?u={{ urlencode(request()->fullUrl()) }}"
+                    target="_blank" rel="noopener noreferrer">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
+                        <path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z" />
+                    </svg>
+                    <span>Facebook</span>
+                </a>
+
+                {{-- Instagram (copy link + open app) --}}
+                <button class="share-btn share-btn--instagram" onclick="shareInstagram()">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <rect x="2" y="2" width="20" height="20" rx="5" ry="5" />
+                        <circle cx="12" cy="12" r="4" />
+                        <circle cx="17.5" cy="6.5" r="1" fill="currentColor" stroke="none" />
+                    </svg>
+                    <span>Instagram</span>
+                </button>
+
+                {{-- Copy Link --}}
+                <button class="share-btn share-btn--copy" id="copyLinkBtn" onclick="copyPageLink()">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71" />
+                        <path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71" />
+                    </svg>
+                    <span id="copyLinkText">Copy Link</span>
+                </button>
+            </div>
             <div style="display: flex; gap: 12px; align-items: center; flex-wrap: wrap; margin-top: 8px;">
                 <span class="course-status-badge">
                     {{ $batch->status === 'open' ? 'Open for Admission' : ($batch->status === 'filling_fast' ? 'Filling Fast' : 'Admission Closed') }}
@@ -455,10 +582,10 @@
                     @foreach($batch->benefits as $benefit)
                         <div class="c-benefit-card">
                             <div class="c-benefit-title">
-                                <svg width="18" height="18" viewBox="0 0 24 24" fill="none"
-                                     stroke="currentColor" stroke-width="2">
-                                    <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/>
-                                    <polyline points="22 4 12 14.01 9 11.01"/>
+                                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                    stroke-width="2">
+                                    <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14" />
+                                    <polyline points="22 4 12 14.01 9 11.01" />
                                 </svg>
                                 {{ $benefit['title'] }}
                             </div>
@@ -494,12 +621,11 @@
             <div class="sidebar-meta">
                 {{-- Start Date --}}
                 <div class="sidebar-meta-item">
-                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none"
-                         stroke="currentColor" stroke-width="2">
-                        <rect x="3" y="4" width="18" height="18" rx="2" ry="2"/>
-                        <line x1="16" y1="2" x2="16" y2="6"/>
-                        <line x1="8" y1="2" x2="8" y2="6"/>
-                        <line x1="3" y1="10" x2="21" y2="10"/>
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <rect x="3" y="4" width="18" height="18" rx="2" ry="2" />
+                        <line x1="16" y1="2" x2="16" y2="6" />
+                        <line x1="8" y1="2" x2="8" y2="6" />
+                        <line x1="3" y1="10" x2="21" y2="10" />
                     </svg>
                     <div>
                         <div class="s-meta-label">Start Date</div>
@@ -510,10 +636,9 @@
                 {{-- Schedule --}}
                 @if(!empty($batch->schedule_json))
                     <div class="sidebar-meta-item">
-                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none"
-                             stroke="currentColor" stroke-width="2">
-                            <circle cx="12" cy="12" r="10"/>
-                            <path d="M12 6v6l4 2"/>
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <circle cx="12" cy="12" r="10" />
+                            <path d="M12 6v6l4 2" />
                         </svg>
                         <div style="width: 100%;">
                             <div class="s-meta-label">Class Schedule</div>
@@ -532,10 +657,9 @@
                 {{-- Trainer --}}
                 @if($batch->trainer)
                     <div class="sidebar-meta-item">
-                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none"
-                             stroke="currentColor" stroke-width="2">
-                            <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/>
-                            <circle cx="12" cy="7" r="4"/>
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2" />
+                            <circle cx="12" cy="7" r="4" />
                         </svg>
                         <div>
                             <div class="s-meta-label">Lead Trainer</div>
@@ -546,12 +670,11 @@
 
                 {{-- Seats --}}
                 <div class="sidebar-meta-item">
-                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none"
-                         stroke="currentColor" stroke-width="2">
-                        <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/>
-                        <circle cx="9" cy="7" r="4"/>
-                        <path d="M23 21v-2a4 4 0 0 0-3-3.87"/>
-                        <path d="M16 3.13a4 4 0 0 1 0 7.75"/>
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2" />
+                        <circle cx="9" cy="7" r="4" />
+                        <path d="M23 21v-2a4 4 0 0 0-3-3.87" />
+                        <path d="M16 3.13a4 4 0 0 1 0 7.75" />
                     </svg>
                     <div style="width: 100%;">
                         <div class="s-meta-label">
@@ -560,7 +683,7 @@
                         </div>
                         <div class="seat-bar-track">
                             <div class="seat-bar-fill"
-                                 style="width: {{ $batch->fill_percentage ?? ($batch->filled_seats / $batch->seat_limit * 100) }}%;">
+                                style="width: {{ $batch->fill_percentage ?? ($batch->filled_seats / $batch->seat_limit * 100) }}%;">
                             </div>
                         </div>
                     </div>
@@ -570,6 +693,33 @@
             {{-- CTA — hidden on mobile, mobile-cta-bar handles it --}}
             <a href="/grooming-lab" class="btn-fill btn-apply">Apply Now</a>
 
+            {{-- Social Share --}}
+            <div class="share-bar" style="margin-top: 20px; padding-top: 20px; border-top: 1px solid var(--border);">
+                <span class="share-label">Share:</span>
+                <a class="share-btn share-btn--facebook"
+                    href="https://www.facebook.com/sharer/sharer.php?u={{ urlencode(request()->fullUrl()) }}"
+                    target="_blank" rel="noopener noreferrer">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
+                        <path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z" />
+                    </svg>
+                </a>
+                <button class="share-btn share-btn--instagram" onclick="shareInstagram()">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <rect x="2" y="2" width="20" height="20" rx="5" ry="5" />
+                        <circle cx="12" cy="12" r="4" />
+                        <circle cx="17.5" cy="6.5" r="1" fill="currentColor" stroke="none" />
+                    </svg>
+                </button>
+                <button class="share-btn share-btn--copy" id="copyLinkBtn2"
+                    onclick="copyPageLink('copyLinkBtn2', 'copyLinkText2')">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71" />
+                        <path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71" />
+                    </svg>
+                </button>
+            </div>
+
+            {{-- AD SLOT --}}
             <div style="margin-top: 24px;">
                 <x-ad-banner position="batch_show_sidebar" />
             </div>
@@ -581,4 +731,36 @@
         <span class="mobile-cta-price">৳{{ number_format($batch->fee) }}</span>
         <a href="/grooming-lab" class="btn-fill mobile-cta-btn">Apply Now</a>
     </div>
+    <script>
+        function copyPageLink(btnId = 'copyLinkBtn', textId = 'copyLinkText') {
+            const url = window.location.href;
+            navigator.clipboard.writeText(url).then(() => {
+                const btn = document.getElementById(btnId);
+                const text = document.getElementById(textId);
+                if (btn) btn.classList.add('copied');
+                if (text) text.textContent = 'Copied!';
+                setTimeout(() => {
+                    if (btn) btn.classList.remove('copied');
+                    if (text) text.textContent = 'Copy Link';
+                }, 2000);
+            }).catch(() => {
+                // Fallback for older browsers
+                const el = document.createElement('textarea');
+                el.value = window.location.href;
+                document.body.appendChild(el);
+                el.select();
+                document.execCommand('copy');
+                document.body.removeChild(el);
+            });
+        }
+
+        function shareInstagram() {
+            // Instagram has no web share API.
+            // Copy the link first, then open Instagram so user can paste in Story/DM.
+            copyPageLink();
+            setTimeout(() => {
+                window.open('https://www.instagram.com/', '_blank');
+            }, 600);
+        }
+    </script>
 </div>
