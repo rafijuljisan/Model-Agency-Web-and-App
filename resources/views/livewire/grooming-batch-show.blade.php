@@ -86,7 +86,6 @@
             font-weight: 600;
             font-size: var(--text-xs);
             text-transform: uppercase;
-            letter-spacing: 0.1em;
         }
 
         /* =============================================
@@ -196,7 +195,6 @@
             font-weight: 600;
             color: var(--gold);
             text-transform: uppercase;
-            letter-spacing: 0.05em;
             margin-bottom: 8px;
         }
 
@@ -259,7 +257,6 @@
         .s-meta-label {
             font-size: var(--text-xs);
             text-transform: uppercase;
-            letter-spacing: 0.1em;
             color: var(--text-muted);
             font-weight: 600;
             margin-bottom: 2px;
@@ -384,7 +381,6 @@
             font-family: var(--font-bangla);
             color: var(--text-muted);
             text-transform: uppercase;
-            letter-spacing: 0.1em;
             font-weight: 600;
             margin-right: 4px;
         }

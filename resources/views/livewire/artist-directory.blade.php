@@ -1101,8 +1101,7 @@
             {{-- Grid --}}
             <div class="artist-grid" wire:loading.class="is-loading">
                 @forelse($artists as $artist)
-                    <a href="/artist/{{ $artist->id }}" class="artist-card"
-                    aria-label="View {{ $artist->name }}'s profile">
+                    <a href="{{ route('artist.show', ['slug' => \Illuminate\Support\Str::slug($artist->name) . '-' . $artist->id]) }}" class="artist-card" aria-label="View {{ $artist->name }}'s profile">
 
                         {{-- ── White triangle verified badge ── --}}
                         <div class="artist-card-verified">

@@ -8,6 +8,8 @@ use App\Livewire\ArtistDirectory;
 use App\Livewire\ArtistProfile;
 use App\Livewire\PhotoGalleryPage;
 use App\Models\PhotoGallery;
+use SimpleSoftwareIO\QrCode\Facades\QrCode;
+use Illuminate\Support\Str;
 
 /*
 |--------------------------------------------------------------------------
@@ -111,6 +113,33 @@ Route::get('/robots.txt', function () {
         ?? "User-agent: *\nAllow: /\nDisallow: /admin/\nSitemap: " . url('/sitemap.xml');
     return response($content, 200)->header('Content-Type', 'text/plain');
 });
+Route::get('/artist/{id}/download-qr/{format?}', function ($id, $format = 'svg') {
+    $artist = \App\Models\User::findOrFail($id);
+    
+    // Build the dynamic profile URL
+    $profileUrl = route('artist.show', [
+        'slug' => \Illuminate\Support\Str::slug($artist->name) . '-' . $artist->id
+    ]);
+
+    // Restrict to supported lossless formats
+    if (!in_array($format, ['svg', 'png'])) {
+        $format = 'svg';
+    }
+
+    // Generate the QR code
+    $qrCode = \SimpleSoftwareIO\QrCode\Facades\QrCode::format($format)
+        ->size(300)
+        ->margin(1)
+        ->generate($profileUrl);
+
+    // Set correct headers based on format
+    $contentType = $format === 'png' ? 'image/png' : 'image/svg+xml';
+
+    return response($qrCode, 200, [
+        'Content-Type' => $contentType,
+        'Content-Disposition' => 'attachment; filename="' . \Illuminate\Support\Str::slug($artist->name) . '-qr.' . $format . '"',
+    ]);
+})->name('artist.qr.download');
 // Admin-only route to serve private verification documents
 // Admin-only route to serve private verification documents
 Route::middleware('auth')->group(function () {
@@ -148,7 +177,7 @@ Route::get('/videos', App\Livewire\VideoGallery::class)->name('videos.index');
 Route::get('/contact', App\Livewire\ContactPage::class)->name('contact');
 Route::get('/casting', App\Livewire\CastingPage::class)->name('casting');
 Route::get('/artists', ArtistDirectory::class)->name('artists.index');
-Route::get('/artist/{id}', ArtistProfile::class)->name('artist.show');
+Route::get('/artist/{slug}', \App\Livewire\ArtistProfile::class)->name('artist.show');
 Route::get('/grooming-lab', App\Livewire\GroomingPage::class)->name('grooming');
 Route::get('/grooming-lab/{id}', \App\Livewire\GroomingBatchShow::class)->name('grooming.show');
 

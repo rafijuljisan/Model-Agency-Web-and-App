@@ -1043,6 +1043,95 @@
             font-size: 0.75rem !important;
             padding: 4px 12px !important;
         }
+        /* ── Header QR Code ── */
+        .ap-header-qr-wrap {
+            position: relative;
+            display: flex;
+            flex-direction: column;
+            align-items: flex-end;
+            margin-bottom: 12px;
+        }
+
+        .ap-header-qr {
+            background: #ffffff;
+            padding: 8px;
+            border: 1px solid var(--border-strong);
+            border-radius: 4px;
+            cursor: pointer;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+            transition: transform 0.2s ease, box-shadow 0.2s ease, border-color 0.2s ease;
+        }
+
+        .ap-header-qr:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 16px rgba(0,0,0,0.08);
+            border-color: var(--gold);
+        }
+
+        .ap-qr-dropdown {
+            position: absolute;
+            top: 100%;
+            right: 0;
+            margin-top: 10px;
+            background: var(--bg-surface);
+            border: 1px solid var(--border-strong);
+            border-radius: 4px;
+            box-shadow: 0 12px 32px rgba(0,0,0,0.15);
+            z-index: 50;
+            width: 150px;
+            overflow: hidden;
+        }
+
+        .ap-qr-dl-link {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 12px 16px;
+            font-size: 0.75rem;
+            color: var(--text-primary);
+            text-decoration: none;
+            border-bottom: 1px solid var(--border);
+            transition: background 0.2s, color 0.2s;
+            font-family: 'Jost', sans-serif;
+        }
+
+        .ap-qr-dl-link:last-child {
+            border-bottom: none;
+        }
+
+        .ap-qr-dl-link:hover {
+            background: var(--gold-bg);
+            color: var(--gold);
+        }
+
+        .ap-qr-dl-link strong {
+            font-weight: 600;
+        }
+
+        /* Ensure the QR code scales perfectly */
+        .ap-header-qr svg {
+            width: 120px !important;
+            height: 120px !important;
+        }
+
+        /* Shrink it slightly for mobile screens */
+        @media (max-width: 768px) {
+            .ap-header-qr svg {
+                width: 80px !important;
+                height: 80px !important;
+            }
+        }
+        /* Mobile Responsive */
+        @media (max-width: 768px) {
+            .ap-header-qr-wrap {
+                align-items: center; /* Centers the QR code on mobile */
+                margin-bottom: 16px;
+                width: 100%;
+            }
+            .ap-qr-dropdown {
+                right: auto; /* Centers the dropdown on mobile */
+            }
+        }
     </style>
 
     {{-- ══════════════════════════════════════════
@@ -1154,8 +1243,40 @@
                 </div>
             </div>
 
-            {{-- Actions --}}
+            {{-- Actions & QR Code --}}
             <div class="ap-actions">
+                
+                {{-- ── NEW: Clickable QR Code ── --}}
+                <div class="ap-header-qr-wrap" x-data="{ openQrMenu: false }">
+                    <div class="ap-header-qr" 
+                         @click="openQrMenu = !openQrMenu" 
+                         @click.outside="openQrMenu = false"
+                         title="Click to download QR Code">
+                        @php
+                            $profileUrl = route('artist.show', ['slug' => \Illuminate\Support\Str::slug($artist->name) . '-' . $artist->id]);
+                        @endphp
+                        {!! \SimpleSoftwareIO\QrCode\Facades\QrCode::size(120)->margin(0)->generate($profileUrl) !!}
+                    </div>
+
+                    {{-- Dropdown Menu (Hidden by default) --}}
+                    <div class="ap-qr-dropdown" 
+                         x-show="openQrMenu" 
+                         x-transition.opacity.duration.200ms
+                         style="display: none;" 
+                         :style="openQrMenu ? 'display: block;' : 'display: none;'">
+                        
+                        <a href="{{ route('artist.qr.download', ['id' => $artist->id, 'format' => 'svg']) }}" class="ap-qr-dl-link">
+                            <strong>SVG</strong>
+                            <span style="color: var(--text-muted); font-size: 0.65rem;">(Print)</span>
+                        </a>
+                        <a href="{{ route('artist.qr.download', ['id' => $artist->id, 'format' => 'png']) }}" class="ap-qr-dl-link">
+                            <strong>PNG</strong>
+                            <span style="color: var(--text-muted); font-size: 0.65rem;">(Web)</span>
+                        </a>
+                    </div>
+                </div>
+
+                {{-- Original Action Buttons --}}
                 @auth
                     @if(auth()->id() === $artist->id)
                         <a href="{{ route('account.dashboard') }}" class="btn-outline" style="font-size: 0.78rem;">

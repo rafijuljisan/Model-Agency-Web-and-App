@@ -12,14 +12,19 @@ class ArtistProfile extends Component
     public bool $showContact = false;
     public bool $showAgencyModal = false; // Controls the new popup
 
-    public function mount($id)
+    public function mount($slug)
     {
+        // Extract the ID from the end of the slug
+        $id = \Illuminate\Support\Str::afterLast($slug, '-');
+
         $this->artist = User::role('Verified-Artist')
-            ->with(['profile', 'media', 'experiences'])  // ← add 'experiences'
+            ->with(['profile', 'media', 'experiences'])
             ->whereHas('subscriptions', function ($q) {
                 $q->where('status', 'active');
             })
-            ->findOrFail($id);
+            // Search by 'id' instead of 'member_id'
+            ->where('id', $id) 
+            ->firstOrFail();
     }
 
     public function revealContact()

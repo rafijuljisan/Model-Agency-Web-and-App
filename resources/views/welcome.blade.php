@@ -861,22 +861,64 @@
             border-top: 1px solid var(--border);
             border-bottom: 1px solid var(--border);
             text-align: center;
+            overflow: hidden; /* Prevents the page from scrolling horizontally */
         }
-        .clients-grid {
-            display: flex;
-            flex-wrap: wrap;
-            align-items: center;
-            justify-content: center;
-            gap: 48px 64px;
+
+        /* ── Marquee Containers ── */
+        .marquee-container {
             margin-top: 40px;
+            display: flex;
+            flex-direction: column;
+            gap: 40px; /* Space between the top and bottom rows */
+            width: 100vw; /* Spans full width of screen */
+            margin-left: calc(-50vw + 50%); /* Centers the full-bleed container */
         }
+
+        .marquee-track {
+            display: flex;
+            align-items: center;
+            gap: 64px; /* Space between individual logos */
+            width: max-content; /* Allows track to be as wide as all logos combined */
+        }
+
+        /* Pause animation on hover for better user experience */
+        .marquee-track:hover {
+            animation-play-state: paused; 
+        }
+
+        /* ── Animations ── */
+        .track-left {
+            animation: scroll-left 40s linear infinite;
+        }
+
+        .track-right {
+            animation: scroll-right 40s linear infinite;
+        }
+
+        @keyframes scroll-left {
+            0% { transform: translateX(0); }
+            100% { transform: translateX(-50%); } /* Shifts exactly half its width to loop perfectly */
+        }
+
+        @keyframes scroll-right {
+            0% { transform: translateX(-50%); } 
+            100% { transform: translateX(0); }
+        }
+
+        /* ── Logo Styles ── */
+        .client-item {
+            flex-shrink: 0; /* Prevents logos from being squished */
+        }
+
         .client-logo {
             max-width: 140px;
             max-height: 70px;
             filter: grayscale(100%) opacity(0.5);
             transition: filter 0.4s ease, transform 0.4s ease;
             cursor: pointer;
+            object-fit: contain; /* Keeps logo proportions intact */
         }
+
         .client-logo:hover {
             filter: grayscale(0%) opacity(1);
             transform: scale(1.05);
@@ -884,26 +926,29 @@
 
         /* ── Responsive Design Updates ── */
         @media (max-width: 768px) {
-            .clients-grid {
-                flex-direction: row; /* Forces them to stay inline instead of stacking */
-                flex-wrap: wrap; /* Allows them to drop to the next line naturally */
-                justify-content: center;
-                gap: 24px 32px; /* Tighter spacing (row-gap column-gap) */
+            .marquee-container {
+                gap: 30px;
                 margin-top: 32px;
             }
+            .marquee-track {
+                gap: 40px; 
+            }
             .client-logo {
-                max-width: 90px; /* Smaller width for mobile */
-                max-height: 45px; /* Smaller height for mobile */
+                max-width: 100px;
+                max-height: 50px;
             }
         }
 
         @media (max-width: 480px) {
-            .clients-grid {
-                gap: 20px 24px; /* Even tighter spacing for small phones */
+            .marquee-container {
+                gap: 20px;
+            }
+            .marquee-track {
+                gap: 30px; 
             }
             .client-logo {
-                max-width: 75px; /* Extra small width for tiny screens */
-                max-height: 35px; /* Extra small height */
+                max-width: 80px; 
+                max-height: 40px; 
             }
         }
         /* ── Testimonials Section ── */
@@ -1320,7 +1365,7 @@
 
             <div class="talent-grid">
                 @forelse($featuredArtists as $artist)
-                    <a href="/artist/{{ $artist->id }}" class="artist-card" aria-label="View {{ $artist->name }}'s profile">
+                    <a href="{{ route('artist.show', ['slug' => \Illuminate\Support\Str::slug($artist->name) . '-' . $artist->id]) }}" class="artist-card" aria-label="View {{ $artist->name }}'s profile">
 
                                         {{-- ── White triangle verified badge ── --}}
                                         <div class="artist-card-verified">
@@ -1557,26 +1602,58 @@
         });
     </script>
     @endif
-    {{-- ══════════════════════════════════════════
-         OUR CLIENTS
-    ══════════════════════════════════════════ --}}
+   {{-- ══════════════════════════════════════════
+     OUR CLIENTS
+   ══════════════════════════════════════════ --}}
     @if($clients->count() > 0)
     <section class="clients-section anim-fade-up" aria-label="Our Clients">
         <div class="section-inner">
             <div class="section-eyebrow" style="justify-content:center;">Trusted By</div>
             <h2 class="section-title">Our <strong>Partners & Clients</strong></h2>
             
-            <div class="clients-grid">
-                {{-- Added ->shuffle() here to randomize the order on every page load --}}
-                @foreach($clients->shuffle() as $client)
-                    @if($client->website_url)
-                        <a href="{{ $client->website_url }}" target="_blank" rel="noopener">
-                            <img src="{{ Storage::url($client->logo) }}" alt="{{ $client->name }}" class="client-logo">
-                        </a>
-                    @else
-                        <img src="{{ Storage::url($client->logo) }}" alt="{{ $client->name }}" class="client-logo">
-                    @endif
-                @endforeach
+            @php
+                // Shuffle and split the clients into two rows
+                $shuffledClients = $clients->shuffle();
+                $halfCount = ceil($shuffledClients->count() / 2);
+                $row1 = $shuffledClients->take($halfCount);
+                $row2 = $shuffledClients->slice($halfCount);
+            @endphp
+
+            <div class="marquee-container">
+                {{-- Top Row: Scrolls Right to Left --}}
+                <div class="marquee-track track-left">
+                    {{-- Loop twice to create a seamless infinite scroll --}}
+                    @foreach([1, 2] as $loop)
+                        @foreach($row1 as $client)
+                            <div class="client-item">
+                                @if($client->website_url)
+                                    <a href="{{ $client->website_url }}" target="_blank" rel="noopener">
+                                        <img src="{{ Storage::url($client->logo) }}" alt="{{ $client->name }}" class="client-logo">
+                                    </a>
+                                @else
+                                    <img src="{{ Storage::url($client->logo) }}" alt="{{ $client->name }}" class="client-logo">
+                                @endif
+                            </div>
+                        @endforeach
+                    @endforeach
+                </div>
+
+                {{-- Bottom Row: Scrolls Left to Right --}}
+                <div class="marquee-track track-right">
+                    @foreach([1, 2] as $loop)
+                        @foreach($row2 as $client)
+                            <div class="client-item">
+                                @if($client->website_url)
+                                    <a href="{{ $client->website_url }}" target="_blank" rel="noopener">
+                                        <img src="{{ Storage::url($client->logo) }}" alt="{{ $client->name }}" class="client-logo">
+                                    </a>
+                                @else
+                                    <img src="{{ Storage::url($client->logo) }}" alt="{{ $client->name }}" class="client-logo">
+                                @endif
+                            </div>
+                        @endforeach
+                    @endforeach
+                </div>
             </div>
         </div>
     </section>
