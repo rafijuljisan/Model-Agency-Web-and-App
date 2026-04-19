@@ -5,9 +5,7 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="csrf-token" content="<?php echo e(csrf_token()); ?>"> 
-    
-    <title><?php echo e($title ?? $seo?->meta_title ?? 'Verified Talent Directory | Dhaka Model Agency'); ?></title>
-    
+        
     <link rel="icon" type="image/x-icon" href="<?php echo e(asset('favicon.ico')); ?>"> 
 
     <?php 
@@ -15,34 +13,52 @@
         $seo = cache()->remember('site_settings', 86400, fn() => \App\Models\Setting::first()); 
     ?>
 
-    
+    <?php
+        // Prevent undefined variable errors on pages that don't pass these
+        $ogTitle       = $ogTitle       ?? null;
+        $ogDescription = $ogDescription ?? null;
+        $ogImage       = $ogImage       ?? null;
+        $ogUrl         = $ogUrl         ?? null;
+    ?>
     <?php if(\Livewire\Mechanisms\ExtendBlade\ExtendBlade::isRenderingLivewireComponent()): ?><!--[if BLOCK]><![endif]--><?php endif; ?><?php if(isset($meta)): ?>
-        
-        <?php echo e($meta); ?>
+    
+    <?php echo e($meta); ?>
 
     <?php else: ?>
         
-        <meta name="description" content="<?php echo e($seo?->meta_description ?? 'Verified talent directory — Bangladesh'); ?>">
-        <meta name="keywords" content="<?php echo e($seo?->meta_keywords); ?>">
-        <meta name="robots" content="index, follow">
-        <link rel="canonical" href="<?php echo e(url()->current()); ?>">
+        <?php
+            $metaTitle       = $ogTitle       ?? $seo?->meta_title       ?? config('app.name');
+            $metaDescription = $ogDescription ?? $seo?->meta_description ?? '';
+            $metaImage       = $ogImage       ?? ($seo?->og_image ? asset('storage/' . $seo->og_image) : null);
+            $metaUrl         = $ogUrl         ?? url()->current();
+        ?>
+
+        <title><?php echo e($metaTitle); ?></title>
+        <meta name="description"  content="<?php echo e($metaDescription); ?>">
+        <meta name="keywords"     content="<?php echo e($seo?->meta_keywords); ?>">
+        <meta name="robots"       content="index, follow">
+        <link rel="canonical"     href="<?php echo e($metaUrl); ?>">
 
         
-        <meta property="og:type" content="website">
-        <meta property="og:url" content="<?php echo e(url()->current()); ?>">
-        <meta property="og:title" content="<?php echo e($seo?->meta_title ?? config('app.name')); ?>">
-        <meta property="og:description" content="<?php echo e($seo?->meta_description); ?>">
-        <?php if(\Livewire\Mechanisms\ExtendBlade\ExtendBlade::isRenderingLivewireComponent()): ?><!--[if BLOCK]><![endif]--><?php endif; ?><?php if($seo?->og_image): ?>
-            <meta property="og:image" content="<?php echo e(asset('storage/' . $seo->og_image)); ?>">
+        <meta property="og:type" content="<?php echo e(isset($ogUrl) && str_contains($ogUrl ?? '', '/artists/') ? 'profile' : 'website'); ?>">
+        <meta property="og:url"         content="<?php echo e($metaUrl); ?>">
+        <meta property="og:title"       content="<?php echo e($metaTitle); ?>">
+        <meta property="og:description" content="<?php echo e($metaDescription); ?>">
+        <meta property="og:site_name"   content="<?php echo e($seo?->site_name ?? config('app.name')); ?>">
+        <?php if(\Livewire\Mechanisms\ExtendBlade\ExtendBlade::isRenderingLivewireComponent()): ?><!--[if BLOCK]><![endif]--><?php endif; ?><?php if($metaImage): ?>
+            <meta property="og:image"            content="<?php echo e($metaImage); ?>">
+            <meta property="og:image:secure_url" content="<?php echo e($metaImage); ?>">
+            <meta property="og:image:width"      content="1200">
+            <meta property="og:image:height"     content="630">
+            <meta property="og:image:alt"        content="<?php echo e($metaTitle); ?>">
         <?php endif; ?><?php if(\Livewire\Mechanisms\ExtendBlade\ExtendBlade::isRenderingLivewireComponent()): ?><!--[if ENDBLOCK]><![endif]--><?php endif; ?>
-        <meta property="og:site_name" content="<?php echo e($seo?->site_name ?? config('app.name')); ?>">
 
         
-        <meta name="twitter:card" content="summary_large_image">
-        <meta name="twitter:title" content="<?php echo e($seo?->meta_title ?? config('app.name')); ?>">
-        <meta name="twitter:description" content="<?php echo e($seo?->meta_description); ?>">
-        <?php if(\Livewire\Mechanisms\ExtendBlade\ExtendBlade::isRenderingLivewireComponent()): ?><!--[if BLOCK]><![endif]--><?php endif; ?><?php if($seo?->og_image): ?>
-            <meta name="twitter:image" content="<?php echo e(asset('storage/' . $seo->og_image)); ?>">
+        <meta name="twitter:card"        content="summary_large_image">
+        <meta name="twitter:title"       content="<?php echo e($metaTitle); ?>">
+        <meta name="twitter:description" content="<?php echo e($metaDescription); ?>">
+        <?php if(\Livewire\Mechanisms\ExtendBlade\ExtendBlade::isRenderingLivewireComponent()): ?><!--[if BLOCK]><![endif]--><?php endif; ?><?php if($metaImage): ?>
+            <meta name="twitter:image" content="<?php echo e($metaImage); ?>">
         <?php endif; ?><?php if(\Livewire\Mechanisms\ExtendBlade\ExtendBlade::isRenderingLivewireComponent()): ?><!--[if ENDBLOCK]><![endif]--><?php endif; ?>
     <?php endif; ?><?php if(\Livewire\Mechanisms\ExtendBlade\ExtendBlade::isRenderingLivewireComponent()): ?><!--[if ENDBLOCK]><![endif]--><?php endif; ?>
 

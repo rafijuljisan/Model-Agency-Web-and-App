@@ -12,6 +12,7 @@ use Spatie\MediaLibrary\HasMedia;
 use Spatie\MediaLibrary\InteractsWithMedia;
 use Filament\Models\Contracts\FilamentUser;
 use Filament\Panel;
+use Spatie\MediaLibrary\MediaCollections\Models\Media;
 
 class User extends Authenticatable implements HasMedia, FilamentUser
 {
@@ -108,5 +109,16 @@ class User extends Authenticatable implements HasMedia, FilamentUser
     public function subscriptions()
     {
         return $this->hasMany(Subscription::class);
+    }
+    public function registerMediaConversions(?Media $media = null): void
+    {
+        $this->addMediaConversion('og')
+            ->performOnCollections('avatar', 'portfolio')
+            ->width(1200)
+            ->height(630)
+            ->keepOriginalImageFormat() // keeps jpg as jpg, png as png
+            ->optimize()
+            ->quality(85)
+            ->nonQueued();
     }
 }

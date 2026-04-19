@@ -185,11 +185,11 @@ class UsersTable
                         Notification::make()->title('NID Rejected')->danger()->send();
                     }),
 
+                /// =========================
+                // 🎓 NID BACK APPROVAL
                 // =========================
-                // 🎓 ACADEMIC APPROVAL
-                // =========================
-                Action::make('approve_academic')
-                    ->label('Approve Certificate')
+                Action::make('approve_academic') // You can keep the internal name 'approve_academic' or change it to 'approve_nid_back'
+                    ->label('Approve NID Back')
                     ->color('success')
                     ->visible(
                         fn($record) =>
@@ -205,18 +205,18 @@ class UsersTable
                         // ── TRIGGER USER EMAIL (SUCCESS) ──
                         $record->notify(new \App\Notifications\UserStatusNotification(
                             'NID Back Approved!',
-                            'Great news! Your NID/Passport ot Birth certificate has been successfully verified by our team.',
+                            'Great news! Your NID/Passport/Birth certificate back side has been successfully verified by our team.',
                             true // Shows the green success button
                         ));
 
                         Notification::make()
-                            ->title('Academic Certificate Approved')
+                            ->title('NID Back Approved')
                             ->success()
                             ->send();
                     }),
 
                 Action::make('reject_academic')
-                    ->label('Reject Certificate')
+                    ->label('Reject NID Back')
                     ->color('danger')
                     ->visible(
                         fn($record) =>
@@ -224,16 +224,17 @@ class UsersTable
                     )
                     ->requiresConfirmation()
                     ->action(function ($record) {
-                        $record->update(['nid_back_verification_status' => 'rejected']); // ← was 'unverified'
+                        $record->update(['nid_back_verification_status' => 'rejected']); 
             
                         $record->notify(new \App\Notifications\UserStatusNotification(
-                            'Academic Certificate Rejected',
-                            'Unfortunately, we could not verify the academic certificate you uploaded. Please log in and upload a clearer, valid document.',
+                            'NID Back Rejected',
+                            'Unfortunately, we could not verify the back side of the document you uploaded. Please log in and upload a clearer, valid document.',
                             false
                         ));
 
-                        Notification::make()->title('Academic Certificate Rejected')->danger()->send();
+                        Notification::make()->title('NID Back Rejected')->danger()->send();
                     }),
+
                 // =========================
                 // 🌟 ONE-CLICK FULL APPROVAL
                 // =========================
@@ -248,7 +249,7 @@ class UsersTable
                     )
                     ->requiresConfirmation()
                     ->modalHeading('Approve Artist Account')
-                    ->modalDescription('Are you sure you want to approve both the NID and Academic Certificate for this user?')
+                    ->modalDescription('Are you sure you want to approve both the Front and Back of the NID for this user?')
                     ->action(function ($record) {
                         // Approve both documents at once
                         $record->update([
@@ -262,9 +263,9 @@ class UsersTable
                         }
 
                         // Trigger a single success email
-                        $record->notify(new UserStatusNotification(
+                        $record->notify(new \App\Notifications\UserStatusNotification(
                             'Account Verified!',
-                            'Great news! Your identity and academic documents have been verified. Your profile is now unlocked.',
+                            'Great news! Your identity documents (Front and Back) have been verified. Your profile is now unlocked.',
                             true
                         ));
 

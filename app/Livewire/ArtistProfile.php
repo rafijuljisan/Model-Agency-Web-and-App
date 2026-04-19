@@ -23,7 +23,7 @@ class ArtistProfile extends Component
                 $q->where('status', 'active');
             })
             // Search by 'id' instead of 'member_id'
-            ->where('id', $id) 
+            ->where('id', $id)
             ->firstOrFail();
     }
 
@@ -46,11 +46,49 @@ class ArtistProfile extends Component
 
     public function render()
     {
-        // Fetch your global settings for the agency contact info in the modal
         $settings = Setting::first();
 
+        // Build OG image with conversion fallback
+        $ogImage = null;
+
+        if ($this->artist->hasMedia('avatar')) {
+            $media = $this->artist->getFirstMedia('avatar');
+            $ogImage = $media->hasGeneratedConversion('og')
+                ? $media->getUrl('og')
+                : $media->getFullUrl();
+        } elseif ($this->artist->hasMedia('portfolio')) {
+            $media = $this->artist->getFirstMedia('portfolio');
+            $ogImage = $media->hasGeneratedConversion('og')
+                ? $media->getUrl('og')
+                : $media->getFullUrl();
+        }
+
+        // Force HTTPS and ensure absolute URL
+        if ($ogImage) {
+            $ogImage = str_replace('http://', 'https://', $ogImage);
+        } else {
+            // Fallback static image if artist has no photo at all
+            $ogImage = asset('images/og-default.jpg');
+        }
+
+        $ogTitle = $this->artist->name . ' — Verified Talent | Dhaka Model Agency';
+
+        $ogDescription = \Illuminate\Support\Str::limit(
+            strip_tags($this->artist->profile?->bio ?? 'View this verified talent profile on Dhaka Model Agency.'),
+            160
+        );
+
+        $ogUrl = route('artist.show', [
+            'slug' => \Illuminate\Support\Str::slug($this->artist->name) . '-' . $this->artist->id
+        ]);
+
         return view('livewire.artist-profile', [
-            'settings' => $settings
-        ])->title($this->artist->name . ' | Verified Talent');
+            'settings' => $settings,
+        ])->layout('layouts.app', [
+                    'ogImage' => $ogImage,
+                    'ogTitle' => $ogTitle,
+                    'ogDescription' => $ogDescription,
+                    'ogUrl' => $ogUrl,
+                ]);
     }
 }

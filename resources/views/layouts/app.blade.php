@@ -5,9 +5,7 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="csrf-token" content="{{ csrf_token() }}"> {{-- REQUIRED FOR LARAVEL SECURITY --}}
-    
-    <title>{{ $title ?? $seo?->meta_title ?? 'Verified Talent Directory | Dhaka Model Agency' }}</title>
-    
+        
     <link rel="icon" type="image/x-icon" href="{{ asset('favicon.ico') }}"> {{-- ADD YOUR FAVICON --}}
 
     @php 
@@ -15,33 +13,51 @@
         $seo = cache()->remember('site_settings', 86400, fn() => \App\Models\Setting::first()); 
     @endphp
 
-    {{-- ── DYNAMIC SEO INJECTION ── --}}
+    @php
+        // Prevent undefined variable errors on pages that don't pass these
+        $ogTitle       = $ogTitle       ?? null;
+        $ogDescription = $ogDescription ?? null;
+        $ogImage       = $ogImage       ?? null;
+        $ogUrl         = $ogUrl         ?? null;
+    @endphp
     @if(isset($meta))
-        {{-- If a specific page (like an editorial) passes custom tags, print them here --}}
-        {{ $meta }}
+    {{-- Custom meta slot passed from specific pages --}}
+    {{ $meta }}
     @else
-        {{-- ── GLOBAL FALLBACK SEO ── --}}
-        <meta name="description" content="{{ $seo?->meta_description ?? 'Verified talent directory — Bangladesh' }}">
-        <meta name="keywords" content="{{ $seo?->meta_keywords }}">
-        <meta name="robots" content="index, follow">
-        <link rel="canonical" href="{{ url()->current() }}">
+        {{-- ── DYNAMIC SEO: Uses per-page vars if available, falls back to global settings ── --}}
+        @php
+            $metaTitle       = $ogTitle       ?? $seo?->meta_title       ?? config('app.name');
+            $metaDescription = $ogDescription ?? $seo?->meta_description ?? '';
+            $metaImage       = $ogImage       ?? ($seo?->og_image ? asset('storage/' . $seo->og_image) : null);
+            $metaUrl         = $ogUrl         ?? url()->current();
+        @endphp
 
-        {{-- Open Graph (Facebook, WhatsApp) --}}
-        <meta property="og:type" content="website">
-        <meta property="og:url" content="{{ url()->current() }}">
-        <meta property="og:title" content="{{ $seo?->meta_title ?? config('app.name') }}">
-        <meta property="og:description" content="{{ $seo?->meta_description }}">
-        @if($seo?->og_image)
-            <meta property="og:image" content="{{ asset('storage/' . $seo->og_image) }}">
+        <title>{{ $metaTitle }}</title>
+        <meta name="description"  content="{{ $metaDescription }}">
+        <meta name="keywords"     content="{{ $seo?->meta_keywords }}">
+        <meta name="robots"       content="index, follow">
+        <link rel="canonical"     href="{{ $metaUrl }}">
+
+        {{-- Open Graph (Facebook, WhatsApp, LinkedIn) --}}
+        <meta property="og:type" content="{{ isset($ogUrl) && str_contains($ogUrl ?? '', '/artists/') ? 'profile' : 'website' }}">
+        <meta property="og:url"         content="{{ $metaUrl }}">
+        <meta property="og:title"       content="{{ $metaTitle }}">
+        <meta property="og:description" content="{{ $metaDescription }}">
+        <meta property="og:site_name"   content="{{ $seo?->site_name ?? config('app.name') }}">
+        @if($metaImage)
+            <meta property="og:image"            content="{{ $metaImage }}">
+            <meta property="og:image:secure_url" content="{{ $metaImage }}">
+            <meta property="og:image:width"      content="1200">
+            <meta property="og:image:height"     content="630">
+            <meta property="og:image:alt"        content="{{ $metaTitle }}">
         @endif
-        <meta property="og:site_name" content="{{ $seo?->site_name ?? config('app.name') }}">
 
         {{-- Twitter Card --}}
-        <meta name="twitter:card" content="summary_large_image">
-        <meta name="twitter:title" content="{{ $seo?->meta_title ?? config('app.name') }}">
-        <meta name="twitter:description" content="{{ $seo?->meta_description }}">
-        @if($seo?->og_image)
-            <meta name="twitter:image" content="{{ asset('storage/' . $seo->og_image) }}">
+        <meta name="twitter:card"        content="summary_large_image">
+        <meta name="twitter:title"       content="{{ $metaTitle }}">
+        <meta name="twitter:description" content="{{ $metaDescription }}">
+        @if($metaImage)
+            <meta name="twitter:image" content="{{ $metaImage }}">
         @endif
     @endif
 
