@@ -25,7 +25,7 @@
     border-bottom: 1px solid var(--border);
 }
 .form-page-eyebrow {
-    font-size: 1rem; /* Increased */
+    font-size: 1.35rem; /* Increased */
     font-weight: 600;
     color: var(--gold);
     margin-bottom: 12px;
@@ -47,7 +47,7 @@
 }
 .form-page-title strong { font-weight: 700; }
 .form-page-sub {
-    font-size: 1.15rem; /* Increased from 0.95rem */
+    font-size: 1.35rem; /* Increased from 0.95rem */
     color: var(--text-muted);
     margin-top: 14px;
     line-height: 1.6;
@@ -81,9 +81,8 @@
     line-height: 1.3;
 }
 .casting-type {
-    font-size: 1rem; /* Increased */
+    font-size: 1.35rem; /* Increased */
     font-weight: 600;
-    letter-spacing: 0.1em;
     color: var(--gold);
 }
 .badge-urgent {
@@ -118,7 +117,7 @@
     margin-top: 4px;
 }
 .detail-label {
-    font-size: 1rem;/* Increased */
+    font-size: 1.25rem;/* Increased */
     font-weight: 600;
     color: var(--text-muted);
     margin-bottom: 4px;
@@ -131,7 +130,8 @@
 
 /* Description & Application */
 .casting-desc {
-    font-size: 1.5rem; /* Increased from 1.05rem */
+    font-family: 'SolaimanLipi', 'Jost', sans-serif;
+    font-size: 1.35rem; /* Increased from 1.05rem */
     line-height: 1.8;
     color: var(--text-secondary);
     margin-bottom: 32px;
@@ -213,7 +213,7 @@
         font-size: 2rem;
     }
     .form-page-sub {
-        font-size: 1rem;
+        font-size: 1.15rem;
     }
     .casting-details-grid {
         grid-template-columns: 1fr;
@@ -231,16 +231,16 @@
         font-size: 1.4rem;
     }
     .casting-type {
-        font-size: 0.85rem;
+        font-size: 1.05rem;
     }
     .casting-desc {
-        font-size: 1rem;
+        font-size: 1.05rem;
     }
     .detail-value {
         font-size: 1.05rem;
     }
     .detail-label {
-        font-size: 0.85rem;
+        font-size: 1.05rem;
     }
     .apply-title {
         font-size: 1.1rem;
