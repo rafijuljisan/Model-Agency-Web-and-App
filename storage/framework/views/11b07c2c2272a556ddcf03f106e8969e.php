@@ -252,9 +252,8 @@
 
 /* ── Batch Cards ── */
 .gc-batches {
-    display: flex;
-    flex-wrap: wrap;
-    justify-content: center; /* This perfectly centers the cards */
+    display: grid;
+    grid-template-columns: repeat(2, 1fr); /* Forces exactly 2 columns */
     gap: 24px;
     margin-bottom: 64px;
 }
@@ -264,10 +263,7 @@
     padding: 28px;
     transition: border-color 0.25s, transform 0.25s;
     position: relative;
-    /* Added for Flexbox centering: */
-    width: 100%;
-    flex: 1 1 320px; /* Allows the card to grow/shrink smoothly */
-    max-width: 380px; /* Prevents a single card from becoming giant if there's only 1 batch */
+    /* Removed the flex and max-width properties that were causing uneven sizing */
 }
 .gc-batch-card:hover {
     border-color: var(--gold);
@@ -1175,6 +1171,7 @@
     .gc-check-group { grid-template-columns: 1fr; }
     .gc-notice { padding: 12px 20px; }
     .gc-cta-banner { padding: 40px 20px; }
+    .gc-batches { grid-template-columns: 1fr; }
 }
 </style>
 
@@ -1225,39 +1222,175 @@
     <div class="gc-content-wrapper">
         
         
-        <div class="gc-gallery-side" x-data="{ filter: 'all' }">
-            <div class="gc-section-head" style="text-align: left;">
-                <div class="gc-section-eyebrow">Gallery</div>
-                <h2 class="gc-section-title">Class <strong>Moments</strong></h2>
+        <div class="gc-main-column" style="display: flex; flex-direction: column; min-width: 0;">
+            
+            
+            <div id="batches-section">
+                <div class="gc-section-head">
+                    <div class="gc-section-eyebrow">Upcoming Batches</div>
+                    <h2 class="gc-section-title">Upcoming <strong>Batches</strong></h2>
+                </div>
+
+                <?php if(\Livewire\Mechanisms\ExtendBlade\ExtendBlade::isRenderingLivewireComponent()): ?><!--[if BLOCK]><![endif]--><?php endif; ?><?php if($batches->isEmpty()): ?>
+                    <div style="text-align:center; padding: 48px; background: var(--bg-surface); border: 1px dashed var(--border-strong); margin-bottom: 64px;">
+                        <p style="color: var(--text-muted); font-size: 1.125rem;">There are no upcoming batches at the moment. Check back soon!</p>
+                    </div>
+                <?php else: ?>
+                    <div class="gc-batches">
+                        <?php if(\Livewire\Mechanisms\ExtendBlade\ExtendBlade::isRenderingLivewireComponent()): ?><!--[if BLOCK]><![endif]--><?php \Livewire\Features\SupportCompiledWireKeys\SupportCompiledWireKeys::openLoop(); ?><?php endif; ?><?php $__currentLoopData = $batches; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $batch): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?><?php if(\Livewire\Mechanisms\ExtendBlade\ExtendBlade::isRenderingLivewireComponent()): ?><?php \Livewire\Features\SupportCompiledWireKeys\SupportCompiledWireKeys::startLoopIteration(); ?><?php endif; ?>
+                            <div class="gc-batch-card">
+                                <div class="gc-batch-status <?php echo e($batch->status); ?>">
+                                    <?php if(\Livewire\Mechanisms\ExtendBlade\ExtendBlade::isRenderingLivewireComponent()): ?><!--[if BLOCK]><![endif]--><?php endif; ?><?php if($batch->status === 'open'): ?> Open
+                                    <?php elseif($batch->status === 'filling_fast'): ?> Filling Fast
+                                    <?php else: ?> Full <?php endif; ?><?php if(\Livewire\Mechanisms\ExtendBlade\ExtendBlade::isRenderingLivewireComponent()): ?><!--[if ENDBLOCK]><![endif]--><?php endif; ?>
+                                </div>
+
+                                <a href="<?php echo e(route('grooming.show', $batch->id)); ?>" style="text-decoration: none;">
+                                    <div class="gc-batch-name" 
+                                        style="transition: color 0.2s;" 
+                                        onmouseover="this.style.color='var(--gold)'" 
+                                        onmouseout="this.style.color='var(--text-primary)'">
+                                        <?php echo e($batch->title); ?>
+
+                                    </div>
+                                </a>
+
+                                <div class="gc-batch-meta">
+                                    <div class="gc-batch-meta-row">
+                                        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
+                                        Start Date: <?php echo e($batch->start_date->format('d M Y')); ?>
+
+                                    </div>
+                                    <?php if(\Livewire\Mechanisms\ExtendBlade\ExtendBlade::isRenderingLivewireComponent()): ?><!--[if BLOCK]><![endif]--><?php endif; ?><?php if($batch->trainer): ?>
+                                    <div class="gc-batch-meta-row">
+                                        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="8" r="4"/><path d="M4 20c0-4 3.58-7 8-7s8 3 8 7"/></svg>
+                                        Trainer: <?php echo e($batch->trainer); ?>
+
+                                    </div>
+                                    <?php endif; ?><?php if(\Livewire\Mechanisms\ExtendBlade\ExtendBlade::isRenderingLivewireComponent()): ?><!--[if ENDBLOCK]><![endif]--><?php endif; ?>
+                                    <?php if(\Livewire\Mechanisms\ExtendBlade\ExtendBlade::isRenderingLivewireComponent()): ?><!--[if BLOCK]><![endif]--><?php endif; ?><?php if(!empty($batch->schedule_json)): ?>
+                                    <div class="gc-batch-meta-row">
+                                        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></svg>
+                                        <?php echo e(collect($batch->schedule_json)->map(fn($s) => ($s['day'] ?? '') . ' ' . ($s['time'] ?? ''))->implode(', ')); ?>
+
+                                    </div>
+                                    <?php endif; ?><?php if(\Livewire\Mechanisms\ExtendBlade\ExtendBlade::isRenderingLivewireComponent()): ?><!--[if ENDBLOCK]><![endif]--><?php endif; ?>
+                                </div>
+
+                                
+                                <div class="gc-seat-bar-wrap">
+                                    <div class="gc-seat-bar-label">
+                                        <span>Seat Availability</span>
+                                        <span><?php echo e($batch->filled_seats); ?>/<?php echo e($batch->seat_limit); ?> Seats</span>
+                                    </div>
+                                    <div class="gc-seat-bar">
+                                        <div class="gc-seat-bar-fill" style="width: <?php echo e($batch->fill_percentage); ?>%"></div>
+                                    </div>
+                                    <?php if(\Livewire\Mechanisms\ExtendBlade\ExtendBlade::isRenderingLivewireComponent()): ?><!--[if BLOCK]><![endif]--><?php endif; ?><?php if($batch->remaining_seats <= 5 && $batch->remaining_seats > 0): ?>
+                                        <div style="font-size:0.95rem; color:var(--gold); font-weight:700; margin-top:5px;">
+                                            ⚡ Only <?php echo e($batch->remaining_seats); ?> seats left!
+                                        </div>
+                                    <?php endif; ?><?php if(\Livewire\Mechanisms\ExtendBlade\ExtendBlade::isRenderingLivewireComponent()): ?><!--[if ENDBLOCK]><![endif]--><?php endif; ?>
+                                </div>
+
+                                <div class="gc-batch-fee">
+                                    ৳<?php echo e(number_format($batch->fee)); ?>
+
+                                    <span>/ Person</span>
+                                </div>
+
+                                <div style="display: flex; gap: 12px; margin-top: 16px;">
+                                    
+                                    <a href="<?php echo e(route('grooming.show', $batch->id)); ?>"
+                                    style="flex: 1; padding: 12px; border: 1px solid var(--gold); color: var(--gold); text-align: center; font-family: 'SolaimanLipi', 'Jost', sans-serif; font-size: 1rem; font-weight: 600; text-transform: uppercase; text-decoration: none; transition: all 0.2s; display: flex; align-items: center; justify-content: center;"
+                                    onmouseover="this.style.background='var(--gold)'; this.style.color='#fff';"
+                                    onmouseout="this.style.background='transparent'; this.style.color='var(--gold)';">
+                                        View Details
+                                    </a>
+
+                                    
+                                    <button
+                                        class="gc-apply-btn"
+                                        style="flex: 1; margin: 0; width: auto;"
+                                        wire:click="$set('batch_id', '<?php echo e($batch->id); ?>')"
+                                        <?php if($batch->status === 'full'): ?> disabled <?php endif; ?>
+                                        @click="applyModalOpen = true"
+                                    >
+                                        <?php if(\Livewire\Mechanisms\ExtendBlade\ExtendBlade::isRenderingLivewireComponent()): ?><!--[if BLOCK]><![endif]--><?php endif; ?><?php if($batch->status === 'full'): ?>
+                                            Seat Full
+                                        <?php else: ?>
+                                            Apply Now
+                                        <?php endif; ?><?php if(\Livewire\Mechanisms\ExtendBlade\ExtendBlade::isRenderingLivewireComponent()): ?><!--[if ENDBLOCK]><![endif]--><?php endif; ?>
+                                    </button>
+                                </div>
+                            </div>
+                        <?php if(\Livewire\Mechanisms\ExtendBlade\ExtendBlade::isRenderingLivewireComponent()): ?><?php \Livewire\Features\SupportCompiledWireKeys\SupportCompiledWireKeys::endLoop(); ?><?php endif; ?><?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?><?php if(\Livewire\Mechanisms\ExtendBlade\ExtendBlade::isRenderingLivewireComponent()): ?><!--[if ENDBLOCK]><![endif]--><?php \Livewire\Features\SupportCompiledWireKeys\SupportCompiledWireKeys::closeLoop(); ?><?php endif; ?>
+                    </div>
+                <?php endif; ?><?php if(\Livewire\Mechanisms\ExtendBlade\ExtendBlade::isRenderingLivewireComponent()): ?><!--[if ENDBLOCK]><![endif]--><?php endif; ?>
             </div>
 
-            <?php if(\Livewire\Mechanisms\ExtendBlade\ExtendBlade::isRenderingLivewireComponent()): ?><!--[if BLOCK]><![endif]--><?php endif; ?><?php if($gallery->isNotEmpty()): ?>
-                <div class="gc-gallery-filters" style="justify-content: flex-start;">
-                    <button class="gc-gallery-filter" :class="filter==='all'?'active':''" @click="filter='all'">All</button>
-                    <button class="gc-gallery-filter" :class="filter==='training'?'active':''" @click="filter='training'">Training</button>
-                    <button class="gc-gallery-filter" :class="filter==='graduation'?'active':''" @click="filter='graduation'">Graduation</button>
-                    <button class="gc-gallery-filter" :class="filter==='event'?'active':''" @click="filter='event'">Event</button>
+            
+            <div style="margin-bottom: 64px; display:flex; justify-content:center;">
+                <?php if (isset($component)) { $__componentOriginaled4987d3f6007db3445a6067a328a16c = $component; } ?>
+<?php if (isset($attributes)) { $__attributesOriginaled4987d3f6007db3445a6067a328a16c = $attributes; } ?>
+<?php $component = App\View\Components\AdBanner::resolve(['position' => 'grooming_middle'] + (isset($attributes) && $attributes instanceof Illuminate\View\ComponentAttributeBag ? $attributes->all() : [])); ?>
+<?php $component->withName('ad-banner'); ?>
+<?php if ($component->shouldRender()): ?>
+<?php $__env->startComponent($component->resolveView(), $component->data()); ?>
+<?php if (isset($attributes) && $attributes instanceof Illuminate\View\ComponentAttributeBag): ?>
+<?php $attributes = $attributes->except(\App\View\Components\AdBanner::ignoredParameterNames()); ?>
+<?php endif; ?>
+<?php $component->withAttributes([]); ?>
+<?php \Livewire\Features\SupportCompiledWireKeys\SupportCompiledWireKeys::processComponentKey($component); ?>
+
+<?php echo $__env->renderComponent(); ?>
+<?php endif; ?>
+<?php if (isset($__attributesOriginaled4987d3f6007db3445a6067a328a16c)): ?>
+<?php $attributes = $__attributesOriginaled4987d3f6007db3445a6067a328a16c; ?>
+<?php unset($__attributesOriginaled4987d3f6007db3445a6067a328a16c); ?>
+<?php endif; ?>
+<?php if (isset($__componentOriginaled4987d3f6007db3445a6067a328a16c)): ?>
+<?php $component = $__componentOriginaled4987d3f6007db3445a6067a328a16c; ?>
+<?php unset($__componentOriginaled4987d3f6007db3445a6067a328a16c); ?>
+<?php endif; ?>
+            </div>
+
+            
+            <div class="gc-gallery-side" x-data="{ filter: 'all' }">
+                <div class="gc-section-head" style="text-align: left;">
+                    <div class="gc-section-eyebrow">Gallery</div>
+                    <h2 class="gc-section-title">Class <strong>Moments</strong></h2>
                 </div>
 
-                <div class="gc-gallery-grid-3x4">
-                    <?php if(\Livewire\Mechanisms\ExtendBlade\ExtendBlade::isRenderingLivewireComponent()): ?><!--[if BLOCK]><![endif]--><?php \Livewire\Features\SupportCompiledWireKeys\SupportCompiledWireKeys::openLoop(); ?><?php endif; ?><?php $__currentLoopData = $gallery; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $photo): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?><?php if(\Livewire\Mechanisms\ExtendBlade\ExtendBlade::isRenderingLivewireComponent()): ?><?php \Livewire\Features\SupportCompiledWireKeys\SupportCompiledWireKeys::startLoopIteration(); ?><?php endif; ?>
-                    <div class="gc-gallery-item"
-                        x-show="filter === 'all' || filter === '<?php echo e($photo->category); ?>'"
-                        x-transition>
-                        <img src="<?php echo e(asset('storage/' . $photo->image)); ?>" alt="<?php echo e($photo->title); ?>" loading="lazy">
+                <?php if(\Livewire\Mechanisms\ExtendBlade\ExtendBlade::isRenderingLivewireComponent()): ?><!--[if BLOCK]><![endif]--><?php endif; ?><?php if($gallery->isNotEmpty()): ?>
+                    <div class="gc-gallery-filters" style="justify-content: flex-start;">
+                        <button class="gc-gallery-filter" :class="filter==='all'?'active':''" @click="filter='all'">All</button>
+                        <button class="gc-gallery-filter" :class="filter==='training'?'active':''" @click="filter='training'">Training</button>
+                        <button class="gc-gallery-filter" :class="filter==='graduation'?'active':''" @click="filter='graduation'">Graduation</button>
+                        <button class="gc-gallery-filter" :class="filter==='event'?'active':''" @click="filter='event'">Event</button>
                     </div>
-                    <?php if(\Livewire\Mechanisms\ExtendBlade\ExtendBlade::isRenderingLivewireComponent()): ?><?php \Livewire\Features\SupportCompiledWireKeys\SupportCompiledWireKeys::endLoop(); ?><?php endif; ?><?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?><?php if(\Livewire\Mechanisms\ExtendBlade\ExtendBlade::isRenderingLivewireComponent()): ?><!--[if ENDBLOCK]><![endif]--><?php \Livewire\Features\SupportCompiledWireKeys\SupportCompiledWireKeys::closeLoop(); ?><?php endif; ?>
-                </div>
-                
-                
-                <div>
-                    <?php echo e($gallery->links('vendor.pagination.custom-numbered')); ?>
 
-                </div>
-            <?php else: ?>
-                <p style="color:var(--text-muted); font-size: 0.9rem;">No images available.</p>
-            <?php endif; ?><?php if(\Livewire\Mechanisms\ExtendBlade\ExtendBlade::isRenderingLivewireComponent()): ?><!--[if ENDBLOCK]><![endif]--><?php endif; ?>
-        </div>
+                    <div class="gc-gallery-grid-3x4">
+                        <?php if(\Livewire\Mechanisms\ExtendBlade\ExtendBlade::isRenderingLivewireComponent()): ?><!--[if BLOCK]><![endif]--><?php \Livewire\Features\SupportCompiledWireKeys\SupportCompiledWireKeys::openLoop(); ?><?php endif; ?><?php $__currentLoopData = $gallery; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $photo): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?><?php if(\Livewire\Mechanisms\ExtendBlade\ExtendBlade::isRenderingLivewireComponent()): ?><?php \Livewire\Features\SupportCompiledWireKeys\SupportCompiledWireKeys::startLoopIteration(); ?><?php endif; ?>
+                        <div class="gc-gallery-item"
+                            x-show="filter === 'all' || filter === '<?php echo e($photo->category); ?>'"
+                            x-transition>
+                            <img src="<?php echo e(asset('storage/' . $photo->image)); ?>" alt="<?php echo e($photo->title); ?>" loading="lazy">
+                        </div>
+                        <?php if(\Livewire\Mechanisms\ExtendBlade\ExtendBlade::isRenderingLivewireComponent()): ?><?php \Livewire\Features\SupportCompiledWireKeys\SupportCompiledWireKeys::endLoop(); ?><?php endif; ?><?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?><?php if(\Livewire\Mechanisms\ExtendBlade\ExtendBlade::isRenderingLivewireComponent()): ?><!--[if ENDBLOCK]><![endif]--><?php \Livewire\Features\SupportCompiledWireKeys\SupportCompiledWireKeys::closeLoop(); ?><?php endif; ?>
+                    </div>
+                    
+                    
+                    <div>
+                        <?php echo e($gallery->links('vendor.pagination.custom-numbered')); ?>
+
+                    </div>
+                <?php else: ?>
+                    <p style="color:var(--text-muted); font-size: 0.9rem;">No images available.</p>
+                <?php endif; ?><?php if(\Livewire\Mechanisms\ExtendBlade\ExtendBlade::isRenderingLivewireComponent()): ?><!--[if ENDBLOCK]><![endif]--><?php endif; ?>
+            </div>
+
+        </div> 
 
         
         <div class="gc-sidebar">
@@ -1284,6 +1417,7 @@
                 <?php endif; ?><?php if(\Livewire\Mechanisms\ExtendBlade\ExtendBlade::isRenderingLivewireComponent()): ?><!--[if ENDBLOCK]><![endif]--><?php endif; ?>
             </div>
             
+            
             <div class="gc-sidebar-stats">
                 <div class="gc-stats-grid">
                     <div class="gc-stat-box">
@@ -1304,139 +1438,9 @@
                 </button>
             </div>
         </div>
-        
 
     </div>
 
-    
-    <div style="margin-bottom: 64px;">
-        <?php if (isset($component)) { $__componentOriginaled4987d3f6007db3445a6067a328a16c = $component; } ?>
-<?php if (isset($attributes)) { $__attributesOriginaled4987d3f6007db3445a6067a328a16c = $attributes; } ?>
-<?php $component = App\View\Components\AdBanner::resolve(['position' => 'grooming_middle'] + (isset($attributes) && $attributes instanceof Illuminate\View\ComponentAttributeBag ? $attributes->all() : [])); ?>
-<?php $component->withName('ad-banner'); ?>
-<?php if ($component->shouldRender()): ?>
-<?php $__env->startComponent($component->resolveView(), $component->data()); ?>
-<?php if (isset($attributes) && $attributes instanceof Illuminate\View\ComponentAttributeBag): ?>
-<?php $attributes = $attributes->except(\App\View\Components\AdBanner::ignoredParameterNames()); ?>
-<?php endif; ?>
-<?php $component->withAttributes([]); ?>
-<?php \Livewire\Features\SupportCompiledWireKeys\SupportCompiledWireKeys::processComponentKey($component); ?>
-
-<?php echo $__env->renderComponent(); ?>
-<?php endif; ?>
-<?php if (isset($__attributesOriginaled4987d3f6007db3445a6067a328a16c)): ?>
-<?php $attributes = $__attributesOriginaled4987d3f6007db3445a6067a328a16c; ?>
-<?php unset($__attributesOriginaled4987d3f6007db3445a6067a328a16c); ?>
-<?php endif; ?>
-<?php if (isset($__componentOriginaled4987d3f6007db3445a6067a328a16c)): ?>
-<?php $component = $__componentOriginaled4987d3f6007db3445a6067a328a16c; ?>
-<?php unset($__componentOriginaled4987d3f6007db3445a6067a328a16c); ?>
-<?php endif; ?>
-    </div>
-    
-    <div id="batches-section">
-        <div class="gc-section-head">
-            <div class="gc-section-eyebrow">Upcoming Batches</div>
-            <h2 class="gc-section-title">Upcoming <strong>Batches</strong></h2>
-        </div>
-
-        <?php if(\Livewire\Mechanisms\ExtendBlade\ExtendBlade::isRenderingLivewireComponent()): ?><!--[if BLOCK]><![endif]--><?php endif; ?><?php if($batches->isEmpty()): ?>
-            <div style="text-align:center; padding: 48px; background: var(--bg-surface); border: 1px dashed var(--border-strong); margin-bottom: 64px;">
-                <p style="color: var(--text-muted); font-size: 1.125rem;">There are no upcoming batches at the moment. Check back soon!</p>
-            </div>
-        <?php else: ?>
-            <div class="gc-batches">
-                <?php if(\Livewire\Mechanisms\ExtendBlade\ExtendBlade::isRenderingLivewireComponent()): ?><!--[if BLOCK]><![endif]--><?php \Livewire\Features\SupportCompiledWireKeys\SupportCompiledWireKeys::openLoop(); ?><?php endif; ?><?php $__currentLoopData = $batches; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $batch): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?><?php if(\Livewire\Mechanisms\ExtendBlade\ExtendBlade::isRenderingLivewireComponent()): ?><?php \Livewire\Features\SupportCompiledWireKeys\SupportCompiledWireKeys::startLoopIteration(); ?><?php endif; ?>
-                    <div class="gc-batch-card">
-                        <div class="gc-batch-status <?php echo e($batch->status); ?>">
-                            <?php if(\Livewire\Mechanisms\ExtendBlade\ExtendBlade::isRenderingLivewireComponent()): ?><!--[if BLOCK]><![endif]--><?php endif; ?><?php if($batch->status === 'open'): ?> Open
-                            <?php elseif($batch->status === 'filling_fast'): ?> Filling Fast
-                            <?php else: ?> Full <?php endif; ?><?php if(\Livewire\Mechanisms\ExtendBlade\ExtendBlade::isRenderingLivewireComponent()): ?><!--[if ENDBLOCK]><![endif]--><?php endif; ?>
-                        </div>
-
-                        <a href="<?php echo e(route('grooming.show', $batch->id)); ?>" style="text-decoration: none;">
-                            <div class="gc-batch-name" 
-                                style="transition: color 0.2s;" 
-                                onmouseover="this.style.color='var(--gold)'" 
-                                onmouseout="this.style.color='var(--text-primary)'">
-                                <?php echo e($batch->title); ?>
-
-                            </div>
-                        </a>
-
-                        <div class="gc-batch-meta">
-                            <div class="gc-batch-meta-row">
-                                <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
-                                Start Date: <?php echo e($batch->start_date->format('d M Y')); ?>
-
-                            </div>
-                            <?php if(\Livewire\Mechanisms\ExtendBlade\ExtendBlade::isRenderingLivewireComponent()): ?><!--[if BLOCK]><![endif]--><?php endif; ?><?php if($batch->trainer): ?>
-                            <div class="gc-batch-meta-row">
-                                <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="8" r="4"/><path d="M4 20c0-4 3.58-7 8-7s8 3 8 7"/></svg>
-                                Trainer: <?php echo e($batch->trainer); ?>
-
-                            </div>
-                            <?php endif; ?><?php if(\Livewire\Mechanisms\ExtendBlade\ExtendBlade::isRenderingLivewireComponent()): ?><!--[if ENDBLOCK]><![endif]--><?php endif; ?>
-                            <?php if(\Livewire\Mechanisms\ExtendBlade\ExtendBlade::isRenderingLivewireComponent()): ?><!--[if BLOCK]><![endif]--><?php endif; ?><?php if(!empty($batch->schedule_json)): ?>
-                            <div class="gc-batch-meta-row">
-                                <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></svg>
-                                <?php echo e(collect($batch->schedule_json)->map(fn($s) => ($s['day'] ?? '') . ' ' . ($s['time'] ?? ''))->implode(', ')); ?>
-
-                            </div>
-                            <?php endif; ?><?php if(\Livewire\Mechanisms\ExtendBlade\ExtendBlade::isRenderingLivewireComponent()): ?><!--[if ENDBLOCK]><![endif]--><?php endif; ?>
-                        </div>
-
-                        
-                        <div class="gc-seat-bar-wrap">
-                            <div class="gc-seat-bar-label">
-                                <span>Seat Availability</span>
-                                <span><?php echo e($batch->filled_seats); ?>/<?php echo e($batch->seat_limit); ?> Seats</span>
-                            </div>
-                            <div class="gc-seat-bar">
-                                <div class="gc-seat-bar-fill" style="width: <?php echo e($batch->fill_percentage); ?>%"></div>
-                            </div>
-                            <?php if(\Livewire\Mechanisms\ExtendBlade\ExtendBlade::isRenderingLivewireComponent()): ?><!--[if BLOCK]><![endif]--><?php endif; ?><?php if($batch->remaining_seats <= 5 && $batch->remaining_seats > 0): ?>
-                                <div style="font-size:0.95rem; color:var(--gold); font-weight:700; margin-top:5px;">
-                                    ⚡ Only <?php echo e($batch->remaining_seats); ?> seats left!
-                                </div>
-                            <?php endif; ?><?php if(\Livewire\Mechanisms\ExtendBlade\ExtendBlade::isRenderingLivewireComponent()): ?><!--[if ENDBLOCK]><![endif]--><?php endif; ?>
-                        </div>
-
-                        <div class="gc-batch-fee">
-                            ৳<?php echo e(number_format($batch->fee)); ?>
-
-                            <span>/ Person</span>
-                        </div>
-
-                        <div style="display: flex; gap: 12px; margin-top: 16px;">
-                            
-                            <a href="<?php echo e(route('grooming.show', $batch->id)); ?>"
-                            style="flex: 1; padding: 12px; border: 1px solid var(--gold); color: var(--gold); text-align: center; font-family: 'SolaimanLipi', 'Jost', sans-serif; font-size: 1rem; font-weight: 600; text-transform: uppercase; text-decoration: none; transition: all 0.2s; display: flex; align-items: center; justify-content: center;"
-                            onmouseover="this.style.background='var(--gold)'; this.style.color='#fff';"
-                            onmouseout="this.style.background='transparent'; this.style.color='var(--gold)';">
-                                View Details
-                            </a>
-
-                            
-                            <button
-                                class="gc-apply-btn"
-                                style="flex: 1; margin: 0; width: auto;"
-                                wire:click="$set('batch_id', '<?php echo e($batch->id); ?>')"
-                                <?php if($batch->status === 'full'): ?> disabled <?php endif; ?>
-                                @click="applyModalOpen = true"
-                            >
-                                <?php if(\Livewire\Mechanisms\ExtendBlade\ExtendBlade::isRenderingLivewireComponent()): ?><!--[if BLOCK]><![endif]--><?php endif; ?><?php if($batch->status === 'full'): ?>
-                                    Seat Full
-                                <?php else: ?>
-                                    Apply Now
-                                <?php endif; ?><?php if(\Livewire\Mechanisms\ExtendBlade\ExtendBlade::isRenderingLivewireComponent()): ?><!--[if ENDBLOCK]><![endif]--><?php endif; ?>
-                            </button>
-                        </div>
-                    </div>
-                <?php if(\Livewire\Mechanisms\ExtendBlade\ExtendBlade::isRenderingLivewireComponent()): ?><?php \Livewire\Features\SupportCompiledWireKeys\SupportCompiledWireKeys::endLoop(); ?><?php endif; ?><?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?><?php if(\Livewire\Mechanisms\ExtendBlade\ExtendBlade::isRenderingLivewireComponent()): ?><!--[if ENDBLOCK]><![endif]--><?php \Livewire\Features\SupportCompiledWireKeys\SupportCompiledWireKeys::closeLoop(); ?><?php endif; ?>
-            </div>
-        <?php endif; ?><?php if(\Livewire\Mechanisms\ExtendBlade\ExtendBlade::isRenderingLivewireComponent()): ?><!--[if ENDBLOCK]><![endif]--><?php endif; ?>
-    </div>
 
     
     <div style="margin-bottom: 40px;">

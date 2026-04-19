@@ -252,9 +252,8 @@
 
 /* ── Batch Cards ── */
 .gc-batches {
-    display: flex;
-    flex-wrap: wrap;
-    justify-content: center; /* This perfectly centers the cards */
+    display: grid;
+    grid-template-columns: repeat(2, 1fr); /* Forces exactly 2 columns */
     gap: 24px;
     margin-bottom: 64px;
 }
@@ -264,10 +263,7 @@
     padding: 28px;
     transition: border-color 0.25s, transform 0.25s;
     position: relative;
-    /* Added for Flexbox centering: */
-    width: 100%;
-    flex: 1 1 320px; /* Allows the card to grow/shrink smoothly */
-    max-width: 380px; /* Prevents a single card from becoming giant if there's only 1 batch */
+    /* Removed the flex and max-width properties that were causing uneven sizing */
 }
 .gc-batch-card:hover {
     border-color: var(--gold);
@@ -1175,6 +1171,7 @@
     .gc-check-group { grid-template-columns: 1fr; }
     .gc-notice { padding: 12px 20px; }
     .gc-cta-banner { padding: 40px 20px; }
+    .gc-batches { grid-template-columns: 1fr; }
 }
 </style>
 
@@ -1207,41 +1204,151 @@
     ══════════════════════════════════ --}}
     <div class="gc-content-wrapper">
         
-        {{-- LEFT SIDE: GALLERY --}}
-        <div class="gc-gallery-side" x-data="{ filter: 'all' }">
-            <div class="gc-section-head" style="text-align: left;">
-                <div class="gc-section-eyebrow">Gallery</div>
-                <h2 class="gc-section-title">Class <strong>Moments</strong></h2>
+        {{-- 🟦 LEFT COLUMN: Batches, Ad, and Gallery --}}
+        <div class="gc-main-column" style="display: flex; flex-direction: column; min-width: 0;">
+            
+            {{-- 1. UPCOMING BATCHES --}}
+            <div id="batches-section">
+                <div class="gc-section-head">
+                    <div class="gc-section-eyebrow">Upcoming Batches</div>
+                    <h2 class="gc-section-title">Upcoming <strong>Batches</strong></h2>
+                </div>
+
+                @if($batches->isEmpty())
+                    <div style="text-align:center; padding: 48px; background: var(--bg-surface); border: 1px dashed var(--border-strong); margin-bottom: 64px;">
+                        <p style="color: var(--text-muted); font-size: 1.125rem;">There are no upcoming batches at the moment. Check back soon!</p>
+                    </div>
+                @else
+                    <div class="gc-batches">
+                        @foreach($batches as $batch)
+                            <div class="gc-batch-card">
+                                <div class="gc-batch-status {{ $batch->status }}">
+                                    @if($batch->status === 'open') Open
+                                    @elseif($batch->status === 'filling_fast') Filling Fast
+                                    @else Full @endif
+                                </div>
+
+                                <a href="{{ route('grooming.show', $batch->id) }}" style="text-decoration: none;">
+                                    <div class="gc-batch-name" 
+                                        style="transition: color 0.2s;" 
+                                        onmouseover="this.style.color='var(--gold)'" 
+                                        onmouseout="this.style.color='var(--text-primary)'">
+                                        {{ $batch->title }}
+                                    </div>
+                                </a>
+
+                                <div class="gc-batch-meta">
+                                    <div class="gc-batch-meta-row">
+                                        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
+                                        Start Date: {{ $batch->start_date->format('d M Y') }}
+                                    </div>
+                                    @if($batch->trainer)
+                                    <div class="gc-batch-meta-row">
+                                        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="8" r="4"/><path d="M4 20c0-4 3.58-7 8-7s8 3 8 7"/></svg>
+                                        Trainer: {{ $batch->trainer }}
+                                    </div>
+                                    @endif
+                                    @if(!empty($batch->schedule_json))
+                                    <div class="gc-batch-meta-row">
+                                        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></svg>
+                                        {{ collect($batch->schedule_json)->map(fn($s) => ($s['day'] ?? '') . ' ' . ($s['time'] ?? ''))->implode(', ') }}
+                                    </div>
+                                    @endif
+                                </div>
+
+                                {{-- Seat bar --}}
+                                <div class="gc-seat-bar-wrap">
+                                    <div class="gc-seat-bar-label">
+                                        <span>Seat Availability</span>
+                                        <span>{{ $batch->filled_seats }}/{{ $batch->seat_limit }} Seats</span>
+                                    </div>
+                                    <div class="gc-seat-bar">
+                                        <div class="gc-seat-bar-fill" style="width: {{ $batch->fill_percentage }}%"></div>
+                                    </div>
+                                    @if($batch->remaining_seats <= 5 && $batch->remaining_seats > 0)
+                                        <div style="font-size:0.95rem; color:var(--gold); font-weight:700; margin-top:5px;">
+                                            ⚡ Only {{ $batch->remaining_seats }} seats left!
+                                        </div>
+                                    @endif
+                                </div>
+
+                                <div class="gc-batch-fee">
+                                    ৳{{ number_format($batch->fee) }}
+                                    <span>/ Person</span>
+                                </div>
+
+                                <div style="display: flex; gap: 12px; margin-top: 16px;">
+                                    {{-- View Details Button --}}
+                                    <a href="{{ route('grooming.show', $batch->id) }}"
+                                    style="flex: 1; padding: 12px; border: 1px solid var(--gold); color: var(--gold); text-align: center; font-family: 'SolaimanLipi', 'Jost', sans-serif; font-size: 1rem; font-weight: 600; text-transform: uppercase; text-decoration: none; transition: all 0.2s; display: flex; align-items: center; justify-content: center;"
+                                    onmouseover="this.style.background='var(--gold)'; this.style.color='#fff';"
+                                    onmouseout="this.style.background='transparent'; this.style.color='var(--gold)';">
+                                        View Details
+                                    </a>
+
+                                    {{-- Quick Apply Button --}}
+                                    <button
+                                        class="gc-apply-btn"
+                                        style="flex: 1; margin: 0; width: auto;"
+                                        wire:click="$set('batch_id', '{{ $batch->id }}')"
+                                        @if($batch->status === 'full') disabled @endif
+                                        @click="applyModalOpen = true"
+                                    >
+                                        @if($batch->status === 'full')
+                                            Seat Full
+                                        @else
+                                            Apply Now
+                                        @endif
+                                    </button>
+                                </div>
+                            </div>
+                        @endforeach
+                    </div>
+                @endif
             </div>
 
-            @if($gallery->isNotEmpty())
-                <div class="gc-gallery-filters" style="justify-content: flex-start;">
-                    <button class="gc-gallery-filter" :class="filter==='all'?'active':''" @click="filter='all'">All</button>
-                    <button class="gc-gallery-filter" :class="filter==='training'?'active':''" @click="filter='training'">Training</button>
-                    <button class="gc-gallery-filter" :class="filter==='graduation'?'active':''" @click="filter='graduation'">Graduation</button>
-                    <button class="gc-gallery-filter" :class="filter==='event'?'active':''" @click="filter='event'">Event</button>
+            {{-- AD SLOT 2: MIDDLE (Perfectly placed between Batches and Gallery) --}}
+            <div style="margin-bottom: 64px; display:flex; justify-content:center;">
+                <x-ad-banner position="grooming_middle" />
+            </div>
+
+            {{-- 2. GALLERY --}}
+            <div class="gc-gallery-side" x-data="{ filter: 'all' }">
+                <div class="gc-section-head" style="text-align: left;">
+                    <div class="gc-section-eyebrow">Gallery</div>
+                    <h2 class="gc-section-title">Class <strong>Moments</strong></h2>
                 </div>
 
-                <div class="gc-gallery-grid-3x4">
-                    @foreach($gallery as $photo)
-                    <div class="gc-gallery-item"
-                        x-show="filter === 'all' || filter === '{{ $photo->category }}'"
-                        x-transition>
-                        <img src="{{ asset('storage/' . $photo->image) }}" alt="{{ $photo->title }}" loading="lazy">
+                @if($gallery->isNotEmpty())
+                    <div class="gc-gallery-filters" style="justify-content: flex-start;">
+                        <button class="gc-gallery-filter" :class="filter==='all'?'active':''" @click="filter='all'">All</button>
+                        <button class="gc-gallery-filter" :class="filter==='training'?'active':''" @click="filter='training'">Training</button>
+                        <button class="gc-gallery-filter" :class="filter==='graduation'?'active':''" @click="filter='graduation'">Graduation</button>
+                        <button class="gc-gallery-filter" :class="filter==='event'?'active':''" @click="filter='event'">Event</button>
                     </div>
-                    @endforeach
-                </div>
-                
-                {{-- Custom Pagination Link --}}
-                <div>
-                    {{ $gallery->links('vendor.pagination.custom-numbered') }}
-                </div>
-            @else
-                <p style="color:var(--text-muted); font-size: 0.9rem;">No images available.</p>
-            @endif
-        </div>
 
-        {{-- RIGHT SIDE: NOTICES SIDEBAR --}}
+                    <div class="gc-gallery-grid-3x4">
+                        @foreach($gallery as $photo)
+                        <div class="gc-gallery-item"
+                            x-show="filter === 'all' || filter === '{{ $photo->category }}'"
+                            x-transition>
+                            <img src="{{ asset('storage/' . $photo->image) }}" alt="{{ $photo->title }}" loading="lazy">
+                        </div>
+                        @endforeach
+                    </div>
+                    
+                    {{-- Custom Pagination Link --}}
+                    <div>
+                        {{ $gallery->links('vendor.pagination.custom-numbered') }}
+                    </div>
+                @else
+                    <p style="color:var(--text-muted); font-size: 0.9rem;">No images available.</p>
+                @endif
+            </div>
+
+        </div> {{-- End Left Column --}}
+
+        {{-- 🟧 RIGHT COLUMN: SIDEBAR --}}
         <div class="gc-sidebar">
             <div class="gc-sidebar-title">
                 <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
@@ -1264,7 +1371,8 @@
                     <p style="color:var(--text-muted); font-size: 0.95rem;">There are no new notices at the moment.</p>
                 @endif
             </div>
-            {{-- ADDED: Registration Stats Box --}}
+            
+            {{-- Registration Stats Box --}}
             <div class="gc-sidebar-stats">
                 <div class="gc-stats-grid">
                     <div class="gc-stat-box">
@@ -1285,115 +1393,9 @@
                 </button>
             </div>
         </div>
-        
 
     </div>
 
-    {{-- AD SLOT 2: Grooming Page Middle --}}
-    <div style="margin-bottom: 64px;">
-        <x-ad-banner position="grooming_middle" />
-    </div>
-    {{-- ══════════════════════════════════
-         UPCOMING BATCHES
-    ══════════════════════════════════ --}}
-    <div id="batches-section">
-        <div class="gc-section-head">
-            <div class="gc-section-eyebrow">Upcoming Batches</div>
-            <h2 class="gc-section-title">Upcoming <strong>Batches</strong></h2>
-        </div>
-
-        @if($batches->isEmpty())
-            <div style="text-align:center; padding: 48px; background: var(--bg-surface); border: 1px dashed var(--border-strong); margin-bottom: 64px;">
-                <p style="color: var(--text-muted); font-size: 1.125rem;">There are no upcoming batches at the moment. Check back soon!</p>
-            </div>
-        @else
-            <div class="gc-batches">
-                @foreach($batches as $batch)
-                    <div class="gc-batch-card">
-                        <div class="gc-batch-status {{ $batch->status }}">
-                            @if($batch->status === 'open') Open
-                            @elseif($batch->status === 'filling_fast') Filling Fast
-                            @else Full @endif
-                        </div>
-
-                        <a href="{{ route('grooming.show', $batch->id) }}" style="text-decoration: none;">
-                            <div class="gc-batch-name" 
-                                style="transition: color 0.2s;" 
-                                onmouseover="this.style.color='var(--gold)'" 
-                                onmouseout="this.style.color='var(--text-primary)'">
-                                {{ $batch->title }}
-                            </div>
-                        </a>
-
-                        <div class="gc-batch-meta">
-                            <div class="gc-batch-meta-row">
-                                <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
-                                Start Date: {{ $batch->start_date->format('d M Y') }}
-                            </div>
-                            @if($batch->trainer)
-                            <div class="gc-batch-meta-row">
-                                <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="8" r="4"/><path d="M4 20c0-4 3.58-7 8-7s8 3 8 7"/></svg>
-                                Trainer: {{ $batch->trainer }}
-                            </div>
-                            @endif
-                            @if(!empty($batch->schedule_json))
-                            <div class="gc-batch-meta-row">
-                                <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></svg>
-                                {{ collect($batch->schedule_json)->map(fn($s) => ($s['day'] ?? '') . ' ' . ($s['time'] ?? ''))->implode(', ') }}
-                            </div>
-                            @endif
-                        </div>
-
-                        {{-- Seat bar --}}
-                        <div class="gc-seat-bar-wrap">
-                            <div class="gc-seat-bar-label">
-                                <span>Seat Availability</span>
-                                <span>{{ $batch->filled_seats }}/{{ $batch->seat_limit }} Seats</span>
-                            </div>
-                            <div class="gc-seat-bar">
-                                <div class="gc-seat-bar-fill" style="width: {{ $batch->fill_percentage }}%"></div>
-                            </div>
-                            @if($batch->remaining_seats <= 5 && $batch->remaining_seats > 0)
-                                <div style="font-size:0.95rem; color:var(--gold); font-weight:700; margin-top:5px;">
-                                    ⚡ Only {{ $batch->remaining_seats }} seats left!
-                                </div>
-                            @endif
-                        </div>
-
-                        <div class="gc-batch-fee">
-                            ৳{{ number_format($batch->fee) }}
-                            <span>/ Person</span>
-                        </div>
-
-                        <div style="display: flex; gap: 12px; margin-top: 16px;">
-                            {{-- View Details Button --}}
-                            <a href="{{ route('grooming.show', $batch->id) }}"
-                            style="flex: 1; padding: 12px; border: 1px solid var(--gold); color: var(--gold); text-align: center; font-family: 'SolaimanLipi', 'Jost', sans-serif; font-size: 1rem; font-weight: 600; text-transform: uppercase; text-decoration: none; transition: all 0.2s; display: flex; align-items: center; justify-content: center;"
-                            onmouseover="this.style.background='var(--gold)'; this.style.color='#fff';"
-                            onmouseout="this.style.background='transparent'; this.style.color='var(--gold)';">
-                                View Details
-                            </a>
-
-                            {{-- Quick Apply Button (Your existing button, modified to fit) --}}
-                            <button
-                                class="gc-apply-btn"
-                                style="flex: 1; margin: 0; width: auto;"
-                                wire:click="$set('batch_id', '{{ $batch->id }}')"
-                                @if($batch->status === 'full') disabled @endif
-                                @click="applyModalOpen = true"
-                            >
-                                @if($batch->status === 'full')
-                                    Seat Full
-                                @else
-                                    Apply Now
-                                @endif
-                            </button>
-                        </div>
-                    </div>
-                @endforeach
-            </div>
-        @endif
-    </div>
 
     {{-- AD SLOT 3: Grooming Page Bottom --}}
     <div style="margin-bottom: 40px;">
