@@ -3,6 +3,9 @@
 namespace App\Providers;
 
 use Illuminate\Support\ServiceProvider;
+use App\Models\Category;
+use Illuminate\Support\Facades\Cache;
+use Illuminate\Support\Facades\View;
 
 class AppServiceProvider extends ServiceProvider
 {
@@ -19,6 +22,16 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot(): void
     {
-        \Illuminate\Support\Facades\View::composer('*', \App\Http\View\Composers\NavigationComposer::class);
+        View::composer('*', function ($view) {
+            $navGroups = Cache::rememberForever('nav_category_groups', function () {
+                return Category::where('is_active', true)
+                    ->select('group')
+                    ->groupBy('group')
+                    ->orderByRaw("FIELD(`group`, 'Artist', 'Model', 'Brand Promoter', 'Content Creator', 'Director', 'Creative Crew')")
+                    ->pluck('group');
+            });
+
+            $view->with('navGroups', $navGroups);
+        });
     }
 }
