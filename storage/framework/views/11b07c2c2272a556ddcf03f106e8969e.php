@@ -1178,9 +1178,7 @@
 }
 </style>
 
-{{-- ══════════════════════════════════
-     HERO
-══════════════════════════════════ --}}
+
 <div class="gc-hero">
     <div class="gc-hero-eyebrow">Dhaka Model Agency</div>
     <h1 class="gc-hero-title">
@@ -1198,23 +1196,42 @@
 </div>
 
 <div class="gc-body">
-    {{-- AD SLOT 1: Grooming Page Top --}}
+    
     <div style="margin-bottom: 40px;">
-        <x-ad-banner position="grooming_top" />
+        <?php if (isset($component)) { $__componentOriginaled4987d3f6007db3445a6067a328a16c = $component; } ?>
+<?php if (isset($attributes)) { $__attributesOriginaled4987d3f6007db3445a6067a328a16c = $attributes; } ?>
+<?php $component = App\View\Components\AdBanner::resolve(['position' => 'grooming_top'] + (isset($attributes) && $attributes instanceof Illuminate\View\ComponentAttributeBag ? $attributes->all() : [])); ?>
+<?php $component->withName('ad-banner'); ?>
+<?php if ($component->shouldRender()): ?>
+<?php $__env->startComponent($component->resolveView(), $component->data()); ?>
+<?php if (isset($attributes) && $attributes instanceof Illuminate\View\ComponentAttributeBag): ?>
+<?php $attributes = $attributes->except(\App\View\Components\AdBanner::ignoredParameterNames()); ?>
+<?php endif; ?>
+<?php $component->withAttributes([]); ?>
+<?php \Livewire\Features\SupportCompiledWireKeys\SupportCompiledWireKeys::processComponentKey($component); ?>
+
+<?php echo $__env->renderComponent(); ?>
+<?php endif; ?>
+<?php if (isset($__attributesOriginaled4987d3f6007db3445a6067a328a16c)): ?>
+<?php $attributes = $__attributesOriginaled4987d3f6007db3445a6067a328a16c; ?>
+<?php unset($__attributesOriginaled4987d3f6007db3445a6067a328a16c); ?>
+<?php endif; ?>
+<?php if (isset($__componentOriginaled4987d3f6007db3445a6067a328a16c)): ?>
+<?php $component = $__componentOriginaled4987d3f6007db3445a6067a328a16c; ?>
+<?php unset($__componentOriginaled4987d3f6007db3445a6067a328a16c); ?>
+<?php endif; ?>
     </div>
-    {{-- ══════════════════════════════════
-        GALLERY & NOTICES SIDEBAR
-    ══════════════════════════════════ --}}
+    
     <div class="gc-content-wrapper">
         
-        {{-- LEFT SIDE: GALLERY --}}
+        
         <div class="gc-gallery-side" x-data="{ filter: 'all' }">
             <div class="gc-section-head" style="text-align: left;">
                 <div class="gc-section-eyebrow">Gallery</div>
                 <h2 class="gc-section-title">Class <strong>Moments</strong></h2>
             </div>
 
-            @if($gallery->isNotEmpty())
+            <?php if(\Livewire\Mechanisms\ExtendBlade\ExtendBlade::isRenderingLivewireComponent()): ?><!--[if BLOCK]><![endif]--><?php endif; ?><?php if($gallery->isNotEmpty()): ?>
                 <div class="gc-gallery-filters" style="justify-content: flex-start;">
                     <button class="gc-gallery-filter" :class="filter==='all'?'active':''" @click="filter='all'">All</button>
                     <button class="gc-gallery-filter" :class="filter==='training'?'active':''" @click="filter='training'">Training</button>
@@ -1223,25 +1240,26 @@
                 </div>
 
                 <div class="gc-gallery-grid-3x4">
-                    @foreach($gallery as $photo)
+                    <?php if(\Livewire\Mechanisms\ExtendBlade\ExtendBlade::isRenderingLivewireComponent()): ?><!--[if BLOCK]><![endif]--><?php \Livewire\Features\SupportCompiledWireKeys\SupportCompiledWireKeys::openLoop(); ?><?php endif; ?><?php $__currentLoopData = $gallery; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $photo): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?><?php if(\Livewire\Mechanisms\ExtendBlade\ExtendBlade::isRenderingLivewireComponent()): ?><?php \Livewire\Features\SupportCompiledWireKeys\SupportCompiledWireKeys::startLoopIteration(); ?><?php endif; ?>
                     <div class="gc-gallery-item"
-                        x-show="filter === 'all' || filter === '{{ $photo->category }}'"
+                        x-show="filter === 'all' || filter === '<?php echo e($photo->category); ?>'"
                         x-transition>
-                        <img src="{{ asset('storage/' . $photo->image) }}" alt="{{ $photo->title }}" loading="lazy">
+                        <img src="<?php echo e(asset('storage/' . $photo->image)); ?>" alt="<?php echo e($photo->title); ?>" loading="lazy">
                     </div>
-                    @endforeach
+                    <?php if(\Livewire\Mechanisms\ExtendBlade\ExtendBlade::isRenderingLivewireComponent()): ?><?php \Livewire\Features\SupportCompiledWireKeys\SupportCompiledWireKeys::endLoop(); ?><?php endif; ?><?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?><?php if(\Livewire\Mechanisms\ExtendBlade\ExtendBlade::isRenderingLivewireComponent()): ?><!--[if ENDBLOCK]><![endif]--><?php \Livewire\Features\SupportCompiledWireKeys\SupportCompiledWireKeys::closeLoop(); ?><?php endif; ?>
                 </div>
                 
-                {{-- Custom Pagination Link --}}
+                
                 <div>
-                    {{ $gallery->links('vendor.pagination.custom-numbered') }}
+                    <?php echo e($gallery->links('vendor.pagination.custom-numbered')); ?>
+
                 </div>
-            @else
+            <?php else: ?>
                 <p style="color:var(--text-muted); font-size: 0.9rem;">No images available.</p>
-            @endif
+            <?php endif; ?><?php if(\Livewire\Mechanisms\ExtendBlade\ExtendBlade::isRenderingLivewireComponent()): ?><!--[if ENDBLOCK]><![endif]--><?php endif; ?>
         </div>
 
-        {{-- RIGHT SIDE: NOTICES SIDEBAR --}}
+        
         <div class="gc-sidebar">
             <div class="gc-sidebar-title">
                 <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
@@ -1251,20 +1269,21 @@
             </div>
 
             <div class="gc-notices-scroll">
-                @if($notices->isNotEmpty())
-                    @foreach($notices as $notice)
-                        <div class="gc-notice-card {{ $notice->priority }}">
+                <?php if(\Livewire\Mechanisms\ExtendBlade\ExtendBlade::isRenderingLivewireComponent()): ?><!--[if BLOCK]><![endif]--><?php endif; ?><?php if($notices->isNotEmpty()): ?>
+                    <?php if(\Livewire\Mechanisms\ExtendBlade\ExtendBlade::isRenderingLivewireComponent()): ?><!--[if BLOCK]><![endif]--><?php \Livewire\Features\SupportCompiledWireKeys\SupportCompiledWireKeys::openLoop(); ?><?php endif; ?><?php $__currentLoopData = $notices; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $notice): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?><?php if(\Livewire\Mechanisms\ExtendBlade\ExtendBlade::isRenderingLivewireComponent()): ?><?php \Livewire\Features\SupportCompiledWireKeys\SupportCompiledWireKeys::startLoopIteration(); ?><?php endif; ?>
+                        <div class="gc-notice-card <?php echo e($notice->priority); ?>">
                             <strong style="display:block; margin-bottom:4px; font-size:1.25rem; font-weight: 600;">
-                                {{ $notice->title }}
+                                <?php echo e($notice->title); ?>
+
                             </strong>
-                            <span style="color: inherit;">{{ $notice->message }}</span>
+                            <span style="color: inherit;"><?php echo e($notice->message); ?></span>
                         </div>
-                    @endforeach
-                @else
+                    <?php if(\Livewire\Mechanisms\ExtendBlade\ExtendBlade::isRenderingLivewireComponent()): ?><?php \Livewire\Features\SupportCompiledWireKeys\SupportCompiledWireKeys::endLoop(); ?><?php endif; ?><?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?><?php if(\Livewire\Mechanisms\ExtendBlade\ExtendBlade::isRenderingLivewireComponent()): ?><!--[if ENDBLOCK]><![endif]--><?php \Livewire\Features\SupportCompiledWireKeys\SupportCompiledWireKeys::closeLoop(); ?><?php endif; ?>
+                <?php else: ?>
                     <p style="color:var(--text-muted); font-size: 0.95rem;">There are no new notices at the moment.</p>
-                @endif
+                <?php endif; ?><?php if(\Livewire\Mechanisms\ExtendBlade\ExtendBlade::isRenderingLivewireComponent()): ?><!--[if ENDBLOCK]><![endif]--><?php endif; ?>
             </div>
-            {{-- ADDED: Registration Stats Box --}}
+            
             <div class="gc-sidebar-stats">
                 <div class="gc-stats-grid">
                     <div class="gc-stat-box">
@@ -1289,126 +1308,169 @@
 
     </div>
 
-    {{-- AD SLOT 2: Grooming Page Middle --}}
+    
     <div style="margin-bottom: 64px;">
-        <x-ad-banner position="grooming_middle" />
+        <?php if (isset($component)) { $__componentOriginaled4987d3f6007db3445a6067a328a16c = $component; } ?>
+<?php if (isset($attributes)) { $__attributesOriginaled4987d3f6007db3445a6067a328a16c = $attributes; } ?>
+<?php $component = App\View\Components\AdBanner::resolve(['position' => 'grooming_middle'] + (isset($attributes) && $attributes instanceof Illuminate\View\ComponentAttributeBag ? $attributes->all() : [])); ?>
+<?php $component->withName('ad-banner'); ?>
+<?php if ($component->shouldRender()): ?>
+<?php $__env->startComponent($component->resolveView(), $component->data()); ?>
+<?php if (isset($attributes) && $attributes instanceof Illuminate\View\ComponentAttributeBag): ?>
+<?php $attributes = $attributes->except(\App\View\Components\AdBanner::ignoredParameterNames()); ?>
+<?php endif; ?>
+<?php $component->withAttributes([]); ?>
+<?php \Livewire\Features\SupportCompiledWireKeys\SupportCompiledWireKeys::processComponentKey($component); ?>
+
+<?php echo $__env->renderComponent(); ?>
+<?php endif; ?>
+<?php if (isset($__attributesOriginaled4987d3f6007db3445a6067a328a16c)): ?>
+<?php $attributes = $__attributesOriginaled4987d3f6007db3445a6067a328a16c; ?>
+<?php unset($__attributesOriginaled4987d3f6007db3445a6067a328a16c); ?>
+<?php endif; ?>
+<?php if (isset($__componentOriginaled4987d3f6007db3445a6067a328a16c)): ?>
+<?php $component = $__componentOriginaled4987d3f6007db3445a6067a328a16c; ?>
+<?php unset($__componentOriginaled4987d3f6007db3445a6067a328a16c); ?>
+<?php endif; ?>
     </div>
-    {{-- ══════════════════════════════════
-         UPCOMING BATCHES
-    ══════════════════════════════════ --}}
+    
     <div id="batches-section">
         <div class="gc-section-head">
             <div class="gc-section-eyebrow">Upcoming Batches</div>
             <h2 class="gc-section-title">Upcoming <strong>Batches</strong></h2>
         </div>
 
-        @if($batches->isEmpty())
+        <?php if(\Livewire\Mechanisms\ExtendBlade\ExtendBlade::isRenderingLivewireComponent()): ?><!--[if BLOCK]><![endif]--><?php endif; ?><?php if($batches->isEmpty()): ?>
             <div style="text-align:center; padding: 48px; background: var(--bg-surface); border: 1px dashed var(--border-strong); margin-bottom: 64px;">
                 <p style="color: var(--text-muted); font-size: 1.125rem;">There are no upcoming batches at the moment. Check back soon!</p>
             </div>
-        @else
+        <?php else: ?>
             <div class="gc-batches">
-                @foreach($batches as $batch)
+                <?php if(\Livewire\Mechanisms\ExtendBlade\ExtendBlade::isRenderingLivewireComponent()): ?><!--[if BLOCK]><![endif]--><?php \Livewire\Features\SupportCompiledWireKeys\SupportCompiledWireKeys::openLoop(); ?><?php endif; ?><?php $__currentLoopData = $batches; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $batch): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?><?php if(\Livewire\Mechanisms\ExtendBlade\ExtendBlade::isRenderingLivewireComponent()): ?><?php \Livewire\Features\SupportCompiledWireKeys\SupportCompiledWireKeys::startLoopIteration(); ?><?php endif; ?>
                     <div class="gc-batch-card">
-                        <div class="gc-batch-status {{ $batch->status }}">
-                            @if($batch->status === 'open') Open
-                            @elseif($batch->status === 'filling_fast') Filling Fast
-                            @else Full @endif
+                        <div class="gc-batch-status <?php echo e($batch->status); ?>">
+                            <?php if(\Livewire\Mechanisms\ExtendBlade\ExtendBlade::isRenderingLivewireComponent()): ?><!--[if BLOCK]><![endif]--><?php endif; ?><?php if($batch->status === 'open'): ?> Open
+                            <?php elseif($batch->status === 'filling_fast'): ?> Filling Fast
+                            <?php else: ?> Full <?php endif; ?><?php if(\Livewire\Mechanisms\ExtendBlade\ExtendBlade::isRenderingLivewireComponent()): ?><!--[if ENDBLOCK]><![endif]--><?php endif; ?>
                         </div>
 
-                        <a href="{{ route('grooming.show', $batch->id) }}" style="text-decoration: none;">
+                        <a href="<?php echo e(route('grooming.show', $batch->id)); ?>" style="text-decoration: none;">
                             <div class="gc-batch-name" 
                                 style="transition: color 0.2s;" 
                                 onmouseover="this.style.color='var(--gold)'" 
                                 onmouseout="this.style.color='var(--text-primary)'">
-                                {{ $batch->title }}
+                                <?php echo e($batch->title); ?>
+
                             </div>
                         </a>
 
                         <div class="gc-batch-meta">
                             <div class="gc-batch-meta-row">
                                 <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
-                                Start Date: {{ $batch->start_date->format('d M Y') }}
+                                Start Date: <?php echo e($batch->start_date->format('d M Y')); ?>
+
                             </div>
-                            @if($batch->trainer)
+                            <?php if(\Livewire\Mechanisms\ExtendBlade\ExtendBlade::isRenderingLivewireComponent()): ?><!--[if BLOCK]><![endif]--><?php endif; ?><?php if($batch->trainer): ?>
                             <div class="gc-batch-meta-row">
                                 <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="8" r="4"/><path d="M4 20c0-4 3.58-7 8-7s8 3 8 7"/></svg>
-                                Trainer: {{ $batch->trainer }}
+                                Trainer: <?php echo e($batch->trainer); ?>
+
                             </div>
-                            @endif
-                            @if(!empty($batch->schedule_json))
+                            <?php endif; ?><?php if(\Livewire\Mechanisms\ExtendBlade\ExtendBlade::isRenderingLivewireComponent()): ?><!--[if ENDBLOCK]><![endif]--><?php endif; ?>
+                            <?php if(\Livewire\Mechanisms\ExtendBlade\ExtendBlade::isRenderingLivewireComponent()): ?><!--[if BLOCK]><![endif]--><?php endif; ?><?php if(!empty($batch->schedule_json)): ?>
                             <div class="gc-batch-meta-row">
                                 <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></svg>
-                                {{ collect($batch->schedule_json)->map(fn($s) => ($s['day'] ?? '') . ' ' . ($s['time'] ?? ''))->implode(', ') }}
+                                <?php echo e(collect($batch->schedule_json)->map(fn($s) => ($s['day'] ?? '') . ' ' . ($s['time'] ?? ''))->implode(', ')); ?>
+
                             </div>
-                            @endif
+                            <?php endif; ?><?php if(\Livewire\Mechanisms\ExtendBlade\ExtendBlade::isRenderingLivewireComponent()): ?><!--[if ENDBLOCK]><![endif]--><?php endif; ?>
                         </div>
 
-                        {{-- Seat bar --}}
+                        
                         <div class="gc-seat-bar-wrap">
                             <div class="gc-seat-bar-label">
                                 <span>Seat Availability</span>
-                                <span>{{ $batch->filled_seats }}/{{ $batch->seat_limit }} Seats</span>
+                                <span><?php echo e($batch->filled_seats); ?>/<?php echo e($batch->seat_limit); ?> Seats</span>
                             </div>
                             <div class="gc-seat-bar">
-                                <div class="gc-seat-bar-fill" style="width: {{ $batch->fill_percentage }}%"></div>
+                                <div class="gc-seat-bar-fill" style="width: <?php echo e($batch->fill_percentage); ?>%"></div>
                             </div>
-                            @if($batch->remaining_seats <= 5 && $batch->remaining_seats > 0)
+                            <?php if(\Livewire\Mechanisms\ExtendBlade\ExtendBlade::isRenderingLivewireComponent()): ?><!--[if BLOCK]><![endif]--><?php endif; ?><?php if($batch->remaining_seats <= 5 && $batch->remaining_seats > 0): ?>
                                 <div style="font-size:0.95rem; color:var(--gold); font-weight:700; margin-top:5px;">
-                                    ⚡ Only {{ $batch->remaining_seats }} seats left!
+                                    ⚡ Only <?php echo e($batch->remaining_seats); ?> seats left!
                                 </div>
-                            @endif
+                            <?php endif; ?><?php if(\Livewire\Mechanisms\ExtendBlade\ExtendBlade::isRenderingLivewireComponent()): ?><!--[if ENDBLOCK]><![endif]--><?php endif; ?>
                         </div>
 
                         <div class="gc-batch-fee">
-                            ৳{{ number_format($batch->fee) }}
+                            ৳<?php echo e(number_format($batch->fee)); ?>
+
                             <span>/ Person</span>
                         </div>
 
                         <div style="display: flex; gap: 12px; margin-top: 16px;">
-                            {{-- View Details Button --}}
-                            <a href="{{ route('grooming.show', $batch->id) }}"
+                            
+                            <a href="<?php echo e(route('grooming.show', $batch->id)); ?>"
                             style="flex: 1; padding: 12px; border: 1px solid var(--gold); color: var(--gold); text-align: center; font-family: 'SolaimanLipi', 'Jost', sans-serif; font-size: 1rem; font-weight: 600; text-transform: uppercase; text-decoration: none; transition: all 0.2s; display: flex; align-items: center; justify-content: center;"
                             onmouseover="this.style.background='var(--gold)'; this.style.color='#fff';"
                             onmouseout="this.style.background='transparent'; this.style.color='var(--gold)';">
                                 View Details
                             </a>
 
-                            {{-- Quick Apply Button (Your existing button, modified to fit) --}}
+                            
                             <button
                                 class="gc-apply-btn"
                                 style="flex: 1; margin: 0; width: auto;"
-                                wire:click="$set('batch_id', '{{ $batch->id }}')"
-                                @if($batch->status === 'full') disabled @endif
+                                wire:click="$set('batch_id', '<?php echo e($batch->id); ?>')"
+                                <?php if($batch->status === 'full'): ?> disabled <?php endif; ?>
                                 @click="applyModalOpen = true"
                             >
-                                @if($batch->status === 'full')
+                                <?php if(\Livewire\Mechanisms\ExtendBlade\ExtendBlade::isRenderingLivewireComponent()): ?><!--[if BLOCK]><![endif]--><?php endif; ?><?php if($batch->status === 'full'): ?>
                                     Seat Full
-                                @else
+                                <?php else: ?>
                                     Apply Now
-                                @endif
+                                <?php endif; ?><?php if(\Livewire\Mechanisms\ExtendBlade\ExtendBlade::isRenderingLivewireComponent()): ?><!--[if ENDBLOCK]><![endif]--><?php endif; ?>
                             </button>
                         </div>
                     </div>
-                @endforeach
+                <?php if(\Livewire\Mechanisms\ExtendBlade\ExtendBlade::isRenderingLivewireComponent()): ?><?php \Livewire\Features\SupportCompiledWireKeys\SupportCompiledWireKeys::endLoop(); ?><?php endif; ?><?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?><?php if(\Livewire\Mechanisms\ExtendBlade\ExtendBlade::isRenderingLivewireComponent()): ?><!--[if ENDBLOCK]><![endif]--><?php \Livewire\Features\SupportCompiledWireKeys\SupportCompiledWireKeys::closeLoop(); ?><?php endif; ?>
             </div>
-        @endif
+        <?php endif; ?><?php if(\Livewire\Mechanisms\ExtendBlade\ExtendBlade::isRenderingLivewireComponent()): ?><!--[if ENDBLOCK]><![endif]--><?php endif; ?>
     </div>
 
-    {{-- AD SLOT 3: Grooming Page Bottom --}}
+    
     <div style="margin-bottom: 40px;">
-        <x-ad-banner position="grooming_bottom" />
+        <?php if (isset($component)) { $__componentOriginaled4987d3f6007db3445a6067a328a16c = $component; } ?>
+<?php if (isset($attributes)) { $__attributesOriginaled4987d3f6007db3445a6067a328a16c = $attributes; } ?>
+<?php $component = App\View\Components\AdBanner::resolve(['position' => 'grooming_bottom'] + (isset($attributes) && $attributes instanceof Illuminate\View\ComponentAttributeBag ? $attributes->all() : [])); ?>
+<?php $component->withName('ad-banner'); ?>
+<?php if ($component->shouldRender()): ?>
+<?php $__env->startComponent($component->resolveView(), $component->data()); ?>
+<?php if (isset($attributes) && $attributes instanceof Illuminate\View\ComponentAttributeBag): ?>
+<?php $attributes = $attributes->except(\App\View\Components\AdBanner::ignoredParameterNames()); ?>
+<?php endif; ?>
+<?php $component->withAttributes([]); ?>
+<?php \Livewire\Features\SupportCompiledWireKeys\SupportCompiledWireKeys::processComponentKey($component); ?>
+
+<?php echo $__env->renderComponent(); ?>
+<?php endif; ?>
+<?php if (isset($__attributesOriginaled4987d3f6007db3445a6067a328a16c)): ?>
+<?php $attributes = $__attributesOriginaled4987d3f6007db3445a6067a328a16c; ?>
+<?php unset($__attributesOriginaled4987d3f6007db3445a6067a328a16c); ?>
+<?php endif; ?>
+<?php if (isset($__componentOriginaled4987d3f6007db3445a6067a328a16c)): ?>
+<?php $component = $__componentOriginaled4987d3f6007db3445a6067a328a16c; ?>
+<?php unset($__componentOriginaled4987d3f6007db3445a6067a328a16c); ?>
+<?php endif; ?>
     </div>
-    {{-- ══════════════════════════════════
-         CTA BANNER
-    ══════════════════════════════════ --}}
+    
     <div class="gc-cta-banner">
         <div class="gc-cta-banner-title">Get Your Career Started Today</div>
         <p class="gc-cta-banner-sub">Limited Seats Available. Apply Now or Contact Us for More Information.</p>
         
         <div style="position: relative; z-index: 10; display: flex; gap: 16px; justify-content: center; align-items: center; flex-wrap: wrap;">
             
-            {{-- আবেদন বাটন --}}
+            
             <button class="gc-hero-cta" @click="applyModalOpen = true" style="margin: 0;">
                 Apply Now
                 <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
@@ -1416,12 +1478,12 @@
                 </svg>
             </button>
 
-            {{-- হোয়াটসঅ্যাপ বাটন --}}
-            @if($settings?->contact_phone)
-            @php
+            
+            <?php if(\Livewire\Mechanisms\ExtendBlade\ExtendBlade::isRenderingLivewireComponent()): ?><!--[if BLOCK]><![endif]--><?php endif; ?><?php if($settings?->contact_phone): ?>
+            <?php
                 $wa = preg_replace('/[^0-9]/', '', $settings->contact_phone);
-            @endphp
-            <a href="https://wa.me/{{ $wa }}?text=আমি%20গ্রুমিং%20ক্লাস%20সম্পর্কে%20বিস্তারিত%20জানতে%20চাই।"
+            ?>
+            <a href="https://wa.me/<?php echo e($wa); ?>?text=আমি%20গ্রুমিং%20ক্লাস%20সম্পর্কে%20বিস্তারিত%20জানতে%20চাই।"
                target="_blank"
                style="display: inline-flex; align-items: center; gap: 10px; padding: 15px 32px; background: #25D366; color: #fff; font-family: 'SolaimanLipi', 'Jost', sans-serif; font-size: 1.125rem; font-weight: 600; text-transform: uppercase; letter-spacing: 0.12em; border-radius: 2px; text-decoration: none; transition: transform 0.2s, box-shadow 0.2s;"
                onmouseover="this.style.transform='translateY(-2px)'; this.style.boxShadow='0 8px 24px rgba(37, 211, 102, 0.25)';"
@@ -1431,22 +1493,18 @@
                 </svg>
                 Whatsapp
             </a>
-            @endif
+            <?php endif; ?><?php if(\Livewire\Mechanisms\ExtendBlade\ExtendBlade::isRenderingLivewireComponent()): ?><!--[if ENDBLOCK]><![endif]--><?php endif; ?>
         </div>
     </div>
 
 </div>
 
-{{-- ══════════════════════════════════
-     MULTI-STEP APPLICATION MODAL
-══════════════════════════════════ --}}
+
 <div id="gc-apply-modal" x-show="applyModalOpen" style="display: none;" class="gc-modal-overlay">
     <div class="gc-modal">
 
-        {{-- ══════════════════════════════════
-             SUCCESS SCREEN
-        ══════════════════════════════════ --}}
-        @if($submitted)
+        
+        <?php if(\Livewire\Mechanisms\ExtendBlade\ExtendBlade::isRenderingLivewireComponent()): ?><!--[if BLOCK]><![endif]--><?php endif; ?><?php if($submitted): ?>
             <div class="gc-success">
                 <div class="gc-success-icon">
                     <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
@@ -1455,12 +1513,12 @@
                 </div>
                 <div class="gc-success-title">Application Submitted! 🎉</div>
                 <p class="gc-success-sub">
-                    Your application number: <strong>#{{ $applicationId }}</strong><br>
+                    Your application number: <strong>#<?php echo e($applicationId); ?></strong><br>
                     Our team will verify your payment and confirm shortly.
                 </p>
-                @if($settings?->contact_phone)
-                    @php $wa = preg_replace('/[^0-9]/', '', $settings->contact_phone); @endphp
-                    <a href="https://wa.me/{{ $wa }}?text=আমি%20গ্রুমিং%20ক্লাসে%20আবেদন%20করেছি।%20আমার%20আবেদন%20নম্বর%20%23{{ $applicationId }}"
+                <?php if(\Livewire\Mechanisms\ExtendBlade\ExtendBlade::isRenderingLivewireComponent()): ?><!--[if BLOCK]><![endif]--><?php endif; ?><?php if($settings?->contact_phone): ?>
+                    <?php $wa = preg_replace('/[^0-9]/', '', $settings->contact_phone); ?>
+                    <a href="https://wa.me/<?php echo e($wa); ?>?text=আমি%20গ্রুমিং%20ক্লাসে%20আবেদন%20করেছি।%20আমার%20আবেদন%20নম্বর%20%23<?php echo e($applicationId); ?>"
                        target="_blank"
                        style="display:inline-flex;align-items:center;gap:10px;padding:13px 26px;background:#25D366;color:#fff;font-weight:700;font-size:0.88rem;border-radius:6px;text-decoration:none;margin-bottom:14px;">
                         <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor">
@@ -1472,13 +1530,11 @@
                     <button @click="applyModalOpen = false" class="gc-btn-ghost" style="margin-top:4px;">
                         Close
                     </button>
-                @endif
+                <?php endif; ?><?php if(\Livewire\Mechanisms\ExtendBlade\ExtendBlade::isRenderingLivewireComponent()): ?><!--[if ENDBLOCK]><![endif]--><?php endif; ?>
             </div>
 
-        {{-- ══════════════════════════════════
-             STEP 0: MEMBER LOOKUP
-        ══════════════════════════════════ --}}
-        @elseif($step === 0)
+        
+        <?php elseif($step === 0): ?>
             <div class="gc-modal-header">
                 <div class="gc-modal-title">Quick Start</div>
                 <button class="gc-modal-close" @click="applyModalOpen = false">
@@ -1490,8 +1546,8 @@
 
             <div class="gc-quickstart-body">
 
-                @if(! $isMemberCheck)
-                    {{-- Choice screen --}}
+                <?php if(\Livewire\Mechanisms\ExtendBlade\ExtendBlade::isRenderingLivewireComponent()): ?><!--[if BLOCK]><![endif]--><?php endif; ?><?php if(! $isMemberCheck): ?>
+                    
                     <div class="gc-quickstart-icon">
                         <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="var(--gold)" stroke-width="2">
                             <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/>
@@ -1513,8 +1569,8 @@
                         </button>
                     </div>
 
-                @else
-                    {{-- Lookup input --}}
+                <?php else: ?>
+                    
                     <div class="gc-quickstart-icon">
                         <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="var(--gold)" stroke-width="2">
                             <circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/>
@@ -1531,14 +1587,22 @@
                             wire:keydown.enter="lookupMember"
                             placeholder="e.g. DMA-261001 or 01XXXXXXXXX"
                             style="text-align:center;font-size:1rem;letter-spacing:0.04em;">
-                        @error('memberLookupInput')
-                            <div class="gc-field-error">{{ $message }}</div>
-                        @enderror
-                        @if($memberLookupError)
+                        <?php if(\Livewire\Mechanisms\ExtendBlade\ExtendBlade::isRenderingLivewireComponent()): ?><!--[if BLOCK]><![endif]--><?php endif; ?><?php $__errorArgs = ['memberLookupInput'];
+$__bag = $errors->getBag($__errorArgs[1] ?? 'default');
+if ($__bag->has($__errorArgs[0])) :
+if (isset($message)) { $__messageOriginal = $message; }
+$message = $__bag->first($__errorArgs[0]); ?>
+                            <div class="gc-field-error"><?php echo e($message); ?></div>
+                        <?php unset($message);
+if (isset($__messageOriginal)) { $message = $__messageOriginal; }
+endif;
+unset($__errorArgs, $__bag); ?><?php if(\Livewire\Mechanisms\ExtendBlade\ExtendBlade::isRenderingLivewireComponent()): ?><!--[if ENDBLOCK]><![endif]--><?php endif; ?>
+                        <?php if(\Livewire\Mechanisms\ExtendBlade\ExtendBlade::isRenderingLivewireComponent()): ?><!--[if BLOCK]><![endif]--><?php endif; ?><?php if($memberLookupError): ?>
                             <div class="gc-field-error" style="margin-top:6px;">
-                                {{ $memberLookupError }}
+                                <?php echo e($memberLookupError); ?>
+
                             </div>
-                        @endif
+                        <?php endif; ?><?php if(\Livewire\Mechanisms\ExtendBlade\ExtendBlade::isRenderingLivewireComponent()): ?><!--[if ENDBLOCK]><![endif]--><?php endif; ?>
                     </div>
 
                     <div class="gc-quickstart-actions" style="margin-top:20px;">
@@ -1550,24 +1614,22 @@
                             ← Back
                         </button>
                     </div>
-                @endif
+                <?php endif; ?><?php if(\Livewire\Mechanisms\ExtendBlade\ExtendBlade::isRenderingLivewireComponent()): ?><!--[if ENDBLOCK]><![endif]--><?php endif; ?>
 
             </div>
 
-        {{-- ══════════════════════════════════
-             STEPS 1–5: MAIN FORM
-        ══════════════════════════════════ --}}
-        @else
+        
+        <?php else: ?>
 
-            {{-- ── Header ── --}}
+            
             <div class="gc-modal-header">
                 <div class="gc-modal-title">
-                    @if($step === 1) Personal Information
-                    @elseif($step === 2) Physical Information
-                    @elseif($step === 3) Career Interest
-                    @elseif($step === 4) Batch Selection
-                    @else Payment
-                    @endif
+                    <?php if(\Livewire\Mechanisms\ExtendBlade\ExtendBlade::isRenderingLivewireComponent()): ?><!--[if BLOCK]><![endif]--><?php endif; ?><?php if($step === 1): ?> Personal Information
+                    <?php elseif($step === 2): ?> Physical Information
+                    <?php elseif($step === 3): ?> Career Interest
+                    <?php elseif($step === 4): ?> Batch Selection
+                    <?php else: ?> Payment
+                    <?php endif; ?><?php if(\Livewire\Mechanisms\ExtendBlade\ExtendBlade::isRenderingLivewireComponent()): ?><!--[if ENDBLOCK]><![endif]--><?php endif; ?>
                 </div>
                 <button class="gc-modal-close" @click="applyModalOpen = false">
                     <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
@@ -1576,53 +1638,66 @@
                 </button>
             </div>
 
-            {{-- ── Progress Bar ── --}}
+            
             <div class="gc-steps-bar">
-                @for($i = 1; $i <= $totalSteps; $i++)
-                    <div class="gc-step-dot {{ $i < $step ? 'done' : ($i === $step ? 'active' : '') }}">
-                        @if($i < $step)
+                <?php if(\Livewire\Mechanisms\ExtendBlade\ExtendBlade::isRenderingLivewireComponent()): ?><!--[if BLOCK]><![endif]--><?php \Livewire\Features\SupportCompiledWireKeys\SupportCompiledWireKeys::openLoop(); ?><?php endif; ?><?php for($i = 1; $i <= $totalSteps; $i++): ?><?php if(\Livewire\Mechanisms\ExtendBlade\ExtendBlade::isRenderingLivewireComponent()): ?><?php \Livewire\Features\SupportCompiledWireKeys\SupportCompiledWireKeys::startLoopIteration(); ?><?php endif; ?>
+                    <div class="gc-step-dot <?php echo e($i < $step ? 'done' : ($i === $step ? 'active' : '')); ?>">
+                        <?php if(\Livewire\Mechanisms\ExtendBlade\ExtendBlade::isRenderingLivewireComponent()): ?><!--[if BLOCK]><![endif]--><?php endif; ?><?php if($i < $step): ?>
                             <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3">
                                 <polyline points="20 6 9 17 4 12"/>
                             </svg>
-                        @else
-                            {{ $i }}
-                        @endif
+                        <?php else: ?>
+                            <?php echo e($i); ?>
+
+                        <?php endif; ?><?php if(\Livewire\Mechanisms\ExtendBlade\ExtendBlade::isRenderingLivewireComponent()): ?><!--[if ENDBLOCK]><![endif]--><?php endif; ?>
                     </div>
-                    @if($i < $totalSteps)
-                        <div class="gc-step-line {{ $i < $step ? 'done' : '' }}"></div>
-                    @endif
-                @endfor
+                    <?php if(\Livewire\Mechanisms\ExtendBlade\ExtendBlade::isRenderingLivewireComponent()): ?><!--[if BLOCK]><![endif]--><?php endif; ?><?php if($i < $totalSteps): ?>
+                        <div class="gc-step-line <?php echo e($i < $step ? 'done' : ''); ?>"></div>
+                    <?php endif; ?><?php if(\Livewire\Mechanisms\ExtendBlade\ExtendBlade::isRenderingLivewireComponent()): ?><!--[if ENDBLOCK]><![endif]--><?php endif; ?>
+                <?php if(\Livewire\Mechanisms\ExtendBlade\ExtendBlade::isRenderingLivewireComponent()): ?><?php \Livewire\Features\SupportCompiledWireKeys\SupportCompiledWireKeys::endLoop(); ?><?php endif; ?><?php endfor; ?><?php if(\Livewire\Mechanisms\ExtendBlade\ExtendBlade::isRenderingLivewireComponent()): ?><!--[if ENDBLOCK]><![endif]--><?php \Livewire\Features\SupportCompiledWireKeys\SupportCompiledWireKeys::closeLoop(); ?><?php endif; ?>
             </div>
 
-            {{-- ── Pre-filled Member Badge ── --}}
-            @if($isPreFilled && in_array($step, [3, 4, 5]))
+            
+            <?php if(\Livewire\Mechanisms\ExtendBlade\ExtendBlade::isRenderingLivewireComponent()): ?><!--[if BLOCK]><![endif]--><?php endif; ?><?php if($isPreFilled && in_array($step, [3, 4, 5])): ?>
                 <div class="gc-member-badge">
                     <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3">
                         <polyline points="20 6 9 17 4 12"/>
                     </svg>
                     Member profile auto-filled — Steps 1 & 2 completed.
                 </div>
-            @endif
+            <?php endif; ?><?php if(\Livewire\Mechanisms\ExtendBlade\ExtendBlade::isRenderingLivewireComponent()): ?><!--[if ENDBLOCK]><![endif]--><?php endif; ?>
 
-            {{-- ── Form Body ── --}}
+            
             <div class="gc-modal-body">
 
-                {{-- ─────────────────────────────
-                     STEP 1: Personal Info
-                ───────────────────────────── --}}
-                @if($step === 1)
-                    <div wire:key="form-step-1">
+                
+                <?php if(\Livewire\Mechanisms\ExtendBlade\ExtendBlade::isRenderingLivewireComponent()): ?><!--[if BLOCK]><![endif]--><?php endif; ?><?php if($step === 1): ?>
+                    <div <?php \Livewire\Features\SupportCompiledWireKeys\SupportCompiledWireKeys::$currentLoop['key'] = 'form-step-1'; ?>wire:key="form-step-1">
                         <div class="gc-field">
                             <label>Full Name <span style="color:var(--gold)">*</span></label>
                             <input type="text" wire:model.defer="full_name" placeholder="Your full name">
-                            @error('full_name') <div class="gc-field-error">{{ $message }}</div> @enderror
+                            <?php if(\Livewire\Mechanisms\ExtendBlade\ExtendBlade::isRenderingLivewireComponent()): ?><!--[if BLOCK]><![endif]--><?php endif; ?><?php $__errorArgs = ['full_name'];
+$__bag = $errors->getBag($__errorArgs[1] ?? 'default');
+if ($__bag->has($__errorArgs[0])) :
+if (isset($message)) { $__messageOriginal = $message; }
+$message = $__bag->first($__errorArgs[0]); ?> <div class="gc-field-error"><?php echo e($message); ?></div> <?php unset($message);
+if (isset($__messageOriginal)) { $message = $__messageOriginal; }
+endif;
+unset($__errorArgs, $__bag); ?><?php if(\Livewire\Mechanisms\ExtendBlade\ExtendBlade::isRenderingLivewireComponent()): ?><!--[if ENDBLOCK]><![endif]--><?php endif; ?>
                         </div>
 
                         <div class="gc-grid-2">
                             <div class="gc-field">
                                 <label>Mobile Number <span style="color:var(--gold)">*</span></label>
                                 <input type="tel" wire:model.defer="phone" placeholder="01XXXXXXXXX">
-                                @error('phone') <div class="gc-field-error">{{ $message }}</div> @enderror
+                                <?php if(\Livewire\Mechanisms\ExtendBlade\ExtendBlade::isRenderingLivewireComponent()): ?><!--[if BLOCK]><![endif]--><?php endif; ?><?php $__errorArgs = ['phone'];
+$__bag = $errors->getBag($__errorArgs[1] ?? 'default');
+if ($__bag->has($__errorArgs[0])) :
+if (isset($message)) { $__messageOriginal = $message; }
+$message = $__bag->first($__errorArgs[0]); ?> <div class="gc-field-error"><?php echo e($message); ?></div> <?php unset($message);
+if (isset($__messageOriginal)) { $message = $__messageOriginal; }
+endif;
+unset($__errorArgs, $__bag); ?><?php if(\Livewire\Mechanisms\ExtendBlade\ExtendBlade::isRenderingLivewireComponent()): ?><!--[if ENDBLOCK]><![endif]--><?php endif; ?>
                             </div>
                             <div class="gc-field">
                                 <label>WhatsApp</label>
@@ -1633,20 +1708,32 @@
                         <div class="gc-field" style="margin-bottom:0;">
                             <label>Email</label>
                             <input type="email" wire:model.defer="email" placeholder="you@example.com">
-                            @error('email') <div class="gc-field-error">{{ $message }}</div> @enderror
+                            <?php if(\Livewire\Mechanisms\ExtendBlade\ExtendBlade::isRenderingLivewireComponent()): ?><!--[if BLOCK]><![endif]--><?php endif; ?><?php $__errorArgs = ['email'];
+$__bag = $errors->getBag($__errorArgs[1] ?? 'default');
+if ($__bag->has($__errorArgs[0])) :
+if (isset($message)) { $__messageOriginal = $message; }
+$message = $__bag->first($__errorArgs[0]); ?> <div class="gc-field-error"><?php echo e($message); ?></div> <?php unset($message);
+if (isset($__messageOriginal)) { $message = $__messageOriginal; }
+endif;
+unset($__errorArgs, $__bag); ?><?php if(\Livewire\Mechanisms\ExtendBlade\ExtendBlade::isRenderingLivewireComponent()): ?><!--[if ENDBLOCK]><![endif]--><?php endif; ?>
                         </div>
 
                     </div>
-                {{-- ─────────────────────────────
-                     STEP 2: Physical Info
-                ───────────────────────────── --}}
-                @elseif($step === 2)
-                    <div wire:key="form-step-2">
+                
+                <?php elseif($step === 2): ?>
+                    <div <?php \Livewire\Features\SupportCompiledWireKeys\SupportCompiledWireKeys::$currentLoop['key'] = 'form-step-2'; ?>wire:key="form-step-2">
                         <div class="gc-grid-2">
                             <div class="gc-field">
                                 <label>Age</label>
                                 <input type="number" wire:model.defer="age" placeholder="e.g. 22">
-                                @error('age') <div class="gc-field-error">{{ $message }}</div> @enderror
+                                <?php if(\Livewire\Mechanisms\ExtendBlade\ExtendBlade::isRenderingLivewireComponent()): ?><!--[if BLOCK]><![endif]--><?php endif; ?><?php $__errorArgs = ['age'];
+$__bag = $errors->getBag($__errorArgs[1] ?? 'default');
+if ($__bag->has($__errorArgs[0])) :
+if (isset($message)) { $__messageOriginal = $message; }
+$message = $__bag->first($__errorArgs[0]); ?> <div class="gc-field-error"><?php echo e($message); ?></div> <?php unset($message);
+if (isset($__messageOriginal)) { $message = $__messageOriginal; }
+endif;
+unset($__errorArgs, $__bag); ?><?php if(\Livewire\Mechanisms\ExtendBlade\ExtendBlade::isRenderingLivewireComponent()): ?><!--[if ENDBLOCK]><![endif]--><?php endif; ?>
                             </div>
                             <div class="gc-field">
                                 <label>Gender</label>
@@ -1673,105 +1760,108 @@
                         </div>
 
                     </div>
-                {{-- ─────────────────────────────
-                     STEP 3: Career Interest
-                ───────────────────────────── --}}
-                @elseif($step === 3)
-                    <div wire:key="form-step-3">
+                
+                <?php elseif($step === 3): ?>
+                    <div <?php \Livewire\Features\SupportCompiledWireKeys\SupportCompiledWireKeys::$currentLoop['key'] = 'form-step-3'; ?>wire:key="form-step-3">
                         <div class="gc-field">
                             <label>Career Interests <span style="color:var(--text-muted);font-weight:400;text-transform:none;font-size:0.75rem;">(Select all that apply)</span></label>
                             <div class="gc-interest-grid">
-                                @foreach(['Modeling', 'Acting', 'Personality Development', 'Fashion Industry'] as $interest)
-                                    <label class="gc-interest-card {{ in_array($interest, $career_interests) ? 'selected' : '' }}">
+                                <?php if(\Livewire\Mechanisms\ExtendBlade\ExtendBlade::isRenderingLivewireComponent()): ?><!--[if BLOCK]><![endif]--><?php \Livewire\Features\SupportCompiledWireKeys\SupportCompiledWireKeys::openLoop(); ?><?php endif; ?><?php $__currentLoopData = ['Modeling', 'Acting', 'Personality Development', 'Fashion Industry']; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $interest): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?><?php if(\Livewire\Mechanisms\ExtendBlade\ExtendBlade::isRenderingLivewireComponent()): ?><?php \Livewire\Features\SupportCompiledWireKeys\SupportCompiledWireKeys::startLoopIteration(); ?><?php endif; ?>
+                                    <label class="gc-interest-card <?php echo e(in_array($interest, $career_interests) ? 'selected' : ''); ?>">
                                         <input type="checkbox"
                                             wire:model.live="career_interests"
-                                            value="{{ $interest }}">
-                                        <span>{{ $interest }}</span>
-                                        @if(in_array($interest, $career_interests))
+                                            value="<?php echo e($interest); ?>">
+                                        <span><?php echo e($interest); ?></span>
+                                        <?php if(\Livewire\Mechanisms\ExtendBlade\ExtendBlade::isRenderingLivewireComponent()): ?><!--[if BLOCK]><![endif]--><?php endif; ?><?php if(in_array($interest, $career_interests)): ?>
                                             <span class="gc-interest-check">
                                                 <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#16a34a" stroke-width="3">
                                                     <polyline points="20 6 9 17 4 12"/>
                                                 </svg>
                                             </span>
-                                        @endif
+                                        <?php endif; ?><?php if(\Livewire\Mechanisms\ExtendBlade\ExtendBlade::isRenderingLivewireComponent()): ?><!--[if ENDBLOCK]><![endif]--><?php endif; ?>
                                     </label>
-                                @endforeach
+                                <?php if(\Livewire\Mechanisms\ExtendBlade\ExtendBlade::isRenderingLivewireComponent()): ?><?php \Livewire\Features\SupportCompiledWireKeys\SupportCompiledWireKeys::endLoop(); ?><?php endif; ?><?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?><?php if(\Livewire\Mechanisms\ExtendBlade\ExtendBlade::isRenderingLivewireComponent()): ?><!--[if ENDBLOCK]><![endif]--><?php \Livewire\Features\SupportCompiledWireKeys\SupportCompiledWireKeys::closeLoop(); ?><?php endif; ?>
                             </div>
                         </div>
 
                         <div class="gc-field" style="margin-bottom:0;">
                             <label>Experience Level</label>
                             <div class="gc-exp-grid">
-                                @foreach([
+                                <?php if(\Livewire\Mechanisms\ExtendBlade\ExtendBlade::isRenderingLivewireComponent()): ?><!--[if BLOCK]><![endif]--><?php \Livewire\Features\SupportCompiledWireKeys\SupportCompiledWireKeys::openLoop(); ?><?php endif; ?><?php $__currentLoopData = [
                                     'Beginner'     => ['label' => 'Beginner',     'sub' => 'নতুন',           'icon' => '🌱'],
                                     'Intermediate' => ['label' => 'Intermediate', 'sub' => 'কিছুটা অভিজ্ঞ', 'icon' => '⭐'],
                                     'Experienced'  => ['label' => 'Experienced',  'sub' => 'অভিজ্ঞ',         'icon' => '🏆'],
-                                ] as $val => $info)
-                                    <label class="gc-exp-card {{ $experience_level === $val ? 'selected' : '' }}">
-                                        <input type="radio" wire:model.live="experience_level" value="{{ $val }}">
-                                        <span class="gc-exp-icon">{{ $info['icon'] }}</span>
-                                        <span class="gc-exp-label">{{ $info['label'] }}</span>
-                                        <span class="gc-exp-sub">{{ $info['sub'] }}</span>
-                                        @if($experience_level === $val)
+                                ]; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $val => $info): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?><?php if(\Livewire\Mechanisms\ExtendBlade\ExtendBlade::isRenderingLivewireComponent()): ?><?php \Livewire\Features\SupportCompiledWireKeys\SupportCompiledWireKeys::startLoopIteration(); ?><?php endif; ?>
+                                    <label class="gc-exp-card <?php echo e($experience_level === $val ? 'selected' : ''); ?>">
+                                        <input type="radio" wire:model.live="experience_level" value="<?php echo e($val); ?>">
+                                        <span class="gc-exp-icon"><?php echo e($info['icon']); ?></span>
+                                        <span class="gc-exp-label"><?php echo e($info['label']); ?></span>
+                                        <span class="gc-exp-sub"><?php echo e($info['sub']); ?></span>
+                                        <?php if(\Livewire\Mechanisms\ExtendBlade\ExtendBlade::isRenderingLivewireComponent()): ?><!--[if BLOCK]><![endif]--><?php endif; ?><?php if($experience_level === $val): ?>
                                             <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="#16a34a" stroke-width="3">
                                                 <polyline points="20 6 9 17 4 12"/>
                                             </svg>
-                                        @endif
+                                        <?php endif; ?><?php if(\Livewire\Mechanisms\ExtendBlade\ExtendBlade::isRenderingLivewireComponent()): ?><!--[if ENDBLOCK]><![endif]--><?php endif; ?>
                                     </label>
-                                @endforeach
+                                <?php if(\Livewire\Mechanisms\ExtendBlade\ExtendBlade::isRenderingLivewireComponent()): ?><?php \Livewire\Features\SupportCompiledWireKeys\SupportCompiledWireKeys::endLoop(); ?><?php endif; ?><?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?><?php if(\Livewire\Mechanisms\ExtendBlade\ExtendBlade::isRenderingLivewireComponent()): ?><!--[if ENDBLOCK]><![endif]--><?php \Livewire\Features\SupportCompiledWireKeys\SupportCompiledWireKeys::closeLoop(); ?><?php endif; ?>
                             </div>
                         </div>
 
                     </div>
-                {{-- ─────────────────────────────
-                     STEP 4: Batch Selection
-                ───────────────────────────── --}}
-                @elseif($step === 4)
-                    <div wire:key="form-step-4">
+                
+                <?php elseif($step === 4): ?>
+                    <div <?php \Livewire\Features\SupportCompiledWireKeys\SupportCompiledWireKeys::$currentLoop['key'] = 'form-step-4'; ?>wire:key="form-step-4">
                         <div class="gc-batch-select-grid">
-                            @forelse($batches as $batch)
-                                <div class="gc-batch-select-card {{ $batch_id == $batch->id ? 'selected' : '' }}"
-                                    wire:click="$set('batch_id', '{{ $batch->id }}')">
+                            <?php if(\Livewire\Mechanisms\ExtendBlade\ExtendBlade::isRenderingLivewireComponent()): ?><!--[if BLOCK]><![endif]--><?php \Livewire\Features\SupportCompiledWireKeys\SupportCompiledWireKeys::openLoop(); ?><?php endif; ?><?php $__empty_1 = true; $__currentLoopData = $batches; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $batch): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); $__empty_1 = false; ?><?php if(\Livewire\Mechanisms\ExtendBlade\ExtendBlade::isRenderingLivewireComponent()): ?><?php \Livewire\Features\SupportCompiledWireKeys\SupportCompiledWireKeys::startLoopIteration(); ?><?php endif; ?>
+                                <div class="gc-batch-select-card <?php echo e($batch_id == $batch->id ? 'selected' : ''); ?>"
+                                    wire:click="$set('batch_id', '<?php echo e($batch->id); ?>')">
                                     <div style="flex:1;min-width:0;">
-                                        <div class="gc-batch-select-name">{{ $batch->title }}</div>
+                                        <div class="gc-batch-select-name"><?php echo e($batch->title); ?></div>
                                         <div class="gc-batch-select-meta">
-                                            Start: {{ $batch->start_date->format('d M Y') }}
-                                            &nbsp;·&nbsp; Seats: {{ $batch->remaining_seats }}
+                                            Start: <?php echo e($batch->start_date->format('d M Y')); ?>
+
+                                            &nbsp;·&nbsp; Seats: <?php echo e($batch->remaining_seats); ?>
+
                                         </div>
                                     </div>
-                                    <div class="gc-batch-select-fee">৳{{ number_format($batch->fee) }}</div>
+                                    <div class="gc-batch-select-fee">৳<?php echo e(number_format($batch->fee)); ?></div>
                                 </div>
-                            @empty
+                            <?php if(\Livewire\Mechanisms\ExtendBlade\ExtendBlade::isRenderingLivewireComponent()): ?><?php \Livewire\Features\SupportCompiledWireKeys\SupportCompiledWireKeys::endLoop(); ?><?php endif; ?><?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); if ($__empty_1): ?><?php if(\Livewire\Mechanisms\ExtendBlade\ExtendBlade::isRenderingLivewireComponent()): ?><?php \Livewire\Features\SupportCompiledWireKeys\SupportCompiledWireKeys::closeLoop(); ?><?php endif; ?>
                                 <p style="color:var(--text-muted);font-size:0.9rem;">No batches currently available.</p>
-                            @endforelse
+                            <?php endif; ?><?php if(\Livewire\Mechanisms\ExtendBlade\ExtendBlade::isRenderingLivewireComponent()): ?><!--[if ENDBLOCK]><![endif]--><?php endif; ?>
                         </div>
-                        @error('batch_id')
-                            <div class="gc-field-error" style="margin-top:10px;">{{ $message }}</div>
-                        @enderror
+                        <?php if(\Livewire\Mechanisms\ExtendBlade\ExtendBlade::isRenderingLivewireComponent()): ?><!--[if BLOCK]><![endif]--><?php endif; ?><?php $__errorArgs = ['batch_id'];
+$__bag = $errors->getBag($__errorArgs[1] ?? 'default');
+if ($__bag->has($__errorArgs[0])) :
+if (isset($message)) { $__messageOriginal = $message; }
+$message = $__bag->first($__errorArgs[0]); ?>
+                            <div class="gc-field-error" style="margin-top:10px;"><?php echo e($message); ?></div>
+                        <?php unset($message);
+if (isset($__messageOriginal)) { $message = $__messageOriginal; }
+endif;
+unset($__errorArgs, $__bag); ?><?php if(\Livewire\Mechanisms\ExtendBlade\ExtendBlade::isRenderingLivewireComponent()): ?><!--[if ENDBLOCK]><![endif]--><?php endif; ?>
                     </div>
-                {{-- ─────────────────────────────
-                     STEP 5: Payment
-                ───────────────────────────── --}}
-                @elseif($step === 5)
-                <div wire:key="form-step-5">
+                
+                <?php elseif($step === 5): ?>
+                <div <?php \Livewire\Features\SupportCompiledWireKeys\SupportCompiledWireKeys::$currentLoop['key'] = 'form-step-5'; ?>wire:key="form-step-5">
 
-                    {{-- Selected batch summary --}}
-                    @if($selectedBatch)
+                    
+                    <?php if(\Livewire\Mechanisms\ExtendBlade\ExtendBlade::isRenderingLivewireComponent()): ?><!--[if BLOCK]><![endif]--><?php endif; ?><?php if($selectedBatch): ?>
                         <div class="gc-batch-summary">
                             <div>
                                 <div class="gc-batch-summary-label">Selected Batch</div>
-                                <div class="gc-batch-summary-name">{{ $selectedBatch->title }}</div>
+                                <div class="gc-batch-summary-name"><?php echo e($selectedBatch->title); ?></div>
                             </div>
-                            <div class="gc-batch-summary-fee">৳{{ number_format($selectedBatch->fee) }}</div>
+                            <div class="gc-batch-summary-fee">৳<?php echo e(number_format($selectedBatch->fee)); ?></div>
                         </div>
-                    @endif
+                    <?php endif; ?><?php if(\Livewire\Mechanisms\ExtendBlade\ExtendBlade::isRenderingLivewireComponent()): ?><!--[if ENDBLOCK]><![endif]--><?php endif; ?>
 
-                    {{-- Payment method with brand icons --}}
+                    
                     <div class="gc-field">
                         <label>Payment Method <span style="color:var(--gold)">*</span></label>
                         <div class="payment-methods">
 
-                            @if($settings?->bkash_number)
+                            <?php if(\Livewire\Mechanisms\ExtendBlade\ExtendBlade::isRenderingLivewireComponent()): ?><!--[if BLOCK]><![endif]--><?php endif; ?><?php if($settings?->bkash_number): ?>
                             <label class="payment-method-label">
                                 <input type="radio"
                                     wire:model.live="payment_method"
@@ -1784,9 +1874,9 @@
                                     <span class="pm-label">বিকাশ</span>
                                 </div>
                             </label>
-                            @endif
+                            <?php endif; ?><?php if(\Livewire\Mechanisms\ExtendBlade\ExtendBlade::isRenderingLivewireComponent()): ?><!--[if ENDBLOCK]><![endif]--><?php endif; ?>
 
-                            @if($settings?->nagad_number)
+                            <?php if(\Livewire\Mechanisms\ExtendBlade\ExtendBlade::isRenderingLivewireComponent()): ?><!--[if BLOCK]><![endif]--><?php endif; ?><?php if($settings?->nagad_number): ?>
                             <label class="payment-method-label">
                                 <input type="radio"
                                     wire:model.live="payment_method"
@@ -1799,9 +1889,9 @@
                                     <span class="pm-label">নগদ</span>
                                 </div>
                             </label>
-                            @endif
+                            <?php endif; ?><?php if(\Livewire\Mechanisms\ExtendBlade\ExtendBlade::isRenderingLivewireComponent()): ?><!--[if ENDBLOCK]><![endif]--><?php endif; ?>
 
-                            @if($settings?->rocket_number)
+                            <?php if(\Livewire\Mechanisms\ExtendBlade\ExtendBlade::isRenderingLivewireComponent()): ?><!--[if BLOCK]><![endif]--><?php endif; ?><?php if($settings?->rocket_number): ?>
                             <label class="payment-method-label">
                                 <input type="radio"
                                     wire:model.live="payment_method"
@@ -1814,23 +1904,30 @@
                                     <span class="pm-label">রকেট</span>
                                 </div>
                             </label>
-                            @endif
+                            <?php endif; ?><?php if(\Livewire\Mechanisms\ExtendBlade\ExtendBlade::isRenderingLivewireComponent()): ?><!--[if ENDBLOCK]><![endif]--><?php endif; ?>
 
                         </div>
-                        @error('payment_method') <div class="gc-field-error" style="margin-top:-12px;margin-bottom:12px;">{{ $message }}</div> @enderror
+                        <?php if(\Livewire\Mechanisms\ExtendBlade\ExtendBlade::isRenderingLivewireComponent()): ?><!--[if BLOCK]><![endif]--><?php endif; ?><?php $__errorArgs = ['payment_method'];
+$__bag = $errors->getBag($__errorArgs[1] ?? 'default');
+if ($__bag->has($__errorArgs[0])) :
+if (isset($message)) { $__messageOriginal = $message; }
+$message = $__bag->first($__errorArgs[0]); ?> <div class="gc-field-error" style="margin-top:-12px;margin-bottom:12px;"><?php echo e($message); ?></div> <?php unset($message);
+if (isset($__messageOriginal)) { $message = $__messageOriginal; }
+endif;
+unset($__errorArgs, $__bag); ?><?php if(\Livewire\Mechanisms\ExtendBlade\ExtendBlade::isRenderingLivewireComponent()): ?><!--[if ENDBLOCK]><![endif]--><?php endif; ?>
                     </div>
 
-                    {{-- Send money to box --}}
-                    @if($payment_method && $settings)
-                        @php
+                    
+                    <?php if(\Livewire\Mechanisms\ExtendBlade\ExtendBlade::isRenderingLivewireComponent()): ?><!--[if BLOCK]><![endif]--><?php endif; ?><?php if($payment_method && $settings): ?>
+                        <?php
                             $payNumber = match($payment_method) {
                                 'bKash'  => $settings->bkash_number,
                                 'Nagad'  => $settings->nagad_number,
                                 'Rocket' => $settings->rocket_number,
                                 default  => null,
                             };
-                        @endphp
-                        @if($payNumber)
+                        ?>
+                        <?php if(\Livewire\Mechanisms\ExtendBlade\ExtendBlade::isRenderingLivewireComponent()): ?><!--[if BLOCK]><![endif]--><?php endif; ?><?php if($payNumber): ?>
                             <div class="gc-pay-info-box">
                                 <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="var(--gold)" stroke-width="2" style="flex-shrink:0;">
                                     <rect x="1" y="4" width="22" height="16" rx="2"/>
@@ -1838,23 +1935,37 @@
                                 </svg>
                                 <div>
                                     <div class="gc-pay-info-label">এই নম্বরে Send Money করুন</div>
-                                    <div class="gc-pay-info-number">{{ $payNumber }}</div>
+                                    <div class="gc-pay-info-number"><?php echo e($payNumber); ?></div>
                                 </div>
                             </div>
-                        @endif
-                    @endif
+                        <?php endif; ?><?php if(\Livewire\Mechanisms\ExtendBlade\ExtendBlade::isRenderingLivewireComponent()): ?><!--[if ENDBLOCK]><![endif]--><?php endif; ?>
+                    <?php endif; ?><?php if(\Livewire\Mechanisms\ExtendBlade\ExtendBlade::isRenderingLivewireComponent()): ?><!--[if ENDBLOCK]><![endif]--><?php endif; ?>
 
-                    {{-- Sender + TrxID --}}
+                    
                     <div class="gc-grid-2">
                         <div class="gc-field">
                             <label>Sender Number <span style="color:var(--gold)">*</span></label>
                             <input type="tel" wire:model.defer="sender_number" placeholder="01XXXXXXXXX">
-                            @error('sender_number') <div class="gc-field-error">{{ $message }}</div> @enderror
+                            <?php if(\Livewire\Mechanisms\ExtendBlade\ExtendBlade::isRenderingLivewireComponent()): ?><!--[if BLOCK]><![endif]--><?php endif; ?><?php $__errorArgs = ['sender_number'];
+$__bag = $errors->getBag($__errorArgs[1] ?? 'default');
+if ($__bag->has($__errorArgs[0])) :
+if (isset($message)) { $__messageOriginal = $message; }
+$message = $__bag->first($__errorArgs[0]); ?> <div class="gc-field-error"><?php echo e($message); ?></div> <?php unset($message);
+if (isset($__messageOriginal)) { $message = $__messageOriginal; }
+endif;
+unset($__errorArgs, $__bag); ?><?php if(\Livewire\Mechanisms\ExtendBlade\ExtendBlade::isRenderingLivewireComponent()): ?><!--[if ENDBLOCK]><![endif]--><?php endif; ?>
                         </div>
                         <div class="gc-field">
                             <label>Transaction ID <span style="color:var(--gold)">*</span></label>
                             <input type="text" wire:model.defer="transaction_id" placeholder="e.g. 9J5A6B8C" style="letter-spacing:0.08em;">
-                            @error('transaction_id') <div class="gc-field-error">{{ $message }}</div> @enderror
+                            <?php if(\Livewire\Mechanisms\ExtendBlade\ExtendBlade::isRenderingLivewireComponent()): ?><!--[if BLOCK]><![endif]--><?php endif; ?><?php $__errorArgs = ['transaction_id'];
+$__bag = $errors->getBag($__errorArgs[1] ?? 'default');
+if ($__bag->has($__errorArgs[0])) :
+if (isset($message)) { $__messageOriginal = $message; }
+$message = $__bag->first($__errorArgs[0]); ?> <div class="gc-field-error"><?php echo e($message); ?></div> <?php unset($message);
+if (isset($__messageOriginal)) { $message = $__messageOriginal; }
+endif;
+unset($__errorArgs, $__bag); ?><?php if(\Livewire\Mechanisms\ExtendBlade\ExtendBlade::isRenderingLivewireComponent()): ?><!--[if ENDBLOCK]><![endif]--><?php endif; ?>
                         </div>
                     </div>
 
@@ -1862,26 +1973,34 @@
                         <label>Payment Screenshot <span style="color:var(--text-muted);font-weight:400;text-transform:none;font-size:0.75rem;">(Optional)</span></label>
                         <input type="file" wire:model="payment_screenshot" accept="image/*">
                         <div class="gc-field-hint">JPG, PNG — Maximum 3MB</div>
-                        @error('payment_screenshot') <div class="gc-field-error">{{ $message }}</div> @enderror
+                        <?php if(\Livewire\Mechanisms\ExtendBlade\ExtendBlade::isRenderingLivewireComponent()): ?><!--[if BLOCK]><![endif]--><?php endif; ?><?php $__errorArgs = ['payment_screenshot'];
+$__bag = $errors->getBag($__errorArgs[1] ?? 'default');
+if ($__bag->has($__errorArgs[0])) :
+if (isset($message)) { $__messageOriginal = $message; }
+$message = $__bag->first($__errorArgs[0]); ?> <div class="gc-field-error"><?php echo e($message); ?></div> <?php unset($message);
+if (isset($__messageOriginal)) { $message = $__messageOriginal; }
+endif;
+unset($__errorArgs, $__bag); ?><?php if(\Livewire\Mechanisms\ExtendBlade\ExtendBlade::isRenderingLivewireComponent()): ?><!--[if ENDBLOCK]><![endif]--><?php endif; ?>
                         <div wire:loading wire:target="payment_screenshot" style="font-size:0.78rem;color:var(--gold);margin-top:4px;">
                             Uploading...
                         </div>
                     </div>
 
-                @endif
+                <?php endif; ?><?php if(\Livewire\Mechanisms\ExtendBlade\ExtendBlade::isRenderingLivewireComponent()): ?><!--[if ENDBLOCK]><![endif]--><?php endif; ?>
             </div>
 
-            {{-- ── Modal Footer ── --}}
+            
             <div class="gc-modal-footer">
                 <button class="gc-btn-prev" wire:click="prevStep">
                     ← Previous
                 </button>
 
                 <span style="font-size:0.72rem;color:var(--text-muted);">
-                    Step {{ $step }} / {{ $totalSteps }}
+                    Step <?php echo e($step); ?> / <?php echo e($totalSteps); ?>
+
                 </span>
 
-                @if($step < $totalSteps)
+                <?php if(\Livewire\Mechanisms\ExtendBlade\ExtendBlade::isRenderingLivewireComponent()): ?><!--[if BLOCK]><![endif]--><?php endif; ?><?php if($step < $totalSteps): ?>
                     <button class="gc-btn-next" wire:click="nextStep">
                         <span wire:loading.remove wire:target="nextStep">Next →</span>
                         <span wire:loading.flex wire:target="nextStep" style="align-items:center;gap:6px;">
@@ -1892,16 +2011,16 @@
                             Loading
                         </span>
                     </button>
-                @else
+                <?php else: ?>
                     <button class="gc-btn-next" wire:click="submit">
                         <span wire:loading.remove wire:target="submit">Submit ✓</span>
                         <span wire:loading wire:target="submit">Submitting...</span>
                     </button>
-                @endif
+                <?php endif; ?><?php if(\Livewire\Mechanisms\ExtendBlade\ExtendBlade::isRenderingLivewireComponent()): ?><!--[if ENDBLOCK]><![endif]--><?php endif; ?>
             </div>
 
-        @endif
+        <?php endif; ?><?php if(\Livewire\Mechanisms\ExtendBlade\ExtendBlade::isRenderingLivewireComponent()): ?><!--[if ENDBLOCK]><![endif]--><?php endif; ?>
     </div>
 </div>
 
-</div>
+</div><?php /**PATH H:\agency-app\resources\views/livewire/grooming-page.blade.php ENDPATH**/ ?>

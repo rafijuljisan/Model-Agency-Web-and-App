@@ -6,11 +6,25 @@ use Illuminate\Database\Eloquent\Model;
 class GroomingApplication extends Model
 {
     protected $fillable = [
-        'batch_id', 'full_name', 'phone', 'whatsapp', 'email',
-        'age', 'gender', 'height', 'weight', 'address',
-        'career_interests', 'experience_level',
-        'payment_method', 'transaction_id', 'payment_screenshot',
-        'status', 'payment_status', 'admin_note'
+        'batch_id',
+        'full_name',
+        'phone',
+        'whatsapp',
+        'email',
+        'age',
+        'gender',
+        'height',
+        'weight',
+        'address',
+        'career_interests',
+        'experience_level',
+        'payment_method',
+        'transaction_id',
+        'payment_screenshot',
+        'status',
+        'payment_status',
+        'admin_note',
+        'sender_number',
     ];
 
     protected $casts = [

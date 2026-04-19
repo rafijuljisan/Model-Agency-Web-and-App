@@ -7,6 +7,7 @@ use App\Models\GroomingBatch;
 use App\Models\GroomingGallery;
 use App\Models\GroomingNotice;
 use App\Models\Setting;
+use App\Models\User;
 use Livewire\Attributes\Layout;
 use Livewire\Attributes\Title;
 use Livewire\Component;
@@ -15,8 +16,8 @@ use Livewire\WithPagination;
 use Illuminate\Support\Facades\Notification;
 use App\Notifications\AdminAlertNotification;
 use Filament\Notifications\Notification as FilamentNotification;
-use App\Models\User;
 use Illuminate\Support\Facades\Log;
+use Carbon\Carbon;
 
 #[Title('Grooming Class | Dhaka Model Agency')]
 #[Layout('layouts.app')]
@@ -24,9 +25,22 @@ class GroomingPage extends Component
 {
     use WithFileUploads, WithPagination;
 
-    // ── Multi-step state ──
-    public int $step = 1;
-    public int $totalSteps = 5;
+    // ── Step state ──
+    // 0 = member lookup screen
+    // 1 = Personal Info
+    // 2 = Physical Info
+    // 3 = Career Interest
+    // 4 = Batch Selection
+    // 5 = Payment
+    public int $step = 0;
+    public int $totalSteps = 5; // visible steps (1–5), step 0 is pre-form
+
+    // ── Member Lookup ──
+    public bool $isMemberCheck = false;
+    public string $memberLookupInput = '';
+    public ?string $memberLookupError = null;
+    public ?int $linkedUserId = null;
+    public bool $isPreFilled = false;
 
     // ── Step 1: Personal Info ──
     public string $full_name = '';
@@ -58,21 +72,95 @@ class GroomingPage extends Component
     public bool $submitted = false;
     public ?int $applicationId = null;
 
-    // ── Validation rules per step ──
+    // ─────────────────────────────────────────
+    // Member Lookup
+    // ─────────────────────────────────────────
+
+    public function lookupMember(): void
+    {
+        $this->memberLookupError = null;
+
+        $this->validate([
+            'memberLookupInput' => 'required|string|min:3',
+        ], [
+            'memberLookupInput.required' => 'Please enter your Member ID or mobile number.',
+            'memberLookupInput.min'      => 'Please enter at least 3 characters.',
+        ]);
+
+        $user = User::where('is_verified', true)
+            ->where(function ($q) {
+                $q->where('member_id', $this->memberLookupInput)
+                  ->orWhere('phone', $this->memberLookupInput);
+            })
+            ->with('profile')
+            ->first();
+
+        if (! $user) {
+            $this->memberLookupError = 'No verified member found with that ID or phone number. Please check and try again.';
+            return;
+        }
+
+        // ── Auto-fill Step 1: Personal Info ──
+        $this->full_name = $user->name  ?? '';
+        $this->phone     = $user->phone ?? '';
+        $this->email     = $user->email ?? '';
+        // whatsapp stays empty — they can fill if needed
+
+        // ── Auto-fill Step 2: Physical Info ──
+        if ($user->profile) {
+            $p = $user->profile;
+
+            $this->gender = $p->gender ?? '';
+            $this->height = $p->height_cm ?? '';
+            $this->weight = $p->weight_kg ?? '';
+
+            // Build address from available profile fields
+            $this->address = trim(implode(', ', array_filter([
+                $p->street_address,
+                $p->upazila,
+                $p->district,
+                $p->country !== 'Bangladesh' ? $p->country : null,
+            ])));
+
+            // Calculate age from date of birth
+            if ($p->date_of_birth) {
+                $this->age = (string) Carbon::parse($p->date_of_birth)->age;
+            }
+        }
+
+        $this->linkedUserId = $user->id;
+        $this->isPreFilled  = true;
+
+        // ── Jump directly to Step 3 (skip 1 & 2) ──
+        $this->step = 3;
+    }
+
+    public function skipMemberLookup(): void
+    {
+        $this->isMemberCheck    = false;
+        $this->memberLookupInput = '';
+        $this->memberLookupError = null;
+        $this->step = 1;
+    }
+
+    // ─────────────────────────────────────────
+    // Validation Rules Per Step
+    // ─────────────────────────────────────────
+
     protected function rulesForStep(): array
     {
         return match ($this->step) {
             1 => [
                 'full_name' => 'required|string|max:255',
-                'phone' => 'required|string|max:20',
-                'whatsapp' => 'nullable|string|max:20',
-                'email' => 'nullable|email|max:255',
+                'phone'     => 'required|string|max:20',
+                'whatsapp'  => 'nullable|string|max:20',
+                'email'     => 'nullable|email|max:255',
             ],
             2 => [
-                'age' => 'nullable|integer|min:10|max:60',
-                'gender' => 'nullable|in:Male,Female,Other',
-                'height' => 'nullable|string|max:20',
-                'weight' => 'nullable|string|max:20',
+                'age'     => 'nullable|integer|min:10|max:60',
+                'gender'  => 'nullable|in:Male,Female,Other',
+                'height'  => 'nullable|string|max:20',
+                'weight'  => 'nullable|string|max:20',
                 'address' => 'nullable|string|max:500',
             ],
             3 => [
@@ -83,14 +171,18 @@ class GroomingPage extends Component
                 'batch_id' => 'required|exists:grooming_batches,id',
             ],
             5 => [
-                'payment_method' => 'required|string',
-                'sender_number' => 'required|string|max:20',
-                'transaction_id' => 'required|string|unique:grooming_applications,transaction_id',
-                'payment_screenshot' => 'nullable|image|max:3072',
+                'payment_method'    => 'required|string',
+                'sender_number'     => 'required|string|max:20',
+                'transaction_id'    => 'required|string|unique:grooming_applications,transaction_id',
+                'payment_screenshot'=> 'nullable|image|max:3072',
             ],
             default => [],
         };
     }
+
+    // ─────────────────────────────────────────
+    // Navigation
+    // ─────────────────────────────────────────
 
     public function nextStep(): void
     {
@@ -100,8 +192,22 @@ class GroomingPage extends Component
 
     public function prevStep(): void
     {
-        $this->step = max(1, $this->step - 1);
+        $previousStep = $this->step - 1;
+
+        // If member was pre-filled, going back from step 3
+        // should return to step 0 (lookup screen), not step 2
+        if ($this->isPreFilled && $this->step === 3) {
+            $this->step = 0;
+            $this->isMemberCheck = true; // keep lookup panel open
+            return;
+        }
+
+        $this->step = max(0, $previousStep);
     }
+
+    // ─────────────────────────────────────────
+    // Submit
+    // ─────────────────────────────────────────
 
     public function submit(): void
     {
@@ -113,29 +219,29 @@ class GroomingPage extends Component
         }
 
         $application = GroomingApplication::create([
-            'batch_id' => $this->batch_id,
-            'full_name' => $this->full_name,
-            'phone' => $this->phone,
-            'whatsapp' => $this->whatsapp ?: null,
-            'email' => $this->email ?: null,
-            'age' => $this->age ?: null,
-            'gender' => $this->gender ?: null,
-            'height' => $this->height ?: null,
-            'weight' => $this->weight ?: null,
-            'address' => $this->address ?: null,
-            'career_interests' => !empty($this->career_interests) ? $this->career_interests : null,
-            'experience_level' => $this->experience_level ?: null,
-            'payment_method' => $this->payment_method,
-            'sender_number' => $this->sender_number,
-            'transaction_id' => $this->transaction_id,
+            'user_id'            => $this->linkedUserId,
+            'batch_id'           => $this->batch_id,
+            'full_name'          => $this->full_name,
+            'phone'              => $this->phone,
+            'whatsapp'           => $this->whatsapp ?: null,
+            'email'              => $this->email ?: null,
+            'age'                => $this->age ?: null,
+            'gender'             => $this->gender ?: null,
+            'height'             => $this->height ?: null,
+            'weight'             => $this->weight ?: null,
+            'address'            => $this->address ?: null,
+            'career_interests'   => !empty($this->career_interests) ? $this->career_interests : null,
+            'experience_level'   => $this->experience_level ?: null,
+            'payment_method'     => $this->payment_method,
+            'sender_number'      => $this->sender_number,
+            'transaction_id'     => $this->transaction_id,
             'payment_screenshot' => $screenshotPath,
-            'status' => 'pending',
-            'payment_status' => 'unpaid',
+            'status'             => 'pending',
+            'payment_status'     => 'unpaid',
         ]);
 
         GroomingBatch::where('id', $this->batch_id)->increment('filled_seats');
 
-        // ── Notify Admins ──
         $admins = User::role('Super-Admin')->get();
 
         try {
@@ -159,6 +265,10 @@ class GroomingPage extends Component
         $this->submitted = true;
     }
 
+    // ─────────────────────────────────────────
+    // Render
+    // ─────────────────────────────────────────
+
     public function render()
     {
         $batches = GroomingBatch::where('is_active', true)
@@ -174,7 +284,7 @@ class GroomingPage extends Component
             ->where('show_on_grooming', true)
             ->where(fn($q) => $q->whereNull('expires_at')->orWhere('expires_at', '>', now()))
             ->orderByRaw("FIELD(priority, 'critical', 'normal', 'low')")
-            ->get(); // <-- Changed to get()
+            ->get();
 
         $settings = Setting::first();
 
@@ -187,7 +297,7 @@ class GroomingPage extends Component
             'gallery',
             'notices',
             'settings',
-            'selectedBatch' // <-- Changed 'notice' to 'notices'
+            'selectedBatch'
         ));
     }
 }
