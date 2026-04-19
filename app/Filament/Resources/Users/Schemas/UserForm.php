@@ -118,14 +118,11 @@ class UserForm
                                     ->label('Talent Categories & Skills')
                                     ->options(function (?\Illuminate\Database\Eloquent\Model $record) {
                                         // 1. Fetch categories using a custom priority sort for the group, then alphabetically by name
-                                        $options = \App\Models\Category::orderByRaw("FIELD(`group`, 'Artist', 'Model', 'Brand Promoter', 'Content Creator', 'Director', 'Creative Crew')")
-                                            ->orderBy('name')
+                                        $options = \App\Models\Category::customOrdered()
                                             ->get()
-                                            ->mapWithKeys(function ($category) {
-                                            // The array key is what saves to the database ($category->name)
-                                            // The array value is what the user sees in the dropdown
-                                            return [$category->name => "{$category->name} — ({$category->group})"];
-                                        })
+                                            ->mapWithKeys(fn($category) => [
+                                                $category->name => "{$category->name} — ({$category->group})"
+                                            ])
                                             ->toArray();
 
                                         // 2. Preserve archived/deleted categories for legacy profiles

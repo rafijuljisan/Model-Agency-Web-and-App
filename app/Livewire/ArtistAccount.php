@@ -261,6 +261,8 @@ class ArtistAccount extends Component
             'district' => 'required|string|max:100',
             'upazila' => 'required|string|max:100',
             'street_address' => 'nullable|string|max:500',
+            'categories' => 'required|array|min:1',   // ← ADD
+            'categories.*' => 'string|max:100',          // ← ADD
         ]);
 
         $user->update([
@@ -275,6 +277,7 @@ class ArtistAccount extends Component
         Profile::updateOrCreate(
             ['user_id' => $user->id],
             [
+                'categories' => $this->categories,      // ← ADD
                 'gender' => $this->gender ?: null,
                 'date_of_birth' => $this->date_of_birth ?: null,
                 'height_cm' => $this->height_cm ?: null,
@@ -287,7 +290,6 @@ class ArtistAccount extends Component
             ]
         );
 
-        // Redirect back to dashboard — mount() will now route to under_review
         return redirect()->route('account.dashboard');
     }
     // In ArtistAccount.php - updateAvatar()
@@ -601,6 +603,7 @@ class ArtistAccount extends Component
 
         // Fetch all active categories and group them locally
         $groupedCategories = \App\Models\Category::where('is_active', true)
+            ->customOrdered()
             ->get()
             ->groupBy('group');
 

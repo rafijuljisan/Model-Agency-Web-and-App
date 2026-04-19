@@ -13,4 +13,9 @@ class Category extends Model
         static::updated($clear);
         static::deleted($clear);
     }
+    public function scopeCustomOrdered($query)
+    {
+        return $query->orderByRaw("FIELD(`group`, 'Artist', 'Model', 'Brand Promoter', 'Content Creator', 'Director', 'Creative Crew')")
+            ->orderBy('name');
+    }
 }
