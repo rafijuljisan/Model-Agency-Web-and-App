@@ -1831,6 +1831,13 @@
                                 'Rocket' => $settings->rocket_number,
                                 default  => null,
                             };
+
+                            $payAccountType = match($payment_method) {
+                                'bKash'  => $settings->bkash_type,
+                                'Nagad'  => $settings->nagad_type,
+                                'Rocket' => $settings->rocket_type,
+                                default  => null,
+                            };
                         @endphp
                         @if($payNumber)
                             <div class="gc-pay-info-box">
@@ -1839,7 +1846,9 @@
                                     <line x1="1" y1="10" x2="23" y2="10"/>
                                 </svg>
                                 <div>
-                                    <div class="gc-pay-info-label">এই নম্বরে Send Money করুন</div>
+                                    <div class="gc-pay-info-label">
+                                        এই নম্বরে {{ $payAccountType }} করুন
+                                    </div>
                                     <div class="gc-pay-info-number">{{ $payNumber }}</div>
                                 </div>
                             </div>

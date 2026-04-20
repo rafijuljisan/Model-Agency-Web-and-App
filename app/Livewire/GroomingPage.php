@@ -64,6 +64,7 @@ class GroomingPage extends Component
 
     // ── Step 5: Payment ──
     public string $payment_method = '';
+    
     public string $sender_number = '';
     public string $transaction_id = '';
     public $payment_screenshot = null;
