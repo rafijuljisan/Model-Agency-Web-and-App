@@ -55,7 +55,7 @@ class UsersTable
                 \Filament\Tables\Columns\IconColumn::make('is_featured')
                     ->label('Featured')
                     ->boolean()
-                    ->trueIcon('heroicon-o-star')
+                    ->trueIcon('heroicon-s-star')
                     ->falseIcon('heroicon-o-star') // dim star
                     ->trueColor('warning'),
             ])

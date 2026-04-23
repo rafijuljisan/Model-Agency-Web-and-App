@@ -15,6 +15,9 @@ use Illuminate\Support\Facades\Hash;
 use Filament\Forms\Components\SpatieMediaLibraryFileUpload;
 use Filament\Schemas\Components\Utilities\Get;
 use Filament\Forms\Components\Repeater;
+use Filament\Forms\Components\FileUpload;
+use Filament\Schemas\Components\Grid;
+use Filament\Forms\Components\Placeholder;
 
 class UserForm
 {
@@ -386,38 +389,107 @@ class UserForm
                     ->description('Private documents uploaded by the user for verification.')
                     ->columns(2)
                     ->schema([
-                        \Filament\Forms\Components\Placeholder::make('nid_preview')
-                            ->label('NID/Passport/Birth Front Side')
-                            ->content(function ($record): \Illuminate\Support\HtmlString {
-                                if (!$record || !$record->nid_path) {
-                                    return new \Illuminate\Support\HtmlString('<span style="color:#9ca3af; font-size:0.85rem;">No document uploaded yet.</span>');
-                                }
-                                $url = route('admin.document.view', ['type' => 'nid', 'user' => $record->id]);
-                                return new \Illuminate\Support\HtmlString("
-                                    <div style='display:flex; flex-direction:column; gap:10px;'>
-                                        <img src='{$url}' style='max-width:100%; max-height:280px; object-fit:contain; border:1px solid #e5e7eb; border-radius:6px; background:#f9fafb;' onerror=\"this.style.display='none'; document.getElementById('nid-link-{$record->id}').style.display='inline-flex';\">
-                                        <a id='nid-link-{$record->id}' href='{$url}' target='_blank' style='display:none; font-size:0.8rem; color:#6366f1; font-weight:600;'>Open Document ↗</a>
-                                        <a href='{$url}' target='_blank' style='font-size:0.78rem; color:#6b7280; text-decoration:underline;'>View / Download full file ↗</a>
-                                    </div>
-                                ");
-                            }),
 
-                        \Filament\Forms\Components\Placeholder::make('nid_back_preview')
-                            ->label('NID/Passport/Birth Back Side')
-                            ->content(function ($record): \Illuminate\Support\HtmlString {
-                                if (!$record || !$record->nid_back_path) {
-                                    return new \Illuminate\Support\HtmlString('<span style="color:#9ca3af; font-size:0.85rem;">No document uploaded yet.</span>');
-                                }
-                                $url = route('admin.document.view', ['type' => 'nid_back', 'user' => $record->id]);
-                                return new \Illuminate\Support\HtmlString("
-                                    <div style='display:flex; flex-direction:column; gap:10px;'>
-                                        <img src='{$url}' style='max-width:100%; max-height:280px; object-fit:contain; border:1px solid #e5e7eb; border-radius:6px; background:#f9fafb;' onerror=\"this.style.display='none'; document.getElementById('acad-link-{$record->id}').style.display='inline-flex';\">
-                                        <a id='acad-link-{$record->id}' href='{$url}' target='_blank' style='display:none; font-size:0.8rem; color:#6366f1; font-weight:600;'>Open Document ↗</a>
-                                        <a href='{$url}' target='_blank' style='font-size:0.78rem; color:#6b7280; text-decoration:underline;'>View / Download full file ↗</a>
-                                    </div>
-                                ");
-                            }),
+                        // ── FRONT SIDE ─────────────────────────────────────────────
+                        Grid::make(1)
+                            ->schema([
+                                Placeholder::make('nid_preview')
+                                    ->label('NID/Passport/Birth Front Side — Current File')
+                                    ->content(function ($record): \Illuminate\Support\HtmlString {
+                                        if (!$record || !$record->nid_path) {
+                                            return new \Illuminate\Support\HtmlString(
+                                                '<span style="color:#9ca3af; font-size:0.85rem;">No document uploaded yet.</span>'
+                                            );
+                                        }
+                                        $url = route('admin.document.view', ['type' => 'nid', 'user' => $record->id]);
+                                        return new \Illuminate\Support\HtmlString("
+                            <div style='display:flex; flex-direction:column; gap:10px;'>
+                                <img src='{$url}' style='max-width:100%; max-height:220px; object-fit:contain; border:1px solid #e5e7eb; border-radius:6px; background:#f9fafb;'
+                                     onerror=\"this.style.display='none'; document.getElementById('nid-link-{$record->id}').style.display='inline-flex';\">
+                                <a id='nid-link-{$record->id}' href='{$url}' target='_blank'
+                                   style='display:none; font-size:0.8rem; color:#6366f1; font-weight:600;'>Open Document ↗</a>
+                                <a href='{$url}' target='_blank'
+                                   style='font-size:0.78rem; color:#6b7280; text-decoration:underline;'>View / Download full file ↗</a>
+                            </div>
+                        ");
+                                    }),
 
+                                FileUpload::make('nid_path')
+                                    ->label('Upload New Front Side Document')
+                                    ->disk('private')              // your private disk name
+                                    ->directory('verification/nid')
+                                    ->acceptedFileTypes(['image/jpeg', 'image/png', 'image/webp', 'application/pdf'])
+                                    ->maxSize(5120)                // 5 MB
+                                    ->downloadable()
+                                    ->openable()
+                                    ->previewable(true)
+                                    ->imagePreviewHeight('180')
+                                    ->helperText('Accepted: JPG, PNG, WebP, PDF — Max 5 MB. Uploading a new file will replace the existing one.')
+                                    ->saveUploadedFileUsing(function ($file, $record) {
+                                        // Delete old file if exists
+                                        if ($record?->nid_path) {
+                                            \Illuminate\Support\Facades\Storage::disk('private')->delete($record->nid_path);
+                                        }
+
+                                        $filename = 'nid_' . $record->id . '_' . time() . '.' . $file->getClientOriginalExtension();
+                                        $path = $file->storeAs('verification/nid', $filename, 'private');
+
+                                        $record->update(['nid_path' => $path]);
+
+                                        return $path;
+                                    }),
+                            ]),
+
+                        // ── BACK SIDE ──────────────────────────────────────────────
+                        Grid::make(1)
+                            ->schema([
+                                Placeholder::make('nid_back_preview')
+                                    ->label('NID/Passport/Birth Back Side — Current File')
+                                    ->content(function ($record): \Illuminate\Support\HtmlString {
+                                        if (!$record || !$record->nid_back_path) {
+                                            return new \Illuminate\Support\HtmlString(
+                                                '<span style="color:#9ca3af; font-size:0.85rem;">No document uploaded yet.</span>'
+                                            );
+                                        }
+                                        $url = route('admin.document.view', ['type' => 'nid_back', 'user' => $record->id]);
+                                        return new \Illuminate\Support\HtmlString("
+                            <div style='display:flex; flex-direction:column; gap:10px;'>
+                                <img src='{$url}' style='max-width:100%; max-height:220px; object-fit:contain; border:1px solid #e5e7eb; border-radius:6px; background:#f9fafb;'
+                                     onerror=\"this.style.display='none'; document.getElementById('acad-link-{$record->id}').style.display='inline-flex';\">
+                                <a id='acad-link-{$record->id}' href='{$url}' target='_blank'
+                                   style='display:none; font-size:0.8rem; color:#6366f1; font-weight:600;'>Open Document ↗</a>
+                                <a href='{$url}' target='_blank'
+                                   style='font-size:0.78rem; color:#6b7280; text-decoration:underline;'>View / Download full file ↗</a>
+                            </div>
+                        ");
+                                    }),
+
+                                FileUpload::make('nid_back_path')
+                                    ->label('Upload New Back Side Document')
+                                    ->disk('private')
+                                    ->directory('verification/nid_back')
+                                    ->acceptedFileTypes(['image/jpeg', 'image/png', 'image/webp', 'application/pdf'])
+                                    ->maxSize(5120)
+                                    ->downloadable()
+                                    ->openable()
+                                    ->previewable(true)
+                                    ->imagePreviewHeight('180')
+                                    ->helperText('Accepted: JPG, PNG, WebP, PDF — Max 5 MB. Uploading a new file will replace the existing one.')
+                                    ->saveUploadedFileUsing(function ($file, $record) {
+                                        if ($record?->nid_back_path) {
+                                            \Illuminate\Support\Facades\Storage::disk('private')->delete($record->nid_back_path);
+                                        }
+
+                                        $filename = 'nid_back_' . $record->id . '_' . time() . '.' . $file->getClientOriginalExtension();
+                                        $path = $file->storeAs('verification/nid_back', $filename, 'private');
+
+                                        $record->update(['nid_back_path' => $path]);
+
+                                        return $path;
+                                    }),
+                            ]),
+
+                        // ── STATUS SELECTS (unchanged) ─────────────────────────────
                         Select::make('verification_status')
                             ->label('NID/Passport/Birth Front Side Status')
                             ->options([
@@ -427,8 +499,8 @@ class UserForm
                                 'rejected' => 'Rejected',
                             ])
                             ->default('unverified')
-                            ->required()                   // ← ADD THIS
-                            ->selectablePlaceholder(false) // ← ADD THIS
+                            ->required()
+                            ->selectablePlaceholder(false)
                             ->native(false),
 
                         Select::make('nid_back_verification_status')
@@ -440,8 +512,8 @@ class UserForm
                                 'rejected' => 'Rejected',
                             ])
                             ->default('unverified')
-                            ->required()                   // ← ADD THIS
-                            ->selectablePlaceholder(false) // ← ADD THIS
+                            ->required()
+                            ->selectablePlaceholder(false)
                             ->native(false),
                     ]),
                 // 8. Artist Experience & Credits

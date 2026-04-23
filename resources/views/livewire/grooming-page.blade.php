@@ -1847,7 +1847,7 @@
                                 </svg>
                                 <div>
                                     <div class="gc-pay-info-label">
-                                        এই নম্বরে {{ $payAccountType }} করুন
+                                        এই নম্বরে <span style="color:red; font-weight:700;">{{ $payAccountType }}</span> করুন
                                     </div>
                                     <div class="gc-pay-info-number">{{ $payNumber }}</div>
                                 </div>
