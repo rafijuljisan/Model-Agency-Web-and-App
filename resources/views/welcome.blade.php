@@ -1257,37 +1257,35 @@
             {{-- Right gallery collage --}}
             <div class="hero-gallery anim-fade-up anim-d2" aria-hidden="true">
 
-                <div class="hero-card hero-card-1">
-                    <img src="https://images.unsplash.com/photo-1529626455594-4ff0802cfb7e?w=600&q=80" alt="">
-                    <div class="hero-card-badge">
-                        <svg width="10" height="10" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2L3 7v5c0 5.55 3.84 10.74 9 12 5.16-1.26 9-6.45 9-12V7L12 2zm-2 15l-4-4 1.41-1.41L10 14.17l6.59-6.59L18 9l-8 8z"/></svg>
-                        Verified
-                    </div>
-                    <div class="hero-card-label">
-                        <div class="hero-card-cat">Model</div>
-                        <div class="hero-card-name">Anahita R.</div>
-                    </div>
-                </div>
+                @foreach($featuredArtists->take(3) as $artist)
+                    <div class="hero-card hero-card-{{ $loop->iteration }}">
+                        
+                        {{-- Load Avatar, fallback to Portfolio, fallback to placeholder --}}
+                        @if($artist->hasMedia('avatar'))
+                            <img src="{{ $artist->getFirstMediaUrl('avatar') }}" alt="{{ $artist->name }}">
+                        @elseif($artist->hasMedia('portfolio'))
+                            <img src="{{ $artist->getFirstMediaUrl('portfolio') }}" alt="{{ $artist->name }}">
+                        @else
+                            <img src="https://ui-avatars.com/api/?name={{ urlencode($artist->name) }}&background=1a1714&color=fff&size=600" alt="{{ $artist->name }}">
+                        @endif
 
-                <div class="hero-card hero-card-2">
-                    <img src="https://images.unsplash.com/photo-1531746020798-e6953c6e8e04?w=500&q=80" alt="">
-                    <div class="hero-card-badge">
-                        <svg width="10" height="10" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2L3 7v5c0 5.55 3.84 10.74 9 12 5.16-1.26 9-6.45 9-12V7L12 2zm-2 15l-4-4 1.41-1.41L10 14.17l6.59-6.59L18 9l-8 8z"/></svg>
-                        Verified
-                    </div>
-                    <div class="hero-card-label">
-                        <div class="hero-card-cat">Actress</div>
-                        <div class="hero-card-name">Nadia K.</div>
-                    </div>
-                </div>
+                        {{-- Original design showed the badge only on the top two cards --}}
+                        @if($loop->iteration <= 2)
+                            <div class="hero-card-badge">
+                                <svg width="10" height="10" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2L3 7v5c0 5.55 3.84 10.74 9 12 5.16-1.26 9-6.45 9-12V7L12 2zm-2 15l-4-4 1.41-1.41L10 14.17l6.59-6.59L18 9l-8 8z"/></svg>
+                                Verified
+                            </div>
+                        @endif
 
-                <div class="hero-card hero-card-3">
-                    <img src="https://images.unsplash.com/photo-1488161628813-04466f872be2?w=400&q=80" alt="">
-                    <div class="hero-card-label">
-                        <div class="hero-card-cat">Photographer</div>
-                        <div class="hero-card-name">Fiton K.</div>
+                        <div class="hero-card-label">
+                            <div class="hero-card-cat">
+                                {{-- Dynamically grab their first category or fallback to 'Professional' --}}
+                                {{ !empty($artist->profile?->categories) ? collect($artist->profile->categories)->first() : 'Professional' }}
+                            </div>
+                            <div class="hero-card-name">{{ $artist->name }}</div>
+                        </div>
                     </div>
-                </div>
+                @endforeach
 
                 <div class="hero-accent-box" aria-label="100% NID Verified">
                     <div class="hero-accent-box-num">100%</div>
@@ -1477,7 +1475,7 @@
                                                         <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
                                                             <path d="M8 3v18M5 6h3M5 10h3M5 14h3M5 18h3M16 3l4 4-4 4M20 7H8"/>
                                                         </svg>
-                                                        <strong>{{ $artist->profile->height_cm }} cm</strong>
+                                                        <strong>{{ $artist->profile->height_cm }} ft</strong>
                                                     </div>
                                                 @endif
 

@@ -919,7 +919,7 @@
 
                         {{-- Height --}}
                         <div class="form-field">
-                            <label class="form-field-label" for="bi-height">Height (ft/cm)</label>
+                            <label class="form-field-label" for="bi-height">Height (ft)</label>
                             <input id="bi-height" type="text" class="form-input" wire:model.defer="height_cm"
                                 placeholder="e.g. 5'8&quot; or 172">
                         </div>
@@ -1487,7 +1487,7 @@
                                             <path d="M8 3v18M5 6h3M5 10h3M5 14h3M5 18h3M16 3l4 4-4 4M20 7H8" />
                                         </svg>
                                         <input id="f-height" type="number" class="form-input" wire:model.defer="height_cm"
-                                            placeholder="e.g. 165" min="100" max="250">
+                                            placeholder="e.g. 5.6" min="100" max="250">
                                     </div>
                                 </div>
 
@@ -1520,7 +1520,7 @@
                                 <div class="form-field">
                                     <label class="form-field-label">Height (ft)</label>
                                     <input type="number" class="form-input" wire:model.defer="height_cm"
-                                        placeholder="e.g. 170">
+                                        placeholder="e.g. 5.6">
                                 </div>
 
                                 <div class="form-field">

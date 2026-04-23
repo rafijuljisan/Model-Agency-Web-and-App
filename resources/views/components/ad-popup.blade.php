@@ -58,10 +58,14 @@
     <div x-data="{
             showPopup: false,
             adId: 'popup_ad_{{ $ad->id }}',
+            cooldownHours: 24, // Change this to how often it should reappear
             
             init() {
-                // If this specific ad ID hasn't been seen, show it after 1.5 seconds
-                if (!localStorage.getItem(this.adId)) {
+                let lastSeen = localStorage.getItem(this.adId);
+                let now = new Date().getTime();
+                
+                // Check if never seen, OR if the cooldown time has passed
+                if (!lastSeen || (now - lastSeen) > (this.cooldownHours * 60 * 60 * 1000)) {
                     setTimeout(() => {
                         this.showPopup = true;
                     }, 1500);
@@ -69,8 +73,8 @@
             },
             closePopup() {
                 this.showPopup = false;
-                // Mark this specific ad as seen so it doesn't show again
-                localStorage.setItem(this.adId, 'true');
+                // Save the current timestamp when they close it
+                localStorage.setItem(this.adId, new Date().getTime());
             }
         }"
         x-show="showPopup"

@@ -954,10 +954,10 @@
                 </div>
 
                 <div class="filter-group">
-                    <span class="filter-label">Height Range (CM)</span>
+                    <span class="filter-label">Height Range (Ft)</span>
                     <div style="display: flex; gap: 8px;">
-                        <input class="filter-input" type="number" placeholder="Min cm" wire:model.live.debounce.500ms="minHeight">
-                        <input class="filter-input" type="number" placeholder="Max cm" wire:model.live.debounce.500ms="maxHeight">
+                        <input class="filter-input" type="number" placeholder="Min ft" wire:model.live.debounce.500ms="minHeight">
+                        <input class="filter-input" type="number" placeholder="Max ft" wire:model.live.debounce.500ms="maxHeight">
                     </div>
                 </div>
 
@@ -1235,7 +1235,7 @@
                                             stroke="currentColor" stroke-width="1.5">
                                             <path d="M8 3v18M5 6h3M5 10h3M5 14h3M5 18h3M16 3l4 4-4 4M20 7H8"/>
                                         </svg>
-                                        <strong>{{ $artist->profile->height_cm }} cm</strong>
+                                        <strong>{{ $artist->profile->height_cm }} ft</strong>
                                     </div>
                                 @endif
 
