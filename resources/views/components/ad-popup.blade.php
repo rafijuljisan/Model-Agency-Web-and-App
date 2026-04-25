@@ -58,7 +58,7 @@
     <div x-data="{
             showPopup: false,
             adId: 'popup_ad_{{ $ad->id }}',
-            cooldownHours: 24, // Change this to how often it should reappear
+            cooldownHours: 1, // Change this to how often it should reappear
             
             init() {
                 let lastSeen = localStorage.getItem(this.adId);

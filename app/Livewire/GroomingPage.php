@@ -18,6 +18,7 @@ use App\Notifications\AdminAlertNotification;
 use Filament\Notifications\Notification as FilamentNotification;
 use Illuminate\Support\Facades\Log;
 use Carbon\Carbon;
+use App\Services\FacebookCapiService;
 
 #[Title('Grooming Class | Dhaka Model Agency')]
 #[Layout('layouts.app')]
@@ -264,6 +265,30 @@ class GroomingPage extends Component
 
         $this->applicationId = $application->id;
         $this->submitted = true;
+        // --- Trigger Facebook CAPI CompleteRegistration Event ---
+        try {
+            // Fetch the fee from the selected batch
+            $batch = GroomingBatch::find($this->batch_id);
+            $fee = $batch ? $batch->fee : 0;
+
+            // Use the database Application ID as the unique deduplication key
+            $uniqueEventId = 'GROOM_APP_' . $application->id; 
+
+            $capiService = new FacebookCapiService();
+            $capiService->sendRegistrationEvent(
+                [
+                    'email' => $this->email,
+                    'phone' => $this->phone,
+                    'name'  => $this->full_name,
+                ],
+                $fee,
+                request()->url(),
+                $uniqueEventId // Pass the deduplication ID here
+            );
+        } catch (\Exception $e) {
+            // Silently fail if CAPI crashes so the user still sees the success screen
+            Log::error('CAPI Trigger Error: ' . $e->getMessage());
+        }
     }
 
     // ─────────────────────────────────────────

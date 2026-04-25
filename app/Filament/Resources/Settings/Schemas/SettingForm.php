@@ -1,16 +1,15 @@
 <?php
 
 namespace App\Filament\Resources\Settings\Schemas;
-use Filament\Schemas\Components\Tabs;
-use Filament\Forms\Components\TextInput;
-use Filament\Forms\Components\Textarea;
-use Filament\Forms\Components\FileUpload;
-use Filament\Forms\Components\Select;
-use Filament\Tables\Columns\TextColumn;
-use Filament\Tables\Columns\ImageColumn;
-use Filament\Schemas\Components\Tabs\Tab;
-use Filament\Forms\Components\RichEditor;
 
+use Filament\Forms\Components\FileUpload;
+use Filament\Forms\Components\RichEditor;
+use Filament\Forms\Components\Select;
+use Filament\Forms\Components\Textarea;
+use Filament\Forms\Components\TextInput;
+use Filament\Forms\Components\Toggle;
+use Filament\Schemas\Components\Tabs;
+use Filament\Schemas\Components\Tabs\Tab;
 use Filament\Schemas\Schema;
 
 class SettingForm
@@ -23,7 +22,7 @@ class SettingForm
                     ->columnSpanFull()
                     ->tabs([
                         // TAB 1: BRANDING
-                        Tabs\Tab::make('Branding')
+                        Tab::make('Branding')
                             ->icon('heroicon-o-paint-brush')
                             ->columns(2)
                             ->schema([
@@ -44,7 +43,7 @@ class SettingForm
 
                         // TAB 2: CONTACT & SOCIALS
                         // TAB 2: CONTACT & SOCIALS
-                        Tabs\Tab::make('Contact & Location')
+                        Tab::make('Contact & Location')
                             ->icon('heroicon-o-map-pin')
                             ->columns(2)
                             ->schema([
@@ -75,7 +74,7 @@ class SettingForm
                                 TextInput::make('youtube_url')->url()->label('YouTube URL'),
                                 TextInput::make('linkedin_url')->url()->label('LinkedIn URL'),
                             ]),
-                        Tabs\Tab::make('About Page')
+                        Tab::make('About Page')
                             ->icon('heroicon-o-identification')
                             ->columns(2)
                             ->schema([
@@ -117,7 +116,7 @@ class SettingForm
                                     ->toolbarButtons(['bold', 'italic', 'bulletList', 'orderedList']),
                             ]),
                         // TAB 3: PAYMENT METHODS
-                        Tabs\Tab::make('Payment Gateways')
+                        Tab::make('Payment Gateways')
                             ->icon('heroicon-o-banknotes')
                             ->columns(2)
                             ->schema([
@@ -142,7 +141,7 @@ class SettingForm
                                     'Payment' => 'Merchant (Payment)',
                                 ]),
                             ]),
-                        Tabs\Tab::make('SEO & Analytics')
+                        Tab::make('SEO & Analytics')
                             ->icon('heroicon-o-magnifying-glass')
                             ->columns(2)
                             ->schema([
@@ -196,8 +195,20 @@ class SettingForm
                                     ->label('Facebook Pixel ID')
                                     ->placeholder('e.g. 1234567890123456'),
 
+                                TextInput::make('facebook_capi_token')
+                                    ->label('Facebook CAPI Access Token')
+                                    ->placeholder('Paste your System User Access Token here')
+                                    ->password()
+                                    ->revealable()
+                                    ->helperText('Generate this in Facebook Events Manager > Settings > Conversions API > Generate access token.'),
+
+                                TextInput::make('facebook_test_event_code')
+                                    ->label('Test Event Code')
+                                    ->placeholder('e.g. TEST54321')
+                                    ->helperText('Use this for testing in the Events Manager. Clear this field when going live in production.'),
+
                                 // ── Sitemap & Robots ──
-                                \Filament\Forms\Components\Toggle::make('sitemap_enabled')
+                                Toggle::make('sitemap_enabled')
                                     ->label('Enable Sitemap (/sitemap.xml)')
                                     ->default(true)
                                     ->columnSpanFull(),
@@ -210,7 +221,7 @@ class SettingForm
                                     ->columnSpanFull(),
 
                                 // ── Schema.org ──
-                                \Filament\Forms\Components\Select::make('schema_org_type')
+                                Select::make('schema_org_type')
                                     ->label('Business Schema Type')
                                     ->options([
                                         'Organization' => 'Organization',
