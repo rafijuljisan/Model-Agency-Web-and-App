@@ -205,10 +205,20 @@ class PhotocardService
              $this->drawAutoScaledText($canvas, self::LOC_X, self::LOC_Y, $dark, $regularFont, $location, 280, 2, 24, 16);
         }
 
-        // ── Member Type ──
-        $memberType = collect($artist->profile?->categories ?? [])
-            ->take(2)
-            ->implode(', ');
+        // ── Member Type (Groups only, Custom Ordered) ──
+        $profileCategories = $artist->profile?->categories ?? [];
+        
+        $memberType = '';
+        if (!empty($profileCategories)) {
+            // 1. Query the Category model using the profile's data
+            // NOTE: If your profile stores category IDs instead of Names, change 'name' to 'id' below!
+            $memberType = \App\Models\Category::whereIn('name', $profileCategories)
+                ->customOrdered() // 2. Apply your custom ordering scope
+                ->get()
+                ->pluck('group')  // 3. Extract ONLY the group names
+                ->unique()        // 4. Remove duplicate groups (if they have multiple categories in one group)
+                ->implode(', ');  // 5. Join them with a comma
+        }
 
         if ($memberType) {
             $this->drawAutoScaledText($canvas, self::TYPE_X, self::TYPE_Y, $white, $boldFont, $memberType, 600, 2, 24, 16);
