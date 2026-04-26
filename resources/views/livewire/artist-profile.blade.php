@@ -1289,6 +1289,18 @@
                     @endif
                 @endauth
 
+                @if(auth()->check() && (auth()->id() === $artist->id || auth()->user()->hasRole('Super-Admin')))
+                    <a href="{{ route('photocard.download', $artist) }}"
+                    class="inline-flex items-center gap-2 px-4 py-2 bg-red-600 text-white rounded-lg text-sm font-semibold hover:bg-red-700 transition">
+                        {{-- heroicon: identification --}}
+                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                d="M10 6H5a2 2 0 00-2 2v9a2 2 0 002 2h14a2 2 0 002-2V8a2 2 0 00-2-2h-5m-4 0V5a2 2 0 114 0v1m-4 0a2 2 0 104 0M9 14h6"/>
+                        </svg>
+                        Download Photocard
+                    </a>
+                @endif
+                
                 @if(!auth()->check() || auth()->id() !== $artist->id)
                     <button wire:click="revealContact" class="btn-fill mobile-only"
                         style="font-size: 0.78rem; min-width: 160px; justify-content: center;">

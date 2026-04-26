@@ -2,21 +2,22 @@
 
 namespace App\Filament\Resources\Users\Tables;
 
-use Filament\Tables\Table;
-use Filament\Tables\Columns\ImageColumn;
+use App\Models\User;
+use App\Notifications\UserStatusNotification;
+use App\Services\PhotocardService;
+use Filament\Actions\Action;
+use Filament\Actions\BulkAction;
+use Filament\Actions\BulkActionGroup;
+use Filament\Actions\DeleteAction;
+use Filament\Actions\DeleteBulkAction;
+use Filament\Actions\EditAction;
+use Filament\Notifications\Notification;
+use Filament\Tables\Columns\IconColumn;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Filters\SelectFilter;
 use Filament\Tables\Filters\TernaryFilter;
+use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
-
-use Filament\Actions\EditAction;
-use Filament\Actions\DeleteAction;
-use Filament\Actions\Action;
-use Filament\Actions\BulkActionGroup;
-use Filament\Actions\DeleteBulkAction;
-use App\Notifications\UserStatusNotification;
-
-use Filament\Notifications\Notification;
 
 class UsersTable
 {
@@ -36,7 +37,7 @@ class UsersTable
                 TextColumn::make('verification_status')
                     ->label('NID Front')
                     ->badge()
-                    ->color(fn(string $state): string => match ($state) {
+                    ->color(fn (string $state): string => match ($state) {
                         'verified' => 'success',
                         'pending' => 'warning',
                         'unverified' => 'danger',
@@ -46,13 +47,13 @@ class UsersTable
                 TextColumn::make('nid_back_verification_status')
                     ->label('NID Back')
                     ->badge()
-                    ->color(fn(string $state): string => match ($state) {
+                    ->color(fn (string $state): string => match ($state) {
                         'verified' => 'success',
                         'pending' => 'warning',
                         'unverified' => 'danger',
                         default => 'gray',
                     }),
-                \Filament\Tables\Columns\IconColumn::make('is_featured')
+                IconColumn::make('is_featured')
                     ->label('Featured')
                     ->boolean()
                     ->trueIcon('heroicon-s-star')
@@ -104,7 +105,7 @@ class UsersTable
                     ->query(function (Builder $query, array $data): Builder {
                         return $query->when(
                             $data['value'],
-                            fn(Builder $query, $value): Builder => $query->whereHas('profile', fn($q) => $q->where('gender', $value))
+                            fn (Builder $query, $value): Builder => $query->whereHas('profile', fn ($q) => $q->where('gender', $value))
                         );
                     }),
 
@@ -119,7 +120,7 @@ class UsersTable
                     ->query(function (Builder $query, array $data): Builder {
                         return $query->when(
                             $data['value'],
-                            fn(Builder $query, $value): Builder => $query->whereHas('profile', fn($q) => $q->where('experience_level', $value))
+                            fn (Builder $query, $value): Builder => $query->whereHas('profile', fn ($q) => $q->where('experience_level', $value))
                         );
                     }),
 
@@ -127,9 +128,9 @@ class UsersTable
                 TernaryFilter::make('willing_to_travel')
                     ->label('Willing to Travel')
                     ->queries(
-                        true: fn(Builder $query) => $query->whereHas('profile', fn($q) => $q->where('willing_to_travel', true)),
-                        false: fn(Builder $query) => $query->whereHas('profile', fn($q) => $q->where('willing_to_travel', false)),
-                        blank: fn(Builder $query) => $query,
+                        true: fn (Builder $query) => $query->whereHas('profile', fn ($q) => $q->where('willing_to_travel', true)),
+                        false: fn (Builder $query) => $query->whereHas('profile', fn ($q) => $q->where('willing_to_travel', false)),
+                        blank: fn (Builder $query) => $query,
                     ),
             ])
 
@@ -137,6 +138,20 @@ class UsersTable
                 EditAction::make(),
                 DeleteAction::make(),
 
+                Action::make('download_photocard')
+                    ->label('Download Card')
+                    ->icon('heroicon-o-identification')
+                    ->color('danger')
+                    ->url(fn ($record) => route('photocard.download', $record))
+                    ->openUrlInNewTab(),
+
+                Action::make('regenerate_photocard')
+                    ->label('Regenerate Card')
+                    ->icon('heroicon-o-arrow-path')
+                    ->color('warning')
+                    ->url(fn ($record) => route('photocard.regenerate', $record))
+                    ->requiresConfirmation()
+                    ->openUrlInNewTab(),
                 // =========================
                 // ✅ NID APPROVAL
                 // =========================
@@ -144,14 +159,13 @@ class UsersTable
                     ->label('Approve NID')
                     ->color('success')
                     ->visible(
-                        fn($record) =>
-                        $record->verification_status === 'pending'
+                        fn ($record) => $record->verification_status === 'pending'
                         && $record->nid_path
                     )
                     ->requiresConfirmation()
                     ->action(function ($record) {
                         $record->update(['verification_status' => 'verified']);
-                        if (!$record->hasRole('Verified-Artist')) {
+                        if (! $record->hasRole('Verified-Artist')) {
                             $record->assignRole('Verified-Artist');
                         }
 
@@ -169,13 +183,12 @@ class UsersTable
                     ->label('Reject NID')
                     ->color('danger')
                     ->visible(
-                        fn($record) =>
-                        $record->verification_status === 'pending' && $record->nid_path
+                        fn ($record) => $record->verification_status === 'pending' && $record->nid_path
                     )
                     ->requiresConfirmation()
                     ->action(function ($record) {
                         $record->update(['verification_status' => 'rejected']); // ← was 'unverified'
-            
+
                         $record->notify(new UserStatusNotification(
                             'National ID Rejected',
                             'Unfortunately, we could not verify the National ID you uploaded. Please log in and upload a clearer, original document.',
@@ -185,15 +198,14 @@ class UsersTable
                         Notification::make()->title('NID Rejected')->danger()->send();
                     }),
 
-                /// =========================
+                // / =========================
                 // 🎓 NID BACK APPROVAL
                 // =========================
                 Action::make('approve_academic') // You can keep the internal name 'approve_academic' or change it to 'approve_nid_back'
                     ->label('Approve NID Back')
                     ->color('success')
                     ->visible(
-                        fn($record) =>
-                        $record->nid_back_verification_status === 'pending'
+                        fn ($record) => $record->nid_back_verification_status === 'pending'
                         && $record->nid_back_path
                     )
                     ->requiresConfirmation()
@@ -203,7 +215,7 @@ class UsersTable
                         ]);
 
                         // ── TRIGGER USER EMAIL (SUCCESS) ──
-                        $record->notify(new \App\Notifications\UserStatusNotification(
+                        $record->notify(new UserStatusNotification(
                             'NID Back Approved!',
                             'Great news! Your NID/Passport/Birth certificate back side has been successfully verified by our team.',
                             true // Shows the green success button
@@ -219,14 +231,13 @@ class UsersTable
                     ->label('Reject NID Back')
                     ->color('danger')
                     ->visible(
-                        fn($record) =>
-                        $record->nid_back_verification_status === 'pending' && $record->nid_back_path
+                        fn ($record) => $record->nid_back_verification_status === 'pending' && $record->nid_back_path
                     )
                     ->requiresConfirmation()
                     ->action(function ($record) {
-                        $record->update(['nid_back_verification_status' => 'rejected']); 
-            
-                        $record->notify(new \App\Notifications\UserStatusNotification(
+                        $record->update(['nid_back_verification_status' => 'rejected']);
+
+                        $record->notify(new UserStatusNotification(
                             'NID Back Rejected',
                             'Unfortunately, we could not verify the back side of the document you uploaded. Please log in and upload a clearer, valid document.',
                             false
@@ -243,8 +254,7 @@ class UsersTable
                     ->color('success')
                     ->icon('heroicon-o-check-badge')
                     ->visible(
-                        fn($record) =>
-                        $record->verification_status === 'pending' ||
+                        fn ($record) => $record->verification_status === 'pending' ||
                         $record->nid_back_verification_status === 'pending'
                     )
                     ->requiresConfirmation()
@@ -258,12 +268,12 @@ class UsersTable
                         ]);
 
                         // Assign the Verified Artist role
-                        if (!$record->hasRole('Verified-Artist')) {
+                        if (! $record->hasRole('Verified-Artist')) {
                             $record->assignRole('Verified-Artist');
                         }
 
                         // Trigger a single success email
-                        $record->notify(new \App\Notifications\UserStatusNotification(
+                        $record->notify(new UserStatusNotification(
                             'Account Verified!',
                             'Great news! Your identity documents (Front and Back) have been verified. Your profile is now unlocked.',
                             true
@@ -276,8 +286,7 @@ class UsersTable
                     ->color('warning')
                     ->icon('heroicon-o-x-circle')
                     ->visible(
-                        fn($record) =>
-                        $record->verification_status === 'verified' ||
+                        fn ($record) => $record->verification_status === 'verified' ||
                         $record->nid_back_verification_status === 'verified'
                     )
                     ->requiresConfirmation()
@@ -306,6 +315,20 @@ class UsersTable
             ->bulkActions([
                 BulkActionGroup::make([
                     DeleteBulkAction::make(),
+
+                    BulkAction::make('bulk_photocards')
+                        ->label('Generate All Photocards')
+                        ->icon('heroicon-o-identification')
+                        ->action(function () {
+                            $service = app(PhotocardService::class);
+
+                            User::role('Verified-Artist')
+                                ->whereHas('subscriptions', fn ($q) => $q->where('status', 'active'))
+                                ->get()
+                                ->each(fn (User $artist) => $service->generate($artist));
+                        })
+                        ->requiresConfirmation()
+                        ->deselectRecordsAfterCompletion(),
                 ]),
             ]);
     }

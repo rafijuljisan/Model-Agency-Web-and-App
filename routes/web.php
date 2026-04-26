@@ -222,7 +222,24 @@ Route::get('/legal', function () {
 })->name('legal');
 // 5. Public Pricing Page (Renamed to avoid conflict)
 Route::get('/pricing', [App\Http\Controllers\PaymentController::class, 'show'])->name('pricing.index');
+/*
+|--------------------------------------------------------------------------
+| Photocard Routes
+|--------------------------------------------------------------------------
+*/
+Route::middleware('auth')->group(function () {
+    // Owner or admin downloads their card
+    Route::get('/photocard/{artist}/download', [App\Http\Controllers\PhotocardController::class, 'download'])
+        ->name('photocard.download');
 
+    // Admin: force regenerate one card
+    Route::get('/photocard/{artist}/regenerate', [App\Http\Controllers\PhotocardController::class, 'regenerate'])
+        ->name('photocard.regenerate');
+
+    // Admin: bulk generate all
+    Route::post('/photocard/bulk-generate', [App\Http\Controllers\PhotocardController::class, 'bulkGenerate'])
+        ->name('photocard.bulk');
+});
 
 /*
 |--------------------------------------------------------------------------

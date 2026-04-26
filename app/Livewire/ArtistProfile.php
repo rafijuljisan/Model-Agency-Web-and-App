@@ -2,20 +2,23 @@
 
 namespace App\Livewire;
 
-use App\Models\User;
 use App\Models\Setting;
+use App\Models\User;
+use Illuminate\Support\Str;
 use Livewire\Component;
 
 class ArtistProfile extends Component
 {
     public User $artist;
+
     public bool $showContact = false;
+
     public bool $showAgencyModal = false; // Controls the new popup
 
     public function mount($slug)
     {
         // Extract the ID from the end of the slug
-        $id = \Illuminate\Support\Str::afterLast($slug, '-');
+        $id = Str::afterLast($slug, '-');
 
         $this->artist = User::role('Verified-Artist')
             ->with(['profile', 'media', 'experiences'])
@@ -42,6 +45,22 @@ class ArtistProfile extends Component
     public function closeAgencyModal()
     {
         $this->showAgencyModal = false;
+    }
+
+    public function generatePhotocard()
+    {
+        $user = auth()->user();
+
+        $isOwner = $user && $user->id === $this->artist->id;
+        $isAdmin = $user && $user->hasRole('Super-Admin');
+
+        if (! $isOwner && ! $isAdmin) {
+            $this->showAgencyModal = true; // reuse existing modal for non-auth visitors
+
+            return;
+        }
+
+        return redirect()->route('photocard.download', $this->artist);
     }
 
     public function render()
@@ -71,24 +90,24 @@ class ArtistProfile extends Component
             $ogImage = asset('images/og-default.jpg');
         }
 
-        $ogTitle = $this->artist->name . ' — Verified Talent | Dhaka Model Agency';
+        $ogTitle = $this->artist->name.' — Verified Talent | Dhaka Model Agency';
 
-        $ogDescription = \Illuminate\Support\Str::limit(
+        $ogDescription = Str::limit(
             strip_tags($this->artist->profile?->bio ?? 'View this verified talent profile on Dhaka Model Agency.'),
             160
         );
 
         $ogUrl = route('artist.show', [
-            'slug' => \Illuminate\Support\Str::slug($this->artist->name) . '-' . $this->artist->id
+            'slug' => Str::slug($this->artist->name).'-'.$this->artist->id,
         ]);
 
         return view('livewire.artist-profile', [
             'settings' => $settings,
         ])->layout('layouts.app', [
-                    'ogImage' => $ogImage,
-                    'ogTitle' => $ogTitle,
-                    'ogDescription' => $ogDescription,
-                    'ogUrl' => $ogUrl,
-                ]);
+            'ogImage' => $ogImage,
+            'ogTitle' => $ogTitle,
+            'ogDescription' => $ogDescription,
+            'ogUrl' => $ogUrl,
+        ]);
     }
 }

@@ -2699,6 +2699,16 @@
                             </svg>
                             <span class="hide-on-mobile">View Profile</span>
                         </a>
+                        @if($currentStep === 'profile')
+                            <a href="{{ route('photocard.download', auth()->user()) }}"
+                            class="inline-flex items-center gap-2 px-4 py-2 border border-red-600 text-red-600 rounded-lg text-sm font-semibold hover:bg-red-50 transition">
+                                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                        d="M10 6H5a2 2 0 00-2 2v9a2 2 0 002 2h14a2 2 0 002-2V8a2 2 0 00-2-2h-5m-4 0V5a2 2 0 114 0v1m-4 0a2 2 0 104 0M9 14h6"/>
+                                </svg>
+                                Download My Membership Card
+                            </a>
+                        @endif
                     </div>
 
                     {{-- Right Side: Navigation & Universal Save --}}

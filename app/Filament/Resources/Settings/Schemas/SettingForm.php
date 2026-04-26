@@ -39,6 +39,14 @@ class SettingForm
                                     ->image()
                                     ->disk('public')
                                     ->directory('settings'),
+                                FileUpload::make('photocard_frame')
+                                    ->label('Membership Card Frame (PNG, 1200×1200px)')
+                                    ->helperText('Upload your transparent-area frame. Artists\' photos will be placed inside the cutout.')
+                                    ->image()
+                                    ->disk('public')
+                                    ->directory('settings/photocard')
+                                    ->acceptedFileTypes(['image/png'])
+                                    ->columnSpanFull(),
                             ]),
 
                         // TAB 2: CONTACT & SOCIALS
