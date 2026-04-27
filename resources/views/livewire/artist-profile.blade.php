@@ -1,7 +1,5 @@
 <div x-data="{
     activeTab: 'about',
-    lightboxOpen: false,
-    activeImg: '',
     showModal: false
 }" x-init="
     // Sync modal state with Livewire
@@ -1660,8 +1658,7 @@
                     <div class="ap-card">
                         <div class="ap-card-head">
                             <div class="ap-card-head-icon">
-                                <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor"
-                                    stroke-width="2">
+                                <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                                     <rect x="3" y="3" width="18" height="18" rx="1" />
                                     <circle cx="8.5" cy="8.5" r="1.5" />
                                     <path d="M21 15l-5-5L5 21" />
@@ -1669,28 +1666,104 @@
                             </div>
                             <div class="ap-card-title">Portfolio Gallery</div>
                         </div>
+                        
                         <div class="ap-card-body" style="padding: 3px;">
                             @if($artist->hasMedia('portfolio'))
-                                <div class="ap-portfolio-grid">
+                            
+                                {{-- 1. Bulletproof Inline Alpine Component for Livewire --}}
+                                {{-- 1. Bulletproof Inline Alpine Component for Livewire --}}
+                                <div class="ap-portfolio-grid" 
+                                    x-data="{
+                                        isOpen: false,
+                                        currentIndex: 0,
+                                        images: @js($artist->getMedia('portfolio')->map(fn($m) => $m->getUrl())->values()),
+                                        touchStartX: 0,
+                                        touchEndX: 0,
+                                        openGallery(index) {
+                                            this.currentIndex = index;
+                                            this.isOpen = true;
+                                            document.body.style.overflow = 'hidden';
+                                        },
+                                        closeGallery() {
+                                            this.isOpen = false;
+                                            document.body.style.overflow = '';
+                                        },
+                                        next() {
+                                            if (this.isOpen && this.currentIndex < this.images.length - 1) this.currentIndex++;
+                                        },
+                                        prev() {
+                                            if (this.isOpen && this.currentIndex > 0) this.currentIndex--;
+                                        },
+                                        handleSwipe() {
+                                            if (!this.isOpen) return;
+                                            if (this.touchEndX < this.touchStartX - 50) this.next();
+                                            if (this.touchEndX > this.touchStartX + 50) this.prev();
+                                        }
+                                    }"
+                                    @keydown.window.escape="closeGallery()"
+                                    @keydown.window.right="next()"
+                                    @keydown.window.left="prev()"
+                                >
+                                    {{-- 2. Render the thumbnails --}}
                                     @foreach($artist->getMedia('portfolio') as $media)
-                                        <div class="ap-portfolio-item"
-                                            @click="lightboxOpen = true; activeImg = '{{ $media->getUrl() }}'">
+                                        <div class="ap-portfolio-item" 
+                                            @click="openGallery({{ $loop->index }})"
+                                            style="cursor: pointer;">
                                             <img src="{{ $media->getUrl() }}" alt="Portfolio image" loading="lazy">
                                             <div class="ap-portfolio-overlay">
-                                                <svg width="22" height="22" viewBox="0 0 24 24" fill="none"
-                                                    stroke="currentColor" stroke-width="1.5">
+                                                <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
                                                     <path d="M15 3h6v6M9 21H3v-6M21 3l-7 7M3 21l7-7" />
                                                 </svg>
                                                 <span>View</span>
                                             </div>
                                         </div>
                                     @endforeach
+
+                                    {{-- 3. The Fullscreen Lightbox Overlay --}}
+                                    <template x-teleport="body">
+                                        <div x-show="isOpen" 
+                                            x-transition.opacity.duration.300ms
+                                            style="position: fixed; inset: 0; z-index: 99999; background: rgba(0,0,0,0.95);"
+                                            @touchstart="touchStartX = $event.changedTouches[0].screenX"
+                                            @touchend="touchEndX = $event.changedTouches[0].screenX; handleSwipe()"
+                                            style="display: none;">
+                                            
+                                            {{-- Perfect Centering Wrapper --}}
+                                            <div style="width: 100%; height: 100%; display: flex; align-items: center; justify-content: center; position: relative;">
+                                                
+                                                {{-- Close Button --}}
+                                                <button @click="closeGallery()" style="position: absolute; top: 20px; right: 20px; color: white; background: rgba(255,255,255,0.1); border: none; border-radius: 50%; width: 44px; height: 44px; display: flex; align-items: center; justify-content: center; cursor: pointer; z-index: 10001; transition: background 0.2s;" onmouseover="this.style.background='rgba(255,255,255,0.2)'" onmouseout="this.style.background='rgba(255,255,255,0.1)'">
+                                                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
+                                                </button>
+
+                                                {{-- Prev Button --}}
+                                                <button x-show="currentIndex > 0" @click.stop="prev()" style="position: absolute; left: 20px; top: 50%; transform: translateY(-50%); color: white; background: rgba(255,255,255,0.1); border: none; border-radius: 50%; width: 44px; height: 44px; display: flex; align-items: center; justify-content: center; cursor: pointer; z-index: 10001; transition: background 0.2s;" onmouseover="this.style.background='rgba(255,255,255,0.2)'" onmouseout="this.style.background='rgba(255,255,255,0.1)'">
+                                                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="15 18 9 12 15 6"></polyline></svg>
+                                                </button>
+
+                                                {{-- The Image --}}
+                                                <img :src="images[currentIndex]" 
+                                                    @click.stop
+                                                    style="max-width: 90vw; max-height: 85vh; width: auto; height: auto; object-fit: contain; border-radius: 4px; box-shadow: 0 20px 25px -5px rgba(0,0,0,0.5); display: block; margin: auto;">
+
+                                                {{-- Next Button --}}
+                                                <button x-show="currentIndex < images.length - 1" @click.stop="next()" style="position: absolute; right: 20px; top: 50%; transform: translateY(-50%); color: white; background: rgba(255,255,255,0.1); border: none; border-radius: 50%; width: 44px; height: 44px; display: flex; align-items: center; justify-content: center; cursor: pointer; z-index: 10001; transition: background 0.2s;" onmouseover="this.style.background='rgba(255,255,255,0.2)'" onmouseout="this.style.background='rgba(255,255,255,0.1)'">
+                                                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="9 18 15 12 9 6"></polyline></svg>
+                                                </button>
+
+                                                {{-- Counter --}}
+                                                <div style="position: absolute; bottom: 20px; left: 50%; transform: translateX(-50%); color: white; font-size: 0.9rem; font-weight: 500; background: rgba(0,0,0,0.5); padding: 4px 12px; border-radius: 999px;">
+                                                    <span x-text="currentIndex + 1"></span> / <span x-text="images.length"></span>
+                                                </div>
+                                            </div>
+                                            
+                                        </div>
+                                    </template>
                                 </div>
                             @else
                                 <div class="ap-portfolio-grid" style="padding: 24px;">
                                     <div class="ap-portfolio-empty">
-                                        <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor"
-                                            stroke-width="0.8" style="margin: 0 auto; opacity: 0.25;">
+                                        <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="0.8" style="margin: 0 auto; opacity: 0.25;">
                                             <rect x="3" y="3" width="18" height="18" rx="1" />
                                             <circle cx="8.5" cy="8.5" r="1.5" />
                                             <path d="M21 15l-5-5L5 21" />
@@ -1701,7 +1774,6 @@
                             @endif
                         </div>
                     </div>
-
                 </div>
 
                 {{-- TAB: SKILLS / EXPERIENCE ── --}}
@@ -2105,22 +2177,6 @@
             </div>
         </div>
     </div>
-
-    {{-- ══════════════════════════════════════════
-    LIGHTBOX
-    ══════════════════════════════════════════ --}}
-    <template x-teleport="body">
-        <div class="ap-lightbox" :class="lightboxOpen ? 'is-open' : ''" x-show="lightboxOpen"
-            @keydown.escape.window="lightboxOpen = false" style="display: none;">
-            <button class="ap-lightbox-close" @click="lightboxOpen = false" aria-label="Close">
-                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                    <line x1="18" y1="6" x2="6" y2="18" />
-                    <line x1="6" y1="6" x2="18" y2="18" />
-                </svg>
-            </button>
-            <img :src="activeImg" class="ap-lightbox-img" @click.outside="lightboxOpen = false" alt="Full screen view">
-        </div>
-    </template>
 
     {{-- ══════════════════════════════════════════
     AGENCY CONTACT MODAL
