@@ -1137,20 +1137,16 @@
                         {{-- ── Always-visible bottom info ── --}}
                         <div class="artist-card-info">
                             @php
-                                // Dynamically figure out which Groups this artist belongs to
-                                $displayGroups = [];
                                 $artistCats = (array) ($artist->profile?->categories ?? []);
-                                
+                                $displayGroups = [];
+
                                 if (!empty($artistCats)) {
-                                    foreach ($categories as $groupName => $cats) {
-                                        foreach ($cats as $c) {
-                                            // Check if any of the artist's categories belong to this group
-                                            if (in_array($c->name ?? $c['name'], $artistCats)) {
-                                                $displayGroups[] = $groupName;
-                                                break; // Found a match, move on to checking the next group
-                                            }
-                                        }
-                                    }
+                                    // Look up the matching categories, apply your custom sort order, and get unique groups
+                                    $displayGroups = \App\Models\Category::whereIn('name', $artistCats)
+                                        ->customOrdered()
+                                        ->pluck('group')
+                                        ->unique()
+                                        ->toArray();
                                 }
                             @endphp
 

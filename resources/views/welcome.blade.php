@@ -1296,53 +1296,51 @@
     </section>
 
     {{-- ══════════════════════════════════════════
-         CATEGORIES STRIP
+        DYNAMIC CATEGORIES STRIP
     ══════════════════════════════════════════ --}}
+    @php
+        // Fetch unique active groups using your model's cache key and ordering
+        $categoryGroups = \Illuminate\Support\Facades\Cache::rememberForever('nav_category_groups', function () {
+            return \App\Models\Category::where('is_active', true)
+                ->customOrdered()
+                ->get()
+                ->unique('group')
+                ->pluck('group');
+        });
+    @endphp
+
     <nav class="categories-strip" aria-label="Browse by category">
         <div class="categories-inner">
+            @foreach($categoryGroups as $group)
+                @php
+                    // Map the correct SVG icon based on the group name
+                    $icon = match($group) {
+                        'Artist' => '<path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/>', // Star
+                        
+                        // NEW: Glamour / Sparkle for Models
+                        'Model' => '<path d="M12 3l1.9 5.8a2 2 0 0 0 1.3 1.3L21 12l-5.8 1.9a2 2 0 0 0-1.3 1.3L12 21l-1.9-5.8a2 2 0 0 0-1.3-1.3L3 12l5.8-1.9a2 2 0 0 0 1.3-1.3L12 3z"/>', 
+                        
+                        // NEW: Brand Seal / Ribbon Badge for Brand Promoters
+                        'Brand Promoter' => '<circle cx="12" cy="8" r="7"/><polyline points="8.21 13.89 7 23 12 20 17 23 15.79 13.88"/>', 
+                        
+                        'Content Creator' => '<rect x="2" y="2" width="20" height="20" rx="2.18" ry="2.18"/><line x1="7" y1="2" x2="7" y2="22"/><line x1="17" y1="2" x2="17" y2="22"/><line x1="2" y1="12" x2="22" y2="12"/><line x1="2" y1="7" x2="7" y2="7"/><line x1="2" y1="17" x2="7" y2="17"/><line x1="17" y1="17" x2="22" y2="17"/><line x1="17" y1="7" x2="22" y2="7"/>', // Film strip
+                        'Director' => '<rect x="2" y="6" width="20" height="12" rx="2" ry="2"/><line x1="2" y1="10" x2="22" y2="10"/><line x1="7" y1="6" x2="7" y2="10"/><line x1="12" y1="6" x2="12" y2="10"/><line x1="17" y1="6" x2="17" y2="10"/>', // Clapperboard
+                        'Creative Crew' => '<path d="M23 19a2 2 0 01-2 2H3a2 2 0 01-2-2V8a2 2 0 012-2h4l2-3h6l2 3h4a2 2 0 012 2z"/><circle cx="12" cy="13" r="4"/>', // Camera
+                        
+                        default => '<circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/>' // Fallback
+                    };
 
-            <a href="/artists?group=Artist" class="category-item">
-                <svg class="cat-icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
-                    <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/>
-                </svg>
-                <span class="cat-label">Artists</span>
-            </a>
+                    // Intelligently pluralize the label, but skip "Creative Crew"
+                    $label = $group === 'Creative Crew' ? $group : \Illuminate\Support\Str::plural($group);
+                @endphp
 
-            <a href="/artists?group=Model" class="category-item">
-                <svg class="cat-icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
-                    <circle cx="12" cy="8" r="4"/><path d="M4 20c0-4 3.58-7 8-7s8 3 8 7"/>
-                </svg>
-                <span class="cat-label">Models</span>
-            </a>
-
-            <a href="/artists?group=Brand+Promotor" class="category-item">
-                <svg class="cat-icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
-                    <path d="M11 5L6 9H2v6h4l5 4V5z"/><path d="M19.07 4.93a10 10 0 010 14.14M15.54 8.46a5 5 0 010 7.07"/>
-                </svg>
-                <span class="cat-label">Brand Promotors</span>
-            </a>
-
-            <a href="/artists?group=Celebrity" class="category-item">
-                <svg class="cat-icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
-                    <path d="M2 4l3 12h14l3-12-6 7-4-7-4 7-6-7zm3 16h14"/>
-                </svg>
-                <span class="cat-label">Celebrities</span>
-            </a>
-
-            <a href="/artists?group=Technician" class="category-item">
-                <svg class="cat-icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
-                    <path d="M23 19a2 2 0 01-2 2H3a2 2 0 01-2-2V8a2 2 0 012-2h4l2-3h6l2 3h4a2 2 0 012 2z"/><circle cx="12" cy="13" r="4"/>
-                </svg>
-                <span class="cat-label">Technicians</span>
-            </a>
-
-            <a href="/artists?group=Director" class="category-item">
-                <svg class="cat-icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
-                    <rect x="2" y="6" width="20" height="12" rx="2" ry="2"/><line x1="2" y1="10" x2="22" y2="10"/><line x1="7" y1="6" x2="7" y2="10"/><line x1="12" y1="6" x2="12" y2="10"/><line x1="17" y1="6" x2="17" y2="10"/>
-                </svg>
-                <span class="cat-label">Directors</span>
-            </a>
-
+                <a href="/artists?group={{ urlencode($group) }}" class="category-item">
+                    <svg class="cat-icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                        {!! $icon !!}
+                    </svg>
+                    <span class="cat-label">{{ $label }}</span>
+                </a>
+            @endforeach
         </div>
     </nav>
 
@@ -1394,20 +1392,16 @@
                                         {{-- ── Always-visible bottom info ── --}}
                                         <div class="artist-card-info">
                                             @php
-                                                // Safely fetch categories specifically for the welcome page
-                                                $allCategories = \App\Models\Category::all()->groupBy('group');
-                                                $displayGroups = [];
                                                 $artistCats = (array) ($artist->profile?->categories ?? []);
-                                                
+                                                $displayGroups = [];
+
                                                 if (!empty($artistCats)) {
-                                                    foreach ($allCategories as $groupName => $cats) {
-                                                        foreach ($cats as $c) {
-                                                            if (in_array($c->name ?? $c['name'], $artistCats)) {
-                                                                $displayGroups[] = $groupName;
-                                                                break;
-                                                            }
-                                                        }
-                                                    }
+                                                    // Look up the matching categories, apply your custom sort order, and get unique groups
+                                                    $displayGroups = \App\Models\Category::whereIn('name', $artistCats)
+                                                        ->customOrdered()
+                                                        ->pluck('group')
+                                                        ->unique()
+                                                        ->toArray();
                                                 }
                                             @endphp
 

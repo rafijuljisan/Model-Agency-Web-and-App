@@ -1199,12 +1199,20 @@
                 {{-- 2. Category tags & Verified Badge --}}
                 <div class="ap-tags">
                     @if(!empty($artist->profile?->categories))
-                        @foreach(array_slice($artist->profile->categories, 0, 3) as $cat)
-                            <span class="ap-tag">{{ $cat }}</span>
+                        @php
+                            // Look up the unique groups for the selected category names
+                            $groups = \App\Models\Category::whereIn('name', $artist->profile->categories)
+                                ->pluck('group')
+                                ->unique()
+                                ->toArray();
+                        @endphp
+
+                        @foreach(array_slice($groups, 0, 3) as $group)
+                            <span class="ap-tag">{{ $group }}</span>
                         @endforeach
-                        @if(count($artist->profile->categories) > 3)
-                            <span class="ap-tag" style="opacity: 0.6;">+{{ count($artist->profile->categories) - 3 }}
-                                more</span>
+
+                        @if(count($groups) > 3)
+                            <span class="ap-tag" style="opacity: 0.6;">+{{ count($groups) - 3 }} more</span>
                         @endif
                     @endif
                 </div>

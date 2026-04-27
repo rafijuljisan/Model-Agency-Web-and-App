@@ -209,6 +209,7 @@
         }
 
         /* Inputs */
+        /* Inputs */
         .form-input,
         .form-select,
         .form-textarea {
@@ -219,7 +220,7 @@
             color: var(--text-primary);
             font-family: 'Jost', sans-serif;
             font-size: 1rem;
-            font-weight: 300;
+            font-weight: 500; /* Increased from 300 for better visibility */
             outline: none;
             transition: border-color 0.25s, background 0.4s, color 0.4s, box-shadow 0.25s;
             appearance: none;
@@ -229,8 +230,9 @@
 
         .form-input::placeholder,
         .form-textarea::placeholder {
-            color: var(--text-muted);
-            opacity: 0.7;
+            color: #9ca3af; /* Forces a lighter, standard placeholder gray */
+            opacity: 0.5;   /* Lowers the visibility so it pushes to the background */
+            font-weight: 300; 
         }
 
         .form-input:focus,
@@ -1075,7 +1077,7 @@
                         </div>
 
                         {{-- Talent Categories & Skills --}}
-                        <div class="form-field form-grid-full">   {{-- ← form-grid-full makes it span both columns --}}
+                        <div class="form-field form-grid-full">
                             <label class="form-field-label">
                                 Talent Categories & Skills <span class="required">*</span>
                             </label>
@@ -1085,19 +1087,36 @@
                                 <span style="color: #dc2626; font-size: 0.75rem; display: block; margin-bottom: 16px;">{{ $message }}</span>
                             @enderror
 
-                            <div style="display: grid; gap: 24px;">
-                                @foreach($groupedCategories as $groupName => $cats)
-                                    <div style="background: var(--bg-primary); border: 1px solid var(--border); border-radius: 6px; padding: 16px;">
-                                        <h4 style="font-size: 0.85rem; font-weight: 600; color: var(--gold); text-transform: uppercase; letter-spacing: 0.1em; margin-bottom: 12px; border-bottom: 1px solid var(--border-strong); padding-bottom: 8px;">
+                            @php
+                                // Fetch the dynamic group order directly from your Category model using your cache key
+                                $orderedGroups = \Illuminate\Support\Facades\Cache::rememberForever('nav_category_groups', function () {
+                                    return \App\Models\Category::where('is_active', true)
+                                        ->customOrdered()
+                                        ->pluck('group')
+                                        ->unique()
+                                        ->toArray();
+                                });
+
+                                // Sort the grouped categories to strictly match the database's customOrdered() priority
+                                $sortedGroupedCategories = collect($groupedCategories)->sortBy(function($cats, $groupName) use ($orderedGroups) {
+                                    // Note: Since orderedGroups is cached, we cast it to an array just in case it returns a collection
+                                    $pos = array_search($groupName, (array) $orderedGroups);
+                                    return $pos === false ? 999 : $pos; // Unknown groups get pushed to the very bottom
+                                });
+                            @endphp
+
+                            <div style="display: flex; flex-direction: column; gap: 24px;">
+                                @foreach($sortedGroupedCategories as $groupName => $cats)
+                                    <div style="background: var(--bg-primary); border: 1px solid var(--border); border-radius: 8px; padding: 20px;">
+                                        <h4 style="font-size: 0.85rem; font-weight: 600; color: var(--gold); text-transform: uppercase; letter-spacing: 0.1em; margin-bottom: 16px; border-bottom: 1px solid var(--border-strong); padding-bottom: 8px;">
                                             {{ $groupName }}
                                         </h4>
-                                        <div style="display: grid; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); gap: 12px;">
+                                        
+                                        <div style="display: flex; flex-wrap: wrap; gap: 10px;">
                                             @foreach($cats as $cat)
-                                                <label style="display: flex; align-items: flex-start; gap: 8px; cursor: pointer; font-size: 0.9rem; color: var(--text-primary);">
-                                                    <input type="checkbox" wire:model.defer="categories"
-                                                        value="{{ $cat->name }}"
-                                                        style="margin-top: 4px; accent-color: var(--gold); width: 16px; height: 16px; cursor: pointer;">
-                                                    <span style="line-height: 1.4;">{{ $cat->name }}</span>
+                                                <label class="skill-pill-label" style="position: relative; display: inline-block;">
+                                                    <input type="checkbox" wire:model.defer="categories" value="{{ $cat->name ?? $cat['name'] }}" class="skill-checkbox">
+                                                    <span class="skill-pill">{{ $cat->name ?? $cat['name'] }}</span>
                                                 </label>
                                             @endforeach
                                         </div>
