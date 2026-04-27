@@ -696,6 +696,17 @@
                 font-size: 0.75rem !important;
             }
         }
+         .upload-zone--drag {
+            border-color: var(--gold) !important;
+            background: var(--gold-bg) !important;
+        }
+        .upload-zone--full {
+            opacity: 0.5;
+            cursor: not-allowed !important;
+        }
+        .upload-zone--full input[type="file"] {
+            pointer-events: none !important;
+        }
     </style>
 
     <div class="form-page">
@@ -1901,7 +1912,10 @@
                 </div>
                 <div x-show="activeTab === 4" x-transition style="display: none;">
                     {{-- ── Section 04: Portfolio ── --}}
-                    <div class="form-section anim-fade-up anim-d3">
+                    <div class="form-section anim-fade-up anim-d3"
+                        x-data="portfolioUploader({{ count($portfolioImages) }}, 12)"
+                        x-init="initListeners()"
+                    >
                         <div class="form-section-header">
                             <div class="form-section-icon">
                                 <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor"
@@ -1912,41 +1926,159 @@
                                 </svg>
                             </div>
                             <div class="form-section-title">Portfolio Images</div>
-                            <div class="form-section-desc">Max 12 images · JPG/PNG/WEBP</div>
+                            <div class="form-section-desc" x-text="`${savedCount} / ${maxPhotos} images`">
+                                {{ count($portfolioImages) }} / 12 images
+                            </div>
                         </div>
+                    
                         <div class="form-section-body">
-
-                            <label class="upload-zone" aria-label="Upload portfolio images">
-                                <input type="file" wire:model.live="newPhotos" multiple accept="image/*"
-                                    aria-label="Choose portfolio images">
+                    
+                            {{-- ── Drop Zone ── --}}
+                            <label class="upload-zone"
+                                :class="{ 'upload-zone--drag': isDragging, 'upload-zone--full': savedCount >= maxPhotos }"
+                                @dragover.prevent="isDragging = true"
+                                @dragleave.prevent="isDragging = false"
+                                @drop.prevent="onDrop($event); isDragging = false"
+                                :aria-disabled="savedCount >= maxPhotos"
+                                style="position: relative;"
+                            >
+                                {{-- Hidden real file input — NOT wire:model, purely JS-driven --}}
+                                <input
+                                    type="file"
+                                    id="portfolio-file-input"
+                                    multiple
+                                    accept="image/*"
+                                    style="position:absolute;inset:0;opacity:0;cursor:pointer;width:100%;height:100%;z-index:2;"
+                                    @change="onFilesSelected($event)"
+                                    :disabled="savedCount >= maxPhotos || isUploading"
+                                >
+                    
                                 <svg class="upload-zone-icon" width="36" height="36" viewBox="0 0 24 24" fill="none"
                                     stroke="currentColor" stroke-width="1" aria-hidden="true">
                                     <polyline points="16 16 12 12 8 16" />
                                     <line x1="12" y1="12" x2="12" y2="21" />
                                     <path d="M20.39 18.39A5 5 0 0018 9h-1.26A8 8 0 103 16.3" />
                                 </svg>
-                                <div class="upload-zone-title">Drop images here or click to browse</div>
-                                <div class="upload-zone-sub">Accepts JPG, PNG, WEBP &nbsp;·&nbsp; <span>Up to 12
-                                        files</span></div>
+                    
+                                <template x-if="savedCount < maxPhotos">
+                                    <div>
+                                        <div class="upload-zone-title">Drop images here or click to browse</div>
+                                        <div class="upload-zone-sub">
+                                            JPG · PNG · WEBP &nbsp;·&nbsp;
+                                            <span x-text="`${maxPhotos - savedCount} slot${maxPhotos - savedCount !== 1 ? 's' : ''} remaining`"></span>
+                                            &nbsp;·&nbsp; <span>Auto-compressed before upload</span>
+                                        </div>
+                                    </div>
+                                </template>
+                                <template x-if="savedCount >= maxPhotos">
+                                    <div>
+                                        <div class="upload-zone-title" style="color: var(--text-muted);">Maximum reached</div>
+                                        <div class="upload-zone-sub">Delete an existing photo to add more</div>
+                                    </div>
+                                </template>
                             </label>
-
-                            <div wire:loading wire:target="newPhotos" class="upload-loading">
-                                <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor"
-                                    stroke-width="2" aria-hidden="true">
-                                    <circle cx="12" cy="12" r="10" opacity="0.25" />
-                                    <path d="M12 2a10 10 0 0110 10" stroke-linecap="round" />
-                                </svg>
-                                Processing uploads…
+                    
+                            {{-- ── Upload Queue Progress Panel ── --}}
+                            <div x-show="queue.length > 0" x-transition style="margin-top: 20px;">
+                    
+                                {{-- Queue header --}}
+                                <div style="display:flex; align-items:center; justify-content:space-between; margin-bottom: 12px;">
+                                    <div style="font-size: 0.8rem; font-weight: 600; letter-spacing: 0.12em; text-transform: uppercase; color: var(--text-muted);">
+                                        Upload Queue
+                                        (<span x-text="queue.filter(f => f.status === 'done').length"></span> /
+                                        <span x-text="queue.length"></span> done)
+                                    </div>
+                                    <button type="button"
+                                        x-show="!isUploading && queue.every(f => ['done','error'].includes(f.status))"
+                                        @click="queue = []"
+                                        style="font-size: 0.75rem; color: var(--text-muted); background: none; border: none; cursor: pointer; padding: 4px 8px;">
+                                        Clear list
+                                    </button>
+                                </div>
+                    
+                                {{-- Per-file rows --}}
+                                <div style="display: flex; flex-direction: column; gap: 8px; max-height: 340px; overflow-y: auto;">
+                                    <template x-for="(file, index) in queue" :key="index">
+                                        <div style="display:flex; align-items:center; gap: 12px; padding: 10px 14px;
+                                                    background: var(--bg-primary); border: 1px solid var(--border); border-radius: 4px;">
+                    
+                                            {{-- Thumbnail preview --}}
+                                            <div style="width: 44px; height: 44px; border-radius: 3px; overflow: hidden;
+                                                        background: var(--bg-secondary); flex-shrink: 0;">
+                                                <img :src="file.preview" alt=""
+                                                    style="width:100%; height:100%; object-fit:cover;"
+                                                    x-show="file.preview">
+                                            </div>
+                    
+                                            {{-- File info + progress bar --}}
+                                            <div style="flex: 1; min-width: 0;">
+                                                <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom: 5px;">
+                                                    <span x-text="file.name"
+                                                        style="font-size:0.8rem; font-weight:500; color:var(--text-primary);
+                                                            white-space:nowrap; overflow:hidden; text-overflow:ellipsis; max-width: 200px;"></span>
+                                                    <span style="font-size: 0.72rem; font-weight: 600; letter-spacing: 0.06em; white-space: nowrap; margin-left: 8px;"
+                                                        :style="{
+                                                            color: file.status === 'done' ? '#16a34a'
+                                                                : file.status === 'error' ? '#dc2626'
+                                                                : file.status === 'compressing' ? 'var(--gold)'
+                                                                : file.status === 'uploading' ? 'var(--gold)'
+                                                                : 'var(--text-muted)'
+                                                        }"
+                                                        x-text="file.status === 'done' ? '✓ Saved'
+                                                            : file.status === 'error' ? '✗ Failed'
+                                                            : file.status === 'compressing' ? 'Compressing…'
+                                                            : file.status === 'uploading' ? file.progress + '%'
+                                                            : 'Waiting…'">
+                                                    </span>
+                                                </div>
+                    
+                                                {{-- Progress track --}}
+                                                <div style="height: 3px; background: var(--border); border-radius: 2px; overflow: hidden;">
+                                                    <div style="height: 100%; border-radius: 2px; transition: width 0.3s ease;"
+                                                        :style="{
+                                                            width: file.status === 'done' ? '100%'
+                                                                : file.status === 'error' ? '100%'
+                                                                : file.status === 'compressing' ? '20%'
+                                                                : file.status === 'uploading' ? file.progress + '%'
+                                                                : '0%',
+                                                            background: file.status === 'done' ? '#16a34a'
+                                                                    : file.status === 'error' ? '#dc2626'
+                                                                    : 'var(--gold)'
+                                                        }">
+                                                    </div>
+                                                </div>
+                    
+                                                {{-- Size info --}}
+                                                <div style="font-size: 0.68rem; color: var(--text-muted); margin-top: 3px;"
+                                                    x-text="file.originalSize && file.compressedSize
+                                                        ? file.originalSize + ' → ' + file.compressedSize + ' (compressed)'
+                                                        : file.originalSize || ''">
+                                                </div>
+                                            </div>
+                    
+                                            {{-- Retry button on error --}}
+                                            <button type="button" x-show="file.status === 'error'"
+                                                @click="retryFile(index)"
+                                                style="font-size: 0.72rem; color: var(--gold); background: none;
+                                                    border: 1px solid var(--border-strong); padding: 4px 10px;
+                                                    border-radius: 3px; cursor: pointer; flex-shrink: 0;">
+                                                Retry
+                                            </button>
+                    
+                                        </div>
+                                    </template>
+                                </div>
                             </div>
-
+                    
+                            {{-- ── Existing Portfolio Thumbnails (Livewire-rendered) ── --}}
                             @if(count($portfolioImages) > 0)
-                                <div class="portfolio-thumbs">
+                                <div class="portfolio-thumbs" style="margin-top: 24px;" id="portfolio-thumb-grid">
                                     @foreach($portfolioImages as $image)
                                         <div class="portfolio-thumb">
                                             <img src="{{ $image->getUrl() }}" alt="Portfolio image" loading="lazy">
                                             <button type="button" class="portfolio-thumb-del"
                                                 wire:click="deletePhoto({{ $image->id }})"
-                                                onclick="return confirm('Delete this photo from your portfolio?')"
+                                                wire:confirm="Delete this photo from your portfolio?"
                                                 aria-label="Delete photo">
                                                 <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor"
                                                     stroke-width="2.5" aria-hidden="true">
@@ -1957,10 +2089,206 @@
                                         </div>
                                     @endforeach
                                 </div>
+                            @else
+                                <div id="portfolio-thumb-grid"></div>
                             @endif
-
-                        </div>
-                    </div>
+                    
+                        </div>{{-- /form-section-body --}}
+                    </div>{{-- /form-section --}}
+                    <script>
+                        function portfolioUploader(initialCount, maxPhotos) {
+                            return {
+                                // ── State ──────────────────────────────────────────────────────────
+                                savedCount: initialCount,   // mirrors $portfolioImages count server-side
+                                maxPhotos:  maxPhotos,
+                                isDragging: false,
+                                isUploading: false,
+                        
+                                // Queue item shape:
+                                // { name, preview, originalSize, compressedSize, blob, status, progress }
+                                // status: 'pending' | 'compressing' | 'uploading' | 'done' | 'error'
+                                queue: [],
+                        
+                                // ── Livewire event listeners ────────────────────────────────────────
+                                initListeners() {
+                                    // Livewire fires this when saveSinglePortfolioPhoto() succeeds
+                                    window.addEventListener('portfolio-photo-saved', () => {
+                                        this.savedCount++;
+                                        this.advanceQueue();
+                                    });
+                        
+                                    // Livewire fires this on validation / server error
+                                    window.addEventListener('portfolio-upload-error', (e) => {
+                                        const currentItem = this.queue.find(f => f.status === 'uploading');
+                                        if (currentItem) {
+                                            currentItem.status = 'error';
+                                            currentItem.errorMsg = e.detail?.message ?? 'Upload failed';
+                                        }
+                                        this.isUploading = false;
+                                        // Try the next item even on error
+                                        this.advanceQueue();
+                                    });
+                                },
+                        
+                                // ── File selection (from input[type=file] change) ───────────────────
+                                onFilesSelected(event) {
+                                    this.addFiles(Array.from(event.target.files));
+                                    // Reset the input so the same file can be re-selected if needed
+                                    event.target.value = '';
+                                },
+                        
+                                // ── Drag-and-drop ───────────────────────────────────────────────────
+                                onDrop(event) {
+                                    const files = Array.from(event.dataTransfer.files)
+                                        .filter(f => f.type.startsWith('image/'));
+                                    this.addFiles(files);
+                                },
+                        
+                                // ── Add files to the queue, respecting the slot cap ─────────────────
+                                addFiles(files) {
+                                    const slotsLeft = this.maxPhotos - this.savedCount - this.queue.filter(f => f.status !== 'error').length;
+                                    if (slotsLeft <= 0) return;
+                        
+                                    const allowed = files.slice(0, slotsLeft);
+                        
+                                    for (const file of allowed) {
+                                        const item = {
+                                            name: file.name,
+                                            preview: null,
+                                            originalSize: this.formatBytes(file.size),
+                                            compressedSize: null,
+                                            blob: null,
+                                            rawFile: file,
+                                            status: 'pending',
+                                            progress: 0,
+                                        };
+                                        // Show client-side preview immediately
+                                        const reader = new FileReader();
+                                        reader.onload = (e) => { item.preview = e.target.result; };
+                                        reader.readAsDataURL(file);
+                        
+                                        this.queue.push(item);
+                                    }
+                        
+                                    // Start the queue if nothing is currently uploading
+                                    if (!this.isUploading) {
+                                        this.advanceQueue();
+                                    }
+                                },
+                        
+                                // ── Pick the next pending item and process it ────────────────────────
+                                advanceQueue() {
+                                    const next = this.queue.find(f => f.status === 'pending');
+                                    if (!next) {
+                                        this.isUploading = false;
+                                        return;
+                                    }
+                                    this.isUploading = true;
+                                    this.processItem(next);
+                                },
+                        
+                                // ── Compress → Upload → Save pipeline for a single item ─────────────
+                                async processItem(item) {
+                                    // 1. Compress
+                                    item.status = 'compressing';
+                                    try {
+                                        item.blob = await this.compressImage(item.rawFile, 1600, 0.82);
+                                        item.compressedSize = this.formatBytes(item.blob.size);
+                                    } catch (err) {
+                                        console.warn('Compression failed, using original:', err);
+                                        item.blob = item.rawFile; // fall back to raw file
+                                    }
+                        
+                                    // 2. Upload via Livewire's JS API (one file, real progress)
+                                    item.status = 'uploading';
+                                    item.progress = 0;
+                        
+                                    $wire.upload(
+                                        'singlePortfolioPhoto',
+                                        item.blob,
+                                        // ─ success callback: Livewire has received the temp file ─
+                                        (uploadedFilename) => {
+                                            // Tell Livewire to move the temp file into the media library
+                                            $wire.saveSinglePortfolioPhoto();
+                                            // The 'portfolio-photo-saved' event will call advanceQueue()
+                                        },
+                                        // ─ error callback ─
+                                        () => {
+                                            item.status = 'error';
+                                            this.isUploading = false;
+                                            this.advanceQueue();
+                                        },
+                                        // ─ progress callback ─
+                                        (event) => {
+                                            item.progress = event.detail.progress;
+                                        }
+                                    );
+                                },
+                        
+                                // ── Retry a failed item ──────────────────────────────────────────────
+                                retryFile(index) {
+                                    const item = this.queue[index];
+                                    item.status = 'pending';
+                                    item.progress = 0;
+                                    item.compressedSize = null;
+                                    if (!this.isUploading) {
+                                        this.advanceQueue();
+                                    }
+                                },
+                        
+                                // ── Client-side Canvas compression ──────────────────────────────────
+                                // Resizes to maxWidth while maintaining aspect ratio, then encodes as
+                                // JPEG at the given quality. This turns a 12MB raw photo into ~300-600KB.
+                                compressImage(file, maxWidth, quality) {
+                                    return new Promise((resolve, reject) => {
+                                        const img = new Image();
+                                        const url = URL.createObjectURL(file);
+                        
+                                        img.onload = () => {
+                                            URL.revokeObjectURL(url);
+                        
+                                            let { width, height } = img;
+                        
+                                            // Only downscale — never upscale
+                                            if (width > maxWidth) {
+                                                height = Math.round((height * maxWidth) / width);
+                                                width = maxWidth;
+                                            }
+                        
+                                            const canvas = document.createElement('canvas');
+                                            canvas.width  = width;
+                                            canvas.height = height;
+                        
+                                            const ctx = canvas.getContext('2d');
+                                            ctx.drawImage(img, 0, 0, width, height);
+                        
+                                            canvas.toBlob(
+                                                (blob) => {
+                                                    if (!blob) { reject(new Error('Canvas toBlob failed')); return; }
+                                                    // Preserve original filename, change extension to jpg
+                                                    const baseName = file.name.replace(/\.[^.]+$/, '');
+                                                    const compressed = new File([blob], baseName + '.jpg', { type: 'image/jpeg' });
+                                                    resolve(compressed);
+                                                },
+                                                'image/jpeg',
+                                                quality
+                                            );
+                                        };
+                        
+                                        img.onerror = () => { URL.revokeObjectURL(url); reject(new Error('Image load failed')); };
+                                        img.src = url;
+                                    });
+                                },
+                        
+                                // ── Utility: human-readable file size ───────────────────────────────
+                                formatBytes(bytes) {
+                                    if (bytes < 1024) return bytes + ' B';
+                                    if (bytes < 1048576) return (bytes / 1024).toFixed(1) + ' KB';
+                                    return (bytes / 1048576).toFixed(1) + ' MB';
+                                },
+                            };
+                        }
+                        </script>
                     {{-- ── Section: Credits & Experience ── --}}
                     <div class="form-section anim-fade-up anim-d2">
                         <div class="form-section-header">

@@ -17,6 +17,7 @@ use Illuminate\Cookie\Middleware\EncryptCookies;
 use Illuminate\Foundation\Http\Middleware\VerifyCsrfToken;
 use Illuminate\Routing\Middleware\SubstituteBindings;
 use Illuminate\Session\Middleware\StartSession;
+use Illuminate\Support\HtmlString;
 use Illuminate\View\Middleware\ShareErrorsFromSession;
 
 class AdminPanelProvider extends PanelProvider
@@ -28,6 +29,16 @@ class AdminPanelProvider extends PanelProvider
             ->id('admin')
             ->brandName('AgencyMarket Admin')
             ->path('admin')
+            ->renderHook(
+                'panels::body.end',
+                fn (): HtmlString => new HtmlString(
+                    '<script src="' . asset('js/admin-image-compress.js')
+                    . '?v=' . (file_exists(public_path('js/admin-image-compress.js'))
+                        ? filemtime(public_path('js/admin-image-compress.js'))
+                        : '1')
+                    . '"></script>'
+                )
+            )
             ->login()
             ->colors([
                 'primary' => Color::Red,

@@ -19,7 +19,6 @@ class ArtistAccount extends Component
     use WithFileUploads;
 
     // ── State Machine ──
-    // Available steps: 'payment_pending', 'nid_upload', 'nid_pending', 'profile'
     public string $currentStep = 'profile';
 
     // ── NID Fields ──
@@ -33,7 +32,6 @@ class ArtistAccount extends Component
     public string $phone = '';
 
     // ── Profile Fields ──
-    // public string $category = '';
     public string $gender = '';
     public string $date_of_birth = '';
     public $height_cm = '';
@@ -44,14 +42,19 @@ class ArtistAccount extends Component
     public string $upazila = '';
     public string $street_address = '';
     public string $bio = '';
-    public array $categories = []; // Replaces the old string $category
-    // public $groupedCategories;     // To hold the DB results
+    public array $categories = [];
 
     // ── Media ──
-    public array $newPhotos = [];
+    // REMOVED: public array $newPhotos = []; — replaced by sequential single-file uploads
     public $portfolioImages = [];
     public $newAvatar = null;
     public bool $saved = false;
+
+    // ── NEW: Single-file sequential portfolio upload ──
+    // This property receives ONE compressed file at a time from the JS queue.
+    // The JS layer compresses client-side, then calls $wire.upload() per file.
+    public $singlePortfolioPhoto = null;
+
     // ── Social Links ──
     public string $facebook_url = '';
     public string $instagram_url = '';
@@ -113,7 +116,6 @@ class ArtistAccount extends Component
         /** @var \App\Models\User $user */
         $user = Auth::user();
 
-        // GATE 1: No subscription yet → go pick a package
         $subscription = $user->subscriptions()->latest()->first();
 
         if (!$subscription) {
@@ -126,7 +128,6 @@ class ArtistAccount extends Component
             return;
         }
 
-        // GATE 2: Documents missing/rejected
         if (
             in_array($user->verification_status, ['unverified', 'rejected', null, ''], true) ||
             in_array($user->nid_back_verification_status, ['unverified', 'rejected', null, ''], true)
@@ -135,11 +136,9 @@ class ArtistAccount extends Component
             return;
         }
 
-        // GATE 3: Basic info not yet filled
         $profile = $user->profile;
         if (!$profile || empty($profile->district) || empty($profile->upazila)) {
             $this->currentStep = 'basic_info';
-            // Pre-fill whatever exists
             $this->name = $user->name ?? '';
             $this->email = $user->email ?? '';
             $this->phone = $user->phone ?? '';
@@ -157,7 +156,6 @@ class ArtistAccount extends Component
             return;
         }
 
-        // GATE 4: Anything still pending → under review
         if (
             $user->verification_status === 'pending' ||
             $user->nid_back_verification_status === 'pending' ||
@@ -167,9 +165,75 @@ class ArtistAccount extends Component
             return;
         }
 
-        // GATE 5: Everything verified & active → full profile
         $this->currentStep = 'profile';
         $this->loadProfileData($user);
+    }
+
+    // ─────────────────────────────────────────────────────────────────────────
+    // NEW: Sequential Single-File Portfolio Upload
+    //
+    // Called by the JS queue one file at a time AFTER client-side compression.
+    // This replaces the old bulk `newPhotos` approach.
+    //
+    // Flow:
+    //   1. User selects files in browser
+    //   2. Alpine.js reads each File object into a queue
+    //   3. For each file: Canvas API compresses it → creates a new Blob
+    //   4. $wire.upload('singlePortfolioPhoto', blob, success, error, progress)
+    //   5. On success callback → JS calls $wire.saveSinglePortfolioPhoto()
+    //   6. This method moves the temp file into the media library
+    //   7. Dispatches 'portfolio-photo-saved' event → JS marks that item done
+    //   8. JS picks the next file from the queue and repeats
+    // ─────────────────────────────────────────────────────────────────────────
+    public function saveSinglePortfolioPhoto(): void
+    {
+        /** @var \App\Models\User $user */
+        $user = Auth::user();
+
+        // Enforce the 12-photo limit before doing any work
+        $existingCount = $user->getMedia('portfolio')->count();
+        if ($existingCount >= 12) {
+            $this->reset('singlePortfolioPhoto');
+            $this->dispatch('portfolio-upload-error', message: 'Maximum 12 photos reached.');
+            return;
+        }
+
+        $this->validate([
+            'singlePortfolioPhoto' => 'required|image|mimes:jpg,jpeg,png,webp|max:8192',
+        ]);
+
+        try {
+            $photo = $this->singlePortfolioPhoto;
+
+            $user->addMedia($photo->getRealPath())
+                ->usingFileName(
+                    pathinfo($photo->getClientOriginalName(), PATHINFO_FILENAME)
+                    . '_' . time() . rand(100, 999)
+                    . '.' . $photo->getClientOriginalExtension()
+                )
+                ->toMediaCollection('portfolio', 'public');
+
+            $this->reset('singlePortfolioPhoto');
+
+            // Refresh the thumbnail grid
+            $this->portfolioImages = $user->fresh()->getMedia('portfolio');
+
+            // Tell the JS queue this slot is done → move to next file
+            $this->dispatch('portfolio-photo-saved');
+
+        } catch (\Exception $e) {
+            Log::error('saveSinglePortfolioPhoto failed for user ' . Auth::id() . ': ' . $e->getMessage());
+            $this->reset('singlePortfolioPhoto');
+            $this->dispatch('portfolio-upload-error', message: 'Upload failed. Please try again.');
+        }
+    }
+
+    // ─────────────────────────────────────────────────────────────────────────
+    // Returns current portfolio count for the JS layer to enforce the cap
+    // ─────────────────────────────────────────────────────────────────────────
+    public function getPortfolioCount(): int
+    {
+        return Auth::user()->getMedia('portfolio')->count();
     }
 
     public function submitDocuments()
@@ -261,8 +325,8 @@ class ArtistAccount extends Component
             'district' => 'required|string|max:100',
             'upazila' => 'required|string|max:100',
             'street_address' => 'nullable|string|max:500',
-            'categories' => 'required|array|min:1',   // ← ADD
-            'categories.*' => 'string|max:100',          // ← ADD
+            'categories' => 'required|array|min:1',
+            'categories.*' => 'string|max:100',
         ]);
 
         $user->update([
@@ -277,7 +341,7 @@ class ArtistAccount extends Component
         Profile::updateOrCreate(
             ['user_id' => $user->id],
             [
-                'categories' => $this->categories,      // ← ADD
+                'categories' => $this->categories,
                 'gender' => $this->gender ?: null,
                 'date_of_birth' => $this->date_of_birth ?: null,
                 'height_cm' => $this->height_cm ?: null,
@@ -292,7 +356,7 @@ class ArtistAccount extends Component
 
         return redirect()->route('account.dashboard');
     }
-    // In ArtistAccount.php - updateAvatar()
+
     public function updateAvatar()
     {
         $this->validate(['newAvatar' => 'image|max:3072']);
@@ -310,7 +374,6 @@ class ArtistAccount extends Component
         session()->flash('success', 'Profile picture updated!');
     }
 
-    // In ArtistAccount.php - deleteAvatar()
     public function deleteAvatar()
     {
         /** @var \App\Models\User $user */
@@ -318,7 +381,7 @@ class ArtistAccount extends Component
         $user->getMedia('avatar')->each->delete();
         session()->flash('success', 'Profile picture removed.');
     }
-    // ── PROFILE LOADING & SAVING LOGIC ──
+
     private function loadProfileData($user)
     {
         $this->name = $user->name ?? '';
@@ -346,7 +409,6 @@ class ArtistAccount extends Component
             $this->tiktok_url = $profile->tiktok_url ?? '';
             $this->linkedin_url = $profile->linkedin_url ?? '';
             $this->portfolio_url = $profile->portfolio_url ?? '';
-            // Measurements
             $this->weight_kg = $profile->weight_kg ?? '';
             $this->chest_bust_inches = $profile->chest_bust_inches ?? '';
             $this->waist_inches = $profile->waist_inches ?? '';
@@ -354,21 +416,15 @@ class ArtistAccount extends Component
             $this->shoulder_inches = $profile->shoulder_inches ?? '';
             $this->shoe_size = $profile->shoe_size ?? '';
             $this->dress_size = $profile->dress_size ?? '';
-
-            // Appearance
             $this->skin_tone = $profile->skin_tone ?? '';
             $this->eye_color = $profile->eye_color ?? '';
             $this->hair_color = $profile->hair_color ?? '';
             $this->hair_length = $profile->hair_length ?? '';
-
-            // Experience
             $this->experience_level = $profile->experience_level ?? '';
             $this->special_skills = $profile->special_skills ?? [];
             $this->showreel_url = $profile->showreel_url ?? '';
             $this->willing_to_travel = $profile->willing_to_travel ?? false;
             $this->availability = $profile->availability ?? '';
-
-            // Follower counts
             $this->instagram_followers = $profile->instagram_followers ?? '';
             $this->tiktok_followers = $profile->tiktok_followers ?? '';
             $this->facebook_followers = $profile->facebook_followers ?? '';
@@ -385,6 +441,8 @@ class ArtistAccount extends Component
         $user->update(['last_active_at' => now()]);
 
         try {
+            // NOTE: newPhotos is no longer validated here.
+            // Portfolio uploads happen independently via saveSinglePortfolioPhoto().
             $this->validate();
 
             $user->update([
@@ -438,23 +496,6 @@ class ArtistAccount extends Component
                     'facebook_followers' => $this->facebook_followers ?: null,
                 ]
             );
-
-            if (!empty($this->newPhotos)) {
-                $existingCount = $user->getMedia('portfolio')->count();
-                $allowedNew = max(0, 12 - $existingCount);
-                $photosToAdd = array_slice($this->newPhotos, 0, $allowedNew);
-
-                foreach ($photosToAdd as $photo) {
-                    $user->addMedia($photo->getRealPath())
-                        ->usingName($photo->getClientOriginalName())
-                        ->usingFileName(
-                            pathinfo($photo->getClientOriginalName(), PATHINFO_FILENAME)
-                            . '_' . time() . '.' . $photo->getClientOriginalExtension()
-                        )
-                        ->toMediaCollection('portfolio', 'public');
-                }
-                $this->newPhotos = [];
-            }
 
             $this->portfolioImages = $user->fresh()->getMedia('portfolio');
             $this->saved = true;
@@ -596,12 +637,12 @@ class ArtistAccount extends Component
         $this->newExpPlatform = '';
         $this->newExpAwardOrganizer = '';
     }
+
     public function render()
     {
         /** @var \App\Models\User $user */
         $user = Auth::user();
 
-        // Fetch all active categories and group them locally
         $groupedCategories = \App\Models\Category::where('is_active', true)
             ->customOrdered()
             ->get()
@@ -609,7 +650,7 @@ class ArtistAccount extends Component
 
         return view('livewire.artist-account', [
             'user' => $user,
-            'groupedCategories' => $groupedCategories, // Passed directly to the view!
+            'groupedCategories' => $groupedCategories,
         ]);
     }
 
@@ -627,9 +668,8 @@ class ArtistAccount extends Component
             'gender' => 'nullable|in:Male,Female,Other',
             'date_of_birth' => 'nullable|date|before:today|after:1900-01-01',
 
-            // ── Flexible height/weight as strings ──
-            'height_cm' => 'nullable|string|max:20',   // accepts "5'10\"", "5.10", "170cm"
-            'weight_kg' => 'nullable|string|max:20',   // accepts "65.5", "65", "65kg"
+            'height_cm' => 'nullable|string|max:20',
+            'weight_kg' => 'nullable|string|max:20',
 
             'hourly_rate' => 'nullable|numeric|min:0|max:999999',
 
@@ -638,11 +678,10 @@ class ArtistAccount extends Component
             'country' => 'nullable|string|max:100',
             'district' => 'required|string|max:100',
             'upazila' => 'required|string|max:100',
-            'street_address' => 'nullable|string|max:500',  // NEW private field
+            'street_address' => 'nullable|string|max:500',
 
             'bio' => 'nullable|string|max:2000',
 
-            // ── Social URLs ──
             'facebook_url' => 'nullable|url|max:255',
             'instagram_url' => 'nullable|url|max:255',
             'youtube_url' => 'nullable|url|max:255',
@@ -651,11 +690,9 @@ class ArtistAccount extends Component
             'portfolio_url' => 'nullable|url|max:255',
             'showreel_url' => 'nullable|url|max:255',
 
-            // ── Portfolio photos ──
-            'newPhotos' => 'nullable|array|max:10',
-            'newPhotos.*' => 'image|mimes:jpg,jpeg,png,webp|max:5120',
+            // NOTE: newPhotos rules removed — portfolio uploads are now handled
+            // independently by saveSinglePortfolioPhoto() one file at a time.
 
-            // ── Measurements — flexible strings ──
             'chest_bust_inches' => 'nullable|string|max:20',
             'waist_inches' => 'nullable|string|max:20',
             'hips_inches' => 'nullable|string|max:20',
@@ -663,20 +700,17 @@ class ArtistAccount extends Component
             'shoe_size' => 'nullable|string|max:20',
             'dress_size' => 'nullable|in:XS,S,M,L,XL,XXL',
 
-            // ── Appearance ──
             'skin_tone' => 'nullable|in:Fair,Medium,Dusky,Deep',
             'eye_color' => 'nullable|string|max:50',
             'hair_color' => 'nullable|string|max:50',
             'hair_length' => 'nullable|in:Bald,Short,Medium,Long',
 
-            // ── Experience ──
             'experience_level' => 'nullable|in:Fresher,1-3 Years,Professional',
             'special_skills' => 'nullable|array',
             'special_skills.*' => 'string|max:100',
             'willing_to_travel' => 'boolean',
             'availability' => 'nullable|in:Full-time,Part-time,Weekends Only,Flexible',
 
-            // ── Follower counts ──
             'instagram_followers' => 'nullable|integer|min:0|max:999999999',
             'tiktok_followers' => 'nullable|integer|min:0|max:999999999',
             'facebook_followers' => 'nullable|integer|min:0|max:999999999',
