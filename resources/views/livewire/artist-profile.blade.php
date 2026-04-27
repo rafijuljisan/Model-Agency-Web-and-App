@@ -1988,24 +1988,54 @@
                             @endif
 
                             @if($artist->profile?->skin_tone)
+                                @php
+                                    $skinHex = match($artist->profile->skin_tone) {
+                                        'Fair' => '#FCE3CD', 'Light' => '#EED3BB', 'Wheatish' => '#E2B88F', 'Dusky' => '#C29587', 'Deep' => '#7C4D31', default => null
+                                    };
+                                @endphp
                                 <div class="ap-attr">
                                     <span class="ap-attr-key">Skin Tone</span>
-                                    <span class="ap-attr-val">{{ $artist->profile->skin_tone }}</span>
+                                    <span class="ap-attr-val" style="display: inline-flex; align-items: center; gap: 6px;">
+                                        @if($skinHex)
+                                            <span style="width: 14px; height: 14px; border-radius: 4px; background-color: {{ $skinHex }}; border: 1px solid rgba(0,0,0,0.15);"></span>
+                                        @endif
+                                        {{ $artist->profile->skin_tone }}
+                                    </span>
                                 </div>
                             @endif
 
                             @if($artist->profile?->eye_color)
+                                @php
+                                    $eyeHex = match($artist->profile->eye_color) {
+                                        'Brown' => '#5c3817', 'Blue' => '#4f7b98', 'Green' => '#607228', 'Greenish Blue' => '#588383', 'Yellowish Green' => '#728224', 'Amber' => '#8f7422', 'Hazel' => '#986121', 'Deep Blue' => '#274f68', 'Dark Green' => '#3c561b', 'Freckled Hazel' => '#704e22', 'Greyish Blue' => '#6e7e85', 'Forest Green' => '#465521', 'Dark Hazel' => '#593c15', 'Grey' => '#727a7c', 'Spring Green' => '#6d7d24', default => null
+                                    };
+                                @endphp
                                 <div class="ap-attr">
                                     <span class="ap-attr-key">Eye Color</span>
-                                    <span class="ap-attr-val">{{ $artist->profile->eye_color }}</span>
+                                    <span class="ap-attr-val" style="display: inline-flex; align-items: center; gap: 6px;">
+                                        @if($eyeHex)
+                                            {{-- Eye colors use border-radius: 50% for a circle --}}
+                                            <span style="width: 14px; height: 14px; border-radius: 50%; background-color: {{ $eyeHex }}; border: 1px solid rgba(0,0,0,0.15);"></span>
+                                        @endif
+                                        {{ $artist->profile->eye_color }}
+                                    </span>
                                 </div>
                             @endif
 
                             @if($artist->profile?->hair_color)
+                                @php
+                                    $hairHex = match($artist->profile->hair_color) {
+                                        'Black' => '#111111', 'Brown Black' => '#221612', 'Darkest Brown' => '#342015', 'Dark Brown' => '#46291b', 'Medium Brown' => '#5e3a26', 'Light Brown' => '#805338', 'Dark Blonde' => '#b08868', 'Medium Blonde' => '#d1a77e', 'Light Blonde' => '#e4c7a7', default => null
+                                    };
+                                @endphp
                                 <div class="ap-attr">
                                     <span class="ap-attr-key">Hair</span>
-                                    <span
-                                        class="ap-attr-val">{{ $artist->profile->hair_color }}{{ $artist->profile->hair_length ? ' · ' . $artist->profile->hair_length : '' }}</span>
+                                    <span class="ap-attr-val" style="display: inline-flex; align-items: center; gap: 6px;">
+                                        @if($hairHex)
+                                            <span style="width: 14px; height: 14px; border-radius: 4px; background-color: {{ $hairHex }}; border: 1px solid rgba(0,0,0,0.15);"></span>
+                                        @endif
+                                        {{ $artist->profile->hair_color }}{{ $artist->profile->hair_length ? ' · ' . $artist->profile->hair_length : '' }}
+                                    </span>
                                 </div>
                             @endif
 

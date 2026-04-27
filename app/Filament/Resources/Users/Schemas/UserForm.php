@@ -254,22 +254,55 @@ class UserForm
 
                                 Select::make('skin_tone')
                                     ->label('Skin Tone')
+                                    ->allowHtml()
+                                    ->native(false)
                                     ->options([
-                                        'Fair' => 'Fair',
-                                        'Medium' => 'Medium',
-                                        'Dusky' => 'Dusky',
-                                        'Deep' => 'Deep',
+                                        'Fair'     => '<div class="flex items-center gap-2"><span class="w-4 h-4 rounded border border-gray-300 shadow-sm" style="background-color: #FCE3CD;"></span>Fair</div>',
+                                        'Light'    => '<div class="flex items-center gap-2"><span class="w-4 h-4 rounded border border-gray-300 shadow-sm" style="background-color: #EED3BB;"></span>Light</div>',
+                                        'Wheatish' => '<div class="flex items-center gap-2"><span class="w-4 h-4 rounded border border-gray-300 shadow-sm" style="background-color: #E2B88F;"></span>Wheatish</div>',
+                                        'Dusky'    => '<div class="flex items-center gap-2"><span class="w-4 h-4 rounded border border-gray-300 shadow-sm" style="background-color: #C29587;"></span>Dusky</div>',
+                                        'Deep'     => '<div class="flex items-center gap-2"><span class="w-4 h-4 rounded border border-gray-300 shadow-sm" style="background-color: #7C4D31;"></span>Deep</div>',
                                     ]),
 
-                                TextInput::make('eye_color')
+                                Select::make('eye_color')
                                     ->label('Eye Color')
-                                    ->autocomplete('off')
-                                    ->placeholder('e.g. Brown'),
+                                    ->searchable()
+                                    ->allowHtml()
+                                    ->native(false)
+                                    ->options([
+                                        'Brown'           => '<div class="flex items-center gap-2"><span class="w-4 h-4 rounded-full border border-gray-300 shadow-sm" style="background-color: #5c3817;"></span>Brown</div>',
+                                        'Blue'            => '<div class="flex items-center gap-2"><span class="w-4 h-4 rounded-full border border-gray-300 shadow-sm" style="background-color: #4f7b98;"></span>Blue</div>',
+                                        'Green'           => '<div class="flex items-center gap-2"><span class="w-4 h-4 rounded-full border border-gray-300 shadow-sm" style="background-color: #607228;"></span>Green</div>',
+                                        'Greenish Blue'   => '<div class="flex items-center gap-2"><span class="w-4 h-4 rounded-full border border-gray-300 shadow-sm" style="background-color: #588383;"></span>Greenish Blue</div>',
+                                        'Yellowish Green' => '<div class="flex items-center gap-2"><span class="w-4 h-4 rounded-full border border-gray-300 shadow-sm" style="background-color: #728224;"></span>Yellowish Green</div>',
+                                        'Amber'           => '<div class="flex items-center gap-2"><span class="w-4 h-4 rounded-full border border-gray-300 shadow-sm" style="background-color: #8f7422;"></span>Amber</div>',
+                                        'Hazel'           => '<div class="flex items-center gap-2"><span class="w-4 h-4 rounded-full border border-gray-300 shadow-sm" style="background-color: #986121;"></span>Hazel</div>',
+                                        'Deep Blue'       => '<div class="flex items-center gap-2"><span class="w-4 h-4 rounded-full border border-gray-300 shadow-sm" style="background-color: #274f68;"></span>Deep Blue</div>',
+                                        'Dark Green'      => '<div class="flex items-center gap-2"><span class="w-4 h-4 rounded-full border border-gray-300 shadow-sm" style="background-color: #3c561b;"></span>Dark Green</div>',
+                                        'Freckled Hazel'  => '<div class="flex items-center gap-2"><span class="w-4 h-4 rounded-full border border-gray-300 shadow-sm" style="background-color: #704e22;"></span>Freckled Hazel</div>',
+                                        'Greyish Blue'    => '<div class="flex items-center gap-2"><span class="w-4 h-4 rounded-full border border-gray-300 shadow-sm" style="background-color: #6e7e85;"></span>Greyish Blue</div>',
+                                        'Forest Green'    => '<div class="flex items-center gap-2"><span class="w-4 h-4 rounded-full border border-gray-300 shadow-sm" style="background-color: #465521;"></span>Forest Green</div>',
+                                        'Dark Hazel'      => '<div class="flex items-center gap-2"><span class="w-4 h-4 rounded-full border border-gray-300 shadow-sm" style="background-color: #593c15;"></span>Dark Hazel</div>',
+                                        'Grey'            => '<div class="flex items-center gap-2"><span class="w-4 h-4 rounded-full border border-gray-300 shadow-sm" style="background-color: #727a7c;"></span>Grey</div>',
+                                        'Spring Green'    => '<div class="flex items-center gap-2"><span class="w-4 h-4 rounded-full border border-gray-300 shadow-sm" style="background-color: #6d7d24;"></span>Spring Green</div>',
+                                    ]),
 
-                                TextInput::make('hair_color')
+                                Select::make('hair_color')
                                     ->label('Hair Color')
-                                    ->autocomplete('off')
-                                    ->placeholder('e.g. Black'),
+                                    ->searchable()
+                                    ->allowHtml()
+                                    ->native(false)
+                                    ->options([
+                                        'Black'         => '<div class="flex items-center gap-2"><span class="w-4 h-4 rounded border border-gray-300 shadow-sm" style="background-color: #111111;"></span>Black</div>',
+                                        'Brown Black'   => '<div class="flex items-center gap-2"><span class="w-4 h-4 rounded border border-gray-300 shadow-sm" style="background-color: #221612;"></span>Brown Black</div>',
+                                        'Darkest Brown' => '<div class="flex items-center gap-2"><span class="w-4 h-4 rounded border border-gray-300 shadow-sm" style="background-color: #342015;"></span>Darkest Brown</div>',
+                                        'Dark Brown'    => '<div class="flex items-center gap-2"><span class="w-4 h-4 rounded border border-gray-300 shadow-sm" style="background-color: #46291b;"></span>Dark Brown</div>',
+                                        'Medium Brown'  => '<div class="flex items-center gap-2"><span class="w-4 h-4 rounded border border-gray-300 shadow-sm" style="background-color: #5e3a26;"></span>Medium Brown</div>',
+                                        'Light Brown'   => '<div class="flex items-center gap-2"><span class="w-4 h-4 rounded border border-gray-300 shadow-sm" style="background-color: #805338;"></span>Light Brown</div>',
+                                        'Dark Blonde'   => '<div class="flex items-center gap-2"><span class="w-4 h-4 rounded border border-gray-300 shadow-sm" style="background-color: #b08868;"></span>Dark Blonde</div>',
+                                        'Medium Blonde' => '<div class="flex items-center gap-2"><span class="w-4 h-4 rounded border border-gray-300 shadow-sm" style="background-color: #d1a77e;"></span>Medium Blonde</div>',
+                                        'Light Blonde'  => '<div class="flex items-center gap-2"><span class="w-4 h-4 rounded border border-gray-300 shadow-sm" style="background-color: #e4c7a7;"></span>Light Blonde</div>',
+                                    ]),
 
                                 Select::make('hair_length')
                                     ->label('Hair Length')

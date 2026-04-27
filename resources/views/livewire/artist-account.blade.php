@@ -707,6 +707,72 @@
         .upload-zone--full input[type="file"] {
             pointer-events: none !important;
         }
+        /* Container for the swatches */
+        .skin-tone-options {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 12px;
+            margin-top: 8px;
+        }
+
+        /* Hide the actual radio button, but keep it accessible */
+        .tone-radio {
+            position: absolute;
+            opacity: 0;
+            width: 0;
+            height: 0;
+        }
+
+        /* The clickable card */
+        .tone-card {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            padding: 6px 12px 6px 6px;
+            border: 2px solid var(--border-color, #e5e7eb); /* Use your theme's border color */
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            background: #fff;
+        }
+
+        /* Hover effect */
+        .tone-card:hover {
+            border-color: #a1a1aa;
+            background-color: #f9fafb;
+        }
+
+        /* The color square */
+        .tone-visual {
+            width: 24px;
+            height: 24px;
+            border-radius: 4px;
+            border: 1px solid rgba(0,0,0,0.1);
+            box-shadow: inset 0 2px 4px rgba(0,0,0,0.05);
+        }
+
+        .tone-label {
+            font-size: 0.9rem;
+            font-weight: 500;
+            color: #374151;
+        }
+
+        /* WHAT HAPPENS WHEN SELECTED */
+        .tone-radio:checked + .tone-visual + .tone-label {
+            color: #ef4444; /* Your primary red color, or change to match your theme */
+        }
+
+        .tone-radio:checked ~ * {
+            /* You can target the parent label using JavaScript or CSS :has() if preferred, 
+            but this basic setup highlights the border via the input state */
+        }
+
+        /* Advanced CSS (works in modern browsers) to highlight the whole box when checked */
+        .tone-card:has(.tone-radio:checked) {
+            border-color: #ef4444; /* Matches your active theme color */
+            background-color: #fef2f2; /* Very light red background */
+            box-shadow: 0 0 0 1px #ef4444;
+        }
     </style>
 
     <div class="form-page">
@@ -1587,27 +1653,229 @@
 
                                 <div class="form-field">
                                     <label class="form-field-label">Skin Tone</label>
-                                    <div class="form-select-wrap">
-                                        <select class="form-select" wire:model.defer="skin_tone">
-                                            <option value="">Select</option>
-                                            <option value="Fair">Fair</option>
-                                            <option value="Medium">Medium</option>
-                                            <option value="Dusky">Dusky</option>
-                                            <option value="Deep">Deep</option>
-                                        </select>
+                                    
+                                    <div class="skin-tone-options">
+                                        {{-- Fair --}}
+                                        <label class="tone-card">
+                                            <input type="radio" wire:model.defer="skin_tone" value="Fair" class="tone-radio">
+                                            <div class="tone-visual" style="background-color: #FCE3CD;"></div>
+                                            <span class="tone-label">Fair</span>
+                                        </label>
+
+                                        {{-- Light --}}
+                                        <label class="tone-card">
+                                            <input type="radio" wire:model.defer="skin_tone" value="Light" class="tone-radio">
+                                            <div class="tone-visual" style="background-color: #EED3BB;"></div>
+                                            <span class="tone-label">Light</span>
+                                        </label>
+
+                                        {{-- Wheatish --}}
+                                        <label class="tone-card">
+                                            <input type="radio" wire:model.defer="skin_tone" value="Wheatish" class="tone-radio">
+                                            <div class="tone-visual" style="background-color: #E2B88F;"></div>
+                                            <span class="tone-label">Wheatish</span>
+                                        </label>
+
+                                        {{-- Dusky --}}
+                                        <label class="tone-card">
+                                            <input type="radio" wire:model.defer="skin_tone" value="Dusky" class="tone-radio">
+                                            <div class="tone-visual" style="background-color: #C29587;"></div>
+                                            <span class="tone-label">Dusky</span>
+                                        </label>
+
+                                        {{-- Deep --}}
+                                        <label class="tone-card">
+                                            <input type="radio" wire:model.defer="skin_tone" value="Deep" class="tone-radio">
+                                            <div class="tone-visual" style="background-color: #7C4D31;"></div>
+                                            <span class="tone-label">Deep</span>
+                                        </label>
                                     </div>
                                 </div>
 
                                 <div class="form-field">
                                     <label class="form-field-label">Eye Color</label>
-                                    <input type="text" class="form-input" wire:model.defer="eye_color"
-                                        placeholder="e.g. Brown">
+                                    
+                                    {{-- Reusing the same container class from the skin tone picker --}}
+                                    <div class="skin-tone-options"> 
+                                        
+                                        {{-- Brown --}}
+                                        <label class="tone-card">
+                                            <input type="radio" wire:model.defer="eye_color" value="Brown" class="tone-radio">
+                                            <div class="tone-visual" style="background-color: #5c3817; border-radius: 50%;"></div>
+                                            <span class="tone-label">Brown</span>
+                                        </label>
+
+                                        {{-- Blue --}}
+                                        <label class="tone-card">
+                                            <input type="radio" wire:model.defer="eye_color" value="Blue" class="tone-radio">
+                                            <div class="tone-visual" style="background-color: #4f7b98; border-radius: 50%;"></div>
+                                            <span class="tone-label">Blue</span>
+                                        </label>
+
+                                        {{-- Green --}}
+                                        <label class="tone-card">
+                                            <input type="radio" wire:model.defer="eye_color" value="Green" class="tone-radio">
+                                            <div class="tone-visual" style="background-color: #607228; border-radius: 50%;"></div>
+                                            <span class="tone-label">Green</span>
+                                        </label>
+
+                                        {{-- Greenish Blue --}}
+                                        <label class="tone-card">
+                                            <input type="radio" wire:model.defer="eye_color" value="Greenish Blue" class="tone-radio">
+                                            <div class="tone-visual" style="background-color: #588383; border-radius: 50%;"></div>
+                                            <span class="tone-label">Greenish Blue</span>
+                                        </label>
+
+                                        {{-- Yellowish Green --}}
+                                        <label class="tone-card">
+                                            <input type="radio" wire:model.defer="eye_color" value="Yellowish Green" class="tone-radio">
+                                            <div class="tone-visual" style="background-color: #728224; border-radius: 50%;"></div>
+                                            <span class="tone-label">Yellowish Green</span>
+                                        </label>
+
+                                        {{-- Amber --}}
+                                        <label class="tone-card">
+                                            <input type="radio" wire:model.defer="eye_color" value="Amber" class="tone-radio">
+                                            <div class="tone-visual" style="background-color: #8f7422; border-radius: 50%;"></div>
+                                            <span class="tone-label">Amber</span>
+                                        </label>
+
+                                        {{-- Hazel --}}
+                                        <label class="tone-card">
+                                            <input type="radio" wire:model.defer="eye_color" value="Hazel" class="tone-radio">
+                                            <div class="tone-visual" style="background-color: #986121; border-radius: 50%;"></div>
+                                            <span class="tone-label">Hazel</span>
+                                        </label>
+
+                                        {{-- Deep Blue --}}
+                                        <label class="tone-card">
+                                            <input type="radio" wire:model.defer="eye_color" value="Deep Blue" class="tone-radio">
+                                            <div class="tone-visual" style="background-color: #274f68; border-radius: 50%;"></div>
+                                            <span class="tone-label">Deep Blue</span>
+                                        </label>
+
+                                        {{-- Dark Green --}}
+                                        <label class="tone-card">
+                                            <input type="radio" wire:model.defer="eye_color" value="Dark Green" class="tone-radio">
+                                            <div class="tone-visual" style="background-color: #3c561b; border-radius: 50%;"></div>
+                                            <span class="tone-label">Dark Green</span>
+                                        </label>
+
+                                        {{-- Freckled Hazel --}}
+                                        <label class="tone-card">
+                                            <input type="radio" wire:model.defer="eye_color" value="Freckled Hazel" class="tone-radio">
+                                            <div class="tone-visual" style="background-color: #704e22; border-radius: 50%;"></div>
+                                            <span class="tone-label">Freckled Hazel</span>
+                                        </label>
+
+                                        {{-- Greyish Blue --}}
+                                        <label class="tone-card">
+                                            <input type="radio" wire:model.defer="eye_color" value="Greyish Blue" class="tone-radio">
+                                            <div class="tone-visual" style="background-color: #6e7e85; border-radius: 50%;"></div>
+                                            <span class="tone-label">Greyish Blue</span>
+                                        </label>
+
+                                        {{-- Forest Green --}}
+                                        <label class="tone-card">
+                                            <input type="radio" wire:model.defer="eye_color" value="Forest Green" class="tone-radio">
+                                            <div class="tone-visual" style="background-color: #465521; border-radius: 50%;"></div>
+                                            <span class="tone-label">Forest Green</span>
+                                        </label>
+
+                                        {{-- Dark Hazel --}}
+                                        <label class="tone-card">
+                                            <input type="radio" wire:model.defer="eye_color" value="Dark Hazel" class="tone-radio">
+                                            <div class="tone-visual" style="background-color: #593c15; border-radius: 50%;"></div>
+                                            <span class="tone-label">Dark Hazel</span>
+                                        </label>
+
+                                        {{-- Grey --}}
+                                        <label class="tone-card">
+                                            <input type="radio" wire:model.defer="eye_color" value="Grey" class="tone-radio">
+                                            <div class="tone-visual" style="background-color: #727a7c; border-radius: 50%;"></div>
+                                            <span class="tone-label">Grey</span>
+                                        </label>
+
+                                        {{-- Spring Green --}}
+                                        <label class="tone-card">
+                                            <input type="radio" wire:model.defer="eye_color" value="Spring Green" class="tone-radio">
+                                            <div class="tone-visual" style="background-color: #6d7d24; border-radius: 50%;"></div>
+                                            <span class="tone-label">Spring Green</span>
+                                        </label>
+
+                                    </div>
                                 </div>
 
                                 <div class="form-field">
                                     <label class="form-field-label">Hair Color</label>
-                                    <input type="text" class="form-input" wire:model.defer="hair_color"
-                                        placeholder="e.g. Black">
+                                    
+                                    {{-- Reusing the same container class --}}
+                                    <div class="skin-tone-options"> 
+                                        
+                                        {{-- 2 Black --}}
+                                        <label class="tone-card">
+                                            <input type="radio" wire:model.defer="hair_color" value="Black" class="tone-radio">
+                                            <div class="tone-visual" style="background-color: #111111;"></div>
+                                            <span class="tone-label">Black</span>
+                                        </label>
+
+                                        {{-- 3 Brown Black --}}
+                                        <label class="tone-card">
+                                            <input type="radio" wire:model.defer="hair_color" value="Brown Black" class="tone-radio">
+                                            <div class="tone-visual" style="background-color: #221612;"></div>
+                                            <span class="tone-label">Brown Black</span>
+                                        </label>
+
+                                        {{-- 4 Darkest Brown --}}
+                                        <label class="tone-card">
+                                            <input type="radio" wire:model.defer="hair_color" value="Darkest Brown" class="tone-radio">
+                                            <div class="tone-visual" style="background-color: #342015;"></div>
+                                            <span class="tone-label">Darkest Brown</span>
+                                        </label>
+
+                                        {{-- 5 Dark Brown --}}
+                                        <label class="tone-card">
+                                            <input type="radio" wire:model.defer="hair_color" value="Dark Brown" class="tone-radio">
+                                            <div class="tone-visual" style="background-color: #46291b;"></div>
+                                            <span class="tone-label">Dark Brown</span>
+                                        </label>
+
+                                        {{-- 6 Medium Brown --}}
+                                        <label class="tone-card">
+                                            <input type="radio" wire:model.defer="hair_color" value="Medium Brown" class="tone-radio">
+                                            <div class="tone-visual" style="background-color: #5e3a26;"></div>
+                                            <span class="tone-label">Medium Brown</span>
+                                        </label>
+
+                                        {{-- 7 Light Brown --}}
+                                        <label class="tone-card">
+                                            <input type="radio" wire:model.defer="hair_color" value="Light Brown" class="tone-radio">
+                                            <div class="tone-visual" style="background-color: #805338;"></div>
+                                            <span class="tone-label">Light Brown</span>
+                                        </label>
+
+                                        {{-- 8 Dark Blonde --}}
+                                        <label class="tone-card">
+                                            <input type="radio" wire:model.defer="hair_color" value="Dark Blonde" class="tone-radio">
+                                            <div class="tone-visual" style="background-color: #b08868;"></div>
+                                            <span class="tone-label">Dark Blonde</span>
+                                        </label>
+
+                                        {{-- 9 Medium Blonde --}}
+                                        <label class="tone-card">
+                                            <input type="radio" wire:model.defer="hair_color" value="Medium Blonde" class="tone-radio">
+                                            <div class="tone-visual" style="background-color: #d1a77e;"></div>
+                                            <span class="tone-label">Medium Blonde</span>
+                                        </label>
+
+                                        {{-- 10 Light Blonde --}}
+                                        <label class="tone-card">
+                                            <input type="radio" wire:model.defer="hair_color" value="Light Blonde" class="tone-radio">
+                                            <div class="tone-visual" style="background-color: #e4c7a7;"></div>
+                                            <span class="tone-label">Light Blonde</span>
+                                        </label>
+
+                                    </div>
                                 </div>
 
                                 <div class="form-field">
@@ -3012,42 +3280,45 @@
                 </div>
 
                 {{-- ── Sticky submit bar ── --}}
-                <div class="form-submit-bar">
+                <div class="form-submit-bar" style="display: flex; justify-content: space-between; align-items: center; width: 100%;">
 
-                    {{-- Left Side: View Profile Icon --}}
-                    <div>
+                    {{-- Left Side: Download Card & View Profile --}}
+                    <div style="display: flex; gap: 10px; align-items: center;">
+                        
+                        {{-- Download Photocard Button (Left of Profile) --}}
+                        @if($currentStep === 'profile')
+                            <a href="{{ route('photocard.download', auth()->user()) }}"
+                                class="btn-outline btn-mobile-icon"
+                                style="padding: 10px 16px; font-size: 0.85rem; display: flex; align-items: center; gap: 8px; border-color: var(--border-strong);"
+                                title="Download Membership Card">
+                                <svg width="16" height="16" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2" style="flex-shrink: 0;">
+                                    <path stroke-linecap="round" stroke-linejoin="round" d="M10 6H5a2 2 0 00-2 2v9a2 2 0 002 2h14a2 2 0 002-2V8a2 2 0 00-2-2h-5m-4 0V5a2 2 0 114 0v1m-4 0a2 2 0 104 0M9 14h6"/>
+                                </svg>
+                                <span class="hide-on-mobile">Membership Card</span>
+                            </a>
+                        @endif
+
+                        {{-- View Profile Button --}}
                         <a href="{{ route('artist.show', auth()->id()) }}" target="_blank"
                             class="btn-outline btn-mobile-icon"
                             style="padding: 10px 16px; font-size: 0.85rem; display: flex; align-items: center; gap: 8px; border-color: var(--border-strong);"
                             title="View Public Profile">
-                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor"
-                                stroke-width="2" style="flex-shrink: 0;">
+                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="flex-shrink: 0;">
                                 <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path>
                                 <circle cx="12" cy="12" r="3"></circle>
                             </svg>
                             <span class="hide-on-mobile">View Profile</span>
                         </a>
-                        @if($currentStep === 'profile')
-                            <a href="{{ route('photocard.download', auth()->user()) }}"
-                            class="inline-flex items-center gap-2 px-4 py-2 border border-red-600 text-red-600 rounded-lg text-sm font-semibold hover:bg-red-50 transition">
-                                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                        d="M10 6H5a2 2 0 00-2 2v9a2 2 0 002 2h14a2 2 0 002-2V8a2 2 0 00-2-2h-5m-4 0V5a2 2 0 114 0v1m-4 0a2 2 0 104 0M9 14h6"/>
-                                </svg>
-                                Download My Membership Card
-                            </a>
-                        @endif
                     </div>
 
                     {{-- Right Side: Navigation & Universal Save --}}
-                    <div class="submit-actions" style="display: flex; gap: 10px; width: 100%; justify-content: flex-end;">
+                    <div class="submit-actions" style="display: flex; gap: 10px; justify-content: flex-end;">
 
                         {{-- Previous --}}
                         <button type="button" class="btn-outline btn-mobile-icon" x-show="activeTab > 1"
                             @click="activeTab--; window.scrollTo({top: 0, behavior: 'smooth'})"
                             style="min-width: 100px; justify-content: center; gap: 6px;" title="Previous Step">
-                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor"
-                                stroke-width="2" style="flex-shrink: 0;">
+                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="flex-shrink: 0;">
                                 <line x1="19" y1="12" x2="5" y2="12"></line>
                                 <polyline points="12 19 5 12 12 5"></polyline>
                             </svg>
@@ -3060,8 +3331,7 @@
                             style="min-width: 100px; justify-content: center; background: var(--bg-secondary); gap: 6px;"
                             title="Next Step">
                             <span class="hide-on-mobile">Next Step</span>
-                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor"
-                                stroke-width="2" style="flex-shrink: 0;">
+                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="flex-shrink: 0;">
                                 <line x1="5" y1="12" x2="19" y2="12"></line>
                                 <polyline points="12 5 19 12 12 19"></polyline>
                             </svg>
@@ -3070,8 +3340,7 @@
                         {{-- Universal Save Button --}}
                         <button type="submit" class="btn-fill btn-mobile-save" wire:loading.attr="disabled"
                             style="min-width: 180px; justify-content: center; display: flex; align-items: center; gap: 6px;">
-                            <svg class="hide-on-mobile" width="15" height="15" viewBox="0 0 24 24" fill="none"
-                                stroke="currentColor" stroke-width="2" style="flex-shrink: 0;">
+                            <svg class="hide-on-mobile" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="flex-shrink: 0;">
                                 <path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"></path>
                                 <polyline points="17 21 17 13 7 13 7 21"></polyline>
                                 <polyline points="7 3 7 8 15 8"></polyline>
