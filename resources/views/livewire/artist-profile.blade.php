@@ -1130,6 +1130,153 @@
                 right: auto; /* Centers the dropdown on mobile */
             }
         }
+        /* ══ Experience List Layout ══ */
+        .exp-list {
+            padding: 8px 0;
+        }
+
+        .exp-item {
+            padding: 18px 28px;
+            border-bottom: 1px solid var(--border);
+            transition: background 0.2s;
+        }
+
+        .exp-item:last-child {
+            border-bottom: none;
+        }
+
+        .exp-item:hover {
+            background: rgba(0, 0, 0, 0.015);
+        }
+
+        /* Top row: year badge + title + role pill */
+        .exp-item-top {
+            display: flex;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin-bottom: 8px;
+        }
+
+        /* Year badge */
+        .exp-year-badge {
+            font-size: 0.85rem;
+            font-weight: 700;
+            color: var(--gold);
+            background: var(--gold-bg);
+            border: 1px solid rgba(var(--gold-rgb, 180, 120, 60), 0.25);
+            padding: 3px 10px;
+            border-radius: 2px;
+            letter-spacing: 0.06em;
+            flex-shrink: 0;
+            font-family: 'Jost', sans-serif;
+        }
+
+        /* Title */
+        .exp-title {
+            font-size: 1.05rem;
+            font-weight: 600;
+            color: var(--text-primary);
+            letter-spacing: 0.01em;
+        }
+
+        /* Role pill (subtle, inline) */
+        /* Replace your current .exp-role-pill with this */
+.exp-role-pill {
+    font-size: 1.05rem;
+    font-weight: 600;
+    color: var(--gold);
+    background: transparent;
+    border: none;
+    padding: 0;
+    border-radius: 0;
+    letter-spacing: 0.01em;
+    text-transform: none;
+}
+
+.exp-role-pill::before {
+    content: '।';
+    margin-right: 8px;
+    margin-left: 2px;
+    opacity: 0.7;  /* was 0.4 */
+    color: var(--text-muted);
+    font-weight: 300;
+}
+
+        /* Result badge: Won */
+        .exp-result-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 5px;
+            font-size: 0.85rem;
+            font-weight: 700;
+            padding: 3px 10px;
+            border-radius: 999px;
+            letter-spacing: 0.06em;
+            text-transform: uppercase;
+            flex-shrink: 0;
+        }
+
+        .exp-result-badge.is-won {
+            background: rgba(22, 163, 74, 0.08);
+            color: #16a34a;
+            border: 1px solid rgba(22, 163, 74, 0.25);
+        }
+
+        .exp-result-badge.is-nominated {
+            background: rgba(234, 179, 8, 0.08);
+            color: #ca8a04;
+            border: 1px solid rgba(234, 179, 8, 0.25);
+        }
+
+        /* Meta row: small icon + label chips */
+        .exp-meta {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 6px 16px;
+            margin-bottom: 6px;
+            align-items: center;
+        }
+
+        .exp-meta-item {
+            display: inline-flex;
+            align-items: center;
+            gap: 5px;
+            font-size: 0.9rem;
+            color: var(--text-muted);
+            font-weight: 400;
+        }
+
+        .exp-meta-item svg {
+            color: var(--gold);
+            flex-shrink: 0;
+            opacity: 0.75;
+        }
+
+        /* Empty meta row: collapse spacing */
+        .exp-meta:empty {
+            display: none;
+        }
+
+        /* Description */
+        .exp-description {
+            font-size: 0.95rem;
+            color: var(--text-secondary);
+            line-height: 1.7;
+            margin-top: 8px;
+            font-style: italic;
+            padding-left: 2px;
+            border-left: 2px solid var(--border-strong);
+            padding-left: 12px;
+        }
+
+        /* Notes (lighter than description) */
+        .exp-notes {
+            font-size: 0.9rem;
+            color: var(--text-muted);
+            margin-top: 6px;
+            font-style: italic;
+        }
     </style>
 
     {{-- ══════════════════════════════════════════
@@ -1782,7 +1929,6 @@
                     @php
                         $groupedExp = $artist->experiences->groupBy('type');
 
-                        // ✅ Fixed: matches actual saved type values from ArtistAccount.php
                         $expTypeLabels = [
                             'acting_screen'          => 'Acting & Screen',
                             'modeling_fashion'       => 'Modeling & Fashion',
@@ -1797,7 +1943,6 @@
                             'custom'                 => 'Other',
                         ];
 
-                        // Types that use the award-style table (have award_category, award_result etc.)
                         $awardStyleTypes = ['awards_achievements', 'competitions_pageants'];
                     @endphp
 
@@ -1816,7 +1961,6 @@
                                             <path d="M15 3h6v6M9 21H3v-6M21 3l-7 7M3 21l7-7" />
                                         </svg>
                                     </div>
-                                    {{-- ✅ Fixed: 'custom' shows the custom_type_label from first entry --}}
                                     <div class="ap-card-title">
                                         @if($type === 'custom')
                                             {{ $entries->first()->custom_type_label ?? 'Other' }}
@@ -1828,130 +1972,153 @@
 
                                 <div class="ap-card-body" style="padding: 0;">
 
-                                    {{-- ✅ Fixed: awards_achievements AND competitions_pageants use award-style table --}}
+                                    {{-- ══ AWARD STYLE: awards_achievements & competitions_pageants ══ --}}
                                     @if(in_array($type, $awardStyleTypes))
-                                        <div class="ap-table-wrapper">
-                                            <table style="border-collapse: collapse; font-size: 0.88rem; width: 100%;">
-                                                <thead>
-                                                    <tr style="border-bottom: 1px solid var(--border); background: var(--bg-primary);">
-                                                        <th style="text-align:left; padding:10px 20px; color:var(--text-muted); font-size:0.85rem; letter-spacing:0.15em; text-transform:uppercase;">Year</th>
-                                                        <th style="text-align:left; padding:10px 20px; color:var(--text-muted); font-size:0.85rem; letter-spacing:0.15em; text-transform:uppercase;">Title</th>
-                                                        <th style="text-align:left; padding:10px 20px; color:var(--text-muted); font-size:0.85rem; letter-spacing:0.15em; text-transform:uppercase;">Category</th>
-                                                        @if($type === 'awards_achievements')
-                                                        <th style="text-align:left; padding:10px 20px; color:var(--text-muted); font-size:0.85rem; letter-spacing:0.15em; text-transform:uppercase;">For Work</th>
-                                                        @endif
-                                                        <th style="text-align:left; padding:10px 20px; color:var(--text-muted); font-size:0.85rem; letter-spacing:0.15em; text-transform:uppercase;">Result</th>
-                                                        <th style="text-align:left; padding:10px 20px; color:var(--text-muted); font-size:0.85rem; letter-spacing:0.15em; text-transform:uppercase;">Organizer</th>
-                                                        @if($type === 'competitions_pageants')
-                                                        <th style="text-align:left; padding:10px 20px; color:var(--text-muted); font-size:0.85rem; letter-spacing:0.15em; text-transform:uppercase;">Location</th>
-                                                        @endif
-                                                    </tr>
-                                                </thead>
-                                                <tbody>
-                                                    @foreach($entries as $exp)
-                                                        <tr style="border-bottom: 1px solid var(--border);">
-                                                            <td style="padding:12px 20px; color:var(--text-muted);">{{ $exp->year ?? '—' }}</td>
-                                                            <td style="padding:12px 20px; color:var(--text-primary); font-weight:500;">{{ $exp->title }}</td>
-                                                            <td style="padding:12px 20px; color:var(--text-secondary);">{{ $exp->award_category ?? '—' }}</td>
-                                                            @if($type === 'awards_achievements')
-                                                            <td style="padding:12px 20px; color:var(--text-secondary); font-style:italic;">{{ $exp->award_work ?? '—' }}</td>
-                                                            @endif
-                                                            <td style="padding:12px 20px;">
-                                                                @if($exp->award_result)
-                                                                    <span style="font-size:0.85rem; font-weight:700; padding:3px 10px; border-radius:999px;
-                                                                        {{ $exp->award_result === 'Won' || $exp->award_result === 'Winner'
-                                                                            ? 'background:rgba(22,163,74,0.1); color:#16a34a; border:1px solid rgba(22,163,74,0.3);'
-                                                                            : 'background:rgba(234,179,8,0.1); color:#ca8a04; border:1px solid rgba(234,179,8,0.3);' }}">
-                                                                        {{ $exp->award_result }}
-                                                                    </span>
-                                                                @else
-                                                                    —
-                                                                @endif
-                                                            </td>
-                                                            <td style="padding:12px 20px; color:var(--text-muted); font-size:1rem;">{{ $exp->award_organizer ?? '—' }}</td>
-                                                            @if($type === 'competitions_pageants')
-                                                            <td style="padding:12px 20px; color:var(--text-muted); font-size:1rem;">{{ $exp->jury_location ?? '—' }}</td>
-                                                            @endif
-                                                        </tr>
-                                                        @if($exp->description)
-                                                            <tr style="border-bottom:1px solid var(--border); background:rgba(0,0,0,0.02);">
-                                                                <td colspan="{{ $type === 'awards_achievements' ? 6 : 6 }}"
-                                                                    style="padding:8px 20px 16px; color:var(--text-secondary); font-size:1rem; line-height:1.6;">
-                                                                    {{ $exp->description }}
-                                                                </td>
-                                                            </tr>
-                                                        @endif
-                                                    @endforeach
-                                                </tbody>
-                                            </table>
-                                        </div>
-
-                                    {{-- Workshop/Training: simple pill list --}}
-                                    @elseif($type === 'workshop_training')
-                                        <div style="padding: 16px 20px;">
+                                        <div class="exp-list">
                                             @foreach($entries as $exp)
-                                                <div style="padding:10px 0; border-bottom:1px solid var(--border); display:flex; gap:12px; align-items:flex-start;">
-                                                    @if($exp->year)
-                                                        <span style="font-size:1rem; color:var(--gold); font-weight:700; background:var(--gold-bg); padding:2px 8px; border-radius:2px; flex-shrink:0; margin-top:2px;">
-                                                            {{ $exp->year }}
-                                                        </span>
-                                                    @endif
-                                                    <div>
-                                                        <span style="font-weight:600; color:var(--text-primary);">{{ $exp->title }}</span>
+                                                <div class="exp-item">
+                                                    <div class="exp-item-top">
+                                                        {{-- Year badge --}}
+                                                        @if($exp->year)
+                                                            <span class="exp-year-badge">{{ $exp->year }}</span>
+                                                        @endif
+
+                                                        {{-- Result badge (Won / Nominated etc.) --}}
+                                                        @if($exp->award_result)
+                                                            @php
+                                                                $isWon = in_array($exp->award_result, ['Won', 'Winner']);
+                                                            @endphp
+                                                            <span class="exp-result-badge {{ $isWon ? 'is-won' : 'is-nominated' }}">
+                                                                @if($isWon)
+                                                                    <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" style="flex-shrink:0;">
+                                                                        <polyline points="20 6 9 17 4 12"/>
+                                                                    </svg>
+                                                                @endif
+                                                                {{ $exp->award_result }}
+                                                            </span>
+                                                        @endif
+
+                                                        {{-- Title --}}
+                                                        <span class="exp-title">{{ $exp->title }}</span>
+                                                    </div>
+
+                                                    {{-- Meta row: only non-empty fields --}}
+                                                    <div class="exp-meta">
+                                                        @if($exp->award_category)
+                                                            <span class="exp-meta-item">
+                                                                <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 8v4l3 3"/></svg>
+                                                                {{ $exp->award_category }}
+                                                            </span>
+                                                        @endif
+                                                        @if($type === 'awards_achievements' && $exp->award_work)
+                                                            <span class="exp-meta-item">
+                                                                <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14.5 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7.5L14.5 2z"/></svg>
+                                                                {{ $exp->award_work }}
+                                                            </span>
+                                                        @endif
                                                         @if($exp->award_organizer)
-                                                            <span style="color:var(--text-muted); font-size:1rem;"> · {{ $exp->award_organizer }}</span>
+                                                            <span class="exp-meta-item">
+                                                                <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/></svg>
+                                                                {{ $exp->award_organizer }}
+                                                            </span>
                                                         @endif
-                                                        @if($exp->jury_location)
-                                                            <span style="color:var(--text-muted); font-size:1rem;"> · {{ $exp->jury_location }}</span>
-                                                        @endif
-                                                        @if($exp->description)
-                                                            <div style="font-size:1rem; color:var(--text-muted); margin-top:4px; font-style:italic;">
-                                                                {{ $exp->description }}
-                                                            </div>
+                                                        @if($type === 'competitions_pageants' && $exp->jury_location)
+                                                            <span class="exp-meta-item">
+                                                                <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
+                                                                {{ $exp->jury_location }}
+                                                            </span>
                                                         @endif
                                                     </div>
+
+                                                    @if($exp->description)
+                                                        <p class="exp-description">{{ $exp->description }}</p>
+                                                    @endif
                                                 </div>
                                             @endforeach
                                         </div>
 
-                                    {{-- ✅ Default: all other types (acting_screen, modeling_fashion, etc.) --}}
-                                    @else
-                                        <div class="ap-table-wrapper">
-                                            <table style="border-collapse: collapse; font-size: 0.88rem; width: 100%;">
-                                                <thead>
-                                                    <tr style="border-bottom:1px solid var(--border); background:var(--bg-primary);">
-                                                        <th style="text-align:left; padding:10px 20px; color:var(--text-muted); font-size:0.85rem; letter-spacing:0.15em; text-transform:uppercase;">Year</th>
-                                                        <th style="text-align:left; padding:10px 20px; color:var(--text-muted); font-size:0.85rem; letter-spacing:0.15em; text-transform:uppercase;">Title</th>
-                                                        <th style="text-align:left; padding:10px 20px; color:var(--text-muted); font-size:0.85rem; letter-spacing:0.15em; text-transform:uppercase;">Role</th>
-                                                        <th style="text-align:left; padding:10px 20px; color:var(--text-muted); font-size:0.85rem; letter-spacing:0.15em; text-transform:uppercase;">Director</th>
-                                                        <th style="text-align:left; padding:10px 20px; color:var(--text-muted); font-size:0.85rem; letter-spacing:0.15em; text-transform:uppercase;">Production</th>
-                                                        <th style="text-align:left; padding:10px 20px; color:var(--text-muted); font-size:0.85rem; letter-spacing:0.15em; text-transform:uppercase;">Language</th>
-                                                        <th style="text-align:left; padding:10px 20px; color:var(--text-muted); font-size:0.85rem; letter-spacing:0.15em; text-transform:uppercase;">Platform</th>
-                                                        <th style="text-align:left; padding:10px 20px; color:var(--text-muted); font-size:0.85rem; letter-spacing:0.15em; text-transform:uppercase;">Notes</th>
-                                                    </tr>
-                                                </thead>
-                                                <tbody>
-                                                    @foreach($entries as $exp)
-                                                        <tr style="border-bottom:1px solid var(--border);">
-                                                            <td style="padding:12px 20px; color:var(--text-muted);">{{ $exp->year ?? '—' }}</td>
-                                                            <td style="padding:12px 20px; color:var(--text-primary); font-weight:500;">{{ $exp->title }}</td>
-                                                            <td style="padding:12px 20px; color:var(--text-secondary);">{{ $exp->role ?? '—' }}</td>
-                                                            <td style="padding:12px 20px; color:var(--text-secondary);">{{ $exp->director ?? '—' }}</td>
-                                                            <td style="padding:12px 20px; color:var(--text-secondary);">{{ $exp->production ?? '—' }}</td>
-                                                            <td style="padding:12px 20px; color:var(--text-secondary);">{{ $exp->language ?? '—' }}</td>
-                                                            <td style="padding:12px 20px; color:var(--text-secondary);">{{ $exp->platform ?? '—' }}</td>
-                                                            <td style="padding:12px 20px; color:var(--text-muted); font-size:1rem; font-style:italic;">{{ $exp->notes ?? '' }}</td>
-                                                        </tr>
-                                                        @if($exp->description)
-                                                            <tr style="border-bottom:1px solid var(--border); background:rgba(0,0,0,0.02);">
-                                                                <td colspan="8" style="padding:8px 20px 16px; color:var(--text-secondary); font-size:1rem; line-height:1.6;">
-                                                                    {{ $exp->description }}
-                                                                </td>
-                                                            </tr>
+                                    {{-- ══ WORKSHOP / TRAINING ══ --}}
+                                    @elseif($type === 'workshop_training')
+                                        <div class="exp-list">
+                                            @foreach($entries as $exp)
+                                                <div class="exp-item">
+                                                    <div class="exp-item-top">
+                                                        @if($exp->year)
+                                                            <span class="exp-year-badge">{{ $exp->year }}</span>
                                                         @endif
-                                                    @endforeach
-                                                </tbody>
-                                            </table>
+                                                        <span class="exp-title">{{ $exp->title }}</span>
+                                                    </div>
+                                                    <div class="exp-meta">
+                                                        @if($exp->award_organizer)
+                                                            <span class="exp-meta-item">
+                                                                <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/></svg>
+                                                                {{ $exp->award_organizer }}
+                                                            </span>
+                                                        @endif
+                                                        @if($exp->jury_location)
+                                                            <span class="exp-meta-item">
+                                                                <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
+                                                                {{ $exp->jury_location }}
+                                                            </span>
+                                                        @endif
+                                                    </div>
+                                                    @if($exp->description)
+                                                        <p class="exp-description">{{ $exp->description }}</p>
+                                                    @endif
+                                                </div>
+                                            @endforeach
+                                        </div>
+
+                                    {{-- ══ DEFAULT: acting, modeling, photography, advertising, events, digital, other, custom ══ --}}
+                                    @else
+                                        <div class="exp-list">
+                                            @foreach($entries as $exp)
+                                                <div class="exp-item">
+                                                    <div class="exp-item-top">
+                                                        @if($exp->year)
+                                                            <span class="exp-year-badge">{{ $exp->year }}</span>
+                                                        @endif
+                                                        <span class="exp-title">{{ $exp->title }}</span>
+                                                        @if($exp->role)
+                                                            <span class="exp-role-pill">{{ $exp->role }}</span>
+                                                        @endif
+                                                    </div>
+
+                                                    <div class="exp-meta">
+                                                        @if($exp->director)
+                                                            <span class="exp-meta-item">
+                                                                <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="8" r="4"/><path d="M4 20c0-4 3.6-7 8-7s8 3 8 7"/></svg>
+                                                                Dir. {{ $exp->director }}
+                                                            </span>
+                                                        @endif
+                                                        @if($exp->production)
+                                                            <span class="exp-meta-item">
+                                                                <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/></svg>
+                                                                {{ $exp->production }}
+                                                            </span>
+                                                        @endif
+                                                        @if($exp->language)
+                                                            <span class="exp-meta-item">
+                                                                <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 8l6 6M4 14l6-6 2-3M2 5h12M7 2h1M22 22l-5-10-5 10M14 18h6"/></svg>
+                                                                {{ $exp->language }}
+                                                            </span>
+                                                        @endif
+                                                        @if($exp->platform)
+                                                            <span class="exp-meta-item">
+                                                                <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="3" width="20" height="14" rx="2"/><path d="M8 21h8M12 17v4"/></svg>
+                                                                {{ $exp->platform }}
+                                                            </span>
+                                                        @endif
+                                                    </div>
+
+                                                    @if($exp->notes)
+                                                        <p class="exp-notes">{{ $exp->notes }}</p>
+                                                    @endif
+                                                    @if($exp->description)
+                                                        <p class="exp-description">{{ $exp->description }}</p>
+                                                    @endif
+                                                </div>
+                                            @endforeach
                                         </div>
                                     @endif
 
@@ -2203,8 +2370,7 @@
                     <h3 class="ap-modal-title">Book {{ $artist->name }}</h3>
                     <p class="ap-modal-desc"
                         style="font-family: 'SolaimanLipi', sans-serif; font-size: 1.4rem; color: var(--text-secondary); line-height: auto;">
-                        গোপনীয়তা এবং পেশাদারিত্ব নিশ্চিত করতে সমস্ত বুকিং আমাদের এজেন্সির মাধ্যমে পরিচালিত হয়। শিডিউল এবং
-                        পারিশ্রমিক সম্পর্কে আলোচনা করতে নিচে আমাদের সাথে যোগাযোগ করুন।
+                        আপনার পরবর্তী প্রজেক্টে {{ $artist->name }}-কে পেতে চান? আমরা আপনার পাশে আছি। শিডিউল ও বিস্তারিত আলোচনার জন্য আমাদের টিমের সাথে সরাসরি কথা বলুন।
                     </p>
 
                     <div class="ap-modal-contact-box">
