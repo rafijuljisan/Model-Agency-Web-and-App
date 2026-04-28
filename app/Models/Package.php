@@ -13,5 +13,6 @@ class Package extends Model
         'is_active' => 'boolean',
         'duration_months' => 'integer',
         'price' => 'decimal:2',
+        'max_portfolio_photos' => 'integer',
     ];
 }

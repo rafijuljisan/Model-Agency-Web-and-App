@@ -2,16 +2,20 @@
 
 namespace App\Livewire;
 
-use Livewire\Component;
-use Livewire\WithFileUploads;
+use App\Models\ArtistExperience;
+use App\Models\Category;
 use App\Models\Profile;
+use App\Models\User;
+use App\Notifications\AdminAlertNotification;
+use Carbon\Carbon;
+use Filament\Notifications\Notification as FilamentNotification;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Log;
-use Livewire\Attributes\Layout;
-use App\Models\User;
 use Illuminate\Support\Facades\Notification;
-use App\Notifications\AdminAlertNotification;
-use Filament\Notifications\Notification as FilamentNotification;
+use Illuminate\Validation\ValidationException;
+use Livewire\Attributes\Layout;
+use Livewire\Component;
+use Livewire\WithFileUploads;
 
 #[Layout('layouts.app')]
 class ArtistAccount extends Component
@@ -23,31 +27,47 @@ class ArtistAccount extends Component
 
     // ── NID Fields ──
     public $nidImage;
+
     public $nidBackImage;
+
     public $profilePhotoUpload = null;
 
     // ── Core User Fields ──
     public string $name = '';
+
     public string $email = '';
+
     public string $phone = '';
 
     // ── Profile Fields ──
     public string $gender = '';
+
     public string $date_of_birth = '';
+
     public $height_cm = '';
+
     public $hourly_rate = '';
+
     public string $languages = '';
+
     public string $country = 'Bangladesh';
+
     public string $district = '';
+
     public string $upazila = '';
+
     public string $street_address = '';
+
     public string $bio = '';
+
     public array $categories = [];
 
     // ── Media ──
     // REMOVED: public array $newPhotos = []; — replaced by sequential single-file uploads
     public $portfolioImages = [];
+
     public $newAvatar = null;
+
     public bool $saved = false;
 
     // ── NEW: Single-file sequential portfolio upload ──
@@ -57,74 +77,114 @@ class ArtistAccount extends Component
 
     // ── Social Links ──
     public string $facebook_url = '';
+
     public string $instagram_url = '';
+
     public string $youtube_url = '';
+
     public string $tiktok_url = '';
+
     public string $linkedin_url = '';
+
     public string $portfolio_url = '';
 
     // ── Measurements ──
     public $weight_kg = '';
+
     public $chest_bust_inches = '';
+
     public $waist_inches = '';
+
     public $hips_inches = '';
+
     public $shoulder_inches = '';
+
     public string $shoe_size = '';
+
     public string $dress_size = '';
 
     // ── Appearance ──
     public string $skin_tone = '';
+
     public string $eye_color = '';
+
     public string $hair_color = '';
+
     public string $hair_length = '';
 
     // ── Experience ──
     public string $experience_level = '';
+
     public array $special_skills = [];
+
     public string $showreel_url = '';
+
     public bool $willing_to_travel = false;
+
     public string $availability = '';
 
     // ── Social follower counts ──
     public $instagram_followers = '';
+
     public $tiktok_followers = '';
+
     public $facebook_followers = '';
 
     // ── Experiences ──
     public array $experiences = [];
+
     public string $newExpType = 'acting_screen';
+
     public string $newExpYear = '';
+
     public string $newExpTitle = '';
+
     public string $newExpRole = '';
+
     public string $newExpDirector = '';
+
     public string $newExpProduction = '';
+
     public string $newExpNotes = '';
+
     public string $newExpAwardCategory = '';
+
     public string $newExpAwardWork = '';
+
     public string $newExpAwardResult = 'Won';
+
     public string $newExpJuryLocation = '';
+
     public bool $showExpForm = false;
+
     public ?int $editingExpId = null;
+
     public string $newExpCustomType = '';
+
     public string $newExpDescription = '';
+
     public string $newExpLanguage = '';
+
     public string $newExpPlatform = '';
+
     public string $newExpAwardOrganizer = '';
 
     public function mount()
     {
-        /** @var \App\Models\User $user */
+        /** @var User $user */
         $user = Auth::user();
 
         $subscription = $user->subscriptions()->latest()->first();
 
-        if (!$subscription) {
+        if (! $subscription) {
             return redirect()->route('packages.index');
         } elseif ($subscription->status === 'failed') {
             $this->currentStep = 'payment_failed';
+
             return;
         } elseif ($subscription->status === 'expired') {
             $this->currentStep = 'payment_expired';
+
             return;
         }
 
@@ -133,18 +193,21 @@ class ArtistAccount extends Component
             in_array($user->nid_back_verification_status, ['unverified', 'rejected', null, ''], true)
         ) {
             $this->currentStep = 'document_upload';
+
             return;
         }
 
         $profile = $user->profile;
-        if (!$profile || empty($profile->district) || empty($profile->upazila)) {
+        if (! $profile || empty($profile->district) || empty($profile->upazila)) {
             $this->currentStep = 'basic_info';
             $this->name = $user->name ?? '';
             $this->email = $user->email ?? '';
             $this->phone = $user->phone ?? '';
             if ($profile) {
                 $this->gender = $profile->gender ?? '';
-                $this->date_of_birth = $profile->date_of_birth ? $profile->date_of_birth->format('Y-m-d') : '';
+                $this->date_of_birth = $profile->date_of_birth instanceof Carbon
+                    ? $profile->date_of_birth->format('Y-m-d')
+                    : (is_string($profile->date_of_birth) ? $profile->date_of_birth : '');
                 $this->height_cm = $profile->height_cm ?? '';
                 $this->languages = $profile->languages ? implode(', ', (array) $profile->languages) : '';
                 $this->experience_level = $profile->experience_level ?? '';
@@ -153,6 +216,7 @@ class ArtistAccount extends Component
                 $this->upazila = $profile->upazila ?? '';
                 $this->street_address = $profile->street_address ?? '';
             }
+
             return;
         }
 
@@ -162,6 +226,7 @@ class ArtistAccount extends Component
             $subscription->status === 'pending'
         ) {
             $this->currentStep = 'under_review';
+
             return;
         }
 
@@ -187,14 +252,15 @@ class ArtistAccount extends Component
     // ─────────────────────────────────────────────────────────────────────────
     public function saveSinglePortfolioPhoto(): void
     {
-        /** @var \App\Models\User $user */
+        /** @var User $user */
         $user = Auth::user();
 
         // Enforce the 12-photo limit before doing any work
         $existingCount = $user->getMedia('portfolio')->count();
-        if ($existingCount >= 12) {
+        if ($existingCount >= $this->getPackagePhotoLimit()) {
             $this->reset('singlePortfolioPhoto');
-            $this->dispatch('portfolio-upload-error', message: 'Maximum 12 photos reached.');
+            $this->dispatch('portfolio-upload-error', message: 'Maximum '.$this->getPackagePhotoLimit().' photos reached.');
+
             return;
         }
 
@@ -208,8 +274,8 @@ class ArtistAccount extends Component
             $user->addMedia($photo->getRealPath())
                 ->usingFileName(
                     pathinfo($photo->getClientOriginalName(), PATHINFO_FILENAME)
-                    . '_' . time() . rand(100, 999)
-                    . '.' . $photo->getClientOriginalExtension()
+                    .'_'.time().rand(100, 999)
+                    .'.'.$photo->getClientOriginalExtension()
                 )
                 ->toMediaCollection('portfolio', 'public');
 
@@ -222,7 +288,7 @@ class ArtistAccount extends Component
             $this->dispatch('portfolio-photo-saved');
 
         } catch (\Exception $e) {
-            Log::error('saveSinglePortfolioPhoto failed for user ' . Auth::id() . ': ' . $e->getMessage());
+            Log::error('saveSinglePortfolioPhoto failed for user '.Auth::id().': '.$e->getMessage());
             $this->reset('singlePortfolioPhoto');
             $this->dispatch('portfolio-upload-error', message: 'Upload failed. Please try again.');
         }
@@ -238,7 +304,7 @@ class ArtistAccount extends Component
 
     public function submitDocuments()
     {
-        /** @var \App\Models\User $user */
+        /** @var User $user */
         $user = Auth::user();
         $rules = [];
         $updates = [];
@@ -268,6 +334,7 @@ class ArtistAccount extends Component
 
         if (empty($updates)) {
             $this->addError('nidImage', 'Please upload at least your NID/Passport image.');
+
             return;
         }
 
@@ -276,7 +343,7 @@ class ArtistAccount extends Component
         if ($this->profilePhotoUpload) {
             $user->getMedia('avatar')->each->delete();
             $user->addMedia($this->profilePhotoUpload->getRealPath())
-                ->usingFileName('avatar_' . $user->id . '.' . $this->profilePhotoUpload->getClientOriginalExtension())
+                ->usingFileName('avatar_'.$user->id.'.'.$this->profilePhotoUpload->getClientOriginalExtension())
                 ->toMediaCollection('avatar', 'public');
         }
 
@@ -290,7 +357,7 @@ class ArtistAccount extends Component
                 url('/admin/users')
             ));
         } catch (\Exception $e) {
-            Log::error('Admin document notification failed: ' . $e->getMessage());
+            Log::error('Admin document notification failed: '.$e->getMessage());
         }
 
         FilamentNotification::make()
@@ -301,7 +368,7 @@ class ArtistAccount extends Component
 
         $subscription = $user->subscriptions()->latest()->first();
 
-        if (!$subscription || in_array($subscription->status, ['failed', 'expired'])) {
+        if (! $subscription || in_array($subscription->status, ['failed', 'expired'])) {
             return redirect()->route('packages.index');
         }
 
@@ -310,7 +377,7 @@ class ArtistAccount extends Component
 
     public function submitBasicInfo()
     {
-        /** @var \App\Models\User $user */
+        /** @var User $user */
         $user = Auth::user();
 
         $this->validate([
@@ -361,13 +428,13 @@ class ArtistAccount extends Component
     {
         $this->validate(['newAvatar' => 'image|max:3072']);
 
-        /** @var \App\Models\User $user */
+        /** @var User $user */
         $user = Auth::user();
 
         $user->getMedia('avatar')->each->delete();
 
         $user->addMedia($this->newAvatar->getRealPath())
-            ->usingFileName('avatar_' . $user->id . '.' . $this->newAvatar->getClientOriginalExtension())
+            ->usingFileName('avatar_'.$user->id.'.'.$this->newAvatar->getClientOriginalExtension())
             ->toMediaCollection('avatar', 'public');
 
         $this->reset('newAvatar');
@@ -376,7 +443,7 @@ class ArtistAccount extends Component
 
     public function deleteAvatar()
     {
-        /** @var \App\Models\User $user */
+        /** @var User $user */
         $user = Auth::user();
         $user->getMedia('avatar')->each->delete();
         session()->flash('success', 'Profile picture removed.');
@@ -392,7 +459,7 @@ class ArtistAccount extends Component
         if ($profile) {
             $this->categories = $profile->categories ?? [];
             $this->gender = $profile->gender ?? '';
-            $this->date_of_birth = $profile->date_of_birth instanceof \Carbon\Carbon
+            $this->date_of_birth = $profile->date_of_birth instanceof Carbon
                 ? $profile->date_of_birth->format('Y-m-d')
                 : (is_string($profile->date_of_birth) ? $profile->date_of_birth : '');
             $this->height_cm = $profile->height_cm ?? '';
@@ -436,7 +503,7 @@ class ArtistAccount extends Component
 
     public function saveProfile(): void
     {
-        /** @var \App\Models\User $user */
+        /** @var User $user */
         $user = Auth::user();
         $user->update(['last_active_at' => now()]);
 
@@ -487,7 +554,7 @@ class ArtistAccount extends Component
                     'hair_color' => $this->hair_color ?: null,
                     'hair_length' => $this->hair_length ?: null,
                     'experience_level' => $this->experience_level ?: null,
-                    'special_skills' => !empty($this->special_skills) ? $this->special_skills : null,
+                    'special_skills' => ! empty($this->special_skills) ? $this->special_skills : null,
                     'showreel_url' => $this->showreel_url ?: null,
                     'willing_to_travel' => $this->willing_to_travel,
                     'availability' => $this->availability ?: null,
@@ -502,22 +569,23 @@ class ArtistAccount extends Component
             session()->flash('message', 'Profile saved successfully!');
             $this->dispatch('profile-saved');
 
-        } catch (\Illuminate\Validation\ValidationException $e) {
+        } catch (ValidationException $e) {
             throw $e;
         } catch (\Exception $e) {
-            Log::error('saveProfile failed for user ' . Auth::id() . ': ' . $e->getMessage());
+            Log::error('saveProfile failed for user '.Auth::id().': '.$e->getMessage());
             session()->flash('error', 'Something went wrong while saving. Please try again.');
         }
     }
 
     public function deletePhoto(int $mediaId): void
     {
-        /** @var \App\Models\User $user */
+        /** @var User $user */
         $user = Auth::user();
         $media = $user->getMedia('portfolio')->find($mediaId);
 
-        if (!$media) {
+        if (! $media) {
             session()->flash('error', 'Photo not found or already deleted.');
+
             return;
         }
 
@@ -526,7 +594,7 @@ class ArtistAccount extends Component
             $this->portfolioImages = $user->fresh()->getMedia('portfolio');
             session()->flash('message', 'Photo removed successfully.');
         } catch (\Exception $e) {
-            Log::error('deletePhoto failed: ' . $e->getMessage());
+            Log::error('deletePhoto failed: '.$e->getMessage());
             session()->flash('error', 'Could not delete photo. Please try again.');
         }
     }
@@ -538,7 +606,7 @@ class ArtistAccount extends Component
 
     public function saveExperience(): void
     {
-        /** @var \App\Models\User $user */
+        /** @var User $user */
         $user = Auth::user();
 
         $data = [
@@ -573,11 +641,11 @@ class ArtistAccount extends Component
         ]);
 
         if ($this->editingExpId) {
-            \App\Models\ArtistExperience::where('id', $this->editingExpId)
+            ArtistExperience::where('id', $this->editingExpId)
                 ->where('user_id', $user->id)
                 ->update($data);
         } else {
-            \App\Models\ArtistExperience::create($data);
+            ArtistExperience::create($data);
         }
 
         $this->resetExpForm();
@@ -587,7 +655,7 @@ class ArtistAccount extends Component
 
     public function editExperience(int $id): void
     {
-        $exp = \App\Models\ArtistExperience::where('id', $id)
+        $exp = ArtistExperience::where('id', $id)
             ->where('user_id', Auth::id())
             ->firstOrFail();
 
@@ -613,7 +681,7 @@ class ArtistAccount extends Component
 
     public function deleteExperience(int $id): void
     {
-        \App\Models\ArtistExperience::where('id', $id)
+        ArtistExperience::where('id', $id)
             ->where('user_id', Auth::id())
             ->delete();
 
@@ -640,10 +708,10 @@ class ArtistAccount extends Component
 
     public function render()
     {
-        /** @var \App\Models\User $user */
+        /** @var User $user */
         $user = Auth::user();
 
-        $groupedCategories = \App\Models\Category::where('is_active', true)
+        $groupedCategories = Category::where('is_active', true)
             ->customOrdered()
             ->get()
             ->groupBy('group');
@@ -654,9 +722,17 @@ class ArtistAccount extends Component
         ]);
     }
 
+    private function getPackagePhotoLimit(): int
+    {
+        $subscription = Auth::user()->subscriptions()->with('package')->latest()->first();
+
+        return $subscription?->package?->max_portfolio_photos ?? 12;
+    }
+
     protected function rules(): array
     {
         $userId = Auth::id();
+
         return [
             'name' => 'required|string|max:255',
             'email' => "required|email|max:255|unique:users,email,{$userId}",

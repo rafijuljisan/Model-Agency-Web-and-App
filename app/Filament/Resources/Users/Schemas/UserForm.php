@@ -410,7 +410,7 @@ class UserForm
                             ->multiple()
                             ->disk('public')
                             ->reorderable()
-                            ->maxFiles(12)
+                            ->maxFiles(50)
                             ->image()
                             ->imageEditor()
                             ->panelLayout('grid')
