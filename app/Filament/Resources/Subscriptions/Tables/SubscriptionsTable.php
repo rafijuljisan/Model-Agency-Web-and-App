@@ -2,17 +2,17 @@
 
 namespace App\Filament\Resources\Subscriptions\Tables;
 
+use App\Models\Subscription;
 use Filament\Actions\Action;
-use Filament\Actions\EditAction;
 use Filament\Actions\BulkActionGroup;
 use Filament\Actions\DeleteBulkAction;
-use Filament\Tables\Columns\TextColumn;
-use Filament\Tables\Table;
-
+use Filament\Actions\EditAction;
+use Filament\Forms\Components\DatePicker;
 // ✅ NEW IMPORTS REQUIRED FOR FILTERS
+use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Filters\Filter;
 use Filament\Tables\Filters\SelectFilter;
-use Filament\Forms\Components\DatePicker;
+use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
 
 class SubscriptionsTable
@@ -31,6 +31,7 @@ class SubscriptionsTable
                     ->sortable(),
 
                 TextColumn::make('payment_method')
+                    ->label('Method')
                     ->searchable(),
 
                 TextColumn::make('trx_id')
@@ -39,7 +40,7 @@ class SubscriptionsTable
                     ->copyable(),
 
                 TextColumn::make('sender_number')
-                    ->label('Mobile Number')
+                    ->label('Sender No')
                     ->searchable()
                     ->copyable(),
 
@@ -55,8 +56,32 @@ class SubscriptionsTable
 
                 TextColumn::make('created_at')
                     ->label('Submitted On')
-                    ->dateTime()
+                    ->date()
                     ->sortable(),
+
+                TextColumn::make('expires_at')
+                    ->label('Expires On')
+                    ->date()
+                    ->sortable()
+                    ->color(fn ($record) => $record->expires_at?->isPast() ? 'danger' :
+                        ($record->expires_at?->diffInDays(now()) <= 10 ? 'warning' : 'success')),
+
+                TextColumn::make('days_left')
+                    ->label('Days Left')
+                    ->state(function ($record): string {
+                        if (! $record->expires_at) {
+                            return '—';
+                        }
+                        if ($record->expires_at->isPast()) {
+                            return 'Expired';
+                        }
+
+                        return (int) now()->diffInDays($record->expires_at).' days';
+                    })
+                    ->badge()
+                    ->color(fn ($record): string => ! $record->expires_at || $record->expires_at->isPast() ? 'danger' :
+                        ((int) now()->diffInDays($record->expires_at) <= 10 ? 'warning' : 'success')
+                    ),
             ])
 
             // =========================
@@ -76,13 +101,17 @@ class SubscriptionsTable
                 SelectFilter::make('payment_method')
                     ->label('Payment Method')
                     ->options(function () {
-                        return \App\Models\Subscription::query()
+                        return Subscription::query()
                             ->select('payment_method')
                             ->distinct()
                             ->whereNotNull('payment_method')
                             ->pluck('payment_method', 'payment_method')
                             ->toArray();
                     }),
+
+                SelectFilter::make('package_id')
+                    ->label('Package')
+                    ->relationship('package', 'name'),
 
                 // 3. Submission Date Range Filter
                 Filter::make('created_at')
@@ -133,12 +162,12 @@ class SubscriptionsTable
                         $record->update([
                             'status' => 'active',
                             'starts_at' => now(),
-                            'expires_at' => now()->addYear(),
+                            'expires_at' => now()->addMonths((int) $record->package?->duration_months ?? 12),
                         ]);
 
                         $user = $record->user;
                         $user->update(['is_verified' => true]);
-                        if (!$user->hasRole('Verified-Artist')) {
+                        if (! $user->hasRole('Verified-Artist')) {
                             $user->assignRole('Verified-Artist');
                         }
                     }),

@@ -8,3 +8,5 @@ Artisan::command('inspire', function () {
     $this->comment(Inspiring::quote());
 })->purpose('Display an inspiring quote');
 Schedule::command('subscriptions:check-expired')->daily();
+Schedule::command('subscriptions:warn-expiry')->dailyAt('08:00');
+Schedule::command('subscriptions:notify-expired')->dailyAt('00:05');
