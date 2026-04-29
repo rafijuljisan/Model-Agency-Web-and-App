@@ -57,8 +57,13 @@ class UsersTable
                     ->label('Featured')
                     ->boolean()
                     ->trueIcon('heroicon-s-star')
-                    ->falseIcon('heroicon-o-star') // dim star
+                    ->falseIcon('heroicon-o-star')
                     ->trueColor('warning'),
+
+                // ← ADD HERE
+                TextColumn::make('featured_order')
+                    ->label('Order')
+                    ->sortable(),
             ])
 
             // =========================
@@ -145,6 +150,22 @@ class UsersTable
                     ->url(fn ($record) => route('photocard.download', $record))
                     ->openUrlInNewTab(),
 
+                Action::make('set_featured_order')
+                    ->label('Set Order')
+                    ->icon('heroicon-o-arrows-up-down')
+                    ->color('gray')
+                    ->visible(fn ($record) => $record->is_featured)
+                    ->form([
+                        \Filament\Forms\Components\TextInput::make('featured_order')
+                            ->label('Display Order (1 = first)')
+                            ->numeric()
+                            ->required()
+                            ->default(fn ($record) => $record->featured_order),
+                    ])
+                    ->action(function ($record, array $data) {
+                        $record->update(['featured_order' => $data['featured_order']]);
+                        Notification::make()->title('Order Updated')->success()->send();
+                    }),
                 Action::make('regenerate_photocard')
                     ->label('Regenerate Card')
                     ->icon('heroicon-o-arrow-path')

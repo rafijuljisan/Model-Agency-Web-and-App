@@ -32,6 +32,7 @@ Route::get('/', function () {
         ->where('is_featured', true)
         ->where('verification_status', 'verified')
         ->where('nid_back_verification_status', 'verified')
+        ->orderBy('featured_order', 'asc')  // ← add this
         ->get();
 
     $slotsRemaining = 8 - $manuallyFeatured->count();
