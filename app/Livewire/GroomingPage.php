@@ -19,6 +19,9 @@ use Filament\Notifications\Notification as FilamentNotification;
 use Illuminate\Support\Facades\Log;
 use Carbon\Carbon;
 use App\Services\FacebookCapiService;
+use App\Services\TikTokCapiService;
+use Illuminate\Support\Str;
+
 
 #[Title('Grooming Class | Dhaka Model Agency')]
 #[Layout('layouts.app')]
@@ -65,7 +68,7 @@ class GroomingPage extends Component
 
     // ── Step 5: Payment ──
     public string $payment_method = '';
-    
+
     public string $sender_number = '';
     public string $transaction_id = '';
     public $payment_screenshot = null;
@@ -272,7 +275,7 @@ class GroomingPage extends Component
             $fee = $batch ? $batch->fee : 0;
 
             // Use the database Application ID as the unique deduplication key
-            $uniqueEventId = 'GROOM_APP_' . $application->id; 
+            $uniqueEventId = 'GROOM_APP_' . $application->id;
 
             $capiService = new FacebookCapiService();
             $capiService->sendRegistrationEvent(
@@ -283,7 +286,19 @@ class GroomingPage extends Component
                 ],
                 $fee,
                 request()->url(),
-                $uniqueEventId // Pass the deduplication ID here
+                $uniqueEventId
+            );
+
+            // ── TikTok Events API ──
+            $tiktokService = new TikTokCapiService();
+            $tiktokService->sendRegistrationEvent(
+                [
+                    'email' => $this->email,
+                    'phone' => $this->phone,
+                ],
+                $fee,
+                request()->url(),
+                $uniqueEventId // same ID = deduplication across browser pixel + server event
             );
         } catch (\Exception $e) {
             // Silently fail if CAPI crashes so the user still sees the success screen

@@ -215,6 +215,23 @@ class SettingForm
                                     ->placeholder('e.g. TEST54321')
                                     ->helperText('Use this for testing in the Events Manager. Clear this field when going live in production.'),
 
+                                    // ── TikTok Pixel ──
+                                TextInput::make('tiktok_pixel_id')
+                                    ->label('TikTok Pixel ID')
+                                    ->placeholder('e.g. CXXXXXXXXXXXXXXX')
+                                    ->helperText('Found in TikTok Events Manager → your Pixel → Settings'),
+
+                                TextInput::make('tiktok_access_token')
+                                    ->label('TikTok Events API Access Token')
+                                    ->placeholder('Paste your generated access token here')
+                                    ->password()
+                                    ->revealable()
+                                    ->helperText('TikTok Events Manager → your Pixel → Settings → Generate Access Token'),
+
+                                TextInput::make('tiktok_test_event_code')
+                                    ->label('TikTok Test Event Code')
+                                    ->placeholder('e.g. TEST12345')
+                                    ->helperText('Use for testing only. Clear this when going live.'),
                                 // ── Sitemap & Robots ──
                                 Toggle::make('sitemap_enabled')
                                     ->label('Enable Sitemap (/sitemap.xml)')

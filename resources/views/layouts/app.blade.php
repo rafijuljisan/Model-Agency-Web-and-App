@@ -5,12 +5,12 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="csrf-token" content="{{ csrf_token() }}"> {{-- REQUIRED FOR LARAVEL SECURITY --}}
-        
+
     <link rel="icon" type="image/x-icon" href="{{ asset('favicon.ico') }}"> {{-- ADD YOUR FAVICON --}}
 
-    @php 
+    @php
         // PRO TIP: Cache this query so you don't hit the database on every single page load!
-        $seo = cache()->remember('site_settings', 86400, fn() => \App\Models\Setting::first()); 
+        $seo = cache()->remember('site_settings', 86400, fn() => \App\Models\Setting::first());
     @endphp
 
     @php
@@ -62,7 +62,7 @@
     @endif
 
     {{-- ── TRACKING SCRIPTS ── --}}
-    
+
     {{-- Google Search Console Verification --}}
     @if($seo?->google_search_console_id)
         <meta name="google-site-verification" content="{{ $seo->google_search_console_id }}">
@@ -105,6 +105,32 @@
                 document, 'script', 'https://connect.facebook.net/en_US/fbevents.js');
             fbq('init', '{{ $seo->facebook_pixel_id }}');
             fbq('track', 'PageView');
+        </script>
+    @endif
+
+    {{-- TikTok Pixel --}}
+    @if($seo?->tiktok_pixel_id)
+        <script>
+            !function (w, d, t) {
+                w.TiktokAnalyticsObject = t;
+                var ttq = w[t] = w[t] || [];
+                ttq.methods = ['page','track','identify','instances','debug','on','off','once','ready','alias','group','enableCookie','disableCookie','holdConsent','revokeConsent','grantConsent'];
+                ttq.setAndDefer = function (t, e) { t[e] = function () { t.push([e].concat(Array.prototype.slice.call(arguments, 0))) } };
+                for (var i = 0; i < ttq.methods.length; i++) ttq.setAndDefer(ttq, ttq.methods[i]);
+                ttq.instance = function (t) {
+                    for (var e = ttq._i[t] || [], n = 0; n < ttq.methods.length; n++) ttq.setAndDefer(e, ttq.methods[n]);
+                    return e
+                };
+                ttq.load = function (e, n) {
+                    var r = 'https://analytics.tiktok.com/i18n/pixel/events.js', o = n && n.partner;
+                    ttq._i = ttq._i || {}; ttq._i[e] = []; ttq._i[e]._u = r; ttq._t = ttq._t || {}; ttq._t[e] = +new Date;
+                    ttq._o = ttq._o || {}; ttq._o[e] = n || {};
+                    n = document.createElement('script'); n.type = 'text/javascript'; n.async = !0; n.src = r + '?sdkid=' + e + '&lib=' + t;
+                    e = document.getElementsByTagName('script')[0]; e.parentNode.insertBefore(n, e)
+                };
+                ttq.load('{{ $seo->tiktok_pixel_id }}');
+                ttq.page();
+            }(window, document, 'ttq');
         </script>
     @endif
 
@@ -453,7 +479,7 @@
             display: inline-flex;
             align-items: center;
             gap: 3px;
-            padding: 6px 15px;
+            padding: 6px 10px;
 
             /* --- UPDATED FONT SIZE --- */
             font-size: 0.95rem;
@@ -1357,7 +1383,7 @@
                             <a href="/videos" class="mega-menu-card">
                                 <div class="mega-menu-card-title">Video Gallery</div>
                             </a>
-                            
+
                             <a href="/gallery" class="mega-menu-card">
                                 <div class="mega-menu-card-title">Photo Gallery</div>
                             </a>
@@ -1365,7 +1391,7 @@
                     </div>
                 </li>
                 <li><a href="/editorial">Blog</a></li>
-                <li><a href="/grooming-lab">Grooming</a></li>
+                <li><a href="/grooming-lab">Grooming Lab</a></li>
                 <li><a href="/contact">Contact</a></li>
             </ul>
 
@@ -1390,7 +1416,7 @@
 
                 @auth
                     <a href="/account" class="btn-outline">Dashboard</a>
-                    
+
                     {{-- Desktop Logout Icon --}}
                     <form method="POST" action="{{ route('logout') }}" style="display: inline-flex;">
                         @csrf
@@ -1432,19 +1458,19 @@
         {{-- ── 6 High-Level Category Groups ── --}}
         {{-- ── 6 High-Level Category Groups (Accordion Dropdown) ── --}}
         <div x-data="{ catOpen: false }">
-            
+
             {{-- Dropdown Toggle Button --}}
             {{-- Dropdown Toggle Button --}}
-            <button @click="catOpen = !catOpen" 
-                    style="width: 100%; display: flex; align-items: center; justify-content: space-between; 
-                           background: transparent; border: none; border-bottom: 1px solid var(--border); text-align: left; 
-                           font-family: 'Jost', sans-serif; font-size: 1.25rem; font-weight: 500; letter-spacing: 0.02em; 
+            <button @click="catOpen = !catOpen"
+                    style="width: 100%; display: flex; align-items: center; justify-content: space-between;
+                           background: transparent; border: none; border-bottom: 1px solid var(--border); text-align: left;
+                           font-family: 'Jost', sans-serif; font-size: 1.25rem; font-weight: 500; letter-spacing: 0.02em;
                            color: var(--text-primary); margin: 0; padding: 16px 0; cursor: pointer; transition: color 0.22s;">
                 Categories
-                
+
                 {{-- Rotating Chevron Icon --}}
-                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" 
-                     style="transition: transform 0.3s ease; color: var(--text-muted);" 
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                     style="transition: transform 0.3s ease; color: var(--text-muted);"
                      :style="catOpen ? 'transform: rotate(180deg); color: var(--gold);' : ''">
                     <polyline points="6 9 12 15 18 9"></polyline>
                 </svg>
@@ -1468,7 +1494,7 @@
                     </a>
                 @endforeach
             </div>
-            
+
         </div>
 
         <a href="/casting">Casting Calls</a>
@@ -1476,13 +1502,13 @@
         <a href="/videos">Video Gallery</a>
         <a href="/gallery">Photo Gallery</a>
         <a href="/contact">Contact</a>
-        <a href="/grooming-lab">Grooming</a>
+        <a href="/grooming-lab">Grooming Lab</a>
         <a href="/editorial">Blog</a>
 
         <div class="drawer-actions">
             @auth
                 <a href="/account" class="btn-fill" style="width: 100%; justify-content: center; margin-bottom: 10px;">Dashboard</a>
-                
+
                 {{-- Mobile Logout Button --}}
                 <form method="POST" action="{{ route('logout') }}" style="width: 100%;">
                     @csrf
