@@ -304,7 +304,7 @@
         .artist-grid {
             display: grid;
             grid-template-columns: repeat(3, 1fr);
-            gap: 2px;
+            gap: 20px;
             transition: opacity 0.25s;
         }
 
@@ -321,6 +321,7 @@
             display: block;
             text-decoration: none;
             cursor: pointer;
+            border-radius: 15px;
         }
 
         .artist-card-media {
@@ -468,7 +469,7 @@
 .artist-hover-cat-tag {
     padding: 4px 10px;
     border: 1px solid rgba(255, 255, 255, 0.25);
-    font-size: 0.75rem; 
+    font-size: 0.75rem;
     font-weight: 500;
     letter-spacing: normal; /* ← Changed this here as well */
     text-transform: uppercase;
@@ -536,7 +537,7 @@
         }
 
         .artist-card-cat {
-            font-size: 0.8rem; 
+            font-size: 0.8rem;
             font-weight: 600;
             letter-spacing: normal; /* ← Changed this to remove the spacing */
             text-transform: uppercase;
@@ -829,7 +830,7 @@
             height: 16px;
             cursor: pointer;
         }
-        
+
         .filter-checkbox-wrap span {
             font-size: 0.85rem;
             color: var(--text-primary);
@@ -878,7 +879,7 @@
                 </div>
 
                 
-                
+
                 <div class="filter-group">
                     <label class="filter-label" for="filter-search">Search Name</label>
                     <input id="filter-search" class="filter-input" type="text" placeholder="e.g. Artist name…"
@@ -966,9 +967,9 @@
                             <polyline points="6 9 12 15 18 9"></polyline>
                         </svg>
                     </summary>
-                    
+
                     <div class="advanced-filters-content">
-                        
+
                         
                         <div class="filter-group" style="border: none; padding: 0; margin: 0;">
                             <label class="filter-label">Experience Level</label>
@@ -1297,4 +1298,5 @@
         </div>
     </div>
 
-</div><?php /**PATH /var/www/html/resources/views/livewire/artist-directory.blade.php ENDPATH**/ ?>
+</div>
+<?php /**PATH /var/www/html/resources/views/livewire/artist-directory.blade.php ENDPATH**/ ?>

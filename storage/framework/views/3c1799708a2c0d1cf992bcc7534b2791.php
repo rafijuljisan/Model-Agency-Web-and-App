@@ -1,1254 +1,810 @@
 <div x-data>
 <style>
+    /* ── FONTS ── */
+    @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;1,400&family=DM+Sans:wght@300;400;500;600&display=swap');
+
     @font-face {
         font-family: 'SolaimanLipi';
         src: local('SolaimanLipi'),
              url('/fonts/SolaimanLipi.woff2') format('woff2'),
              url('/fonts/SolaimanLipi.ttf') format('truetype');
-        font-weight: normal;
-        font-style: normal;
-        font-display: swap;
+        font-weight: normal; font-style: normal; font-display: swap;
     }
+
+    /* ── TOKENS ── */
     :root {
-        --gc-text-xs:   0.78rem;   /* badges, labels, hints */
-        --gc-text-sm:   0.875rem;  /* meta rows, seat bar label, filter buttons */
-        --gc-text-base: 0.95rem;   /* body text, notice cards, gallery filters */
-        --gc-text-md:   1rem;      /* batch meta rows, apply btn */
-        --gc-text-lg:   1.1rem;    /* sidebar title, section eyebrow */
-        --gc-text-xl:   1.35rem;   /* section titles, batch name, CTA sub */
-        --gc-text-2xl:  1.6rem;    /* batch fee, stat numbers */
-        --gc-text-3xl:  clamp(1.75rem, 4vw, 3.2rem); /* hero title */
-    }
-/* ═══════════════════════════════════════════
-   GROOMING CLASS PAGE
-═══════════════════════════════════════════ */
-/* ── Layout Update: Gallery & Sidebar ── */
-.gc-content-wrapper {
-    display: grid;
-    grid-template-columns: 1fr 350px; /* Gallery takes remaining space, Sidebar is 350px */
-    gap: 40px;
-    margin-bottom: 64px;
-    align-items: start;
-}
-
-/* Sidebar Styles */
-.gc-sidebar {
-    background: var(--bg-surface);
-    border: 1px solid var(--border);
-    padding: 24px;
-    position: sticky;
-    top: 24px; /* Sticks to top when scrolling */
-}
-.gc-sidebar-title {
-    font-family: 'SolaimanLipi', 'Jost', sans-serif;
-    font-size: var(--gc-text-lg);
-    font-weight: 600;
-    color: var(--text-primary);
-    margin-bottom: 16px;
-    padding-bottom: 12px;
-    border-bottom: 1px solid var(--border);
-    display: flex;
-    align-items: center;
-    gap: 8px;
-}
-.gc-notices-scroll {
-    max-height: 650px; /* Fixed height */
-    overflow-y: auto; /* Enables scrolling */
-    display: flex;
-    flex-direction: column;
-    gap: 12px;
-    padding-right: 8px;
-}
-
-/* Custom Scrollbar for Sidebar */
-.gc-notices-scroll::-webkit-scrollbar { width: 6px; }
-.gc-notices-scroll::-webkit-scrollbar-track { background: transparent; }
-.gc-notices-scroll::-webkit-scrollbar-thumb { background: var(--border-strong); border-radius: 4px; }
-.gc-notices-scroll::-webkit-scrollbar-thumb:hover { background: var(--gold); }
-
-/* Notice Card inside Sidebar */
-.gc-notice-card {
-    padding: 16px;
-    font-size: var(--gc-text-base);
-    font-family: 'SolaimanLipi', 'Jost', sans-serif;
-    line-height: 1.5;
-    border: 1px solid var(--border);
-}
-.gc-notice-card.critical { background: rgba(197,0,0,0.05); border-color: rgba(197,0,0,0.2); color: var(--gold); }
-.gc-notice-card.normal { background: var(--bg-secondary); }
-.gc-notice-card.low { background: var(--bg-primary); }
-
-/* Update Gallery Grid to 3 Columns */
-.gc-gallery-grid-3x4 {
-    column-count: 4;
-    column-gap: 8px;
-    margin-bottom: 32px;
-}
-/* ── Sidebar Stats & Apply Box ── */
-.gc-sidebar-stats {
-    margin-top: 24px;
-    padding-top: 24px;
-    border-top: 1px dashed var(--border-strong);
-}
-.gc-stats-grid {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 12px;
-    margin-bottom: 16px;
-}
-.gc-stat-box {
-    background: var(--bg-primary);
-    border: 1px solid var(--border);
-    padding: 16px 12px;
-    text-align: center;
-    border-radius: 4px;
-}
-.gc-stat-number {
-    font-size: var(--gc-text-2xl);
-    font-weight: 700;
-    color: var(--gold);
-    font-family: 'SolaimanLipi', 'Jost', sans-serif;
-    line-height: 1;
-    margin-bottom: 4px;
-}
-.gc-stat-label {
-    font-size: var(--gc-text-xs);
-    color: var(--text-muted);
-    font-weight: 600;
-}
-.gc-sidebar-apply-btn {
-    width: 100%;
-    padding: 14px;
-    background: var(--gold);
-    color: #fff;
-    border: none;
-    font-size: var(--gc-text-lg);
-    font-weight: 600;
-    font-family: 'SolaimanLipi', 'Jost', sans-serif;
-    cursor: pointer;
-    transition: all 0.2s;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: 8px;
-}
-.gc-sidebar-apply-btn:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 8px 24px rgba(197,0,0,0.25);
-}
-/* ── Image Lightbox Modal ── */
-.gc-lightbox-overlay {
-    position: fixed;
-    inset: 0;
-    background: rgba(0, 0, 0, 0.9);
-    z-index: 10000;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    padding: 16px;
-}
-.gc-lightbox-overlay img {
-    max-width: 100%;
-    max-height: 90vh;
-    border-radius: 6px;
-    box-shadow: 0 10px 40px rgba(0,0,0,0.5);
-    object-fit: contain;
-}
-.gc-lightbox-close {
-    position: absolute;
-    top: 20px;
-    right: 20px;
-    background: var(--gold, #ca8a04);
-    color: #fff;
-    border: none;
-    width: 44px;
-    height: 44px;
-    border-radius: 50%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    cursor: pointer;
-    transition: transform 0.2s, background 0.2s;
-    z-index: 10001;
-}
-.gc-lightbox-close:hover {
-    transform: scale(1.1);
-    background: #fff;
-    color: #000;
-}
-/* Responsive fix for smaller screens */
-@media (max-width: 992px) {
-    .gc-content-wrapper { grid-template-columns: 1fr; } /* Stack vertically on mobile */
-    .gc-gallery-grid-3x4 { column-count: 2; }
-}
-@media (max-width: 576px) {
-    .gc-gallery-grid-3x4 {
-        column-count: 2;
-        column-gap: 6px; /* Slightly smaller gap for mobile */
-    }
-}
-/* ── Hero ── */
-.gc-hero {
-    background: var(--bg-secondary);
-    border-bottom: 1px solid var(--border);
-    padding: 72px 40px 64px;
-    text-align: center;
-    position: relative;
-    overflow: hidden;
-}
-.gc-hero::before {
-    content: '';
-    position: absolute;
-    inset: 0;
-    background-image:
-        radial-gradient(circle at 20% 50%, var(--gold-bg) 0%, transparent 50%),
-        radial-gradient(circle at 80% 50%, var(--gold-bg) 0%, transparent 50%);
-    pointer-events: none;
-}
-.gc-hero-eyebrow {
-    font-size: var(--gc-text-lg);
-    font-weight: 600;
-    text-transform: uppercase;
-    color: var(--gold);
-    margin-bottom: 14px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: 12px;
-    position: relative;
-}
-.gc-hero-eyebrow::before, .gc-hero-eyebrow::after {
-    content: ''; width: 28px; height: 1px; background: var(--gold);
-}
-.gc-hero-title {
-    font-family: 'SolaimanLipi', 'Jost', sans-serif;
-    font-size: var(--gc-text-xl);
-    font-weight: 300;
-    color: var(--text-primary);
-    line-height: 1.15;
-    position: relative;
-    margin-bottom: 16px;
-}
-.gc-hero-title strong { font-weight: 600; }
-.gc-hero-sub {
-    font-family: 'SolaimanLipi', 'Jost', sans-serif;
-    font-size: var(--gc-text-lg);
-    color: var(--text-muted);
-    max-width: 580px;
-    margin: 0 auto 32px;
-    line-height: 1.7;
-    position: relative;
-}
-.gc-hero-cta {
-    display: inline-flex;
-    align-items: center;
-    gap: 10px;
-    padding: 16px 36px;
-    background: var(--gold);
-    color: #fff;
-    font-family: 'SolaimanLipi', 'Jost', sans-serif;
-    font-size: var(--gc-text-md);
-    font-weight: 600;
-    text-transform: uppercase;
-    border: none;
-    cursor: pointer;
-    transition: transform 0.2s, box-shadow 0.2s;
-    position: relative;
-}
-.gc-hero-cta:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 8px 24px rgba(197,0,0,0.25);
-}
-
-/* ── Notice Bar ── */
-.gc-notice {
-    padding: 14px 40px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: 12px;
-    font-size: var(--gc-text-md);
-    font-weight: 500;
-    letter-spacing: 0.04em;
-    text-align: center;
-}
-.gc-notice.critical { background: rgba(197,0,0,0.1); color: var(--gold); border-bottom: 1px solid rgba(197,0,0,0.2); }
-.gc-notice.normal   { background: var(--bg-secondary); color: var(--text-secondary); border-bottom: 1px solid var(--border); }
-.gc-notice.low      { background: var(--bg-primary); color: var(--text-muted); border-bottom: 1px solid var(--border); }
-
-/* ── Page body ── */
-.gc-body {
-    max-width: 1440px; /* Increased from 1200px to match wide menus */
-    margin: 0 auto;
-    padding: 56px 40px 80px;
-}
-
-/* ── Section header ── */
-.gc-section-head {
-    text-align: center;
-    margin-bottom: 36px;
-}
-.gc-section-eyebrow {
-    font-size: var(--gc-text-lg);
-    font-weight: 700;
-    text-transform: uppercase;
-    color: var(--gold);
-    margin-bottom: 8px;
-}
-.gc-section-title {
-    font-family: 'SolaimanLipi', 'Jost', sans-serif;
-    font-size: var(--gc-text-xl);
-    font-weight: 300;
-    color: var(--text-primary);
-}
-.gc-section-title strong { font-weight: 600; }
-
-/* ── Batch Cards ── */
-.gc-batches {
-    display: grid;
-    grid-template-columns: repeat(2, 1fr); /* Forces exactly 2 columns */
-    gap: 24px;
-    margin-bottom: 64px;
-}
-.gc-batch-card {
-    background: var(--bg-surface);
-    border: 1px solid var(--border);
-    padding: 28px;
-    transition: border-color 0.25s, transform 0.25s;
-    position: relative;
-    /* Removed the flex and max-width properties that were causing uneven sizing */
-}
-.gc-batch-card:hover {
-    border-color: var(--gold);
-    transform: translateY(-3px);
-}
-.gc-batch-status {
-    position: absolute;
-    top: 16px; right: 16px;
-    font-size: var(--gc-text-xs);
-    font-weight: 700;
-    text-transform: uppercase;
-    padding: 4px 10px;
-    border-radius: 2px;
-}
-.gc-batch-status.open         { background: rgba(22,163,74,0.1); color: #16a34a; }
-.gc-batch-status.filling_fast { background: rgba(234,179,8,0.1);  color: #ca8a04; }
-.gc-batch-status.full         { background: rgba(197,0,0,0.1);    color: var(--gold); }
-
-.gc-batch-name {
-    font-family: 'SolaimanLipi', 'Jost', sans-serif;
-    font-size: var(--gc-text-lg);
-    font-weight: 600;
-    color: var(--text-primary);
-    margin-bottom: 16px;
-    padding-right: 60px;
-}
-.gc-batch-meta {
-    display: flex;
-    flex-direction: column;
-    gap: 8px;
-    margin-bottom: 20px;
-}
-.gc-batch-meta-row {
-    display: flex;
-    align-items: center;
-    gap: 8px;
-    font-size: var(--gc-text-md);
-    color: var(--text-secondary);
-}
-.gc-batch-meta-row svg { color: var(--gold); flex-shrink: 0; }
-
-/* Seat bar */
-.gc-seat-bar-wrap {
-    margin-bottom: 20px;
-}
-.gc-seat-bar-label {
-    display: flex;
-    justify-content: space-between;
-    font-size: var(--gc-text-xs);
-    font-weight: 600;
-    text-transform: uppercase;
-    letter-spacing: 0.1em;
-    color: var(--text-muted);
-    margin-bottom: 6px;
-}
-.gc-seat-bar {
-    height: 5px;
-    background: var(--border);
-    border-radius: 999px;
-    overflow: hidden;
-}
-.gc-seat-bar-fill {
-    height: 100%;
-    border-radius: 999px;
-    background: var(--gold);
-    transition: width 0.5s ease;
-}
-
-.gc-batch-fee {
-    font-family: 'SolaimanLipi', 'Jost', sans-serif;
-    font-size: var(--gc-text-2xl);
-    font-weight: 600;
-    color: var(--text-primary);
-    margin-bottom: 16px;
-}
-.gc-batch-fee span { font-size: var(--gc-text-sm); color: var(--text-muted); font-weight: 300; }
-
-.gc-apply-btn {
-    width: 100%;
-    padding: 12px;
-    background: var(--gold);
-    color: #fff;
-    font-family: 'SolaimanLipi', 'Jost', sans-serif;
-    font-size: var(--gc-text-md);
-    font-weight: 600;
-    text-transform: uppercase;
-    border: none;
-    cursor: pointer;
-    transition: background 0.2s;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: 8px;
-}
-.gc-apply-btn:disabled {
-    background: var(--border-strong);
-    cursor: not-allowed;
-}
-
-/* ── Benefits ── */
-.gc-benefits {
-    display: flex;
-    flex-wrap: wrap;
-    justify-content: center; /* This perfectly centers the benefit cards */
-    gap: 20px;
-    margin-bottom: 64px;
-}
-.gc-benefit {
-    background: var(--bg-surface);
-    border: 1px solid var(--border);
-    padding: 24px;
-    display: flex;
-    gap: 14px;
-    align-items: flex-start;
-    transition: border-color 0.22s;
-    /* Added for Flexbox centering: */
-    width: 100%;
-    flex: 1 1 300px; /* Base width of 300px, allows smooth shrinking/growing */
-    max-width: 400px; /* Prevents cards from stretching too wide */
-}
-.gc-benefit:hover { border-color: var(--gold); }
-.gc-benefit-icon {
-    width: 36px; height: 36px;
-    background: var(--gold-bg);
-    border: 1px solid var(--border-strong);
-    display: flex; align-items: center; justify-content: center;
-    color: var(--gold);
-    flex-shrink: 0;
-}
-.gc-benefit-text { font-size: var(--gc-text-base); font-family: 'SolaimanLipi', 'Jost', sans-serif; color: var(--text-secondary); line-height: 1.6; }
-.gc-benefit-text strong { display: block; color: var(--text-primary); font-family: 'SolaimanLipi', 'Jost', sans-serif; font-weight: 600; font-size: var(--gc-text-md); margin-bottom: 3px; }
-
-/* ── Gallery ── */
-.gc-gallery-filters {
-    display: flex;
-    gap: 8px;
-    justify-content: center;
-    margin-bottom: 24px;
-    flex-wrap: wrap;
-}
-.gc-gallery-filter {
-    padding: 6px 18px;
-    border: 1px solid var(--border-strong);
-    background: transparent;
-    color: var(--text-muted);
-    font-family: 'SolaimanLipi', 'Jost', sans-serif;
-    font-size: var(--gc-text-sm);
-    font-weight: 600;
-    text-transform: uppercase;
-    cursor: pointer;
-    transition: all 0.2s;
-}
-.gc-gallery-filter.active,
-.gc-gallery-filter:hover {
-    border-color: var(--gold);
-    color: var(--gold);
-    background: var(--gold-bg);
-}
-.gc-gallery-grid {
-    display: grid;
-    grid-template-columns: repeat(4, 1fr);
-    gap: 3px;
-    margin-bottom: 64px;
-}
-.gc-gallery-item {
-    break-inside: avoid; /* Prevents splitting across columns */
-    margin-bottom: 8px;  /* Adds vertical gap between images */
-    overflow: hidden;
-    background: var(--bg-secondary);
-    cursor: pointer;
-    position: relative;
-    border-radius: 4px; /* Optional: adds a nice soft edge to masonry items */
-}
-.gc-gallery-item img {
-    width: 100%;
-    height: auto; /* Allows the image to keep its natural height */
-    display: block; /* Removes weird spacing at the bottom of the image */
-    transition: transform 0.5s ease;
-}
-.gc-gallery-item:hover img { transform: scale(1.08); }
-
-/* ── CTA Banner ── */
-.gc-cta-banner {
-    background: var(--bg-secondary);
-    border: 1px solid var(--border);
-    padding: 56px 40px;
-    text-align: center;
-    margin-bottom: 64px;
-    position: relative;
-    overflow: hidden;
-}
-.gc-cta-banner::before {
-    content: '';
-    position: absolute;
-    inset: 0;
-    background: radial-gradient(circle at 50% 50%, var(--gold-bg) 0%, transparent 70%);
-    pointer-events: none; /* <-- Add this line */
-}
-.gc-cta-banner-title {
-    font-family: 'SolaimanLipi', 'Jost', sans-serif;
-    font-size: var(--gc-text-lg);
-    font-weight: 600;
-    color: var(--text-primary);
-    margin-bottom: 12px;
-    position: relative;
-}
-.gc-cta-banner-sub {
-    font-size: var(--gc-text-md);
-    font-family: 'SolaimanLipi', 'Jost', sans-serif;
-    color: var(--text-muted);
-    margin-bottom: 28px;
-    position: relative;
-}
-
-/* ══════════════════════════════════════════
-   GROOMING MODAL — FULL RESPONSIVE SYSTEM
-══════════════════════════════════════════ */
-
-/* ── Overlay ── */
-.gc-modal-overlay {
-    position: fixed;
-    inset: 0;
-    background: rgba(0, 0, 0, 0.75);
-    z-index: 9999;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    padding: 16px;
-    overflow-y: auto;
-}
-
-/* ── Modal Box ── */
-.gc-modal {
-    background: var(--bg-secondary);
-    border: 1px solid var(--border-strong);
-    width: 100%;
-    max-width: 560px;
-    max-height: 92vh;
-    overflow-y: auto;
-    display: flex;
-    flex-direction: column;
-    border-radius: 8px;
-    position: relative;
-}
-
-/* ── Modal Header ── */
-.gc-modal-header {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    padding: 18px 24px;
-    border-bottom: 1px solid var(--border);
-    position: sticky;
-    top: 0;
-    background: var(--bg-secondary);
-    z-index: 10;
-    flex-shrink: 0;
-}
-
-.gc-modal-title {
-    font-size: 1.15rem;
-    font-weight: 700;
-    color: var(--text-primary);
-    text-transform: uppercase;
-    letter-spacing: 0.04em;
-}
-
-.gc-modal-close {
-    background: transparent;
-    border: none;
-    color: var(--text-muted);
-    cursor: pointer;
-    padding: 4px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    flex-shrink: 0;
-    border-radius: 4px;
-    transition: color 0.2s;
-}
-.gc-modal-close:hover { color: var(--text-primary); }
-
-/* ── Step Progress Bar ── */
-.gc-steps-bar {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    padding: 16px 24px;
-    border-bottom: 1px solid var(--border);
-    gap: 0;
-    flex-shrink: 0;
-    background: var(--bg-secondary);
-}
-
-.gc-step-dot {
-    width: 30px;
-    height: 30px;
-    border-radius: 50%;
-    border: 2px solid var(--border-strong);
-    background: var(--bg-primary);
-    color: var(--text-muted);
-    font-size: 0.75rem;
-    font-weight: 700;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    flex-shrink: 0;
-    transition: all 0.3s;
-}
-.gc-step-dot.active {
-    border-color: var(--gold);
-    color: var(--gold);
-    background: var(--gold-bg);
-}
-.gc-step-dot.done {
-    border-color: #16a34a;
-    background: #16a34a;
-    color: #fff;
-}
-
-.gc-step-line {
-    flex: 1;
-    height: 2px;
-    background: var(--border-strong);
-    min-width: 12px;
-    transition: background 0.3s;
-}
-.gc-step-line.done { background: #16a34a; }
-
-/* ── Modal Body ── */
-.gc-modal-body {
-    padding: 24px;
-    flex: 1;
-    overflow-y: auto;
-}
-
-/* ── Modal Footer ── */
-.gc-modal-footer {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    padding: 16px 24px;
-    border-top: 1px solid var(--border);
-    background: var(--bg-secondary);
-    position: sticky;
-    bottom: 0;
-    z-index: 10;
-    flex-shrink: 0;
-    gap: 12px;
-}
-
-/* ── Buttons ── */
-.gc-btn-prev {
-    padding: 10px 20px;
-    border: 1px solid var(--border-strong);
-    background: transparent;
-    color: var(--text-secondary);
-    font-family: 'Jost', sans-serif;
-    font-size: 1rem;
-    font-weight: 600;
-    cursor: pointer;
-    border-radius: 4px;
-    transition: all 0.2s;
-    white-space: nowrap;
-}
-.gc-btn-prev:hover {
-    border-color: var(--gold);
-    color: var(--gold);
-}
-
-.gc-btn-next {
-    padding: 10px 22px;
-    background: var(--gold);
-    color: #ffffff;
-    font-family: 'Jost', sans-serif;
-    font-size: 1rem;
-    font-weight: 700;
-    border: none;
-    cursor: pointer;
-    border-radius: 4px;
-    display: flex;
-    align-items: center;
-    gap: 8px;
-    transition: opacity 0.2s;
-    white-space: nowrap;
-}
-.gc-btn-next:hover { opacity: 0.88; }
-
-/* ── Form Fields ── */
-.gc-field {
-    margin-bottom: 18px;
-}
-.gc-field label {
-    display: block;
-    font-size: 0.95rem;
-    font-weight: 700;
-    text-transform: uppercase;
-    color: var(--text-muted);
-    margin-bottom: 7px;
-}
-.gc-field input,
-.gc-field select,
-.gc-field textarea {
-    width: 100%;
-    padding: 11px 14px;
-    background: var(--bg-primary);
-    border: 1px solid var(--border-strong);
-    color: var(--text-primary);
-    font-family: 'Jost', sans-serif;
-    font-size: 1.125rem;
-    outline: none;
-    border-radius: 4px;
-    transition: border-color 0.2s, box-shadow 0.2s;
-    box-sizing: border-box;
-}
-.gc-field input:focus,
-.gc-field select:focus,
-.gc-field textarea:focus {
-    border-color: var(--gold);
-    box-shadow: 0 0 0 3px var(--gold-bg);
-}
-.gc-field-error {
-    font-size: 0.85rem;
-    color: #ef4444;
-    margin-top: 5px;
-    font-weight: 500;
-}
-.gc-field-hint {
-    font-size: 0.85rem;
-    color: var(--text-muted);
-    margin-top: 5px;
-}
-
-/* ── 2-column grid ── */
-.gc-grid-2 {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 14px;
-}
-
-/* ── Step 3: Career Interest checkboxes ── */
-.gc-interest-grid {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 10px;
-}
-.gc-interest-card {
-    display: flex;
-    align-items: center;
-    gap: 10px;
-    padding: 12px 14px;
-    border: 2px solid var(--border-strong);
-    background: var(--bg-primary);
-    cursor: pointer;
-    font-size: 1rem;
-    font-weight: 600;
-    color: var(--text-secondary);
-    transition: all 0.2s;
-    border-radius: 6px;
-    user-select: none;
-}
-.gc-interest-card.selected {
-    border-color: #16a34a;
-    background: rgba(22, 163, 74, 0.08);
-    color: #16a34a;
-}
-.gc-interest-card input[type="checkbox"] {
-    width: 16px;
-    height: 16px;
-    accent-color: #16a34a;
-    cursor: pointer;
-    flex-shrink: 0;
-    margin: 0;
-    padding: 0;
-}
-.gc-interest-check {
-    margin-left: auto;
-    flex-shrink: 0;
-}
-
-/* ── Step 3: Experience Level ── */
-.gc-exp-grid {
-    display: grid;
-    grid-template-columns: repeat(3, 1fr);
-    gap: 10px;
-}
-.gc-exp-card {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    gap: 4px;
-    padding: 16px 6px;
-    border: 2px solid var(--border-strong);
-    background: var(--bg-primary);
-    cursor: pointer;
-    text-align: center;
-    border-radius: 6px;
-    transition: all 0.2s;
-    user-select: none;
-}
-.gc-exp-card.selected {
-    border-color: #16a34a;
-    background: rgba(22, 163, 74, 0.08);
-}
-.gc-exp-card input[type="radio"] { display: none; }
-.gc-exp-icon { font-size: 1.4rem; line-height: 1; }
-.gc-exp-label {
-    font-size: 0.9rem;
-    font-weight: 700;
-    color: var(--text-primary);
-}
-.gc-exp-card.selected .gc-exp-label { color: #16a34a; }
-.gc-exp-sub { font-size: 0.8rem; color: var(--text-muted); }
-
-/* ── Step 4: Batch cards ── */
-.gc-batch-select-grid {
-    display: flex;
-    flex-direction: column;
-    gap: 10px;
-}
-.gc-batch-select-card {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    gap: 12px;
-    padding: 14px 16px;
-    border: 2px solid var(--border-strong);
-    background: var(--bg-primary);
-    cursor: pointer;
-    border-radius: 6px;
-    transition: all 0.2s;
-}
-.gc-batch-select-card:hover { border-color: var(--gold); }
-.gc-batch-select-card.selected {
-    border-color: var(--gold);
-    background: var(--gold-bg);
-}
-.gc-batch-select-name {
-    font-size: 1.05rem;
-    font-weight: 700;
-    color: var(--text-primary);
-    margin-bottom: 4px;
-}
-.gc-batch-select-meta {
-    font-size: 0.85rem;
-    color: var(--text-muted);
-}
-.gc-batch-select-fee {
-    font-size: 1.2rem;
-    font-weight: 700;
-    color: var(--gold);
-    white-space: nowrap;
-    flex-shrink: 0;
-}
-
-/* ══════════════════════════════════════════
-   PAYMENT METHOD TABS WITH BRAND ICONS
-══════════════════════════════════════════ */
-.payment-methods {
-    display: grid;
-    grid-template-columns: repeat(3, 1fr);
-    gap: 12px;
-    margin-bottom: 20px;
-}
-.payment-method-label {
-    display: block;
-    cursor: pointer;
-    position: relative;
-}
-.payment-method-label input[type="radio"] {
-    position: absolute;
-    opacity: 0;
-    width: 0;
-    height: 0;
-    pointer-events: none;
-}
-.payment-method-tab {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    gap: 8px;
-    padding: 14px 8px;
-    border: 2px solid var(--border-strong);
-    background: var(--bg-primary);
-    color: var(--text-secondary);
-    border-radius: 6px;
-    transition: all 0.25s ease;
-    user-select: none;
-}
-.payment-method-label:hover .payment-method-tab {
-    border-color: var(--gold);
-}
-.payment-method-label input[type="radio"]:checked ~ .payment-method-tab {
-    border-color: var(--gold);
-    background: var(--gold-bg);
-}
-.pm-icon-wrap {
-    width: 44px;
-    height: 44px;
-    border-radius: 10px;
-    overflow: hidden;
-    flex-shrink: 0;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-}
-.pm-brand-img {
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-    display: block;
-}
-.pm-label {
-    font-family: 'SolaimanLipi', sans-serif;
-    font-size: 1.05rem;
-    font-weight: 600;
-    color: var(--text-secondary);
-    transition: color 0.2s;
-}
-.payment-method-label input[type="radio"]:checked ~ .payment-method-tab .pm-label {
-    color: var(--gold);
-}
-
-/* ── Payment info box (send money to) ── */
-.gc-pay-info-box {
-    display: flex;
-    align-items: center;
-    gap: 14px;
-    background: var(--bg-primary);
-    border: 1px solid var(--border-strong);
-    border-left: 3px solid var(--gold);
-    padding: 14px 16px;
-    border-radius: 6px;
-    margin-bottom: 20px;
-}
-.gc-pay-info-label {
-    font-size: 0.85rem;
-    font-weight: 700;
-    text-transform: uppercase;
-    letter-spacing: 0.05em;
-    color: var(--text-muted);
-    margin-bottom: 4px;
-    font-family: 'SolaimanLipi', sans-serif;
-}
-.gc-pay-info-number {
-    font-size: 1.5rem;
-    font-weight: 700;
-    color: var(--gold);
-    letter-spacing: 0.04em;
-}
-
-/* ── Selected batch summary (Step 5) ── */
-.gc-batch-summary {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    gap: 12px;
-    background: var(--gold-bg);
-    border: 1px solid var(--border-strong);
-    padding: 14px 16px;
-    border-radius: 6px;
-    margin-bottom: 20px;
-    flex-wrap: wrap;
-}
-.gc-batch-summary-label {
-    font-size: 0.8rem;
-    font-weight: 700;
-    text-transform: uppercase;
-    letter-spacing: 0.05em;
-    color: var(--text-muted);
-    margin-bottom: 3px;
-}
-.gc-batch-summary-name {
-    font-weight: 700;
-    font-size: 1.05rem;
-    color: var(--text-primary);
-}
-.gc-batch-summary-fee {
-    font-size: 1.5rem;
-    font-weight: 700;
-    color: var(--gold);
-    white-space: nowrap;
-}
-
-/* ── Pre-filled member badge ── */
-.gc-member-badge {
-    display: flex;
-    align-items: center;
-    gap: 8px;
-    padding: 10px 20px;
-    background: rgba(22, 163, 74, 0.07);
-    border-bottom: 1px solid rgba(22, 163, 74, 0.2);
-    font-size: 0.78rem;
-    color: #16a34a;
-    font-weight: 600;
-    flex-shrink: 0;
-}
-
-/* ── Success screen ── */
-.gc-success {
-    padding: 40px 28px;
-    text-align: center;
-}
-.gc-success-icon {
-    width: 60px;
-    height: 60px;
-    background: rgba(22, 163, 74, 0.1);
-    border-radius: 50%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    margin: 0 auto 20px;
-    color: #16a34a;
-}
-.gc-success-title {
-    font-size: 1.25rem;
-    font-weight: 700;
-    color: var(--text-primary);
-    margin-bottom: 12px;
-}
-.gc-success-sub {
-    font-size: 0.95rem;
-    color: var(--text-muted);
-    line-height: 1.7;
-    margin-bottom: 24px;
-}
-
-/* ── Step 0: Quick Start ── */
-.gc-quickstart-body {
-    padding: 44px 28px;
-    text-align: center;
-}
-.gc-quickstart-icon {
-    width: 60px;
-    height: 60px;
-    background: var(--gold-bg);
-    border-radius: 50%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    margin: 0 auto 20px;
-}
-.gc-quickstart-title {
-    font-size: 1.15rem;
-    font-weight: 700;
-    color: var(--text-primary);
-    margin-bottom: 8px;
-}
-.gc-quickstart-sub {
-    color: var(--text-muted);
-    font-size: 0.86rem;
-    line-height: 1.65;
-    margin-bottom: 28px;
-    max-width: 320px;
-    margin-left: auto;
-    margin-right: auto;
-}
-.gc-quickstart-actions {
-    display: flex;
-    gap: 12px;
-    justify-content: center;
-    flex-wrap: wrap;
-}
-.gc-btn-gold {
-    padding: 13px 26px;
-    background: var(--gold);
-    color: #ffffff;
-    font-weight: 700;
-    font-size: 1rem;
-    border: none;
-    cursor: pointer;
-    border-radius: 4px;
-    display: flex;
-    align-items: center;
-    gap: 8px;
-    transition: opacity 0.2s;
-    font-family: 'Jost', sans-serif;
-    white-space: nowrap;
-}
-.gc-btn-gold:hover { opacity: 0.88; }
-.gc-btn-ghost {
-    padding: 13px 26px;
-    background: transparent;
-    border: 1px solid var(--border-strong);
-    color: var(--text-secondary);
-    font-weight: 600;
-    font-size: 0.9rem;
-    cursor: pointer;
-    border-radius: 4px;
-    font-family: 'Jost', sans-serif;
-    transition: all 0.2s;
-    white-space: nowrap;
-}
-.gc-btn-ghost:hover {
-    border-color: var(--gold);
-    color: var(--gold);
-}
-
-/* ══════════════════════════════════════════
-   RESPONSIVE BREAKPOINTS
-══════════════════════════════════════════ */
-
-/* Tablet and below */
-@media (max-width: 600px) {
-    .gc-modal-overlay {
-        padding: 0;
-        align-items: flex-end;
-    }
-    .gc-modal {
-        max-width: 100%;
-        max-height: 96vh;
-        border-radius: 16px 16px 0 0;
-        border-bottom: none;
-    }
-    .gc-modal-header {
-        padding: 16px 18px;
-    }
-    .gc-modal-body {
-        padding: 18px;
-    }
-    .gc-modal-footer {
-        padding: 14px 18px;
-    }
-    .gc-steps-bar {
-        padding: 12px 18px;
-    }
-    .gc-step-dot {
-        width: 26px;
-        height: 26px;
-        font-size: 0.85rem;
-    }
-    .gc-step-line {
-        min-width: 8px;
+        --p-gold:        var(--gold, #b89a5a);
+        --p-gold-dim:    color-mix(in srgb, var(--p-gold) 15%, transparent);
+        --p-gold-mid:    color-mix(in srgb, var(--p-gold) 30%, transparent);
+        --p-ink:         var(--text-primary,   #0f0d0a);
+        --p-muted:       var(--text-secondary, #6b6359);
+        --p-faint:       var(--text-muted,     #a09080);
+        --p-surface:     var(--bg-surface,     #ffffff);
+        --p-bg:          var(--bg-secondary,   #f7f5f2);
+        --p-border:      var(--border,         #e5e0d8);
+        --p-border-str:  var(--border-strong,  #ccc4b8);
+        --p-font-dis:    'Playfair Display', 'SolaimanLipi', serif;
+        --p-font-body:   'DM Sans', 'SolaimanLipi', sans-serif;
+        --p-font-bn:     'SolaimanLipi', 'DM Sans', sans-serif;
+        --p-radius:      6px;
     }
 
-    /* 2-col → 1-col */
-    .gc-grid-2 {
+    .gp-root * { box-sizing: border-box; }
+    .gp-root { font-family: var(--p-font-body); color: var(--p-ink); }
+
+    /* ════════════════════════════════
+       HERO — dark, cinematic
+    ════════════════════════════════ */
+   .gp-hero {
+        background: var(--p-surface); /* Changed from #0f0d0a */
+        color: var(--p-ink); /* Changed from #fff */
+        padding: clamp(64px, 10vw, 120px) clamp(20px, 5vw, 80px);
+        position: relative;
+        overflow: hidden;
+        text-align: center;
+    }
+
+    /* Radial gold glow behind text */
+.gp-hero::before {
+        content: '';
+        position: absolute;
+        top: 50%; left: 50%;
+        transform: translate(-50%, -50%);
+        width: min(700px, 120vw);
+        height: min(700px, 120vw);
+        /* Uses your light theme's gold-bg variable for a softer effect */
+        background: radial-gradient(circle, var(--gold-bg, rgba(184, 74, 74, 0.07)) 0%, transparent 70%);
+        pointer-events: none;
+    }
+
+    /* Thin horizontal rule above heading */
+.gp-hero-rule {
+        width: 48px;
+        height: 1px;
+        background: var(--p-gold);
+        margin: 0 auto 24px;
+        opacity: 0.7;
+    }
+
+.gp-hero-eyebrow {
+        font-size: 0.65rem;
+        font-weight: 600;
+        letter-spacing: 0.28em;
+        text-transform: uppercase;
+        color: var(--p-gold);
+        margin-bottom: 20px;
+        position: relative;
+    }
+
+.gp-hero-title {
+        font-family: var(--p-font-dis);
+        font-size: clamp(2.6rem, 7vw, 5.5rem);
+        font-weight: 400;
+        color: var(--p-ink); /* Changed from #fff */
+        line-height: 1.1;
+        letter-spacing: -0.01em;
+        margin: 0 auto 24px;
+        position: relative;
+        max-width: 820px;
+    }
+
+.gp-hero-title em {
+        font-style: italic;
+        color: var(--p-gold);
+    }
+
+    .gp-hero-sub {
+        font-family: var(--p-font-bn);
+        font-size: clamp(0.9rem, 2vw, 1.05rem);
+        color: var(--p-muted); /* Changed from semi-transparent white */
+        max-width: 520px;
+        margin: 0 auto 40px;
+        line-height: 1.8;
+        position: relative;
+    }
+
+    .gp-hero-cta {
+        display: inline-flex;
+        align-items: center;
+        gap: 10px;
+        padding: 15px 36px;
+        background: var(--p-gold);
+        color: #fff;
+        font-family: var(--p-font-body);
+        font-size: 0.8rem;
+        font-weight: 700;
+        letter-spacing: 0.14em;
+        text-transform: uppercase;
+        border: none;
+        border-radius: 2px;
+        cursor: pointer;
+        text-decoration: none;
+        transition: opacity 0.2s, transform 0.2s;
+        position: relative;
+    }
+
+    .gp-hero-cta:hover { opacity: 0.88; transform: translateY(-2px); }
+
+    /* ── Hero stats bar ── */
+.gp-hero-stats {
+        display: flex;
+        justify-content: center;
         gap: 0;
+        margin-top: clamp(48px, 7vw, 80px);
+        border-top: 1px solid var(--p-border); /* Changed from semi-transparent white */
+        position: relative;
     }
 
-    /* Career interests: 2-col → 1-col */
-    .gc-interest-grid {
-        grid-template-columns: 1fr;
+    .gp-hero-stat {
+        flex: 1;
+        max-width: 180px;
+        padding: 24px 16px;
+        border-right: 1px solid var(--p-border); /* Changed from semi-transparent white */
+        text-align: center;
     }
 
-    /* Experience: 3-col stays (cards are small enough) */
-    .gc-exp-grid {
+.gp-hero-stat:last-child { border-right: none; }
+
+    .gp-hero-stat-num {
+        font-family: var(--p-font-dis);
+        font-size: 2rem;
+        font-weight: 700;
+        color: var(--p-gold);
+        line-height: 1;
+        margin-bottom: 6px;
+    }
+
+    .gp-hero-stat-label {
+        font-size: 0.65rem;
+        font-weight: 600;
+        letter-spacing: 0.16em;
+        text-transform: uppercase;
+        color: var(--p-faint); /* Changed from semi-transparent white */
+    }
+
+    /* ════════════════════════════════
+       PAGE BODY
+    ════════════════════════════════ */
+    .gp-body {
+        max-width: 1360px;
+        margin: 0 auto;
+        padding: clamp(40px, 6vw, 80px) clamp(16px, 4vw, 60px) clamp(60px, 8vw, 120px);
+    }
+
+    /* ── Section header ── */
+    .gp-section { margin-bottom: clamp(56px, 7vw, 96px); }
+
+    .gp-section-head {
+        margin-bottom: clamp(28px, 4vw, 40px);
+    }
+
+    .gp-eyebrow {
+        font-size: 0.62rem;
+        font-weight: 700;
+        letter-spacing: 0.28em;
+        text-transform: uppercase;
+        color: var(--p-gold);
+        margin-bottom: 10px;
+    }
+
+    .gp-section-title {
+        font-family: var(--p-font-dis);
+        font-size: clamp(1.8rem, 3.5vw, 2.8rem);
+        font-weight: 400;
+        color: var(--p-ink);
+        margin: 0;
+        line-height: 1.2;
+    }
+
+    .gp-section-title em { font-style: italic; color: var(--p-gold); }
+
+    /* ── Ad slot ── */
+    .gp-ad { margin-bottom: clamp(40px, 5vw, 64px); display: flex; justify-content: center; }
+
+    /* ════════════════════════════════
+       BATCH CARDS
+    ════════════════════════════════ */
+    .gp-batches {
+        display: grid;
+        grid-template-columns: repeat(2, 1fr);
+        gap: clamp(16px, 2.5vw, 28px);
+    }
+
+    .gp-batch {
+        background: var(--p-surface);
+        border: 1px solid var(--p-border);
+        border-radius: var(--p-radius);
+        overflow: hidden;
+        display: flex;
+        flex-direction: column;
+        transition: border-color 0.25s, box-shadow 0.25s;
+    }
+
+    .gp-batch:hover {
+        border-color: var(--p-gold);
+        box-shadow: 0 8px 40px rgba(0,0,0,0.08);
+    }
+
+    /* Gold top accent bar */
+    .gp-batch-accent {
+        height: 3px;
+        background: linear-gradient(90deg, var(--p-gold), color-mix(in srgb, var(--p-gold) 40%, transparent));
+    }
+
+    .gp-batch-inner { padding: clamp(20px, 3vw, 32px); flex: 1; display: flex; flex-direction: column; }
+
+    /* Status + date row */
+    .gp-batch-top {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
         gap: 8px;
+        margin-bottom: 16px;
+        flex-wrap: wrap;
     }
-    .gc-exp-card { padding: 12px 4px; }
-    .gc-exp-icon { font-size: 1.2rem; }
-    .gc-exp-label { font-size: 0.72rem; }
-    .gc-exp-sub { font-size: 0.68rem; }
 
-    /* Payment methods: 3-col stays */
-    .payment-methods {
+    .gp-status {
+        font-size: 0.62rem;
+        font-weight: 700;
+        letter-spacing: 0.14em;
+        text-transform: uppercase;
+        padding: 4px 10px;
+        border-radius: 2px;
+    }
+
+    .gp-status--open   { background: rgba(22,163,74,0.1);  color: #16a34a; }
+    .gp-status--fast   { background: rgba(202,138,4,0.12); color: #b45309; }
+    .gp-status--full   { background: rgba(185,0,0,0.1);    color: var(--p-gold); }
+
+    .gp-batch-date {
+        font-size: 0.72rem;
+        font-weight: 500;
+        color: var(--p-faint);
+        letter-spacing: 0.06em;
+    }
+
+    .gp-batch-name {
+        font-family: var(--p-font-dis);
+        font-size: clamp(1.2rem, 2.2vw, 1.55rem);
+        font-weight: 400;
+        color: var(--p-ink);
+        margin: 0 0 18px;
+        line-height: 1.3;
+        text-decoration: none;
+        display: block;
+        transition: color 0.2s;
+    }
+
+    .gp-batch-name:hover { color: var(--p-gold); }
+
+    /* Meta list */
+    .gp-batch-meta {
+        display: flex;
+        flex-direction: column;
+        gap: 9px;
+        margin-bottom: 20px;
+    }
+
+    .gp-meta-row {
+        display: flex;
+        align-items: flex-start;
+        gap: 9px;
+        font-family: var(--p-font-bn);
+        font-size: 0.875rem;
+        color: var(--p-muted);
+        line-height: 1.5;
+    }
+
+    .gp-meta-row svg { color: var(--p-gold); flex-shrink: 0; margin-top: 2px; }
+
+    /* Seat bar */
+    .gp-seat { margin-bottom: 20px; }
+
+    .gp-seat-head {
+        display: flex;
+        justify-content: space-between;
+        font-size: 0.68rem;
+        font-weight: 600;
+        letter-spacing: 0.1em;
+        text-transform: uppercase;
+        color: var(--p-faint);
+        margin-bottom: 7px;
+    }
+
+    .gp-seat-track {
+        height: 4px;
+        background: var(--p-border);
+        border-radius: 99px;
+        overflow: hidden;
+    }
+
+    .gp-seat-fill {
+        height: 100%;
+        background: var(--p-gold);
+        border-radius: 99px;
+    }
+
+    .gp-seat-warn {
+        font-size: 0.72rem;
+        font-weight: 700;
+        color: #b45309;
+        margin-top: 6px;
+    }
+
+    /* Fee */
+    .gp-batch-fee {
+        font-family: var(--p-font-dis);
+        font-size: clamp(1.5rem, 2.5vw, 2rem);
+        font-weight: 700;
+        color: var(--p-ink);
+        margin-bottom: 20px;
+        margin-top: auto;
+    }
+
+    .gp-batch-fee small {
+        font-family: var(--p-font-body);
+        font-size: 0.78rem;
+        font-weight: 400;
+        color: var(--p-faint);
+        margin-left: 4px;
+    }
+
+    /* Actions */
+    .gp-batch-actions {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 10px;
+        margin-top: 4px;
+    }
+
+    .gp-btn-outline {
+        padding: 11px 16px;
+        border: 1.5px solid var(--p-border-str);
+        background: transparent;
+        color: var(--p-ink);
+        font-family: var(--p-font-body);
+        font-size: 0.78rem;
+        font-weight: 700;
+        letter-spacing: 0.1em;
+        text-transform: uppercase;
+        text-align: center;
+        text-decoration: none;
+        border-radius: var(--p-radius);
+        cursor: pointer;
+        transition: border-color 0.2s, color 0.2s;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+
+    .gp-btn-outline:hover { border-color: var(--p-gold); color: var(--p-gold); }
+
+    .gp-btn-gold {
+        padding: 11px 16px;
+        background: var(--p-gold);
+        color: #fff;
+        font-family: var(--p-font-body);
+        font-size: 0.78rem;
+        font-weight: 700;
+        letter-spacing: 0.1em;
+        text-transform: uppercase;
+        border: none;
+        border-radius: var(--p-radius);
+        cursor: pointer;
+        transition: opacity 0.2s;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+
+    .gp-btn-gold:hover { opacity: 0.88; }
+    .gp-btn-gold:disabled { background: var(--p-border-str); cursor: not-allowed; opacity: 1; }
+
+    /* Empty state */
+    .gp-empty {
+        grid-column: 1 / -1;
+        text-align: center;
+        padding: 64px 32px;
+        border: 1px dashed var(--p-border-str);
+        border-radius: var(--p-radius);
+        color: var(--p-faint);
+        font-family: var(--p-font-bn);
+        font-size: 1rem;
+        line-height: 1.7;
+    }
+
+    /* ════════════════════════════════
+       TWO-COL LAYOUT (Gallery + Sidebar)
+    ════════════════════════════════ */
+    .gp-two-col {
+        display: grid;
+        grid-template-columns: 1fr 300px;
+        gap: clamp(24px, 4vw, 48px);
+        align-items: start;
+    }
+
+    /* ════════════════════════════════
+       NOTICE SIDEBAR
+    ════════════════════════════════ */
+    .gp-sidebar {
+        background: var(--p-surface);
+        border: 1px solid var(--p-border);
+        border-radius: var(--p-radius);
+        overflow: hidden;
+        position: sticky;
+        top: 24px;
+    }
+
+    .gp-sidebar-head {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        padding: 18px 20px;
+        border-bottom: 1px solid var(--p-border);
+        background: var(--p-bg);
+    }
+
+    .gp-sidebar-head-title {
+        font-size: 0.72rem;
+        font-weight: 700;
+        letter-spacing: 0.18em;
+        text-transform: uppercase;
+        color: var(--p-ink);
+    }
+
+    .gp-sidebar-head svg { color: var(--p-gold); flex-shrink: 0; }
+
+    .gp-notices {
+        max-height: 520px;
+        overflow-y: auto;
+        scrollbar-width: thin;
+        scrollbar-color: var(--p-border-str) transparent;
+    }
+
+    .gp-notices::-webkit-scrollbar { width: 4px; }
+    .gp-notices::-webkit-scrollbar-thumb { background: var(--p-border-str); border-radius: 4px; }
+
+    .gp-notice-item {
+        padding: 16px 20px;
+        border-bottom: 1px solid var(--p-border);
+        font-family: var(--p-font-bn);
+        font-size: 0.875rem;
+        line-height: 1.65;
+    }
+
+    .gp-notice-item:last-child { border-bottom: none; }
+
+    .gp-notice-item--critical { border-left: 3px solid var(--p-gold); background: color-mix(in srgb, var(--p-gold) 5%, transparent); }
+    .gp-notice-item--normal   { }
+    .gp-notice-item--low      { opacity: 0.75; }
+
+    .gp-notice-title {
+        font-size: 0.85rem;
+        font-weight: 700;
+        color: var(--p-ink);
+        margin-bottom: 4px;
+    }
+
+    .gp-notice-item--critical .gp-notice-title { color: var(--p-gold); }
+
+    .gp-notice-body { color: var(--p-muted); }
+
+    .gp-no-notices {
+        padding: 32px 20px;
+        text-align: center;
+        font-family: var(--p-font-bn);
+        font-size: 0.875rem;
+        color: var(--p-faint);
+    }
+
+    /* Sidebar stats + CTA */
+    .gp-sidebar-foot {
+        border-top: 1px solid var(--p-border);
+        background: var(--p-bg);
+        padding: 20px;
+    }
+
+    .gp-sb-stats {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 10px;
+        margin-bottom: 16px;
+    }
+
+    .gp-sb-stat {
+        text-align: center;
+        padding: 14px 8px;
+        background: var(--p-surface);
+        border: 1px solid var(--p-border);
+        border-radius: var(--p-radius);
+    }
+
+    .gp-sb-stat-num {
+        font-family: var(--p-font-dis);
+        font-size: 1.5rem;
+        font-weight: 700;
+        color: var(--p-gold);
+        line-height: 1;
+        margin-bottom: 4px;
+    }
+
+    .gp-sb-stat-label {
+        font-size: 0.6rem;
+        font-weight: 700;
+        letter-spacing: 0.12em;
+        text-transform: uppercase;
+        color: var(--p-faint);
+    }
+
+    .gp-sb-apply {
+        width: 100%;
+        padding: 13px;
+        background: var(--p-gold);
+        color: #fff;
+        font-family: var(--p-font-body);
+        font-size: 0.78rem;
+        font-weight: 700;
+        letter-spacing: 0.14em;
+        text-transform: uppercase;
+        border: none;
+        border-radius: var(--p-radius);
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+        justify-content: center;
         gap: 8px;
+        transition: opacity 0.2s, transform 0.2s;
     }
-    .pm-icon-wrap { width: 36px; height: 36px; }
-    .pm-label { font-size: 0.88rem; }
-    .payment-method-tab { padding: 12px 6px; gap: 6px; }
 
-    /* Batch cards */
-    .gc-batch-select-card { flex-wrap: wrap; }
-    .gc-batch-select-fee { width: 100%; text-align: right; }
+    .gp-sb-apply:hover { opacity: 0.88; transform: translateY(-1px); }
 
-    /* Quickstart */
-    .gc-quickstart-body { padding: 32px 20px; }
-    .gc-quickstart-actions { flex-direction: column; }
-    .gc-btn-gold, .gc-btn-ghost { width: 100%; justify-content: center; }
+    /* ════════════════════════════════
+       GALLERY
+    ════════════════════════════════ */
+    .gp-gallery-filters {
+        display: flex;
+        gap: 6px;
+        margin-bottom: 20px;
+        flex-wrap: wrap;
+    }
 
-    /* Success */
-    .gc-success { padding: 32px 20px; }
+    .gp-filter {
+        padding: 6px 16px;
+        border: 1px solid var(--p-border-str);
+        background: transparent;
+        color: var(--p-muted);
+        font-family: var(--p-font-body);
+        font-size: 0.7rem;
+        font-weight: 700;
+        letter-spacing: 0.12em;
+        text-transform: uppercase;
+        border-radius: 2px;
+        cursor: pointer;
+        transition: all 0.18s;
+    }
 
-    /* Footer buttons */
-    .gc-btn-prev { padding: 10px 14px; font-size: 0.82rem; }
-    .gc-btn-next { padding: 10px 16px; font-size: 0.85rem; }
+    .gp-filter.active,
+    .gp-filter:hover { border-color: var(--p-gold); color: var(--p-gold); background: var(--p-gold-dim); }
 
-    /* Member badge */
-    .gc-member-badge { font-size: 0.74rem; padding: 9px 16px; }
-}
+    .gp-gallery-grid {
+        columns: 3;
+        column-gap: 6px;
+    }
 
-/* Very small phones */
-@media (max-width: 380px) {
-    .gc-exp-grid { gap: 6px; }
-    .gc-exp-label { font-size: 0.68rem; }
-    .pm-icon-wrap { width: 30px; height: 30px; border-radius: 7px; }
-    .gc-modal-title { font-size: 0.88rem; }
-}
+    .gp-gallery-item {
+        break-inside: avoid;
+        margin-bottom: 6px;
+        overflow: hidden;
+        border-radius: 3px;
+        cursor: pointer;
+        position: relative;
+        background: var(--p-bg);
+    }
 
-/* Spin animation for loading */
-@keyframes spin {
-    from { transform: rotate(0deg); }
-    to   { transform: rotate(360deg); }
-}
+    .gp-gallery-item img {
+        width: 100%;
+        height: auto;
+        display: block;
+        transition: transform 0.5s ease;
+    }
 
-/* Responsive */
-@media (max-width: 768px) {
-    .gc-hero { padding: 48px 20px 40px; }
-    .gc-body { padding: 40px 20px 60px; }
-    .gc-gallery-grid { grid-template-columns: repeat(2, 1fr); }
-    .gc-grid-2 { grid-template-columns: 1fr; }
-    .gc-check-group { grid-template-columns: 1fr; }
-    .gc-notice { padding: 12px 20px; }
-    .gc-cta-banner { padding: 40px 20px; }
-    .gc-batches { grid-template-columns: 1fr; }
-}
+    .gp-gallery-item:hover img { transform: scale(1.06); }
+
+    /* Lightbox */
+    .gp-lightbox {
+        position: fixed;
+        inset: 0;
+        background: rgba(0,0,0,0.92);
+        z-index: 10000;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        padding: 20px;
+    }
+
+    .gp-lightbox img {
+        max-width: 100%;
+        max-height: 90vh;
+        object-fit: contain;
+        border-radius: 4px;
+    }
+
+    .gp-lightbox-close {
+        position: absolute;
+        top: 20px; right: 20px;
+        width: 42px; height: 42px;
+        border-radius: 50%;
+        background: rgba(255,255,255,0.12);
+        border: 1px solid rgba(255,255,255,0.2);
+        color: #fff;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        cursor: pointer;
+        transition: background 0.2s;
+        z-index: 10001;
+    }
+
+    .gp-lightbox-close:hover { background: rgba(255,255,255,0.22); }
+
+    /* ════════════════════════════════
+       CTA BANNER
+    ════════════════════════════════ */
+    .gp-cta {
+        background: #0f0d0a;
+        border-radius: 8px;
+        padding: clamp(40px, 6vw, 72px) clamp(24px, 5vw, 64px);
+        text-align: center;
+        position: relative;
+        overflow: hidden;
+    }
+
+    .gp-cta::before {
+        content: '';
+        position: absolute;
+        top: 50%; left: 50%;
+        transform: translate(-50%, -50%);
+        width: 500px; height: 500px;
+        background: radial-gradient(circle, color-mix(in srgb, var(--p-gold) 12%, transparent), transparent 65%);
+        pointer-events: none;
+    }
+
+    .gp-cta-title {
+        font-family: var(--p-font-dis);
+        font-size: clamp(1.8rem, 3.5vw, 2.8rem);
+        font-weight: 400;
+        color: #fff;
+        margin: 0 0 12px;
+        position: relative;
+    }
+
+    .gp-cta-sub {
+        font-family: var(--p-font-bn);
+        font-size: 0.95rem;
+        color: rgba(255,255,255,0.5);
+        margin: 0 0 36px;
+        position: relative;
+    }
+
+    .gp-cta-actions {
+        display: flex;
+        gap: 14px;
+        justify-content: center;
+        flex-wrap: wrap;
+        position: relative;
+    }
+
+    .gp-cta-btn-gold {
+        display: inline-flex;
+        align-items: center;
+        gap: 10px;
+        padding: 14px 32px;
+        background: var(--p-gold);
+        color: #fff;
+        font-family: var(--p-font-body);
+        font-size: 0.8rem;
+        font-weight: 700;
+        letter-spacing: 0.14em;
+        text-transform: uppercase;
+        border: none;
+        border-radius: 2px;
+        cursor: pointer;
+        text-decoration: none;
+        transition: opacity 0.2s, transform 0.2s;
+    }
+
+    .gp-cta-btn-gold:hover { opacity: 0.88; transform: translateY(-2px); }
+
+    .gp-cta-btn-wa {
+        display: inline-flex;
+        align-items: center;
+        gap: 10px;
+        padding: 14px 32px;
+        background: #25D366;
+        color: #fff;
+        font-family: var(--p-font-body);
+        font-size: 0.8rem;
+        font-weight: 700;
+        letter-spacing: 0.14em;
+        text-transform: uppercase;
+        border-radius: 2px;
+        text-decoration: none;
+        transition: opacity 0.2s, transform 0.2s;
+    }
+
+    .gp-cta-btn-wa:hover { opacity: 0.88; transform: translateY(-2px); }
+
+    /* ════════════════════════════════
+       RESPONSIVE
+    ════════════════════════════════ */
+    @media (max-width: 1024px) {
+        .gp-two-col { grid-template-columns: 1fr 260px; }
+    }
+
+    @media (max-width: 860px) {
+        .gp-two-col {
+            grid-template-columns: 1fr;
+        }
+
+        /* Move sidebar above gallery on mobile */
+        .gp-gallery-col { order: 2; }
+        .gp-sidebar    { order: 1; position: static; }
+
+        .gp-hero-stats { gap: 0; flex-wrap: wrap; }
+        .gp-hero-stat  { flex: 1 1 80px; }
+    }
+
+    @media (max-width: 640px) {
+        .gp-batches { grid-template-columns: 1fr; }
+        .gp-gallery-grid { columns: 2; }
+        .gp-batch-actions { grid-template-columns: 1fr; }
+        .gp-cta-actions { flex-direction: column; align-items: center; }
+        .gp-cta-btn-gold, .gp-cta-btn-wa { width: 100%; max-width: 280px; justify-content: center; }
+    }
+
+    @media (max-width: 400px) {
+        .gp-gallery-grid { columns: 2; column-gap: 4px; }
+        .gp-gallery-item { margin-bottom: 4px; }
+    }
 </style>
 
+<div class="gp-root">
 
-<div class="gc-hero">
-    <div class="gc-hero-eyebrow">Dhaka Model Agency</div>
-    <h1 class="gc-hero-title">
-        Professional <strong>Grooming Classes</strong>
-    </h1>
-    <p class="gc-hero-sub">
-        Professional training, camera confidence, portfolio development and agency-ready skill development.
-    </p>
-    <button class="gc-hero-cta" onclick="document.getElementById('batches-section').scrollIntoView({behavior:'smooth'})">
-        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-            <path d="M12 5v14M5 12l7 7 7-7"/>
-        </svg>
-        View Batches and Apply
-    </button>
-</div>
-
-<div class="gc-body">
     
-    <div style="margin-bottom: 40px;">
-        <?php if (isset($component)) { $__componentOriginaled4987d3f6007db3445a6067a328a16c = $component; } ?>
+    <div class="gp-hero">
+        <div class="gp-hero-rule"></div>
+        <div class="gp-hero-eyebrow">Dhaka Model Agency</div>
+        <h1 class="gp-hero-title">Professional <em>Grooming</em> Classes</h1>
+        <p class="gp-hero-sub">Camera confidence, portfolio development, and agency-ready skills — all in one programme.</p>
+        <button class="gp-hero-cta" onclick="document.getElementById('gp-batches').scrollIntoView({behavior:'smooth'})">
+            View Batches &amp; Apply
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M12 5v14M5 12l7 7 7-7"/></svg>
+        </button>
+
+        <div class="gp-hero-stats">
+            <div class="gp-hero-stat">
+                <div class="gp-hero-stat-num">200+</div>
+                <div class="gp-hero-stat-label">Graduates</div>
+            </div>
+            <div class="gp-hero-stat">
+                <div class="gp-hero-stat-num">100%</div>
+                <div class="gp-hero-stat-label">Practical</div>
+            </div>
+            <div class="gp-hero-stat">
+                <div class="gp-hero-stat-num">5★</div>
+                <div class="gp-hero-stat-label">Rated</div>
+            </div>
+            <div class="gp-hero-stat">
+                <div class="gp-hero-stat-num">Live</div>
+                <div class="gp-hero-stat-label">Batches Open</div>
+            </div>
+        </div>
+    </div>
+
+    <div class="gp-body">
+
+        
+        <div class="gp-ad"><?php if (isset($component)) { $__componentOriginaled4987d3f6007db3445a6067a328a16c = $component; } ?>
 <?php if (isset($attributes)) { $__attributesOriginaled4987d3f6007db3445a6067a328a16c = $attributes; } ?>
 <?php $component = App\View\Components\AdBanner::resolve(['position' => 'grooming_top'] + (isset($attributes) && $attributes instanceof Illuminate\View\ComponentAttributeBag ? $attributes->all() : [])); ?>
 <?php $component->withName('ad-banner'); ?>
@@ -1269,125 +825,98 @@
 <?php if (isset($__componentOriginaled4987d3f6007db3445a6067a328a16c)): ?>
 <?php $component = $__componentOriginaled4987d3f6007db3445a6067a328a16c; ?>
 <?php unset($__componentOriginaled4987d3f6007db3445a6067a328a16c); ?>
-<?php endif; ?>
-    </div>
-    
-    <div class="gc-content-wrapper">
+<?php endif; ?></div>
 
         
-        <div class="gc-main-column" style="display: flex; flex-direction: column; min-width: 0;">
-
-            
-            <div id="batches-section">
-                <div class="gc-section-head">
-                    <div class="gc-section-eyebrow">Upcoming Batches</div>
-                </div>
-
-                <?php if(\Livewire\Mechanisms\ExtendBlade\ExtendBlade::isRenderingLivewireComponent()): ?><!--[if BLOCK]><![endif]--><?php endif; ?><?php if($batches->isEmpty()): ?>
-                    <div style="text-align:center; padding: 48px; background: var(--bg-surface); border: 1px dashed var(--border-strong); margin-bottom: 64px;">
-                        <p style="color: var(--text-muted); font-size: 1.125rem;">There are no upcoming batches at the moment. Check back soon!</p>
-                    </div>
-                <?php else: ?>
-                    <div class="gc-batches">
-                        <?php if(\Livewire\Mechanisms\ExtendBlade\ExtendBlade::isRenderingLivewireComponent()): ?><!--[if BLOCK]><![endif]--><?php \Livewire\Features\SupportCompiledWireKeys\SupportCompiledWireKeys::openLoop(); ?><?php endif; ?><?php $__currentLoopData = $batches; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $batch): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?><?php if(\Livewire\Mechanisms\ExtendBlade\ExtendBlade::isRenderingLivewireComponent()): ?><?php \Livewire\Features\SupportCompiledWireKeys\SupportCompiledWireKeys::startLoopIteration(); ?><?php endif; ?>
-                            <div class="gc-batch-card">
-                                <div class="gc-batch-status <?php echo e($batch->status); ?>">
-                                    <?php if(\Livewire\Mechanisms\ExtendBlade\ExtendBlade::isRenderingLivewireComponent()): ?><!--[if BLOCK]><![endif]--><?php endif; ?><?php if($batch->status === 'open'): ?> Open
-                                    <?php elseif($batch->status === 'filling_fast'): ?> Filling Fast
-                                    <?php else: ?> Full <?php endif; ?><?php if(\Livewire\Mechanisms\ExtendBlade\ExtendBlade::isRenderingLivewireComponent()): ?><!--[if ENDBLOCK]><![endif]--><?php endif; ?>
-                                </div>
-
-                                <a href="<?php echo e(route('grooming.show', $batch->id)); ?>" style="text-decoration: none;">
-                                    <div class="gc-batch-name"
-                                        style="transition: color 0.2s;"
-                                        onmouseover="this.style.color='var(--gold)'"
-                                        onmouseout="this.style.color='var(--text-primary)'">
-                                        <?php echo e($batch->title); ?>
-
-                                    </div>
-                                </a>
-
-                                <div class="gc-batch-meta">
-                                    <div class="gc-batch-meta-row">
-                                        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
-                                        Start Date: <?php echo e($batch->start_date->format('d M Y')); ?>
-
-                                    </div>
-                                    <?php if(\Livewire\Mechanisms\ExtendBlade\ExtendBlade::isRenderingLivewireComponent()): ?><!--[if BLOCK]><![endif]--><?php endif; ?><?php if($batch->trainer): ?>
-                                    <div class="gc-batch-meta-row">
-                                        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="8" r="4"/><path d="M4 20c0-4 3.58-7 8-7s8 3 8 7"/></svg>
-                                        Trainer: <?php echo e($batch->trainer); ?>
-
-                                    </div>
-                                    <?php endif; ?><?php if(\Livewire\Mechanisms\ExtendBlade\ExtendBlade::isRenderingLivewireComponent()): ?><!--[if ENDBLOCK]><![endif]--><?php endif; ?>
-                                    <?php if(\Livewire\Mechanisms\ExtendBlade\ExtendBlade::isRenderingLivewireComponent()): ?><!--[if BLOCK]><![endif]--><?php endif; ?><?php if($batch->venue): ?>
-                                    <div class="gc-batch-meta-row">
-                                        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 10c0 7-9 13-9 13S3 17 3 10a9 9 0 0118 0z"/><circle cx="12" cy="10" r="3"/></svg>
-                                        <?php echo e($batch->venue); ?>
-
-                                    </div>
-                                    <?php endif; ?><?php if(\Livewire\Mechanisms\ExtendBlade\ExtendBlade::isRenderingLivewireComponent()): ?><!--[if ENDBLOCK]><![endif]--><?php endif; ?>
-                                    <?php if(\Livewire\Mechanisms\ExtendBlade\ExtendBlade::isRenderingLivewireComponent()): ?><!--[if BLOCK]><![endif]--><?php endif; ?><?php if(!empty($batch->schedule_json)): ?>
-                                    <div class="gc-batch-meta-row">
-                                        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></svg>
-                                        <?php echo e(collect($batch->schedule_json)->map(fn($s) => ($s['day'] ?? '') . ' ' . ($s['time'] ?? ''))->implode(', ')); ?>
-
-                                    </div>
-                                    <?php endif; ?><?php if(\Livewire\Mechanisms\ExtendBlade\ExtendBlade::isRenderingLivewireComponent()): ?><!--[if ENDBLOCK]><![endif]--><?php endif; ?>
-                                </div>
-
-                                
-                                <?php if(\Livewire\Mechanisms\ExtendBlade\ExtendBlade::isRenderingLivewireComponent()): ?><!--[if BLOCK]><![endif]--><?php endif; ?><?php if($batch->show_seats_public): ?>
-                                    <div class="gc-seat-bar-wrap">
-                                        <div class="gc-seat-bar-label">
-                                            <span>Seat Availability</span>
-                                            <span><?php echo e($batch->filled_seats); ?>/<?php echo e($batch->seat_limit); ?> Seats</span>
-                                        </div>
-                                        <div class="gc-seat-bar">
-                                            <div class="gc-seat-bar-fill" style="width: <?php echo e($batch->fill_percentage); ?>%"></div>
-                                        </div>
-                                        <?php if(\Livewire\Mechanisms\ExtendBlade\ExtendBlade::isRenderingLivewireComponent()): ?><!--[if BLOCK]><![endif]--><?php endif; ?><?php if($batch->remaining_seats <= 5 && $batch->remaining_seats > 0): ?>
-                                            <div style="font-size:0.95rem; color:var(--gold); font-weight:700; margin-top:5px;">
-                                                ⚡ Only <?php echo e($batch->remaining_seats); ?> seats left!
-                                            </div>
-                                        <?php endif; ?><?php if(\Livewire\Mechanisms\ExtendBlade\ExtendBlade::isRenderingLivewireComponent()): ?><!--[if ENDBLOCK]><![endif]--><?php endif; ?>
-                                    </div>
-                                <?php endif; ?><?php if(\Livewire\Mechanisms\ExtendBlade\ExtendBlade::isRenderingLivewireComponent()): ?><!--[if ENDBLOCK]><![endif]--><?php endif; ?>
-
-                                <div class="gc-batch-fee">
-                                    ৳<?php echo e(number_format($batch->fee)); ?>
-
-                                    <span>/ Person</span>
-                                </div>
-
-                                <div style="display: flex; gap: 12px; margin-top: 16px;">
-                                    
-                                    <a href="<?php echo e(route('grooming.show', $batch->id)); ?>"
-                                    style="flex: 1; padding: 12px; border: 1px solid var(--gold); color: var(--gold); text-align: center; font-family: 'SolaimanLipi', 'Jost', sans-serif; font-size: 1rem; font-weight: 600; text-transform: uppercase; text-decoration: none; transition: all 0.2s; display: flex; align-items: center; justify-content: center;"
-                                    onmouseover="this.style.background='var(--gold)'; this.style.color='#fff';"
-                                    onmouseout="this.style.background='transparent'; this.style.color='var(--gold)';">
-                                        View Details
-                                    </a>
-
-                                    
-                                    <button
-                                        class="gc-apply-btn"
-                                        style="flex:1; margin:0; width:auto;"
-                                        <?php if($batch->status === 'full'): ?> disabled <?php endif; ?>
-                                        @click="$dispatch('open-grooming-modal')"
-                                    >
-                                        <?php if(\Livewire\Mechanisms\ExtendBlade\ExtendBlade::isRenderingLivewireComponent()): ?><!--[if BLOCK]><![endif]--><?php endif; ?><?php if($batch->status === 'full'): ?> Seat Full <?php else: ?> Apply Now <?php endif; ?><?php if(\Livewire\Mechanisms\ExtendBlade\ExtendBlade::isRenderingLivewireComponent()): ?><!--[if ENDBLOCK]><![endif]--><?php endif; ?>
-                                    </button>
-                                </div>
-                            </div>
-                        <?php if(\Livewire\Mechanisms\ExtendBlade\ExtendBlade::isRenderingLivewireComponent()): ?><?php \Livewire\Features\SupportCompiledWireKeys\SupportCompiledWireKeys::endLoop(); ?><?php endif; ?><?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?><?php if(\Livewire\Mechanisms\ExtendBlade\ExtendBlade::isRenderingLivewireComponent()): ?><!--[if ENDBLOCK]><![endif]--><?php \Livewire\Features\SupportCompiledWireKeys\SupportCompiledWireKeys::closeLoop(); ?><?php endif; ?>
-                    </div>
-                <?php endif; ?><?php if(\Livewire\Mechanisms\ExtendBlade\ExtendBlade::isRenderingLivewireComponent()): ?><!--[if ENDBLOCK]><![endif]--><?php endif; ?>
+        <div class="gp-section" id="gp-batches">
+            <div class="gp-section-head">
+                <div class="gp-eyebrow">Enrol Now</div>
+                <h2 class="gp-section-title">Upcoming <em>Batches</em></h2>
             </div>
 
-            
-            <div style="margin-bottom: 64px; display:flex; justify-content:center;">
-                <?php if (isset($component)) { $__componentOriginaled4987d3f6007db3445a6067a328a16c = $component; } ?>
+            <div class="gp-batches">
+                <?php if(\Livewire\Mechanisms\ExtendBlade\ExtendBlade::isRenderingLivewireComponent()): ?><!--[if BLOCK]><![endif]--><?php endif; ?><?php if($batches->isEmpty()): ?>
+                    <div class="gp-empty">
+                        No upcoming batches right now.<br>Check back soon or contact us for the schedule.
+                    </div>
+                <?php else: ?>
+                    <?php if(\Livewire\Mechanisms\ExtendBlade\ExtendBlade::isRenderingLivewireComponent()): ?><!--[if BLOCK]><![endif]--><?php \Livewire\Features\SupportCompiledWireKeys\SupportCompiledWireKeys::openLoop(); ?><?php endif; ?><?php $__currentLoopData = $batches; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $batch): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?><?php if(\Livewire\Mechanisms\ExtendBlade\ExtendBlade::isRenderingLivewireComponent()): ?><?php \Livewire\Features\SupportCompiledWireKeys\SupportCompiledWireKeys::startLoopIteration(); ?><?php endif; ?>
+                    <div class="gp-batch">
+                        <div class="gp-batch-accent"></div>
+                        <div class="gp-batch-inner">
+
+                            <div class="gp-batch-top">
+                                <?php
+                                    $sc = match($batch->status) { 'open' => 'gp-status--open', 'filling_fast' => 'gp-status--fast', default => 'gp-status--full' };
+                                    $sl = match($batch->status) { 'open' => 'Open', 'filling_fast' => 'Filling Fast', default => 'Full' };
+                                ?>
+                                <span class="gp-status <?php echo e($sc); ?>"><?php echo e($sl); ?></span>
+                                <span class="gp-batch-date"><?php echo e($batch->start_date->format('d M Y')); ?></span>
+                            </div>
+
+                            <a href="<?php echo e(route('grooming.show', $batch->id)); ?>" class="gp-batch-name"><?php echo e($batch->title); ?></a>
+
+                            <div class="gp-batch-meta">
+                                <?php if(\Livewire\Mechanisms\ExtendBlade\ExtendBlade::isRenderingLivewireComponent()): ?><!--[if BLOCK]><![endif]--><?php endif; ?><?php if($batch->trainer): ?>
+                                <div class="gp-meta-row">
+                                    <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+                                    <?php echo e($batch->trainer); ?>
+
+                                </div>
+                                <?php endif; ?><?php if(\Livewire\Mechanisms\ExtendBlade\ExtendBlade::isRenderingLivewireComponent()): ?><!--[if ENDBLOCK]><![endif]--><?php endif; ?>
+                                <?php if(\Livewire\Mechanisms\ExtendBlade\ExtendBlade::isRenderingLivewireComponent()): ?><!--[if BLOCK]><![endif]--><?php endif; ?><?php if($batch->venue): ?>
+                                <div class="gp-meta-row">
+                                    <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 10c0 7-9 13-9 13S3 17 3 10a9 9 0 0118 0z"/><circle cx="12" cy="10" r="3"/></svg>
+                                    <?php echo e($batch->venue); ?>
+
+                                </div>
+                                <?php endif; ?><?php if(\Livewire\Mechanisms\ExtendBlade\ExtendBlade::isRenderingLivewireComponent()): ?><!--[if ENDBLOCK]><![endif]--><?php endif; ?>
+                                <?php if(\Livewire\Mechanisms\ExtendBlade\ExtendBlade::isRenderingLivewireComponent()): ?><!--[if BLOCK]><![endif]--><?php endif; ?><?php if(!empty($batch->schedule_json)): ?>
+                                <div class="gp-meta-row">
+                                    <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></svg>
+                                    <?php echo e(collect($batch->schedule_json)->map(fn($s) => ($s['day'] ?? '') . ' ' . ($s['time'] ?? ''))->implode(' · ')); ?>
+
+                                </div>
+                                <?php endif; ?><?php if(\Livewire\Mechanisms\ExtendBlade\ExtendBlade::isRenderingLivewireComponent()): ?><!--[if ENDBLOCK]><![endif]--><?php endif; ?>
+                            </div>
+
+                            <?php if(\Livewire\Mechanisms\ExtendBlade\ExtendBlade::isRenderingLivewireComponent()): ?><!--[if BLOCK]><![endif]--><?php endif; ?><?php if($batch->show_seats_public): ?>
+                            <div class="gp-seat">
+                                <div class="gp-seat-head">
+                                    <span>Seats</span>
+                                    <span><?php echo e($batch->filled_seats); ?> / <?php echo e($batch->seat_limit); ?></span>
+                                </div>
+                                <div class="gp-seat-track">
+                                    <div class="gp-seat-fill" style="width:<?php echo e($batch->fill_percentage); ?>%"></div>
+                                </div>
+                                <?php if(\Livewire\Mechanisms\ExtendBlade\ExtendBlade::isRenderingLivewireComponent()): ?><!--[if BLOCK]><![endif]--><?php endif; ?><?php if($batch->remaining_seats > 0 && $batch->remaining_seats <= 5): ?>
+                                    <div class="gp-seat-warn">⚡ Only <?php echo e($batch->remaining_seats); ?> seats left</div>
+                                <?php endif; ?><?php if(\Livewire\Mechanisms\ExtendBlade\ExtendBlade::isRenderingLivewireComponent()): ?><!--[if ENDBLOCK]><![endif]--><?php endif; ?>
+                            </div>
+                            <?php endif; ?><?php if(\Livewire\Mechanisms\ExtendBlade\ExtendBlade::isRenderingLivewireComponent()): ?><!--[if ENDBLOCK]><![endif]--><?php endif; ?>
+
+                            <div class="gp-batch-fee">৳<?php echo e(number_format($batch->fee)); ?><small>/ person</small></div>
+
+                            <div class="gp-batch-actions">
+                                <a href="<?php echo e(route('grooming.show', $batch->id)); ?>" class="gp-btn-outline">View Details</a>
+                                <button
+                                    class="gp-btn-gold"
+                                    <?php if($batch->status === 'full'): ?> disabled <?php endif; ?>
+                                    @click="$dispatch('open-grooming-modal')"
+                                >
+                                    <?php echo e($batch->status === 'full' ? 'Seats Full' : 'Apply Now'); ?>
+
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                    <?php if(\Livewire\Mechanisms\ExtendBlade\ExtendBlade::isRenderingLivewireComponent()): ?><?php \Livewire\Features\SupportCompiledWireKeys\SupportCompiledWireKeys::endLoop(); ?><?php endif; ?><?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?><?php if(\Livewire\Mechanisms\ExtendBlade\ExtendBlade::isRenderingLivewireComponent()): ?><!--[if ENDBLOCK]><![endif]--><?php \Livewire\Features\SupportCompiledWireKeys\SupportCompiledWireKeys::closeLoop(); ?><?php endif; ?>
+                <?php endif; ?><?php if(\Livewire\Mechanisms\ExtendBlade\ExtendBlade::isRenderingLivewireComponent()): ?><!--[if ENDBLOCK]><![endif]--><?php endif; ?>
+            </div>
+        </div>
+
+        
+        <div class="gp-ad"><?php if (isset($component)) { $__componentOriginaled4987d3f6007db3445a6067a328a16c = $component; } ?>
 <?php if (isset($attributes)) { $__attributesOriginaled4987d3f6007db3445a6067a328a16c = $attributes; } ?>
 <?php $component = App\View\Components\AdBanner::resolve(['position' => 'grooming_middle'] + (isset($attributes) && $attributes instanceof Illuminate\View\ComponentAttributeBag ? $attributes->all() : [])); ?>
 <?php $component->withName('ad-banner'); ?>
@@ -1408,117 +937,103 @@
 <?php if (isset($__componentOriginaled4987d3f6007db3445a6067a328a16c)): ?>
 <?php $component = $__componentOriginaled4987d3f6007db3445a6067a328a16c; ?>
 <?php unset($__componentOriginaled4987d3f6007db3445a6067a328a16c); ?>
-<?php endif; ?>
-            </div>
-
-            
-            <div class="gc-gallery-side" x-data="{ filter: 'all', modalOpen: false, currentImage: '' }">
-                <div class="gc-section-head" style="text-align: left;">
-                    <div class="gc-section-eyebrow">Gallery</div>
-                    <h2 class="gc-section-title">Class <strong>Moments</strong></h2>
-                </div>
-
-                <?php if(\Livewire\Mechanisms\ExtendBlade\ExtendBlade::isRenderingLivewireComponent()): ?><!--[if BLOCK]><![endif]--><?php endif; ?><?php if($gallery->isNotEmpty()): ?>
-                    <div class="gc-gallery-filters" style="justify-content: flex-start;">
-                        <button class="gc-gallery-filter" :class="filter==='all'?'active':''" @click="filter='all'">All</button>
-                        <button class="gc-gallery-filter" :class="filter==='training'?'active':''" @click="filter='training'">Training</button>
-                        <button class="gc-gallery-filter" :class="filter==='graduation'?'active':''" @click="filter='graduation'">Graduation</button>
-                        <button class="gc-gallery-filter" :class="filter==='event'?'active':''" @click="filter='event'">Event</button>
-                    </div>
-
-                    <div class="gc-gallery-grid-3x4">
-                        <?php if(\Livewire\Mechanisms\ExtendBlade\ExtendBlade::isRenderingLivewireComponent()): ?><!--[if BLOCK]><![endif]--><?php \Livewire\Features\SupportCompiledWireKeys\SupportCompiledWireKeys::openLoop(); ?><?php endif; ?><?php $__currentLoopData = $gallery; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $photo): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?><?php if(\Livewire\Mechanisms\ExtendBlade\ExtendBlade::isRenderingLivewireComponent()): ?><?php \Livewire\Features\SupportCompiledWireKeys\SupportCompiledWireKeys::startLoopIteration(); ?><?php endif; ?>
-                        <div class="gc-gallery-item"
-                            x-show="filter === 'all' || filter === '<?php echo e($photo->category); ?>'"
-                            x-transition
-                            @click="currentImage = '<?php echo e(asset('storage/' . $photo->image)); ?>'; modalOpen = true">
-                            <img src="<?php echo e(asset('storage/' . $photo->image)); ?>" alt="<?php echo e($photo->title); ?>" loading="lazy">
-                        </div>
-                        <?php if(\Livewire\Mechanisms\ExtendBlade\ExtendBlade::isRenderingLivewireComponent()): ?><?php \Livewire\Features\SupportCompiledWireKeys\SupportCompiledWireKeys::endLoop(); ?><?php endif; ?><?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?><?php if(\Livewire\Mechanisms\ExtendBlade\ExtendBlade::isRenderingLivewireComponent()): ?><!--[if ENDBLOCK]><![endif]--><?php \Livewire\Features\SupportCompiledWireKeys\SupportCompiledWireKeys::closeLoop(); ?><?php endif; ?>
-                    </div>
-
-                    
-                    <div>
-                        <?php echo e($gallery->links('vendor.pagination.custom-numbered')); ?>
-
-                    </div>
-                    <!-- Lightbox Modal -->
-                    <div class="gc-lightbox-overlay"
-                        x-show="modalOpen"
-                        x-transition.opacity.duration.300ms
-                        @click.self="modalOpen = false"
-                        @keydown.escape.window="modalOpen = false"
-                        style="display: none;">
-
-                        <button class="gc-lightbox-close" @click="modalOpen = false">
-                            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                                <line x1="18" y1="6" x2="6" y2="18"></line>
-                                <line x1="6" y1="6" x2="18" y2="18"></line>
-                            </svg>
-                        </button>
-
-                        <img :src="currentImage" alt="Expanded View" @click.stop>
-                    </div>
-                <?php else: ?>
-                    <p style="color:var(--text-muted); font-size: 0.9rem;">No images available.</p>
-                <?php endif; ?><?php if(\Livewire\Mechanisms\ExtendBlade\ExtendBlade::isRenderingLivewireComponent()): ?><!--[if ENDBLOCK]><![endif]--><?php endif; ?>
-            </div>
-
-        </div> 
+<?php endif; ?></div>
 
         
-        <div class="gc-sidebar">
-            <div class="gc-sidebar-title">
-                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                    <path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"></path><path d="M13.73 21a2 2 0 0 1-3.46 0"></path>
-                </svg>
-                Notice Board
-            </div>
+        <div class="gp-section">
+            <div class="gp-two-col">
 
-            <div class="gc-notices-scroll">
-                <?php if(\Livewire\Mechanisms\ExtendBlade\ExtendBlade::isRenderingLivewireComponent()): ?><!--[if BLOCK]><![endif]--><?php endif; ?><?php if($notices->isNotEmpty()): ?>
-                    <?php if(\Livewire\Mechanisms\ExtendBlade\ExtendBlade::isRenderingLivewireComponent()): ?><!--[if BLOCK]><![endif]--><?php \Livewire\Features\SupportCompiledWireKeys\SupportCompiledWireKeys::openLoop(); ?><?php endif; ?><?php $__currentLoopData = $notices; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $notice): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?><?php if(\Livewire\Mechanisms\ExtendBlade\ExtendBlade::isRenderingLivewireComponent()): ?><?php \Livewire\Features\SupportCompiledWireKeys\SupportCompiledWireKeys::startLoopIteration(); ?><?php endif; ?>
-                        <div class="gc-notice-card <?php echo e($notice->priority); ?>">
-                            <strong style="display:block; margin-bottom:4px; font-size:1.25rem; font-weight: 600;">
-                                <?php echo e($notice->title); ?>
-
-                            </strong>
-                            <span style="color: inherit;"><?php echo e($notice->message); ?></span>
-                        </div>
-                    <?php if(\Livewire\Mechanisms\ExtendBlade\ExtendBlade::isRenderingLivewireComponent()): ?><?php \Livewire\Features\SupportCompiledWireKeys\SupportCompiledWireKeys::endLoop(); ?><?php endif; ?><?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?><?php if(\Livewire\Mechanisms\ExtendBlade\ExtendBlade::isRenderingLivewireComponent()): ?><!--[if ENDBLOCK]><![endif]--><?php \Livewire\Features\SupportCompiledWireKeys\SupportCompiledWireKeys::closeLoop(); ?><?php endif; ?>
-                <?php else: ?>
-                    <p style="color:var(--text-muted); font-size: 0.95rem;">There are no new notices at the moment.</p>
-                <?php endif; ?><?php if(\Livewire\Mechanisms\ExtendBlade\ExtendBlade::isRenderingLivewireComponent()): ?><!--[if ENDBLOCK]><![endif]--><?php endif; ?>
-            </div>
-
-            
-            <div class="gc-sidebar-stats">
-                <div class="gc-stats-grid">
-                    <div class="gc-stat-box">
-                        <div class="gc-stat-number">200+</div>
-                        <div class="gc-stat-label">Success Students</div>
+                
+                <div class="gp-gallery-col" x-data="{ filter: 'all', lightboxOpen: false, lightboxSrc: '' }">
+                    <div class="gp-section-head">
+                        <div class="gp-eyebrow">Moments</div>
+                        <h2 class="gp-section-title">Class <em>Gallery</em></h2>
                     </div>
-                    <div class="gc-stat-box">
-                        <div class="gc-stat-number">100%</div>
-                        <div class="gc-stat-label">Practical Training</div>
+
+                    <?php if(\Livewire\Mechanisms\ExtendBlade\ExtendBlade::isRenderingLivewireComponent()): ?><!--[if BLOCK]><![endif]--><?php endif; ?><?php if($gallery->isNotEmpty()): ?>
+                        <div class="gp-gallery-filters">
+                            <button class="gp-filter" :class="filter==='all'?'active':''" @click="filter='all'">All</button>
+                            <button class="gp-filter" :class="filter==='training'?'active':''" @click="filter='training'">Training</button>
+                            <button class="gp-filter" :class="filter==='graduation'?'active':''" @click="filter='graduation'">Graduation</button>
+                            <button class="gp-filter" :class="filter==='event'?'active':''" @click="filter='event'">Event</button>
+                        </div>
+
+                        <div class="gp-gallery-grid">
+                            <?php if(\Livewire\Mechanisms\ExtendBlade\ExtendBlade::isRenderingLivewireComponent()): ?><!--[if BLOCK]><![endif]--><?php \Livewire\Features\SupportCompiledWireKeys\SupportCompiledWireKeys::openLoop(); ?><?php endif; ?><?php $__currentLoopData = $gallery; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $photo): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?><?php if(\Livewire\Mechanisms\ExtendBlade\ExtendBlade::isRenderingLivewireComponent()): ?><?php \Livewire\Features\SupportCompiledWireKeys\SupportCompiledWireKeys::startLoopIteration(); ?><?php endif; ?>
+                            <div class="gp-gallery-item"
+                                x-show="filter === 'all' || filter === '<?php echo e($photo->category); ?>'"
+                                x-transition
+                                @click="lightboxSrc = '<?php echo e(asset('storage/' . $photo->image)); ?>'; lightboxOpen = true">
+                                <img src="<?php echo e(asset('storage/' . $photo->image)); ?>" alt="<?php echo e($photo->title); ?>" loading="lazy">
+                            </div>
+                            <?php if(\Livewire\Mechanisms\ExtendBlade\ExtendBlade::isRenderingLivewireComponent()): ?><?php \Livewire\Features\SupportCompiledWireKeys\SupportCompiledWireKeys::endLoop(); ?><?php endif; ?><?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?><?php if(\Livewire\Mechanisms\ExtendBlade\ExtendBlade::isRenderingLivewireComponent()): ?><!--[if ENDBLOCK]><![endif]--><?php \Livewire\Features\SupportCompiledWireKeys\SupportCompiledWireKeys::closeLoop(); ?><?php endif; ?>
+                        </div>
+
+                        <div style="margin-top: 20px;">
+                            <?php echo e($gallery->links('vendor.pagination.custom-numbered')); ?>
+
+                        </div>
+
+                        
+                        <div class="gp-lightbox"
+                            x-show="lightboxOpen"
+                            x-transition.opacity.duration.250ms
+                            @click.self="lightboxOpen = false"
+                            @keydown.escape.window="lightboxOpen = false"
+                            style="display:none">
+                            <button class="gp-lightbox-close" @click="lightboxOpen = false">
+                                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+                            </button>
+                            <img :src="lightboxSrc" alt="Gallery photo" @click.stop>
+                        </div>
+                    <?php else: ?>
+                        <p style="color:var(--p-faint); font-size:0.9rem; font-family:var(--p-font-bn);">No gallery images yet.</p>
+                    <?php endif; ?><?php if(\Livewire\Mechanisms\ExtendBlade\ExtendBlade::isRenderingLivewireComponent()): ?><!--[if ENDBLOCK]><![endif]--><?php endif; ?>
+                </div>
+
+                
+                <div class="gp-sidebar">
+                    <div class="gp-sidebar-head">
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 0 1-3.46 0"/></svg>
+                        <span class="gp-sidebar-head-title">Notice Board</span>
+                    </div>
+
+                    <div class="gp-notices">
+                        <?php if(\Livewire\Mechanisms\ExtendBlade\ExtendBlade::isRenderingLivewireComponent()): ?><!--[if BLOCK]><![endif]--><?php endif; ?><?php if($notices->isNotEmpty()): ?>
+                            <?php if(\Livewire\Mechanisms\ExtendBlade\ExtendBlade::isRenderingLivewireComponent()): ?><!--[if BLOCK]><![endif]--><?php \Livewire\Features\SupportCompiledWireKeys\SupportCompiledWireKeys::openLoop(); ?><?php endif; ?><?php $__currentLoopData = $notices; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $notice): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?><?php if(\Livewire\Mechanisms\ExtendBlade\ExtendBlade::isRenderingLivewireComponent()): ?><?php \Livewire\Features\SupportCompiledWireKeys\SupportCompiledWireKeys::startLoopIteration(); ?><?php endif; ?>
+                            <div class="gp-notice-item gp-notice-item--<?php echo e($notice->priority); ?>">
+                                <div class="gp-notice-title"><?php echo e($notice->title); ?></div>
+                                <div class="gp-notice-body"><?php echo e($notice->message); ?></div>
+                            </div>
+                            <?php if(\Livewire\Mechanisms\ExtendBlade\ExtendBlade::isRenderingLivewireComponent()): ?><?php \Livewire\Features\SupportCompiledWireKeys\SupportCompiledWireKeys::endLoop(); ?><?php endif; ?><?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?><?php if(\Livewire\Mechanisms\ExtendBlade\ExtendBlade::isRenderingLivewireComponent()): ?><!--[if ENDBLOCK]><![endif]--><?php \Livewire\Features\SupportCompiledWireKeys\SupportCompiledWireKeys::closeLoop(); ?><?php endif; ?>
+                        <?php else: ?>
+                            <div class="gp-no-notices">No new notices.</div>
+                        <?php endif; ?><?php if(\Livewire\Mechanisms\ExtendBlade\ExtendBlade::isRenderingLivewireComponent()): ?><!--[if ENDBLOCK]><![endif]--><?php endif; ?>
+                    </div>
+
+                    <div class="gp-sidebar-foot">
+                        <div class="gp-sb-stats">
+                            <div class="gp-sb-stat">
+                                <div class="gp-sb-stat-num">200+</div>
+                                <div class="gp-sb-stat-label">Graduates</div>
+                            </div>
+                            <div class="gp-sb-stat">
+                                <div class="gp-sb-stat-num">100%</div>
+                                <div class="gp-sb-stat-label">Practical</div>
+                            </div>
+                        </div>
+                        <button class="gp-sb-apply" @click="$dispatch('open-grooming-modal')">
+                            Apply Now
+                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
+                        </button>
                     </div>
                 </div>
 
-                <button class="gc-sidebar-apply-btn" @click="$dispatch('open-grooming-modal')">
-                    Apply Now
-                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                        <line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/>
-                    </svg>
-                </button>
             </div>
         </div>
 
-    </div>
-
-
-    
-    <div style="margin-bottom: 40px;">
-        <?php if (isset($component)) { $__componentOriginaled4987d3f6007db3445a6067a328a16c = $component; } ?>
+        
+        <div class="gp-ad"><?php if (isset($component)) { $__componentOriginaled4987d3f6007db3445a6067a328a16c = $component; } ?>
 <?php if (isset($attributes)) { $__attributesOriginaled4987d3f6007db3445a6067a328a16c = $attributes; } ?>
 <?php $component = App\View\Components\AdBanner::resolve(['position' => 'grooming_bottom'] + (isset($attributes) && $attributes instanceof Illuminate\View\ComponentAttributeBag ? $attributes->all() : [])); ?>
 <?php $component->withName('ad-banner'); ?>
@@ -1539,43 +1054,30 @@
 <?php if (isset($__componentOriginaled4987d3f6007db3445a6067a328a16c)): ?>
 <?php $component = $__componentOriginaled4987d3f6007db3445a6067a328a16c; ?>
 <?php unset($__componentOriginaled4987d3f6007db3445a6067a328a16c); ?>
-<?php endif; ?>
-    </div>
-    
-    <div class="gc-cta-banner">
-        <div class="gc-cta-banner-title">Get Your Career Started Today</div>
-        <p class="gc-cta-banner-sub">Limited Seats Available. Apply Now or Contact Us for More Information.</p>
+<?php endif; ?></div>
 
-        <div style="position: relative; z-index: 10; display: flex; gap: 16px; justify-content: center; align-items: center; flex-wrap: wrap;">
+        
+        <div class="gp-cta">
+            <h2 class="gp-cta-title">Begin Your Journey Today</h2>
+            <p class="gp-cta-sub">Limited seats available. Secure your spot now.</p>
+            <div class="gp-cta-actions">
+                <button class="gp-cta-btn-gold" @click="$dispatch('open-grooming-modal')">
+                    Apply Now
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
+                </button>
 
-            
-            <button class="gc-hero-cta" @click="$dispatch('open-grooming-modal')" style="margin: 0;">
-                Apply Now
-                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                    <line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/>
-                </svg>
-            </button>
-
-            
-            <?php if(\Livewire\Mechanisms\ExtendBlade\ExtendBlade::isRenderingLivewireComponent()): ?><!--[if BLOCK]><![endif]--><?php endif; ?><?php if($settings?->contact_phone): ?>
-            <?php
-                $wa = preg_replace('/[^0-9]/', '', $settings->contact_phone);
-            ?>
-            <a href="https://wa.me/<?php echo e($wa); ?>?text=আমি%20গ্রুমিং%20ক্লাস%20সম্পর্কে%20বিস্তারিত%20জানতে%20চাই।"
-               target="_blank"
-               style="display: inline-flex; align-items: center; gap: 10px; padding: 15px 32px; background: #25D366; color: #fff; font-family: 'SolaimanLipi', 'Jost', sans-serif; font-size: var(--gc-text-md); font-weight: 600; text-transform: uppercase; letter-spacing: 0.12em; border-radius: 2px; text-decoration: none; transition: transform 0.2s, box-shadow 0.2s;"
-               onmouseover="this.style.transform='translateY(-2px)'; this.style.boxShadow='0 8px 24px rgba(37, 211, 102, 0.25)';"
-               onmouseout="this.style.transform='translateY(0)'; this.style.boxShadow='none';">
-                <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
-                    <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.422-.272.347-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413Z"/>
-                </svg>
-                Whatsapp
-            </a>
-            <?php endif; ?><?php if(\Livewire\Mechanisms\ExtendBlade\ExtendBlade::isRenderingLivewireComponent()): ?><!--[if ENDBLOCK]><![endif]--><?php endif; ?>
+                <?php if(\Livewire\Mechanisms\ExtendBlade\ExtendBlade::isRenderingLivewireComponent()): ?><!--[if BLOCK]><![endif]--><?php endif; ?><?php if($settings?->contact_phone): ?>
+                <?php $wa = preg_replace('/[^0-9]/', '', $settings->contact_phone); ?>
+                <a href="https://wa.me/<?php echo e($wa); ?>?text=আমি%20গ্রুমিং%20ক্লাস%20সম্পর্কে%20জানতে%20চাই।"
+                   target="_blank" rel="noopener" class="gp-cta-btn-wa">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.422-.272.347-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413Z"/></svg>
+                    WhatsApp
+                </a>
+                <?php endif; ?><?php if(\Livewire\Mechanisms\ExtendBlade\ExtendBlade::isRenderingLivewireComponent()): ?><!--[if ENDBLOCK]><![endif]--><?php endif; ?>
+            </div>
         </div>
+
     </div>
-
 </div>
-
 </div>
 <?php /**PATH /var/www/html/resources/views/livewire/grooming-page.blade.php ENDPATH**/ ?>

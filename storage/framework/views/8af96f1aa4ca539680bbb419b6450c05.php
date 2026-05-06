@@ -170,7 +170,7 @@
             --btn-fill-hover: #2e2820;
             --badge-ok-bg: #eef6ee;
             --badge-ok-color: #2d6a30;
-            --ticker-bg: #d40303;
+            --ticker-bg: #f00001;
             --ticker-color: #faf5f5;
             --nav-h: 72px;
         }
@@ -207,8 +207,8 @@
             /* Brighter red on hover */
             --badge-ok-bg: rgba(46, 106, 48, 0.18);
             --badge-ok-color: #81c784;
-            --ticker-bg: #1a1a1a;
-            --ticker-color: #ff4444;
+            --ticker-bg: #f00001;
+            --ticker-color: #faf5f5;
             --nav-h: 72px;
         }
 
@@ -384,7 +384,7 @@
             left: 0;
             right: 0;
             height: var(--nav-h);
-            z-index: 1000;
+            z-index: 1005;
             display: flex;
             align-items: center;
             transition: background 0.45s, box-shadow 0.45s, backdrop-filter 0.45s;
@@ -411,36 +411,38 @@
         /* Brand */
         /* ── Dynamic Logo ── */
         .nav-brand-logo {
-            height: 52px;
-            /* Base size within the 72px navbar */
-            width: auto;
-            object-fit: contain;
-            display: block;
+    height: 60px;
+    width: auto;
+    object-fit: contain;
+    display: block;
 
-            /* The Overlap Magic */
-            transform: scale(1.45);
-            /* Visually scales it to ~75px to break the boundary */
-            transform-origin: left center;
-            /* Keeps it locked to the left edge */
+    /* Push logo DOWN to overlap the ticker below */
+    position: relative;
+    top: 5px; /* Adjust this to control how much it overlaps the ticker */
 
-            /* Adds a soft shadow so the overlapping part pops off the red ticker */
-            filter: drop-shadow(0 4px 8px rgba(0, 0, 0, 0.12));
+    transform: scale(1.45);
+    transform-origin: left center;
+    transition: transform 0.3s ease;
 
-            transition: transform 0.3s ease;
-        }
+    /* Ensure it renders above the ticker */
+    z-index: 1010;
+}
+
+/* Mobile */
+@media (max-width: 768px) {
+    .nav-brand-logo {
+        height: 65px;
+        transform: scale(1.25);
+        top: 8px; /* Slightly less overlap on mobile */
+    }
+}
 
         [data-theme="dark"] .nav-brand-logo {
             filter: drop-shadow(0 4px 8px rgba(0, 0, 0, 0.4));
         }
 
         /* Mobile adjustments for the overlapping logo */
-        @media (max-width: 768px) {
-            .nav-brand-logo {
-                height: 42px;
-                transform: scale(1.25);
-                /* A slightly smaller overlap on mobile */
-            }
-        }
+
 
         .nav-brand {
             display: flex;

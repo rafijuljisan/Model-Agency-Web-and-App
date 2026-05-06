@@ -10,7 +10,7 @@ use Filament\Forms\Components\Toggle;
 use Filament\Schemas\Schema;
 use Filament\Forms\Components\RichEditor;
 use Filament\Forms\Components\Textarea;
-
+use Filament\Forms\Components\FileUpload;
 
 class GroomingBatchForm
 {
@@ -48,12 +48,52 @@ class GroomingBatchForm
                 ->columnSpanFull()
                 ->nullable(),
 
+            Repeater::make('eligibility')
+                ->label('Eligibility / Requirements')
+                ->schema([
+                    TextInput::make('requirement')
+                        ->required()
+                        ->placeholder('e.g. Minimum height 5\'4" for females'),
+                ])
+                ->columnSpanFull()
+                ->nullable(),
+
+            Repeater::make('faqs')
+                ->label('FAQ')
+                ->schema([
+                    TextInput::make('question')->required()->placeholder('e.g. Do I need prior experience?'),
+                    Textarea::make('answer')->required()->placeholder('No prior experience needed...')->rows(2),
+                ])
+                ->columns(2)
+                ->columnSpanFull()
+                ->nullable(),
+
             DatePicker::make('start_date')->required(),
             DatePicker::make('end_date')->nullable(),
 
             TextInput::make('trainer')
                 ->placeholder('e.g. Nusrat Jahan')
                 ->nullable(),
+
+            FileUpload::make('trainer_image')
+                ->label('Trainer Photo')
+                ->image()
+                ->disk('public')
+                ->directory('trainers')
+                ->nullable(),
+
+            TextInput::make('trainer_designation')
+                ->label('Trainer Designation')
+                ->placeholder('e.g. Senior Grooming Expert, 10+ years experience')
+                ->nullable(),
+
+            Textarea::make('trainer_bio')
+                ->label('Trainer Bio')
+                ->placeholder('Short biography of the trainer...')
+                ->rows(3)
+                ->nullable()
+                ->columnSpanFull(),
+
             TextInput::make('venue')
                 ->placeholder('e.g. House 12, Road 5, Dhanmondi, Dhaka')
                 ->nullable(),
@@ -69,7 +109,7 @@ class GroomingBatchForm
                 ->required()
                 ->default(20)
                 ->label('Total Seats'),
-                
+
             Toggle::make('show_seats_public')
                 ->label('Show seat availability to public')
                 ->default(true),

@@ -10,6 +10,11 @@ class GroomingBatch extends Model
         'trainer', 'seat_limit', 'filled_seats', 'fee', 'status', 'is_active',
         'venue',
         'show_seats_public',
+        'trainer_image',
+        'trainer_designation',
+        'trainer_bio',
+        'eligibility',
+        'faqs',
     ];
 
     protected $casts = [
@@ -20,6 +25,8 @@ class GroomingBatch extends Model
         'course_modules' => 'array',   // <-- Add this
         'is_active' => 'boolean',
         'show_seats_public' => 'boolean',
+        'eligibility' => 'array',
+        'faqs'        => 'array',
     ];
 
     public function applications()
