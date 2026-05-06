@@ -6,8 +6,10 @@ use Illuminate\Database\Eloquent\Model;
 class GroomingBatch extends Model
 {
     protected $fillable = [
-        'title', 'benefits', 'course_modules', 'start_date', 'end_date', 'schedule_json',
-        'trainer', 'seat_limit', 'filled_seats', 'fee', 'status', 'is_active'
+        'title','description', 'benefits', 'course_modules', 'start_date', 'end_date', 'schedule_json',
+        'trainer', 'seat_limit', 'filled_seats', 'fee', 'status', 'is_active',
+        'venue',
+        'show_seats_public',
     ];
 
     protected $casts = [
@@ -17,6 +19,7 @@ class GroomingBatch extends Model
         'benefits' => 'array',         // <-- Add this
         'course_modules' => 'array',   // <-- Add this
         'is_active' => 'boolean',
+        'show_seats_public' => 'boolean',
     ];
 
     public function applications()

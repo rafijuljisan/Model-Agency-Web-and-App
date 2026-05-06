@@ -1,4 +1,4 @@
-<div>
+<div x-data>
     <style>
         /* =============================================
            FONT SETUP — SolaimanLipi for Bangla (Priority)
@@ -24,23 +24,14 @@
             --font-bangla: 'SolaimanLipi', 'Jost', sans-serif;
             --font-latin: 'Jost', 'SolaimanLipi', sans-serif;
 
-            /* Fluid type scale — slightly increased across all levels */
-            --text-xs: clamp(0.85rem, 1.8vw, 0.95rem);
-            /* labels, captions */
-            --text-sm: clamp(0.95rem, 2.2vw, 1.1rem);
-            /* meta, tags */
-            --text-base: clamp(1.1rem, 2.4vw, 1.25rem);
-            /* body text */
-            --text-md: clamp(1.15rem, 2.6vw, 1.35rem);
-            /* module topics, benefit desc */
-            --text-lg: clamp(1.25rem, 2.8vw, 1.5rem);
-            /* benefit titles, section labels */
-            --text-xl: clamp(1.4rem, 3.2vw, 2rem);
-            /* section headings */
-            --text-2xl: clamp(1.7rem, 4.2vw, 2.6rem);
-            /* sidebar price */
-            --text-3xl: clamp(1.85rem, 5.2vw, 3rem);
-            /* hero title */
+            --text-xs:   clamp(0.7rem,  1.4vw, 0.75rem);   /* was 0.85–0.95 → labels, captions */
+            --text-sm:   clamp(0.78rem, 1.6vw, 0.85rem);   /* was 0.95–1.1  → meta, tags */
+            --text-base: clamp(0.875rem,1.8vw, 0.95rem);   /* was 1.1–1.25  → body text */
+            --text-md:   clamp(0.9rem,  2vw,   1rem);       /* was 1.15–1.35 → desc text */
+            --text-lg:   clamp(1rem,    2.2vw, 1.1rem);     /* was 1.25–1.5  → titles */
+            --text-xl:   clamp(1.15rem, 2.6vw, 1.35rem);   /* was 1.4–2     → section heads */
+            --text-2xl:  clamp(1.4rem,  3vw,   1.75rem);   /* was 1.7–2.6   → sidebar price */
+            --text-3xl:  clamp(1.6rem,  4vw,   2.2rem);    /* was 1.85–3    → hero title */
         }
 
         /* =============================================
@@ -664,30 +655,44 @@
                     </div>
                 @endif
 
-                {{-- Seats --}}
-                <div class="sidebar-meta-item">
-                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                        <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2" />
-                        <circle cx="9" cy="7" r="4" />
-                        <path d="M23 21v-2a4 4 0 0 0-3-3.87" />
-                        <path d="M16 3.13a4 4 0 0 1 0 7.75" />
-                    </svg>
-                    <div style="width: 100%;">
-                        <div class="s-meta-label">
-                            <span>Seats</span>
-                            <span>{{ $batch->filled_seats }}/{{ $batch->seat_limit }}</span>
+                @if($batch->venue)
+                    <div class="sidebar-meta-item">
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M21 10c0 7-9 13-9 13S3 17 3 10a9 9 0 0118 0z"/><circle cx="12" cy="10" r="3"/>
+                        </svg>
+                        <div>
+                            <div class="s-meta-label">Venue</div>
+                            <div class="s-meta-value">{{ $batch->venue }}</div>
                         </div>
-                        <div class="seat-bar-track">
-                            <div class="seat-bar-fill"
-                                style="width: {{ $batch->fill_percentage ?? ($batch->filled_seats / $batch->seat_limit * 100) }}%;">
+                    </div>
+                @endif
+
+                {{-- Seats --}}
+                @if($batch->show_seats_public)
+                    <div class="sidebar-meta-item">
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2" />
+                            <circle cx="9" cy="7" r="4" />
+                            <path d="M23 21v-2a4 4 0 0 0-3-3.87" />
+                            <path d="M16 3.13a4 4 0 0 1 0 7.75" />
+                        </svg>
+                        <div style="width: 100%;">
+                            <div class="s-meta-label">
+                                <span>Seats</span>
+                                <span>{{ $batch->filled_seats }}/{{ $batch->seat_limit }}</span>
+                            </div>
+                            <div class="seat-bar-track">
+                                <div class="seat-bar-fill"
+                                    style="width: {{ $batch->fill_percentage ?? ($batch->filled_seats / $batch->seat_limit * 100) }}%;">
+                                </div>
                             </div>
                         </div>
                     </div>
-                </div>
+                @endif
             </div>
 
             {{-- CTA — hidden on mobile, mobile-cta-bar handles it --}}
-            <a href="/grooming-lab" class="btn-fill btn-apply">Apply Now</a>
+            <button class="btn-fill btn-apply" @click="$dispatch('open-grooming-modal')">Apply Now</button>
 
             {{-- Social Share --}}
             <div class="share-bar" style="margin-top: 20px; padding-top: 20px; border-top: 1px solid var(--border);">
@@ -725,7 +730,7 @@
     {{-- MOBILE STICKY CTA BAR (visible only on ≤768px) --}}
     <div class="mobile-cta-bar">
         <span class="mobile-cta-price">৳{{ number_format($batch->fee) }}</span>
-        <a href="/grooming-lab" class="btn-fill mobile-cta-btn">Apply Now</a>
+        <button class="btn-fill mobile-cta-btn" @click="$dispatch('open-grooming-modal')">Apply Now</button>
     </div>
     <script>
         function copyPageLink(btnId = 'copyLinkBtn', textId = 'copyLinkText') {

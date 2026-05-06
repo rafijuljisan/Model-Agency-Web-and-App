@@ -400,68 +400,75 @@
         .ap-skills {
             display: flex;
             flex-wrap: wrap;
-            gap: 8px;
+            gap: 6px;
         }
 
         .ap-skill {
-            padding: 7px 16px;
-            background: var(--bg-primary);
-            border: 1px solid var(--border-strong);
-            font-size: 0.82rem;
+            background: var(--bg-primary);      /* #faf5f5 light / #0a0a0a dark — very soft */
+            color: var(--text-muted);           /* #4d4545 light / #e4e3e3 dark */
+            border: 1px solid var(--border);    /* rgba(180,118,118,0.2) — barely visible */
+            border-radius: 100px;
+            padding: 4px 12px;
+            font-size: 0.8rem;
             font-weight: 500;
-            color: var(--text-secondary);
-            letter-spacing: 0.05em;
-            border-radius: 2px;
-            transition: border-color 0.2s, color 0.2s, background 0.2s;
+            transition: background 0.2s, color 0.2s, border-color 0.2s;
         }
 
         .ap-skill:hover {
-            border-color: var(--gold);
-            color: var(--gold);
-            background: var(--gold-bg);
+            background: var(--gold-bg);         /* rgba(184,74,74,0.07) — very subtle red tint */
+            color: var(--gold);                 /* #c50000 */
+            border-color: var(--border-strong); /* rgba(180,158,118,0.42) */
         }
 
         /* Social links */
-        .ap-socials {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 10px;
-        }
+        /* Social row list */
+        .ap-socials { display: flex; flex-direction: column; }
 
         .ap-social-btn {
-            display: inline-flex;
+            display: flex;
             align-items: center;
-            gap: 8px;
-            padding: 10px 20px;
-            background: var(--bg-primary);
-            border: 1px solid var(--border-strong);
+            gap: 12px;
+            padding: 10px 0;
+            border-bottom: 1px solid var(--border-light);
             color: var(--text-secondary);
             text-decoration: none;
-            font-size: 0.8rem;
-            font-weight: 600;
-            letter-spacing: 0.1em;
-            text-transform: uppercase;
-            transition: all 0.22s;
-            font-family: 'Jost', sans-serif;
+            font-size: 0.9rem;
+            font-weight: 500;
+            transition: color 0.15s;
         }
 
-        .ap-social-btn:hover {
-            border-color: var(--gold);
-            color: var(--gold);
-            background: var(--gold-bg);
-            transform: translateY(-1px);
+        .ap-social-btn:last-child { border-bottom: none; }
+
+        .ap-social-btn:hover { color: var(--text-primary); }
+
+        /* Square icon container replacing raw SVG */
+        .ap-social-icon {
+            width: 32px;
+            height: 32px;
+            border-radius: 8px;
+            background: var(--bg-secondary);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
         }
 
-        .ap-social-btn.is-portfolio {
-            background: var(--gold-bg);
-            border-color: var(--gold);
-            color: var(--gold);
+        .ap-social-name { flex: 1; }
+
+        .ap-social-count {
+            font-size: 0.9rem;
+            opacity: 0.6;
         }
 
-        .ap-social-btn.is-portfolio:hover {
-            background: var(--gold);
-            color: #fff;
+        /* Arrow indicator */
+        .ap-social-arrow {
+            opacity: 0.3;
+            font-size: 13px;
         }
+
+        /* Portfolio CTA stays accented */
+        .ap-social-btn.is-portfolio .ap-social-name { color: var(--gold); }
+        .ap-social-btn.is-portfolio .ap-social-arrow { opacity: 1; color: var(--gold); }
 
         /* ── Portfolio Grid ── */
         .ap-portfolio-grid {
@@ -1033,7 +1040,7 @@
 
         /* Specific fix for smaller notes / sub-text in the table */
         .ap-table-wrapper td[style*="font-size: 0.8rem"] {
-            font-size: 0.9rem !important; 
+            font-size: 0.9rem !important;
         }
 
         /* Specific fix for the Won/Nominated badges */
@@ -1182,26 +1189,26 @@
 
         /* Role pill (subtle, inline) */
         /* Replace your current .exp-role-pill with this */
-.exp-role-pill {
-    font-size: 1.05rem;
-    font-weight: 600;
-    color: var(--gold);
-    background: transparent;
-    border: none;
-    padding: 0;
-    border-radius: 0;
-    letter-spacing: 0.01em;
-    text-transform: none;
-}
+        .exp-role-pill {
+            font-size: 1.05rem;
+            font-weight: 600;
+            color: var(--gold);
+            background: transparent;
+            border: none;
+            padding: 0;
+            border-radius: 0;
+            letter-spacing: 0.01em;
+            text-transform: none;
+        }
 
-.exp-role-pill::before {
-    content: '।';
-    margin-right: 8px;
-    margin-left: 2px;
-    opacity: 0.7;  /* was 0.4 */
-    color: var(--text-muted);
-    font-weight: 300;
-}
+        .exp-role-pill::before {
+            content: '।';
+            margin-right: 8px;
+            margin-left: 2px;
+            opacity: 0.7;  /* was 0.4 */
+            color: var(--text-muted);
+            font-weight: 300;
+        }
 
         /* Result badge: Won */
         .exp-result-badge {
@@ -1276,6 +1283,11 @@
             color: var(--text-muted);
             margin-top: 6px;
             font-style: italic;
+        }
+        @media (min-width: 768px) {
+            .ap-tab {
+                flex: none;
+            }
         }
     </style>
 
@@ -1398,11 +1410,11 @@
 
             {{-- Actions & QR Code --}}
             <div class="ap-actions">
-                
+
                 {{-- ── NEW: Clickable QR Code ── --}}
                 <div class="ap-header-qr-wrap" x-data="{ openQrMenu: false }">
-                    <div class="ap-header-qr" 
-                         @click="openQrMenu = !openQrMenu" 
+                    <div class="ap-header-qr"
+                         @click="openQrMenu = !openQrMenu"
                          @click.outside="openQrMenu = false"
                          title="Click to download QR Code">
                         @php
@@ -1412,12 +1424,12 @@
                     </div>
 
                     {{-- Dropdown Menu (Hidden by default) --}}
-                    <div class="ap-qr-dropdown" 
-                         x-show="openQrMenu" 
+                    <div class="ap-qr-dropdown"
+                         x-show="openQrMenu"
                          x-transition.opacity.duration.200ms
-                         style="display: none;" 
+                         style="display: none;"
                          :style="openQrMenu ? 'display: block;' : 'display: none;'">
-                        
+
                         <a href="{{ route('artist.qr.download', ['id' => $artist->id, 'format' => 'svg']) }}" class="ap-qr-dl-link">
                             <strong>SVG</strong>
                             <span style="color: var(--text-muted); font-size: 0.65rem;">(Print)</span>
@@ -1453,7 +1465,7 @@
                         Download Photocard
                     </a>
                 @endif
-                
+
                 @if(!auth()->check() || auth()->id() !== $artist->id)
                     <button wire:click="revealContact" class="btn-fill mobile-only"
                         style="font-size: 0.78rem; min-width: 160px; justify-content: center;">
@@ -1511,32 +1523,24 @@
         {{-- ══════════════════════════════════════════
         TAB NAVIGATION
         ══════════════════════════════════════════ --}}
-        <div class="ap-tabs ap-fade-3">
-            <button class="ap-tab" :class="activeTab === 'about' ? 'is-active' : ''" @click="activeTab = 'about'">
+        <div class="ap-tabs ap-fade-3 flex w-full">
+            <button class="ap-tab flex-1 md:flex-none flex items-center justify-center gap-2 text-center"
+                :class="activeTab === 'about' ? 'is-active' : ''"
+                @click="activeTab = 'about'">
                 <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                     <circle cx="12" cy="8" r="4" />
                     <path d="M4 20c0-4 3.58-7 8-7s8 3 8 7" />
                 </svg>
-                About
+                <span>About</span>
             </button>
 
-            <button class="ap-tab" :class="activeTab === 'portfolio' ? 'is-active' : ''"
-                @click="activeTab = 'portfolio'">
+            <button class="ap-tab flex-1 md:flex-none flex items-center justify-center gap-2 text-center"
+                :class="activeTab === 'skills' ? 'is-active' : ''"
+                @click="activeTab = 'skills'">
                 <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                    <rect x="3" y="3" width="18" height="18" rx="1" />
-                    <circle cx="8.5" cy="8.5" r="1.5" />
-                    <path d="M21 15l-5-5L5 21" />
+                    <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z" />
                 </svg>
-                Portfolio
-                <span class="ap-tab-count">{{ $artist->getMedia('portfolio')->count() }}</span>
-            </button>
-
-            <button class="ap-tab" :class="activeTab === 'skills' ? 'is-active' : ''" @click="activeTab = 'skills'">
-                <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                    <path
-                        d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z" />
-                </svg>
-                Experience
+                <span>Experience</span>
                 <span class="ap-tab-count">{{ $artist->experiences->count() }}</span>
             </button>
         </div>
@@ -1795,132 +1799,129 @@
 
                             </div>
                         </div>
-                    </div>
 
-                </div>
-
-                {{-- TAB: PORTFOLIO ── --}}
-                <div class="ap-panel" :class="activeTab === 'portfolio' ? 'is-active' : ''">
-
-                    <div class="ap-card">
-                        <div class="ap-card-head">
-                            <div class="ap-card-head-icon">
-                                <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                                    <rect x="3" y="3" width="18" height="18" rx="1" />
-                                    <circle cx="8.5" cy="8.5" r="1.5" />
-                                    <path d="M21 15l-5-5L5 21" />
-                                </svg>
+                        <div class="ap-card">
+                            <div class="ap-card-head">
+                                <div class="ap-card-head-icon">
+                                    <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                        <rect x="3" y="3" width="18" height="18" rx="1" />
+                                        <circle cx="8.5" cy="8.5" r="1.5" />
+                                        <path d="M21 15l-5-5L5 21" />
+                                    </svg>
+                                </div>
+                                <div class="ap-card-title">Portfolio Gallery</div>
                             </div>
-                            <div class="ap-card-title">Portfolio Gallery</div>
-                        </div>
-                        
-                        <div class="ap-card-body" style="padding: 3px;">
-                            @if($artist->hasMedia('portfolio'))
-                            
-                                {{-- 1. Bulletproof Inline Alpine Component for Livewire --}}
-                                {{-- 1. Bulletproof Inline Alpine Component for Livewire --}}
-                                <div class="ap-portfolio-grid" 
-                                    x-data="{
-                                        isOpen: false,
-                                        currentIndex: 0,
-                                        images: @js($artist->getMedia('portfolio')->map(fn($m) => $m->getUrl())->values()),
-                                        touchStartX: 0,
-                                        touchEndX: 0,
-                                        openGallery(index) {
-                                            this.currentIndex = index;
-                                            this.isOpen = true;
-                                            document.body.style.overflow = 'hidden';
-                                        },
-                                        closeGallery() {
-                                            this.isOpen = false;
-                                            document.body.style.overflow = '';
-                                        },
-                                        next() {
-                                            if (this.isOpen && this.currentIndex < this.images.length - 1) this.currentIndex++;
-                                        },
-                                        prev() {
-                                            if (this.isOpen && this.currentIndex > 0) this.currentIndex--;
-                                        },
-                                        handleSwipe() {
-                                            if (!this.isOpen) return;
-                                            if (this.touchEndX < this.touchStartX - 50) this.next();
-                                            if (this.touchEndX > this.touchStartX + 50) this.prev();
-                                        }
-                                    }"
-                                    @keydown.window.escape="closeGallery()"
-                                    @keydown.window.right="next()"
-                                    @keydown.window.left="prev()"
-                                >
-                                    {{-- 2. Render the thumbnails --}}
-                                    @foreach($artist->getMedia('portfolio') as $media)
-                                        <div class="ap-portfolio-item" 
-                                            @click="openGallery({{ $loop->index }})"
-                                            style="cursor: pointer;">
-                                            <img src="{{ $media->getUrl() }}" alt="Portfolio image" loading="lazy">
-                                            <div class="ap-portfolio-overlay">
-                                                <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
-                                                    <path d="M15 3h6v6M9 21H3v-6M21 3l-7 7M3 21l7-7" />
-                                                </svg>
-                                                <span>View</span>
-                                            </div>
-                                        </div>
-                                    @endforeach
 
-                                    {{-- 3. The Fullscreen Lightbox Overlay --}}
-                                    <template x-teleport="body">
-                                        <div x-show="isOpen" 
-                                            x-transition.opacity.duration.300ms
-                                            style="position: fixed; inset: 0; z-index: 99999; background: rgba(0,0,0,0.95);"
-                                            @touchstart="touchStartX = $event.changedTouches[0].screenX"
-                                            @touchend="touchEndX = $event.changedTouches[0].screenX; handleSwipe()"
-                                            style="display: none;">
-                                            
-                                            {{-- Perfect Centering Wrapper --}}
-                                            <div style="width: 100%; height: 100%; display: flex; align-items: center; justify-content: center; position: relative;">
-                                                
-                                                {{-- Close Button --}}
-                                                <button @click="closeGallery()" style="position: absolute; top: 20px; right: 20px; color: white; background: rgba(255,255,255,0.1); border: none; border-radius: 50%; width: 44px; height: 44px; display: flex; align-items: center; justify-content: center; cursor: pointer; z-index: 10001; transition: background 0.2s;" onmouseover="this.style.background='rgba(255,255,255,0.2)'" onmouseout="this.style.background='rgba(255,255,255,0.1)'">
-                                                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
-                                                </button>
+                            <div class="ap-card-body" style="padding: 3px;">
+                                @if($artist->hasMedia('portfolio'))
 
-                                                {{-- Prev Button --}}
-                                                <button x-show="currentIndex > 0" @click.stop="prev()" style="position: absolute; left: 20px; top: 50%; transform: translateY(-50%); color: white; background: rgba(255,255,255,0.1); border: none; border-radius: 50%; width: 44px; height: 44px; display: flex; align-items: center; justify-content: center; cursor: pointer; z-index: 10001; transition: background 0.2s;" onmouseover="this.style.background='rgba(255,255,255,0.2)'" onmouseout="this.style.background='rgba(255,255,255,0.1)'">
-                                                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="15 18 9 12 15 6"></polyline></svg>
-                                                </button>
-
-                                                {{-- The Image --}}
-                                                <img :src="images[currentIndex]" 
-                                                    @click.stop
-                                                    style="max-width: 90vw; max-height: 85vh; width: auto; height: auto; object-fit: contain; border-radius: 4px; box-shadow: 0 20px 25px -5px rgba(0,0,0,0.5); display: block; margin: auto;">
-
-                                                {{-- Next Button --}}
-                                                <button x-show="currentIndex < images.length - 1" @click.stop="next()" style="position: absolute; right: 20px; top: 50%; transform: translateY(-50%); color: white; background: rgba(255,255,255,0.1); border: none; border-radius: 50%; width: 44px; height: 44px; display: flex; align-items: center; justify-content: center; cursor: pointer; z-index: 10001; transition: background 0.2s;" onmouseover="this.style.background='rgba(255,255,255,0.2)'" onmouseout="this.style.background='rgba(255,255,255,0.1)'">
-                                                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="9 18 15 12 9 6"></polyline></svg>
-                                                </button>
-
-                                                {{-- Counter --}}
-                                                <div style="position: absolute; bottom: 20px; left: 50%; transform: translateX(-50%); color: white; font-size: 0.9rem; font-weight: 500; background: rgba(0,0,0,0.5); padding: 4px 12px; border-radius: 999px;">
-                                                    <span x-text="currentIndex + 1"></span> / <span x-text="images.length"></span>
+                                    {{-- 1. Bulletproof Inline Alpine Component for Livewire --}}
+                                    {{-- 1. Bulletproof Inline Alpine Component for Livewire --}}
+                                    <div class="ap-portfolio-grid"
+                                        x-data="{
+                                            isOpen: false,
+                                            currentIndex: 0,
+                                            images: @js($artist->getMedia('portfolio')->map(fn($m) => $m->getUrl())->values()),
+                                            touchStartX: 0,
+                                            touchEndX: 0,
+                                            openGallery(index) {
+                                                this.currentIndex = index;
+                                                this.isOpen = true;
+                                                document.body.style.overflow = 'hidden';
+                                            },
+                                            closeGallery() {
+                                                this.isOpen = false;
+                                                document.body.style.overflow = '';
+                                            },
+                                            next() {
+                                                if (this.isOpen && this.currentIndex < this.images.length - 1) this.currentIndex++;
+                                            },
+                                            prev() {
+                                                if (this.isOpen && this.currentIndex > 0) this.currentIndex--;
+                                            },
+                                            handleSwipe() {
+                                                if (!this.isOpen) return;
+                                                if (this.touchEndX < this.touchStartX - 50) this.next();
+                                                if (this.touchEndX > this.touchStartX + 50) this.prev();
+                                            }
+                                        }"
+                                        @keydown.window.escape="closeGallery()"
+                                        @keydown.window.right="next()"
+                                        @keydown.window.left="prev()"
+                                    >
+                                        {{-- 2. Render the thumbnails --}}
+                                        @foreach($artist->getMedia('portfolio') as $media)
+                                            <div class="ap-portfolio-item"
+                                                @click="openGallery({{ $loop->index }})"
+                                                style="cursor: pointer;">
+                                                <img src="{{ $media->getUrl() }}" alt="Portfolio image" loading="lazy">
+                                                <div class="ap-portfolio-overlay">
+                                                    <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                                                        <path d="M15 3h6v6M9 21H3v-6M21 3l-7 7M3 21l7-7" />
+                                                    </svg>
+                                                    <span>View</span>
                                                 </div>
                                             </div>
-                                            
-                                        </div>
-                                    </template>
-                                </div>
-                            @else
-                                <div class="ap-portfolio-grid" style="padding: 24px;">
-                                    <div class="ap-portfolio-empty">
-                                        <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="0.8" style="margin: 0 auto; opacity: 0.25;">
-                                            <rect x="3" y="3" width="18" height="18" rx="1" />
-                                            <circle cx="8.5" cy="8.5" r="1.5" />
-                                            <path d="M21 15l-5-5L5 21" />
-                                        </svg>
-                                        <div class="ap-portfolio-empty-title">No portfolio images yet</div>
+                                        @endforeach
+
+                                        {{-- 3. The Fullscreen Lightbox Overlay --}}
+                                        <template x-teleport="body">
+                                            <div x-show="isOpen"
+                                                x-transition.opacity.duration.300ms
+                                                style="position: fixed; inset: 0; z-index: 99999; background: rgba(0,0,0,0.95);"
+                                                @touchstart="touchStartX = $event.changedTouches[0].screenX"
+                                                @touchend="touchEndX = $event.changedTouches[0].screenX; handleSwipe()"
+                                                style="display: none;">
+
+                                                {{-- Perfect Centering Wrapper --}}
+                                                <div style="width: 100%; height: 100%; display: flex; align-items: center; justify-content: center; position: relative;">
+
+                                                    {{-- Close Button --}}
+                                                    <button @click="closeGallery()" style="position: absolute; top: 20px; right: 20px; color: white; background: rgba(255,255,255,0.1); border: none; border-radius: 50%; width: 44px; height: 44px; display: flex; align-items: center; justify-content: center; cursor: pointer; z-index: 10001; transition: background 0.2s;" onmouseover="this.style.background='rgba(255,255,255,0.2)'" onmouseout="this.style.background='rgba(255,255,255,0.1)'">
+                                                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
+                                                    </button>
+
+                                                    {{-- Prev Button --}}
+                                                    <button x-show="currentIndex > 0" @click.stop="prev()" style="position: absolute; left: 20px; top: 50%; transform: translateY(-50%); color: white; background: rgba(255,255,255,0.1); border: none; border-radius: 50%; width: 44px; height: 44px; display: flex; align-items: center; justify-content: center; cursor: pointer; z-index: 10001; transition: background 0.2s;" onmouseover="this.style.background='rgba(255,255,255,0.2)'" onmouseout="this.style.background='rgba(255,255,255,0.1)'">
+                                                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="15 18 9 12 15 6"></polyline></svg>
+                                                    </button>
+
+                                                    {{-- The Image --}}
+                                                    <img :src="images[currentIndex]"
+                                                        @click.stop
+                                                        style="max-width: 90vw; max-height: 85vh; width: auto; height: auto; object-fit: contain; border-radius: 4px; box-shadow: 0 20px 25px -5px rgba(0,0,0,0.5); display: block; margin: auto;">
+
+                                                    {{-- Next Button --}}
+                                                    <button x-show="currentIndex < images.length - 1" @click.stop="next()" style="position: absolute; right: 20px; top: 50%; transform: translateY(-50%); color: white; background: rgba(255,255,255,0.1); border: none; border-radius: 50%; width: 44px; height: 44px; display: flex; align-items: center; justify-content: center; cursor: pointer; z-index: 10001; transition: background 0.2s;" onmouseover="this.style.background='rgba(255,255,255,0.2)'" onmouseout="this.style.background='rgba(255,255,255,0.1)'">
+                                                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="9 18 15 12 9 6"></polyline></svg>
+                                                    </button>
+
+                                                    {{-- Counter --}}
+                                                    <div style="position: absolute; bottom: 20px; left: 50%; transform: translateX(-50%); color: white; font-size: 0.9rem; font-weight: 500; background: rgba(0,0,0,0.5); padding: 4px 12px; border-radius: 999px;">
+                                                        <span x-text="currentIndex + 1"></span> / <span x-text="images.length"></span>
+                                                    </div>
+                                                </div>
+
+                                            </div>
+                                        </template>
                                     </div>
-                                </div>
-                            @endif
+                                @else
+                                    <div class="ap-portfolio-grid" style="padding: 24px;">
+                                        <div class="ap-portfolio-empty">
+                                            <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="0.8" style="margin: 0 auto; opacity: 0.25;">
+                                                <rect x="3" y="3" width="18" height="18" rx="1" />
+                                                <circle cx="8.5" cy="8.5" r="1.5" />
+                                                <path d="M21 15l-5-5L5 21" />
+                                            </svg>
+                                            <div class="ap-portfolio-empty-title">No portfolio images yet</div>
+                                        </div>
+                                    </div>
+                                @endif
+                            </div>
                         </div>
+
                     </div>
+
                 </div>
 
                 {{-- TAB: SKILLS / EXPERIENCE ── --}}

@@ -1,1844 +1,1796 @@
 <x-app-layout title="Top Verified Talent">
 
-    <style>
-        /* ═══════════════════════════════════════════
-           PAGE-LEVEL STYLES
-           Inherits CSS tokens from app.blade.php
-        ═══════════════════════════════════════════ */
+{{-- ═══════════════════════════════════════════════════════════
+     HOME PAGE — Complete Stylesheet
+     All tokens (--gold, --bg-primary, etc.) from app.blade.php
+═══════════════════════════════════════════════════════════ --}}
+<style>
 
-        @font-face {
-        font-family: 'SolaimanLipi';
-        src: local('SolaimanLipi'),
-             url('/fonts/SolaimanLipi.woff2') format('woff2'),
-             url('/fonts/SolaimanLipi.ttf') format('truetype');
-        font-weight: normal;
-        font-style: normal;
-        font-display: swap;
+/* ─────────────────────────────────────────────
+   FONT FACE
+───────────────────────────────────────────── */
+@font-face {
+    font-family: 'SolaimanLipi';
+    src: local('SolaimanLipi'),
+         url('/fonts/SolaimanLipi.woff2') format('woff2'),
+         url('/fonts/SolaimanLipi.ttf') format('truetype');
+    font-weight: normal;
+    font-style: normal;
+    font-display: swap;
+}
+
+/* ─────────────────────────────────────────────
+   SHARED LAYOUT UTILITIES
+───────────────────────────────────────────── */
+.pg-section {
+    padding: 96px 0;
+}
+.pg-section--alt {
+    background: var(--bg-secondary);
+}
+.pg-section--surface {
+    background: var(--bg-surface);
+    border-top: 1px solid var(--border);
+}
+.pg-inner {
+    max-width: 1380px;
+    margin: 0 auto;
+    padding: 0 48px;
+}
+.pg-section-head {
+    display: flex;
+    align-items: flex-end;
+    justify-content: space-between;
+    gap: 24px;
+    flex-wrap: wrap;
+    margin-bottom: 52px;
+}
+.pg-eyebrow {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    font-family: 'Jost', sans-serif;
+    font-size: 0.6rem;
+    font-weight: 700;
+    letter-spacing: 0.32em;
+    text-transform: uppercase;
+    color: var(--gold);
+    margin-bottom: 10px;
+}
+.pg-eyebrow::before {
+    content: '';
+    width: 24px; height: 1px;
+    background: var(--gold);
+    flex-shrink: 0;
+}
+.pg-title {
+    font-family: 'Jost', sans-serif;
+    font-size: clamp(1.9rem, 3vw, 2.8rem);
+    font-weight: 300;
+    color: var(--text-primary);
+    line-height: 1.18;
+    margin: 0;
+}
+.pg-title strong { font-weight: 700; }
+
+/* Shared buttons */
+.btn-primary {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    padding: 13px 28px;
+    background: var(--gold);
+    color: #fff;
+    font-family: 'Jost', sans-serif;
+    font-size: 0.66rem;
+    font-weight: 700;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    text-decoration: none;
+    border-radius: 8px;
+    border: none;
+    cursor: pointer;
+    transition: filter 0.2s ease, transform 0.15s ease;
+    white-space: nowrap;
+}
+.btn-primary:hover {
+    filter: brightness(1.12);
+    transform: translateY(-1px);
+}
+.btn-ghost {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 12px 26px;
+    border: 1.5px solid var(--border-strong);
+    color: var(--text-primary);
+    background: transparent;
+    font-family: 'Jost', sans-serif;
+    font-size: 0.66rem;
+    font-weight: 600;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    text-decoration: none;
+    border-radius: 8px;
+    transition: border-color 0.2s, color 0.2s, background 0.2s;
+    white-space: nowrap;
+}
+.btn-ghost:hover {
+    border-color: var(--gold);
+    color: var(--gold);
+    background: var(--gold-bg);
+}
+
+/* Entrance animation */
+@keyframes hp-fade-up {
+    from { opacity: 0; transform: translateY(20px); }
+    to   { opacity: 1; transform: translateY(0); }
+}
+.anim-fade-up { animation: hp-fade-up 0.65s cubic-bezier(.22,.68,0,1.1) both; }
+.anim-d1 { animation-delay: 0.08s; }
+.anim-d2 { animation-delay: 0.18s; }
+.anim-d3 { animation-delay: 0.28s; }
+
+
+/* ═══════════════════════════════════════════
+   1. HERO
+═══════════════════════════════════════════ */
+.hero {
+    position: relative;
+    min-height: 70vh;
+    display: flex;
+    align-items: center;
+    overflow: hidden;
+    background: var(--bg-primary);
+}
+
+/* Decorative rings + dots */
+.hero__deco { position: absolute; inset: 0; pointer-events: none; overflow: hidden; }
+.hero__ring {
+    position: absolute;
+    border-radius: 50%;
+    border: 1px solid var(--border);
+}
+.hero__ring--a { width: 700px; height: 700px; top: -220px; right: -180px; }
+.hero__ring--b { width: 440px; height: 440px; top: -80px;  right:  50px; }
+.hero__ring--c { width: 920px; height: 920px; bottom: -420px; left: -320px; opacity: .4; }
+.hero__vline {
+    position: absolute; width: 1px; top: 0; bottom: 0; right: 38%;
+    background: var(--border-strong); opacity: .22;
+}
+.hero__dots {
+    position: absolute; top: 72px; right: 72px; width: 110px; height: 110px;
+    background-image: radial-gradient(circle, var(--gold) 1px, transparent 1px);
+    background-size: 15px 15px; opacity: .12;
+}
+
+.hero__inner {
+    position: relative; z-index: 2;
+    max-width: 1380px; margin: 0 auto;
+    padding: 58px 48px 24px;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 150px;
+    align-items: center;
+}
+
+/* Left copy */
+.hero__eyebrow {
+    display: inline-flex; align-items: center; gap: 10px;
+    font-family: 'Jost', sans-serif;
+    font-size: 0.58rem; font-weight: 700; letter-spacing: .32em;
+    text-transform: uppercase; color: var(--gold); margin-bottom: 20px;
+}
+.hero__eyebrow-line { width: 26px; height: 1px; background: var(--gold); flex-shrink: 0; }
+
+.hero__headline {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: clamp(2.9rem, 5vw, 5rem);
+    font-weight: 400; line-height: 1.05;
+    letter-spacing: -0.01em;
+    color: var(--text-primary); margin: 0 0 22px;
+}
+.hero__headline strong { font-weight: 700; display: block; }
+.hero__headline em    { font-style: italic; color: var(--gold); display: block; font-weight: 300; }
+
+.hero__sub {
+    font-family: 'Jost', sans-serif;
+    font-size: 0.95rem; font-weight: 300;
+    color: var(--text-secondary); line-height: 1.9;
+    max-width: 420px; margin-bottom: 34px; opacity: .78;
+}
+
+.hero__cta {
+    display: flex; align-items: center;
+    gap: 13px; flex-wrap: wrap;
+}
+
+.hero__stats {
+    display: flex; gap: 32px;
+    margin-top: 46px; padding-top: 28px;
+    border-top: 1px solid var(--border);
+}
+.hero__stat-num {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 2.7rem; font-weight: 600;
+    color: var(--text-primary); line-height: 1;
+}
+.hero__stat-num sup { color: var(--gold); font-size: 1.4rem; font-weight: 400; }
+.hero__stat-label {
+    font-family: 'Jost', sans-serif;
+    font-size: 0.6rem; font-weight: 600;
+    letter-spacing: .18em; text-transform: uppercase;
+    color: var(--text-muted); margin-top: 5px;
+}
+
+/* Right: floating card gallery */
+.hero__gallery {
+    position: relative; height: 560px;
+}
+
+.hero__card {
+    position: absolute; overflow: hidden;
+    border-radius: 16px;
+    box-shadow: 0 16px 52px rgba(0,0,0,.13), 0 4px 14px rgba(0,0,0,.07);
+    transition: transform .5s cubic-bezier(.22,.68,0,1.15), box-shadow .4s ease;
+}
+.hero__card:hover {
+    transform: translateY(-5px) scale(1.015);
+    box-shadow: 0 28px 72px rgba(0,0,0,.19), 0 8px 22px rgba(0,0,0,.10);
+    z-index: 9;
+}
+.hero__card img {
+    width: 100%; height: 100%;
+    object-fit: cover; object-position: top center; display: block;
+    transition: transform .6s ease;
+}
+.hero__card:hover img { transform: scale(1.05); }
+
+.hero__card--1 { width: 252px; height: 344px; top: 16px;  left: 18px;  z-index: 2; }
+.hero__card--2 { width: 204px; height: 276px; top: 26px;  right: 36px; z-index: 2; }
+.hero__card--3 { width: 215px; height: 260px; bottom: 8px; left: 106px; z-index: 3; }
+
+.hero__card-label {
+    position: absolute; bottom: 0; left: 0; right: 0;
+    padding: 44px 14px 14px;
+    background: linear-gradient(to top, rgba(5,5,5,.84) 0%, transparent 100%);
+    border-radius: 0 0 16px 16px;
+}
+.hero__card-cat {
+    font-family: 'Jost', sans-serif;
+    font-size: 0.53rem; font-weight: 700; letter-spacing: .2em;
+    text-transform: uppercase; color: var(--gold-light); margin-bottom: 3px;
+}
+.hero__card-name {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 1.05rem; font-weight: 500; color: #fff; letter-spacing: .02em;
+}
+
+/* Verified pill badge */
+.hero__badge {
+    position: absolute; top: 11px; right: 11px;
+    background: rgba(255,255,255,.96);
+    backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px);
+    padding: 5px 10px 5px 7px; border-radius: 20px;
+    display: inline-flex; align-items: center; gap: 5px;
+    font-family: 'Jost', sans-serif;
+    font-size: 0.6rem; font-weight: 700; letter-spacing: .06em; color: #111;
+    box-shadow: 0 2px 10px rgba(0,0,0,.09);
+}
+.hero__badge::before {
+    content: ''; width: 8px; height: 8px;
+    border-radius: 50%; background: #2a7d4f; flex-shrink: 0; display: block;
+}
+
+/* NID accent box */
+.hero__nid {
+    position: absolute; bottom: 18px; right: 18px; z-index: 4;
+    background: var(--gold); color: #fff;
+    padding: 15px 20px; border-radius: 12px;
+    box-shadow: 0 8px 28px rgba(0,0,0,.2);
+}
+.hero__nid-num {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 2rem; font-weight: 600; line-height: 1;
+}
+.hero__nid-num sup { font-size: .9rem; font-weight: 400; vertical-align: super; }
+.hero__nid-label {
+    font-family: 'Jost', sans-serif;
+    font-size: 0.52rem; font-weight: 700; letter-spacing: .22em;
+    text-transform: uppercase; opacity: .85; margin-top: 4px;
+}
+
+
+/* ═══════════════════════════════════════════
+   2. CATEGORIES STRIP
+═══════════════════════════════════════════ */
+.cats-strip {
+    background: var(--bg-surface);
+    border-top: 1px solid var(--border);
+    border-bottom: 1px solid var(--border);
+    overflow: hidden;
+}
+.cats-inner {
+    max-width: 1380px; margin: 0 auto; padding: 0 48px;
+    display: flex; align-items: stretch;
+}
+.cat-item {
+    display: flex; align-items: center; gap: 9px;
+    padding: 20px 28px;
+    border-right: 1px solid var(--border);
+    cursor: pointer; flex: 1; justify-content: center;
+    text-decoration: none;
+    transition: background .22s;
+}
+.cat-item:first-child { padding-left: 0; }
+.cat-item:last-child  { border-right: none; }
+.cat-item:hover { background: var(--gold-bg); }
+.cat-item:hover .cat-item__icon { color: var(--gold); }
+.cat-item:hover .cat-item__label { color: var(--text-primary); }
+.cat-item__icon {
+    color: var(--text-muted);
+    transition: color .22s; flex-shrink: 0;
+}
+.cat-item__label {
+    font-family: 'Jost', sans-serif;
+    font-size: 0.72rem; font-weight: 600;
+    letter-spacing: .12em; text-transform: uppercase;
+    color: var(--text-secondary); transition: color .22s; white-space: nowrap;
+}
+
+
+/* ═══════════════════════════════════════════
+   3. FEATURED TALENT GRID
+═══════════════════════════════════════════ */
+.talent-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 20px;
+}
+
+.ac {
+    position: relative; overflow: hidden;
+    background: var(--bg-secondary);
+    border-radius: 15px;
+    display: block; text-decoration: none; cursor: pointer;
+}
+.ac__media {
+    aspect-ratio: 3/4; overflow: hidden; position: relative;
+    background: var(--bg-secondary);
+}
+.ac__media img {
+    width: 100%; height: 100%; object-fit: cover;
+    transition: transform .55s cubic-bezier(.25,.46,.45,.94);
+}
+.ac:hover .ac__media img { transform: scale(1.06); }
+.ac__placeholder {
+    width: 100%; height: 100%;
+    display: flex; flex-direction: column;
+    align-items: center; justify-content: center;
+    gap: 10px; color: var(--text-muted);
+}
+.ac__placeholder svg { opacity: .25; }
+.ac__placeholder span {
+    font-size: .7rem; letter-spacing: .18em;
+    text-transform: uppercase; opacity: .45;
+}
+
+/* Triangle verified corner */
+.ac__verified {
+    position: absolute; top: 0; left: 0; z-index: 3;
+    width: 0; height: 0;
+    border-style: solid; border-width: 68px 68px 0 0;
+    border-color: #ffffff transparent transparent transparent;
+}
+.ac__verified-inner {
+    position: absolute; top: -64px; left: 4px;
+    display: flex; flex-direction: column; align-items: center; gap: 2px;
+}
+.ac__verified-inner svg { width: 13px; height: 13px; }
+.ac__verified-inner span {
+    font-size: .48rem; font-weight: 700; letter-spacing: .08em;
+    text-transform: uppercase; color: #2a7d4f; line-height: 1;
+}
+
+/* Default bottom label */
+.ac__info {
+    position: absolute; bottom: 0; left: 0; right: 0;
+    padding: 48px 16px 16px;
+    background: linear-gradient(to top, rgba(0,0,0,.94) 0%, rgba(0,0,0,.5) 45%, transparent 100%);
+    transition: opacity .3s; z-index: 2;
+}
+.ac:hover .ac__info { opacity: 0; }
+.ac__cat {
+    font-family: 'Jost', sans-serif;
+    font-size: .7rem; font-weight: 600; text-transform: uppercase;
+    color: #fff; margin-bottom: 3px; opacity: .8;
+}
+.ac__name {
+    font-family: 'Jost', sans-serif;
+    font-size: 1.3rem; font-weight: 500; color: #fff;
+    letter-spacing: .02em; line-height: 1.2;
+}
+.ac__loc {
+    display: flex; align-items: center; gap: 4px;
+    font-size: .8rem; color: rgba(255,255,255,.65); margin-top: 6px;
+}
+
+/* Hover overlay */
+.ac__hover {
+    position: absolute; inset: 0; z-index: 4;
+    background: rgba(10,8,6,.91);
+    backdrop-filter: blur(3px);
+    display: flex; flex-direction: column; justify-content: center;
+    padding: 24px 20px;
+    opacity: 0; transform: translateY(8px);
+    transition: opacity .35s ease, transform .35s ease;
+}
+.ac:hover .ac__hover { opacity: 1; transform: translateY(0); }
+.ac__hover-name {
+    font-family: 'Jost', sans-serif;
+    font-size: 1.3rem; font-weight: 700; color: #fff;
+    letter-spacing: .02em; margin-bottom: 8px; line-height: 1.2;
+}
+.ac__hover-tags {
+    display: flex; flex-wrap: wrap; gap: 5px; margin-bottom: 14px;
+}
+.ac__hover-tag {
+    padding: 3px 9px;
+    border: 1px solid rgba(255,255,255,.22);
+    font-family: 'Jost', sans-serif;
+    font-size: .68rem; font-weight: 500;
+    text-transform: uppercase; color: rgba(255,255,255,.8);
+    background: rgba(255,255,255,.07);
+}
+.ac__hover-div { height: 1px; background: rgba(255,255,255,.12); margin-bottom: 12px; }
+.ac__hover-row {
+    display: flex; align-items: center; gap: 7px;
+    font-size: .82rem; color: rgba(255,255,255,.75); margin-bottom: 7px;
+}
+.ac__hover-row svg { opacity: .55; flex-shrink: 0; }
+.ac__hover-row strong { color: #fff; font-weight: 600; }
+.ac__hover-cta {
+    margin-top: 16px; padding: 11px 14px;
+    background: #fff; color: #111;
+    font-family: 'Jost', sans-serif;
+    font-size: .78rem; font-weight: 700; letter-spacing: .14em; text-transform: uppercase;
+    display: flex; align-items: center; justify-content: center; gap: 8px;
+    transition: background .2s, color .2s;
+}
+.ac__hover-cta:hover { background: var(--gold); color: #fff; }
+
+/* Empty state */
+.talent-empty {
+    grid-column: 1 / -1; padding: 80px 20px;
+    text-align: center; color: var(--text-muted);
+}
+.talent-empty__icon { margin: 0 auto 18px; opacity: .22; }
+.talent-empty__title {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 1.5rem; font-weight: 300; color: var(--text-secondary); margin-bottom: 7px;
+}
+.talent-empty__sub { font-size: .8rem; letter-spacing: .06em; }
+
+.view-all { margin-top: 44px; text-align: center; }
+
+
+/* ═══════════════════════════════════════════
+   4. GALLERY SLIDER
+═══════════════════════════════════════════ */
+.gallery-card {
+    position: relative; aspect-ratio: 4/5;
+    overflow: hidden; background: var(--bg-surface);
+    border-radius: 6px; cursor: grab;
+}
+.gallery-card:active { cursor: grabbing; }
+.gallery-card img {
+    width: 100%; height: 100%; object-fit: cover;
+    transition: transform .6s cubic-bezier(.25,.46,.45,.94);
+}
+.gallery-card:hover img { transform: scale(1.06); }
+.gallery-card__caption {
+    position: absolute; bottom: 0; left: 0; right: 0;
+    padding: 40px 18px 18px;
+    background: linear-gradient(to top, rgba(0,0,0,.82) 0%, transparent 100%);
+    color: #fff;
+    font-family: 'Jost', sans-serif; font-size: 1rem; font-weight: 500;
+    transform: translateY(10px); opacity: 0;
+    transition: transform .4s ease, opacity .4s ease;
+}
+.gallery-card:hover .gallery-card__caption { transform: translateY(0); opacity: 1; }
+
+.gallerySwiper { padding-bottom: 48px !important; }
+.swiper-pagination-bullet { background: var(--text-muted) !important; opacity: .4; }
+.swiper-pagination-bullet-active { background: var(--gold) !important; opacity: 1; }
+
+
+/* ═══════════════════════════════════════════
+   5. CLIENTS MARQUEE
+═══════════════════════════════════════════ */
+.clients-section {
+    padding: 72px 0;
+    background: var(--bg-surface);
+    border-top: 1px solid var(--border);
+    overflow: hidden;
+}
+.clients-head { text-align: center; margin-bottom: 44px; }
+.marquee-wrap {
+    width: 100vw; margin-left: calc(-50vw + 50%);
+    display: flex; flex-direction: column; gap: 36px;
+}
+.marquee-row {
+    display: flex; align-items: center;
+    gap: 56px; width: max-content;
+}
+.marquee-row:hover { animation-play-state: paused; }
+.marquee-row--ltr { animation: mar-ltr 40s linear infinite; }
+.marquee-row--rtl { animation: mar-rtl 40s linear infinite; }
+
+@keyframes mar-ltr { from { transform: translateX(0); } to { transform: translateX(-50%); } }
+@keyframes mar-rtl { from { transform: translateX(-50%); } to { transform: translateX(0); } }
+
+.client-logo {
+    max-width: 130px; max-height: 64px; flex-shrink: 0;
+    object-fit: contain;
+    filter: grayscale(100%) opacity(.45);
+    transition: filter .4s, transform .4s;
+}
+.client-logo:hover { filter: grayscale(0%) opacity(1); transform: scale(1.05); }
+
+
+/* ═══════════════════════════════════════════
+   WHY TRUST US — Editorial Row Layout
+═══════════════════════════════════════════ */
+.trust-section {
+    padding: 0;
+    background: var(--bg-primary);
+    border-top: 1px solid var(--border);
+}
+
+/* Two-column layout: sticky intro left, items right */
+.trust-layout {
+    max-width: 1380px;
+    margin: 0 auto;
+    display: grid;
+    grid-template-columns: 360px 1fr;
+    min-height: 520px;
+}
+
+/* ── Left: sticky label column ── */
+.trust-intro {
+    padding: 80px 48px 80px 48px;
+    border-right: 1px solid var(--border);
+    position: sticky;
+    top: var(--nav-h, 72px);
+    align-self: start;
+}
+.trust-intro__label {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    font-family: 'Jost', sans-serif;
+    font-size: 0.58rem;
+    font-weight: 700;
+    letter-spacing: 0.32em;
+    text-transform: uppercase;
+    color: var(--gold);
+    margin-bottom: 20px;
+}
+.trust-intro__label::before {
+    content: '';
+    width: 22px; height: 1px;
+    background: var(--gold);
+    flex-shrink: 0;
+}
+.trust-intro__title {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: clamp(2.4rem, 3.2vw, 3.6rem);
+    font-weight: 400;
+    line-height: 1.1;
+    color: var(--text-primary);
+    margin-bottom: 20px;
+}
+.trust-intro__title strong {
+    font-weight: 700;
+    color: var(--gold);
+}
+.trust-intro__sub {
+    font-family: 'Jost', sans-serif;
+    font-size: 0.95rem;
+    font-weight: 300;
+    line-height: 1.85;
+    color: var(--text-secondary);
+    opacity: 0.75;
+    max-width: 260px;
+    margin-bottom: 36px;
+}
+.trust-intro__stat {
+    display: inline-flex;
+    align-items: center;
+    gap: 12px;
+    padding: 14px 18px;
+    border: 1px solid var(--border-strong);
+    background: var(--gold-bg);
+}
+.trust-intro__stat-num {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 2.2rem;
+    font-weight: 600;
+    color: var(--gold);
+    line-height: 1;
+}
+.trust-intro__stat-label {
+    font-family: 'Jost', sans-serif;
+    font-size: 0.6rem;
+    font-weight: 700;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--text-muted);
+}
+
+/* ── Right: stacked feature rows ── */
+.trust-rows {
+    display: flex;
+    flex-direction: column;
+}
+
+.trust-row {
+    position: relative;
+    display: grid;
+    grid-template-columns: 96px 1fr;
+    gap: 0;
+    border-bottom: 1px solid var(--border);
+    overflow: hidden;
+    transition: background 0.3s ease;
+    cursor: default;
+}
+.trust-row:last-child { border-bottom: none; }
+.trust-row:hover { background: var(--gold-bg); }
+
+/* Animated left accent line */
+.trust-row::before {
+    content: '';
+    position: absolute;
+    left: 0; top: 0; bottom: 0;
+    width: 3px;
+    background: var(--gold);
+    transform: scaleY(0);
+    transform-origin: bottom;
+    transition: transform 0.4s cubic-bezier(.22,.68,0,1.1);
+}
+.trust-row:hover::before { transform: scaleY(1); }
+
+/* Number column */
+.trust-row__num-col {
+    display: flex;
+    align-items: flex-start;
+    justify-content: center;
+    padding-top: 44px;
+    border-right: 1px solid var(--border);
+}
+.trust-row__num {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 1rem;
+    font-weight: 600;
+    letter-spacing: 0.1em;
+    color: var(--text-muted);
+    opacity: 0.5;
+    transition: color 0.3s, opacity 0.3s;
+    writing-mode: vertical-rl;
+    text-orientation: mixed;
+    transform: rotate(180deg);
+}
+.trust-row:hover .trust-row__num {
+    color: var(--gold);
+    opacity: 1;
+}
+
+/* Content column */
+.trust-row__content {
+    padding: 44px 48px 44px 44px;
+    display: flex;
+    flex-direction: column;
+    gap: 0;
+}
+
+/* Icon circle */
+.trust-row__icon-wrap {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    margin-bottom: 18px;
+}
+.trust-row__icon {
+    width: 44px; height: 44px;
+    border-radius: 50%;
+    border: 1.5px solid var(--border-strong);
+    display: flex; align-items: center; justify-content: center;
+    color: var(--gold);
+    background: var(--bg-primary);
+    flex-shrink: 0;
+    transition: background 0.3s, border-color 0.3s;
+}
+.trust-row:hover .trust-row__icon {
+    background: var(--gold);
+    border-color: var(--gold);
+    color: #fff;
+}
+.trust-row__tag {
+    font-family: 'Jost', sans-serif;
+    font-size: 0.58rem;
+    font-weight: 700;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--gold);
+    padding: 3px 10px;
+    border: 1px solid var(--gold);
+    opacity: 0.7;
+}
+
+.trust-row__title {
+    font-family: 'Jost', sans-serif;
+    font-size: 1.35rem;
+    font-weight: 700;
+    color: var(--text-primary);
+    margin-bottom: 12px;
+    line-height: 1.25;
+}
+.trust-row__desc {
+    font-family: 'Jost', sans-serif;
+    font-size: 0.95rem;
+    font-weight: 300;
+    color: var(--text-secondary);
+    line-height: 1.85;
+    max-width: 580px;
+}
+.trust-row__desc p { margin-bottom: 10px; }
+.trust-row__desc p:last-child { margin-bottom: 0; }
+.trust-row__desc ul { list-style: none; padding: 0; margin: 10px 0; }
+.trust-row__desc li {
+    display: flex; align-items: flex-start; gap: 8px;
+    margin-bottom: 7px; font-size: 0.87rem;
+}
+.trust-row__desc li::before {
+    content: '';
+    width: 5px; height: 5px;
+    border-radius: 50%;
+    background: var(--gold);
+    flex-shrink: 0;
+    margin-top: 7px;
+}
+
+/* ── Responsive ── */
+@media (max-width: 1024px) {
+    .trust-layout {
+        grid-template-columns: 1fr;
     }
-        /* ── Hero ── */
-        .hero {
-            position: relative;
-            min-height: 92vh;
-            display: flex;
-            align-items: center;
-            overflow: hidden;
-            background: var(--bg-primary);
-        }
-
-        /* Geometric background shapes */
-        .hero-deco {
-            position: absolute;
-            inset: 0;
-            pointer-events: none;
-            overflow: hidden;
-        }
-        .hero-deco-ring {
-            position: absolute;
-            border-radius: 50%;
-            border: 1px solid var(--border);
-        }
-        .hero-deco-ring-1 {
-            width: 680px; height: 680px;
-            top: -200px; right: -160px;
-        }
-        .hero-deco-ring-2 {
-            width: 420px; height: 420px;
-            top: -60px; right: 60px;
-        }
-        .hero-deco-ring-3 {
-            width: 900px; height: 900px;
-            bottom: -400px; left: -300px;
-            border-color: var(--border);
-            opacity: 0.5;
-        }
-        .hero-deco-line {
-            position: absolute;
-            background: var(--border-strong);
-        }
-        .hero-deco-line-v {
-            width: 1px;
-            top: 0; bottom: 0;
-            right: 38%;
-            opacity: 0.4;
-        }
-
-        /* Gold dot grid */
-        .hero-deco-dots {
-            position: absolute;
-            top: 80px; right: 80px;
-            width: 120px; height: 120px;
-            background-image: radial-gradient(circle, var(--gold) 1px, transparent 1px);
-            background-size: 16px 16px;
-            opacity: 0.18;
-        }
-
-        .hero-inner {
-            position: relative;
-            z-index: 2;
-            max-width: 1440px;
-            margin: 0 auto;
-            padding: 80px 40px 60px;
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 64px;
-            align-items: center;
-        }
-
-        /* Hero left */
-        .hero-eyebrow {
-            display: inline-flex;
-            align-items: center;
-            gap: 10px;
-            font-size: 0.6rem;
-            font-weight: 600;
-            letter-spacing: 0.32em;
-            text-transform: uppercase;
-            color: var(--gold);
-            margin-bottom: 22px;
-        }
-        .hero-eyebrow-line {
-            width: 32px; height: 1px;
-            background: var(--gold);
-            flex-shrink: 0;
-        }
-
-        .hero-headline {
-            font-family: 'Cormorant Garamond', serif;
-            font-size: clamp(3rem, 5.5vw, 5.2rem);
-            font-weight: 300;
-            line-height: 1.08;
-            letter-spacing: -0.01em;
-            color: var(--text-primary);
-            margin-bottom: 28px;
-        }
-        .hero-headline strong {
-            font-weight: 600;
-            display: block;
-        }
-        .hero-headline em {
-            font-style: italic;
-            color: var(--gold);
-        }
-
-        .hero-sub {
-            font-size: 1.2rem;
-            font-weight: 300;
-            color: var(--text-secondary);
-            line-height: 1.8;
-            max-width: 440px;
-            margin-bottom: 40px;
-        }
-
-        .hero-cta-row {
-            display: flex;
-            align-items: center;
-            gap: 16px;
-            flex-wrap: wrap;
-        }
-
-        /* Stats strip */
-        .hero-stats {
-            display: flex;
-            gap: 32px;
-            margin-top: 56px;
-            padding-top: 32px;
-            border-top: 1px solid var(--border);
-        }
-        .hero-stat {}
-        .hero-stat-num {
-            font-family: 'Cormorant Garamond', serif;
-            font-size: 3rem;
-            font-weight: 600;
-            color: var(--text-primary);
-            line-height: 1;
-        }
-        .hero-stat-num span { color: var(--gold); }
-        .hero-stat-label {
-            font-size: 0.7rem;
-            font-weight: 500;
-            letter-spacing: 0.18em;
-            text-transform: uppercase;
-            color: var(--text-muted);
-            margin-top: 5px;
-        }
-
-        /* Hero right — stacked cards */
-        .hero-gallery {
-            position: relative;
-            height: 580px;
-        }
-        .hero-card {
-            position: absolute;
-            overflow: hidden;
-            box-shadow: var(--shadow-lg);
-        }
-        .hero-card img {
-            width: 100%; height: 100%;
-            object-fit: cover;
-            transition: transform 0.6s ease;
-        }
-        .hero-card:hover img { transform: scale(1.04); }
-
-        .hero-card-1 {
-            width: 260px; height: 360px;
-            top: 0; left: 0;
-        }
-        .hero-card-2 {
-            width: 210px; height: 290px;
-            top: 60px; right: 20px;
-        }
-        .hero-card-3 {
-            width: 180px; height: 230px;
-            bottom: 0; left: 80px;
-        }
-
-        .hero-card-label {
-            position: absolute;
-            bottom: 0; left: 0; right: 0;
-            padding: 20px 14px 14px;
-            background: linear-gradient(to top, rgba(10,8,4,0.85) 0%, transparent 100%);
-        }
-        .hero-card-name {
-            font-family: 'Cormorant Garamond', serif;
-            font-size: 1rem;
-            font-weight: 400;
-            color: #fff;
-            letter-spacing: 0.03em;
-        }
-        .hero-card-cat {
-            font-size: 0.58rem;
-            font-weight: 500;
-            letter-spacing: 0.2em;
-            text-transform: uppercase;
-            color: var(--gold-light, #d4ab6a);
-        }
-
-        /* Floating verified badge on card */
-        .hero-card-badge {
-            position: absolute;
-            top: 12px; right: 12px;
-            background: rgba(255,255,255,0.92);
-            backdrop-filter: blur(8px);
-            padding: 4px 9px;
-            display: flex;
-            align-items: center;
-            gap: 5px;
-            font-size: 0.58rem;
-            font-weight: 700;
-            letter-spacing: 0.12em;
-            text-transform: uppercase;
-            color: #1a1714;
-        }
-        .hero-card-badge svg { color: #2a7d4f; }
-
-        /* Gold accent box */
-        .hero-accent-box {
-            position: absolute;
-            bottom: 30px; right: -10px;
-            background: var(--gold);
-            padding: 16px 20px;
-            color: #faf8f5;
-        }
-        .hero-accent-box-num {
-            font-family: 'Cormorant Garamond', serif;
-            font-size: 1.8rem;
-            font-weight: 600;
-            line-height: 1;
-        }
-        .hero-accent-box-label {
-            font-size: 0.55rem;
-            font-weight: 500;
-            letter-spacing: 0.22em;
-            text-transform: uppercase;
-            opacity: 0.8;
-            margin-top: 3px;
-        }
-
-        /* ── Categories Strip ── */
-        .categories-strip {
-            background: var(--bg-surface);
-            border-top: 1px solid var(--border);
-            border-bottom: 1px solid var(--border);
-            padding: 0;
-            overflow: hidden;
-        }
-        .categories-inner {
-            max-width: 1440px;
-            margin: 0 auto;
-            padding: 0 40px;
-            display: flex;
-            align-items: stretch;
-        }
-        .category-item {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            padding: 22px 32px;
-            border-right: 1px solid var(--border);
-            cursor: pointer;
-            transition: background 0.22s, color 0.22s;
-            text-decoration: none;
-            flex: 1;
-            justify-content: center;
-        }
-        .category-item:first-child { border-left: none; padding-left: 0; }
-        .category-item:last-child { border-right: none; }
-        .category-item:hover { background: var(--gold-bg); }
-        .category-item:hover .cat-icon { color: var(--gold); }
-        .category-item:hover .cat-label { color: var(--text-primary); }
-        .cat-icon { color: var(--text-muted); transition: color 0.22s; flex-shrink: 0; }
-        .cat-label {
-            font-size: 1.2rem;
-            font-weight: 600;
-            text-transform: uppercase;
-            color: var(--text-secondary);
-            transition: color 0.22s;
-            white-space: nowrap;
-        }
-
-        /* ── Featured Talent Section ── */
-        .talent-section {
-            padding: 100px 0;
-            background: var(--bg-primary);
-        }
-        .section-inner {
-            max-width: 1440px;
-            margin: 0 auto;
-            padding: 0 40px;
-        }
-        .section-header {
-            display: flex;
-            align-items: flex-end;
-            justify-content: space-between;
-            margin-bottom: 56px;
-            gap: 24px;
-            flex-wrap: wrap;
-        }
-        .section-header-left {}
-        .section-eyebrow {
-            font-size: 0.7rem;
-            font-weight: 600;
-            letter-spacing: 0.32em;
-            text-transform: uppercase;
-            color: var(--gold);
-            margin-bottom: 10px;
-            display: flex;
-            align-items: center;
-            gap: 10px;
-        }
-        .section-eyebrow::before {
-            content: '';
-            width: 28px; height: 1px;
-            background: var(--gold);
-        }
-        .section-title {
-            font-family: 'Jost', sans-serif;
-            font-size: clamp(2rem, 3.5vw, 3rem);
-            font-weight: 300;
-            color: var(--text-primary);
-            line-height: 1.15;
-        }
-        .section-title strong { font-weight: 600; }
-
-        /* Talent grid */
-        .talent-grid {
-            display: grid;
-            grid-template-columns: repeat(4, 1fr);
-            gap: 2px;
-        }
-
-/* Artist card (Matches Directory Page) */
-        .artist-card {
-            position: relative;
-            overflow: hidden;
-            background: var(--bg-secondary);
-            display: block;
-            text-decoration: none;
-            cursor: pointer;
-        }
-
-        .artist-card-media {
-            aspect-ratio: 3/4;
-            overflow: hidden;
-            position: relative;
-            background: var(--bg-secondary);
-        }
-
-        .artist-card-media img {
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
-            transition: transform 0.55s cubic-bezier(0.25, 0.46, 0.45, 0.94);
-        }
-
-        .artist-card:hover .artist-card-media img {
-            transform: scale(1.06);
-        }
-
-        .artist-card-placeholder {
-            width: 100%;
-            height: 100%;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            gap: 10px;
-            color: var(--text-muted);
-        }
-
-        .artist-card-placeholder svg {
-            opacity: 0.28;
-        }
-
-        .artist-card-placeholder span {
-            font-size: 0.72rem;
-            letter-spacing: 0.18em;
-            text-transform: uppercase;
-            opacity: 0.5;
-        }
-
-        /* Verified badge (White Triangle) */
-        .artist-card-verified {
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 0;
-            height: 0;
-            border-style: solid;
-            border-width: 72px 72px 0 0;
-            border-color: #ffffff transparent transparent transparent;
-            z-index: 3;
-        }
-
-        .artist-card-verified-inner {
-            position: absolute;
-            top: -68px;
-            left: 4px;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            gap: 2px;
-        }
-
-        .artist-card-verified-inner svg {
-            width: 14px;
-            height: 14px;
-        }
-
-        .artist-card-verified-inner span {
-            font-size: 0.5rem;
-            font-weight: 700;
-            letter-spacing: 0.08em;
-            text-transform: uppercase;
-            color: #2a7d4f;
-            line-height: 1;
-        }
-
-        /* Base info — always visible at bottom */
-        .artist-card-info {
-            position: absolute;
-            bottom: 0;
-            left: 0;
-            right: 0;
-            padding: 48px 16px 16px;
-            background: linear-gradient(
-                to top,
-                rgba(0, 0, 0, 0.95) 0%,
-                rgba(0, 0, 0, 0.75) 40%,
-                rgba(0, 0, 0, 0.2) 70%,
-                transparent 100%
-            );
-            transition: opacity 0.3s;
-            z-index: 2;
-        }
-
-        .artist-card:hover .artist-card-info {
-            opacity: 0;
-        }
-
-        .artist-card-cat {
-            font-size: 0.8rem;
-            font-weight: 600;
-            letter-spacing: normal;
-            text-transform: uppercase;
-            color: #ffffff;
-            margin-bottom: 3px;
-            opacity: 0.85;
-        }
-
-        .artist-card-name {
-            font-family: 'Jost', sans-serif;
-            font-size: 1.65rem;
-            font-weight: 500;
-            color: #fff;
-            letter-spacing: 0.02em;
-            line-height: 1.2;
-        }
-
-        .artist-card-meta {
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            margin-top: 8px;
-        }
-
-        .artist-card-location {
-            display: flex;
-            align-items: center;
-            gap: 4px;
-            font-size: 0.9rem;
-            color: rgba(255, 255, 255, 0.75);
-        }
-
-        .artist-card-rate {
-            font-size: 0.85rem;
-            font-weight: 700;
-            color: #ffffff;
-            letter-spacing: 0.06em;
-        }
-
-        /* Hover overlay — full card cover with all details */
-        .artist-card-hover {
-            position: absolute;
-            inset: 0;
-            background: rgba(10, 8, 6, 0.92);
-            backdrop-filter: blur(2px);
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            padding: 24px 20px;
-            opacity: 0;
-            transform: translateY(8px);
-            transition: opacity 0.35s ease, transform 0.35s ease;
-            z-index: 4;
-        }
-
-        .artist-card:hover .artist-card-hover {
-            opacity: 1;
-            transform: translateY(0);
-        }
-
-        /* Hover panel — name */
-        .artist-hover-name {
-            font-family: 'Jost', sans-serif;
-            font-size: 1.65rem;
-            font-weight: 600;
-            color: #ffffff;
-            letter-spacing: 0.02em;
-            margin-bottom: 6px;
-            line-height: 1.2;
-        }
-
-        /* Hover panel — categories list */
-        .artist-hover-cats {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 5px;
-            margin-bottom: 16px;
-            margin-top: 8px;
-        }
-
-        .artist-hover-cat-tag {
-            padding: 4px 10px;
-            border: 1px solid rgba(255, 255, 255, 0.25);
-            font-size: 0.75rem;
-            font-weight: 500;
-            letter-spacing: normal;
-            text-transform: uppercase;
-            color: rgba(255, 255, 255, 0.85);
-            background: rgba(255, 255, 255, 0.08);
-        }
-
-        /* Hover panel — divider */
-        .artist-hover-divider {
-            height: 1px;
-            background: rgba(255, 255, 255, 0.12);
-            margin-bottom: 14px;
-        }
-
-        /* Hover panel — info rows */
-        .artist-hover-meta {
-            display: flex;
-            flex-direction: column;
-            gap: 8px;
-        }
-
-        .artist-hover-row {
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            font-size: 0.85rem;
-            color: rgba(255, 255, 255, 0.8);
-        }
-
-        .artist-hover-row svg {
-            flex-shrink: 0;
-            opacity: 0.6;
-        }
-
-        .artist-hover-row strong {
-            color: #ffffff;
-            font-weight: 600;
-        }
-
-        /* Hover panel — CTA button */
-        .artist-hover-cta {
-            margin-top: 18px;
-            padding: 12px 16px;
-            background: #ffffff;
-            color: #111111;
-            font-family: 'Jost', sans-serif;
-            font-size: 0.85rem;
-            font-weight: 700;
-            letter-spacing: 0.15em;
-            text-transform: uppercase;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 8px;
-            transition: background 0.2s;
-        }
-
-        .artist-hover-cta:hover {
-            background: var(--gold);
-            color: #ffffff;
-        }
-        /* Empty state */
-        .talent-empty {
-            grid-column: 1 / -1;
-            padding: 80px 20px;
-            text-align: center;
-            color: var(--text-muted);
-        }
-        .talent-empty-icon { margin: 0 auto 20px; opacity: 0.25; }
-        .talent-empty-title {
-            font-family: 'Cormorant Garamond', serif;
-            font-size: 1.6rem;
-            font-weight: 300;
-            color: var(--text-secondary);
-            margin-bottom: 8px;
-        }
-        .talent-empty-sub {
-            font-size: 0.82rem;
-            color: var(--text-muted);
-            letter-spacing: 0.06em;
-        }
-
-        /* View all button */
-        .view-all-wrap {
-            margin-top: 48px;
-            text-align: center;
-        }
-
-        /* ── Why Trust Section ── */
-        .trust-section {
-            padding: 100px 0;
-            background: var(--bg-surface);
-            border-top: 1px solid var(--border);
-        }
-        .trust-grid {
-            display: grid;
-            grid-template-columns: repeat(3, 1fr);
-            gap: 1px;
-            background: var(--border);
-            border: 1px solid var(--border);
-            margin-top: 64px;
-        }
-        .trust-card {
-            background: var(--bg-surface);
-            padding: 48px 40px;
-            position: relative;
-            overflow: hidden;
-            transition: background 0.3s;
-        }
-        .trust-card:hover { 
-            background: var(--gold-bg); 
-        }
-        .trust-card-num {
-            font-family: 'Jost', sans-serif;
-            font-size: 3.5rem;
-            font-weight: 300;
-            color: var(--border-strong);
-            line-height: 1;
-            margin-bottom: 20px;
-            transition: color 0.3s;
-        }
-        .trust-card:hover .trust-card-num { 
-            color: var(--gold); 
-            opacity: 0.4; 
-        }
-        .trust-card-icon {
-            color: var(--gold);
-            margin-bottom: 20px;
-        }
-        .trust-card-title {
-            font-family: 'Jost', sans-serif;
-            font-size: 1.6rem;
-            font-weight: 600;
-            color: var(--text-primary);
-            margin-bottom: 12px;
-        }
-        .trust-card-desc {
-            font-size: 1.05rem; /* রিচ-টেক্সটের জন্য পারফেক্ট সাইজ */
-            color: var(--text-secondary);
-            line-height: 1.7;
-        }
-        
-        /* ── Dynamic Rich Text Styles (ডাটাবেজ থেকে আসা HTML এর জন্য) ── */
-        .trust-card-desc p {
-            margin-bottom: 12px;
-        }
-        .trust-card-desc p:last-child {
-            margin-bottom: 0;
-        }
-        .trust-card-desc ul {
-            list-style-type: disc;
-            padding-left: 20px;
-            margin-top: 8px;
-            margin-bottom: 12px;
-        }
-        .trust-card-desc li {
-            margin-bottom: 6px;
-        }
-        .trust-card-desc ul:last-child {
-            margin-bottom: 0;
-        }
-
-        /* ── Responsive Design ── */
-        @media (max-width: 1024px) {
-            .trust-card {
-                padding: 40px 24px; /* ট্যাবলেটের জন্য প্যাডিং কমানো হয়েছে */
-            }
-        }
-        
-        @media (max-width: 768px) {
-            .trust-section {
-                padding: 60px 0;
-            }
-            .trust-grid {
-                grid-template-columns: 1fr; /* মোবাইলে একটির নিচে আরেকটি দেখাবে */
-                margin-top: 40px;
-            }
-            .trust-card {
-                padding: 40px 32px;
-            }
-        }
-
-        /* ── CTA Banner ── */
-        .cta-banner {
-            position: relative;
-            padding: 100px 40px;
-            background: var(--bg-surface);
-            border-top: 1px solid var(--border);
-            overflow: hidden;
-            text-align: center;
-        }
-        .cta-banner::before {
-            content: '';
-            position: absolute;
-            top: -1px; left: 0; right: 0;
-            height: 1px;
-            background: linear-gradient(to right, transparent, var(--gold), transparent);
-        }
-        .cta-banner-deco {
-            position: absolute;
-            inset: 0;
-            pointer-events: none;
-            overflow: hidden;
-        }
-        .cta-banner-deco-text {
-            position: absolute;
-            font-family: 'Jost', sans-serif;
-            font-size: 16rem;
-            font-weight: 700;
-            color: var(--border);
-            opacity: 0.35;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            white-space: nowrap;
-            user-select: none;
-            letter-spacing: -0.02em;
-            transition: color 0.4s;
-        }
-        .cta-banner-inner {
-            position: relative;
-            z-index: 2;
-            max-width: 680px;
-            margin: 0 auto;
-        }
-        .cta-eyebrow {
-            font-size: 0.9rem;
-            font-weight: 600;
-            letter-spacing: 0.32em;
-            text-transform: uppercase;
-            color: var(--gold);
-            margin-bottom: 18px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 14px;
-        }
-        .cta-eyebrow::before,
-        .cta-eyebrow::after {
-            content: '';
-            width: 28px; height: 1px;
-            background: var(--gold);
-        }
-        .cta-headline {
-            font-family: 'Jost', sans-serif;
-            font-size: clamp(2.2rem, 4vw, 3.6rem);
-            font-weight: 300;
-            color: var(--text-primary);
-            line-height: 1.15;
-            margin-bottom: 16px;
-        }
-        .cta-headline strong { font-weight: 600; }
-        .cta-sub {
-            font-size: 1.2rem;
-            color: var(--text-secondary);
-            line-height: 1.8;
-            margin-bottom: 36px;
-        }
-        .cta-row {
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 14px;
-            flex-wrap: wrap;
-        }
-        /* verified-tag container */
-        .verified-tag {
-            display: inline-flex;
-            align-items: center;
-            gap: 4px; /* Spacing between icon and text */
-            padding: 2px 6px;
-            background: rgba(42, 125, 79, 0.05); /* Subtle background tint */
-            color: #2a7d4f; /* Muted green from your code */
-            border-radius: 4px; /* Slightly rounded corners */
-            font-size: 0.75rem; /* Smaller, legible text */
-            font-weight: 500;
-            text-transform: uppercase;
-            letter-spacing: 0.05em;
-            vertical-align: middle;
-        }
-
-        /* verified-tag icon */
-        .verified-tag-icon {
-            width: 12px; /* Set consistent size for the icon */
-            height: 12px;
-            fill: currentColor; /* Use the parent text color */
-            flex-shrink: 0;
-        }
-
-        /* verified-tag text */
-        .verified-tag-text {
-            color: #2a7d4f;
-        }
-        /* ── Responsive ── */
-        @media (max-width: 1024px) {
-            .talent-grid { grid-template-columns: repeat(2, 1fr); }
-            .trust-grid  { grid-template-columns: 1fr; }
-            .hero-inner  { grid-template-columns: 1fr; gap: 48px; }
-            .hero-gallery { display: none; }
-            .hero-inner  { text-align: center; }
-            .hero-sub, .hero-eyebrow { margin-left: auto; margin-right: auto; }
-            .hero-cta-row { justify-content: center; }
-            .hero-stats  { justify-content: center; }
-            .categories-inner { overflow-x: auto; padding: 0 20px; }
-            .category-item { padding: 18px 20px; }
-        }
-        @media (max-width: 640px) {
-            .talent-grid { grid-template-columns: 1fr; }
-            .hero-headline { font-size: 2.6rem; }
-            .section-inner { padding: 0 20px; }
-            .cta-banner { padding: 64px 20px; }
-        }
-        /* ── Clients Section ── */
-        .clients-section {
-            padding: 80px 0;
-            background: var(--bg-surface);
-            border-top: 1px solid var(--border);
-            border-bottom: 1px solid var(--border);
-            text-align: center;
-            overflow: hidden; /* Prevents the page from scrolling horizontally */
-        }
-
-        /* ── Marquee Containers ── */
-        .marquee-container {
-            margin-top: 40px;
-            display: flex;
-            flex-direction: column;
-            gap: 40px; /* Space between the top and bottom rows */
-            width: 100vw; /* Spans full width of screen */
-            margin-left: calc(-50vw + 50%); /* Centers the full-bleed container */
-        }
-
-        .marquee-track {
-            display: flex;
-            align-items: center;
-            gap: 64px; /* Space between individual logos */
-            width: max-content; /* Allows track to be as wide as all logos combined */
-        }
-
-        /* Pause animation on hover for better user experience */
-        .marquee-track:hover {
-            animation-play-state: paused; 
-        }
-
-        /* ── Animations ── */
-        .track-left {
-            animation: scroll-left 40s linear infinite;
-        }
-
-        .track-right {
-            animation: scroll-right 40s linear infinite;
-        }
-
-        @keyframes scroll-left {
-            0% { transform: translateX(0); }
-            100% { transform: translateX(-50%); } /* Shifts exactly half its width to loop perfectly */
-        }
-
-        @keyframes scroll-right {
-            0% { transform: translateX(-50%); } 
-            100% { transform: translateX(0); }
-        }
-
-        /* ── Logo Styles ── */
-        .client-item {
-            flex-shrink: 0; /* Prevents logos from being squished */
-        }
-
-        .client-logo {
-            max-width: 140px;
-            max-height: 70px;
-            filter: grayscale(100%) opacity(0.5);
-            transition: filter 0.4s ease, transform 0.4s ease;
-            cursor: pointer;
-            object-fit: contain; /* Keeps logo proportions intact */
-        }
-
-        .client-logo:hover {
-            filter: grayscale(0%) opacity(1);
-            transform: scale(1.05);
-        }
-
-        /* ── Responsive Design Updates ── */
-        @media (max-width: 768px) {
-            .marquee-container {
-                gap: 30px;
-                margin-top: 32px;
-            }
-            .marquee-track {
-                gap: 40px; 
-            }
-            .client-logo {
-                max-width: 100px;
-                max-height: 50px;
-            }
-        }
-
-        @media (max-width: 480px) {
-            .marquee-container {
-                gap: 20px;
-            }
-            .marquee-track {
-                gap: 30px; 
-            }
-            .client-logo {
-                max-width: 80px; 
-                max-height: 40px; 
-            }
-        }
-        /* ── Testimonials Section ── */
-        .testi-section {
-            padding: 100px 0;
-            background: var(--bg-secondary);
-        }
-        .testi-grid {
-            display: grid;
-            grid-template-columns: repeat(2, 1fr);
-            gap: 32px;
-            margin-top: 48px;
-        }
-        .testi-card {
-            background: var(--bg-surface);
-            border: 1px solid var(--border);
-            padding: 48px;
-            position: relative;
-            transition: transform 0.4s;
-        }
-        .testi-card:hover {
-            transform: translateY(-4px);
-        }
-        .testi-quote-icon {
-            position: absolute;
-            top: 32px; right: 32px;
-            color: var(--gold);
-            opacity: 0.15;
-            width: 64px; height: 64px;
-            pointer-events: none;
-        }
-        .testi-text {
-            font-size: 1.15rem;
-            line-height: 1.8;
-            color: var(--text-primary);
-            font-style: italic;
-            margin-bottom: 32px;
-            position: relative;
-            z-index: 2;
-        }
-        .testi-author {
-            display: flex;
-            align-items: center;
-            gap: 16px;
-            border-top: 1px solid var(--border-strong);
-            padding-top: 24px;
-        }
-        .testi-avatar {
-            width: 56px; height: 56px;
-            border-radius: 50%;
-            object-fit: cover;
-            border: 2px solid var(--gold-bg);
-        }
-        .testi-author-info {}
-        .testi-name {
-            font-family: 'Jost', sans-serif;
-            font-size: 1.25rem;
-            font-weight: 600;
-            color: var(--text-primary);
-            line-height: 1.2;
-        }
-        .testi-role {
-            font-size: 0.7rem;
-            font-weight: 600;
-            letter-spacing: 0.15em;
-            text-transform: uppercase;
-            color: var(--gold);
-            margin-top: 4px;
-        }
-
-        /* ── Team Section ── */
-        .team-section {
-            padding: 100px 0;
-            background: var(--bg-primary);
-        }
-        
-        /* Changed to Flexbox for perfect center alignment */
-        .team-grid {
-            display: flex;
-            flex-wrap: wrap;
-            justify-content: center; /* This centers the items if there are 5 */
-            gap: 20px; /* Reduced gap to fit 5 columns nicely */
-        }
-        
-        .team-card {
-            flex: 0 0 calc(20% - 16px); /* 5 Columns layout */
-            max-width: calc(20% - 16px);
-            text-align: center;
-            background: var(--bg-surface);
-            border: 1px solid var(--border);
-            padding: 32px 10px; /* Reduced left/right padding */
-            transition: border-color 0.4s;
-        }
-        
-        .team-card:hover {
-            border-color: var(--gold);
-        }
-        
-        .team-avatar-wrap {
-            width: 170px; /* Increased from 140px for larger profile image */
-            height: 170px; /* Increased from 140px for larger profile image */
-            margin: 0 auto 24px;
-            border-radius: 50%;
-            padding: 4px;
-            border: 1px dashed var(--border-strong);
-        }
-        
-        .team-avatar {
-            width: 100%; 
-            height: 100%;
-            border-radius: 50%;
-            object-fit: cover;
-        }
-        
-        .team-name {
-            font-family: 'Jost', sans-serif;
-            font-size: 1.5rem; /* Slightly reduced so big names don't break in 5 cols */
-            font-weight: 500;
-            color: var(--text-primary);
-            margin-bottom: 6px;
-        }
-        
-        .team-role {
-            font-size: 0.75rem;
-            font-weight: 600;
-            letter-spacing: 0.15em;
-            text-transform: uppercase;
-            color: var(--gold);
-            margin-bottom: 20px;
-        }
-        
-        .team-socials {
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 10px;
-        }
-        
-        .team-social-link {
-            width: 34px; 
-            height: 34px;
-            border-radius: 50%;
-            background: var(--bg-secondary);
-            color: var(--text-muted);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            transition: all 0.3s;
-        }
-        
-        .team-social-link:hover {
-            background: var(--gold);
-            color: #fff;
-        }
-
-        /* ── Gallery Slider Section ── */
-        .home-gallery-section {
-            padding: 100px 0;
-            background: var(--bg-secondary); /* Alternating background color */
-            border-top: 1px solid var(--border);
-        }
-        
-        .gallery-slide-card {
-            position: relative;
-            aspect-ratio: 4 / 5; /* Professional portrait ratio */
-            overflow: hidden;
-            background: var(--bg-surface);
-            border-radius: 4px;
-            cursor: grab;
-        }
-        
-        .gallery-slide-card:active {
-            cursor: grabbing;
-        }
-
-        .gallery-slide-img {
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
-            transition: transform 0.6s cubic-bezier(0.25, 0.46, 0.45, 0.94);
-        }
-
-        .gallery-slide-card:hover .gallery-slide-img {
-            transform: scale(1.05);
-        }
-
-        .gallery-slide-caption {
-            position: absolute;
-            bottom: 0; left: 0; right: 0;
-            padding: 40px 20px 20px;
-            background: linear-gradient(to top, rgba(0,0,0,0.85) 0%, rgba(0,0,0,0.4) 60%, transparent 100%);
-            color: #ffffff;
-            font-family: 'Jost', sans-serif;
-            font-size: 1.1rem;
-            font-weight: 500;
-            letter-spacing: 0.02em;
-            transform: translateY(10px);
-            opacity: 0;
-            transition: transform 0.4s ease, opacity 0.4s ease;
-        }
-
-        .gallery-slide-card:hover .gallery-slide-caption {
-            transform: translateY(0);
-            opacity: 1;
-        }
-
-        /* Swiper specific overrides */
-        .gallerySwiper {
-            padding-bottom: 50px !important; /* Space for pagination bullets */
-        }
-        .swiper-pagination-bullet {
-            background: var(--text-muted) !important;
-            opacity: 0.5;
-        }
-        .swiper-pagination-bullet-active {
-            background: var(--gold) !important;
-            opacity: 1;
-        }
-        /* Responsive Additions */
-        
-        /* Small Desktop / Laptop - 3 Columns */
-        @media (max-width: 1200px) {
-            .team-card {
-                flex: 0 0 calc(33.333% - 14px);
-                max-width: calc(33.333% - 14px);
-            }
-        }
-        
-        /* Tablet - 2 Columns */
-        @media (max-width: 900px) {
-            .testi-grid { grid-template-columns: 1fr; }
-            .team-card {
-                flex: 0 0 calc(50% - 10px);
-                max-width: calc(50% - 10px);
-            }
-        }
-        
-        /* Mobile - 1 Column */
-        @media (max-width: 640px) {
-            .team-card {
-                flex: 0 0 100%;
-                max-width: 100%;
-            }
-            .clients-grid { gap: 32px; flex-direction: column; }
-        }
-    </style>
-
-    {{-- ══════════════════════════════════════════
-         HERO
-    ══════════════════════════════════════════ --}}
-    <section class="hero" aria-label="Hero">
-
-        <div class="hero-deco" aria-hidden="true">
-            <div class="hero-deco-ring hero-deco-ring-1"></div>
-            <div class="hero-deco-ring hero-deco-ring-2"></div>
-            <div class="hero-deco-ring hero-deco-ring-3"></div>
-            <div class="hero-deco-line hero-deco-line-v"></div>
-            <div class="hero-deco-dots"></div>
-        </div>
-
-        <div class="hero-inner">
-
-            {{-- Left copy --}}
-            <div class="anim-fade-up">
-                <div class="hero-eyebrow">
-                    <span class="hero-eyebrow-line"></span>
-                    Bangladesh's Premier Talent Platform
-                </div>
-
-                <h1 class="hero-headline">
-                    Discover &amp;<br>
-                    <strong>Hire Verified</strong><br>
-                    <em>Creative Talent.</em>
-                </h1>
-
-                <p class="hero-sub">
-                    The most trusted directory for producers, directors, and brands to connect with verified models, actors, photographers, and content creators across Bangladesh.
-                </p>
-
-                <div class="hero-cta-row">
-                    <a href="/artists" class="btn-fill">
-                        Browse Talent
-                        <svg width="10" height="10" viewBox="0 0 10 10" fill="none" aria-hidden="true">
-                            <path d="M1 5h8M5 1l4 4-4 4" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/>
-                        </svg>
-                    </a>
-                    <a href="/register" class="btn-outline">Apply as Talent</a>
-                </div>
-
-                <div class="hero-stats">
-                    <div class="hero-stat">
-                        <div class="hero-stat-num">500<span>+</span></div>
-                        <div class="hero-stat-label">Verified Talents</div>
-                    </div>
-                    <div class="hero-stat">
-                        <div class="hero-stat-num">120<span>+</span></div>
-                        <div class="hero-stat-label">Active Brands</div>
-                    </div>
-                    <div class="hero-stat">
-                        <div class="hero-stat-num">6</div>
-                        <div class="hero-stat-label">Talent Categories</div>
-                    </div>
-                </div>
+    .trust-intro {
+        position: static;
+        padding: 64px 28px 48px;
+        border-right: none;
+        border-bottom: 1px solid var(--border);
+        text-align: center;
+    }
+    .trust-intro__label { justify-content: center; }
+    .trust-intro__sub { margin-left: auto; margin-right: auto; }
+    .trust-row {
+        grid-template-columns: 64px 1fr;
+    }
+    .trust-row__content {
+        padding: 36px 28px 36px 28px;
+    }
+}
+@media (max-width: 640px) {
+    .trust-intro { padding: 52px 18px 36px; }
+    .trust-row { grid-template-columns: 1fr; }
+    .trust-row__num-col {
+        display: none;
+    }
+    .trust-row__content { padding: 32px 20px; }
+}
+
+
+/* ═══════════════════════════════════════════
+   7. TESTIMONIALS — Redesigned
+═══════════════════════════════════════════ */
+.testi-section { padding: 96px 0; background: var(--bg-primary); border-top: 1px solid var(--border); }
+
+.testi-intro { max-width: 540px; }
+
+.testi-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 20px; margin-top: 52px;
+}
+
+.testi-card {
+    position: relative;
+    background: var(--bg-surface);
+    border: 1px solid var(--border);
+    border-radius: 2px;
+    padding: 0;
+    overflow: hidden;
+    display: flex; flex-direction: column;
+    transition: border-color .35s, transform .35s;
+}
+.testi-card:hover {
+    border-color: var(--gold);
+    transform: translateY(-3px);
+    box-shadow: 0 12px 40px rgba(0,0,0,.07);
+}
+
+/* Accent bar on top */
+.testi-card::before {
+    content: '';
+    position: absolute; top: 0; left: 0; right: 0; height: 3px;
+    background: var(--gold); transform: scaleX(0);
+    transform-origin: left; transition: transform .4s ease;
+}
+.testi-card:hover::before { transform: scaleX(1); }
+
+.testi-card__body { padding: 36px 36px 28px; flex: 1; position: relative; }
+
+/* Large decorative quotation mark */
+.testi-card__q-mark {
+    position: absolute; top: 24px; right: 28px;
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 6rem; font-weight: 700; line-height: 1;
+    color: var(--gold); opacity: .08; user-select: none;
+    pointer-events: none;
+}
+
+.testi-card__stars {
+    display: flex; gap: 3px; margin-bottom: 16px;
+}
+.testi-card__star {
+    width: 12px; height: 12px;
+    color: var(--gold); fill: var(--gold);
+}
+
+.testi-card__text {
+    font-family: 'Jost', sans-serif;
+    font-size: .95rem; font-weight: 300; font-style: italic;
+    color: var(--text-primary); line-height: 1.85;
+    position: relative; z-index: 1;
+}
+
+.testi-card__foot {
+    display: flex; align-items: center; gap: 14px;
+    padding: 20px 36px;
+    background: var(--bg-secondary);
+    border-top: 1px solid var(--border);
+}
+.testi-card__avatar {
+    width: 46px; height: 46px;
+    border-radius: 50%; object-fit: cover; flex-shrink: 0;
+    border: 2px solid var(--border-strong);
+}
+.testi-card__avatar-ph {
+    width: 46px; height: 46px; border-radius: 50%; flex-shrink: 0;
+    background: var(--gold-bg);
+    display: flex; align-items: center; justify-content: center;
+    color: var(--gold); border: 2px solid var(--border-strong);
+}
+.testi-card__name {
+    font-family: 'Jost', sans-serif;
+    font-size: 1rem; font-weight: 700; color: var(--text-primary); line-height: 1.2;
+}
+.testi-card__role {
+    font-size: .6rem; font-weight: 700;
+    letter-spacing: .15em; text-transform: uppercase;
+    color: var(--gold); margin-top: 3px;
+}
+
+
+/* ═══════════════════════════════════════════
+   TEAM SECTION
+═══════════════════════════════════════════ */
+.team-section {
+    padding: 96px 0;
+    background: var(--bg-surface);
+    border-top: 1px solid var(--border);
+}
+
+/*
+   --tcols is set per-render from PHP based on member count.
+   Flexbox + justify-content:center handles orphan centering
+   automatically regardless of remainder.
+*/
+.team-grid {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 20px;
+    margin-top: 52px;
+}
+
+.team-card {
+    /*
+       Each card's width is calculated from the column count variable.
+       - fill exactly N columns when a full row is present
+       - orphan cards on the last row stay their natural width and
+         are centered by justify-content: center on the parent
+    */
+    flex: 0 0 calc(
+        (100% - (var(--tcols, 4) - 1) * 20px) / var(--tcols, 4)
+    );
+    max-width: 280px;
+    min-width: 160px;
+
+    background: var(--bg-primary);
+    border: 1px solid var(--border);
+    overflow: hidden;
+    position: relative;
+    transition: border-color .32s ease, transform .32s ease, box-shadow .32s ease;
+}
+.team-card:hover {
+    border-color: var(--gold);
+    transform: translateY(-5px);
+    box-shadow: 0 16px 48px rgba(0,0,0,.09);
+}
+
+/* Red accent bar slides in from bottom on hover */
+.team-card::after {
+    content: '';
+    position: absolute;
+    bottom: 0; left: 0; right: 0;
+    height: 3px;
+    background: var(--gold);
+    transform: scaleX(0);
+    transform-origin: left;
+    transition: transform .38s cubic-bezier(.22,.68,0,1.1);
+}
+.team-card:hover::after { transform: scaleX(1); }
+
+/* ── Photo block ── */
+.team-card__photo {
+    position: relative;
+    width: 100%;
+    aspect-ratio: 4 / 4.5;   /* portrait ratio */
+    overflow: hidden;
+    background: var(--bg-secondary);
+}
+.team-card__photo img {
+    width: 100%; height: 100%;
+    object-fit: cover; object-position: top center;
+    transition: transform .5s ease;
+    display: block;
+}
+.team-card:hover .team-card__photo img { transform: scale(1.05); }
+
+/* Photo placeholder */
+.team-card__photo-ph {
+    width: 100%; height: 100%;
+    display: flex; align-items: center; justify-content: center;
+    color: var(--text-muted);
+}
+.team-card__photo-ph svg { opacity: .22; }
+
+/* Social icons overlay — appears on photo hover */
+.team-card__socials {
+    position: absolute;
+    inset: 0;
+    display: flex; align-items: center; justify-content: center;
+    gap: 10px;
+    background: rgba(10,8,6,.55);
+    opacity: 0;
+    transition: opacity .3s ease;
+}
+.team-card:hover .team-card__socials { opacity: 1; }
+
+.team-card__soc {
+    width: 36px; height: 36px;
+    border-radius: 50%;
+    border: 1.5px solid rgba(255,255,255,.6);
+    color: #fff;
+    background: transparent;
+    display: flex; align-items: center; justify-content: center;
+    text-decoration: none;
+    transition: background .22s, border-color .22s;
+}
+.team-card__soc:hover {
+    background: var(--gold);
+    border-color: var(--gold);
+}
+
+/* ── Text block ── */
+.team-card__body {
+    padding: 18px 16px 20px;
+    border-top: 1px solid var(--border);
+}
+.team-card__name {
+    font-family: 'Jost', sans-serif;
+    font-size: 1rem; font-weight: 700;
+    color: var(--text-primary);
+    line-height: 1.25;
+    margin-bottom: 5px;
+    white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+}
+.team-card__role {
+    font-family: 'Jost', sans-serif;
+    font-size: 0.6rem; font-weight: 700;
+    letter-spacing: .18em; text-transform: uppercase;
+    color: var(--gold);
+}
+
+/* ── Responsive breakpoints ── */
+@media (max-width: 1024px) {
+    .team-card {
+        flex: 0 0 calc(
+            (100% - (min(var(--tcols, 4), 3) - 1) * 20px)
+            / min(var(--tcols, 4), 3)
+        );
+    }
+}
+@media (max-width: 680px) {
+    .team-card {
+        flex: 0 0 calc((100% - 20px) / 2);
+        max-width: none;
+    }
+}
+@media (max-width: 400px) {
+    .team-card { flex: 0 0 100%; max-width: none; }
+    .team-grid { gap: 14px; }
+}
+
+/* ═══════════════════════════════════════════
+   9. CTA BANNER
+═══════════════════════════════════════════ */
+.cta-banner {
+    position: relative; padding: 100px 48px;
+    background: var(--bg-surface);
+    border-top: 1px solid var(--border); overflow: hidden; text-align: center;
+}
+.cta-banner::before {
+    content: '';
+    position: absolute; top: 0; left: 0; right: 0; height: 1px;
+    background: linear-gradient(to right, transparent, var(--gold), transparent);
+}
+.cta-banner__bg-text {
+    position: absolute; font-family: 'Jost', sans-serif;
+    font-size: 14rem; font-weight: 800; color: var(--border); opacity: .2;
+    top: 50%; left: 50%; transform: translate(-50%, -50%);
+    white-space: nowrap; user-select: none; letter-spacing: -.02em; pointer-events: none;
+}
+.cta-banner__inner { position: relative; z-index: 2; max-width: 640px; margin: 0 auto; }
+.cta-banner__eyebrow {
+    font-family: 'Jost', sans-serif;
+    font-size: .62rem; font-weight: 700; letter-spacing: .32em;
+    text-transform: uppercase; color: var(--gold); margin-bottom: 18px;
+    display: flex; align-items: center; justify-content: center; gap: 14px;
+}
+.cta-banner__eyebrow::before,
+.cta-banner__eyebrow::after { content: ''; width: 24px; height: 1px; background: var(--gold); }
+.cta-banner__title {
+    font-family: 'Jost', sans-serif;
+    font-size: clamp(2rem, 4vw, 3.4rem); font-weight: 300;
+    color: var(--text-primary); line-height: 1.15; margin-bottom: 14px;
+}
+.cta-banner__title strong { font-weight: 700; }
+.cta-banner__sub {
+    font-family: 'Jost', sans-serif;
+    font-size: .95rem; color: var(--text-secondary); line-height: 1.85; margin-bottom: 32px; opacity: .78;
+}
+.cta-banner__btns { display: flex; align-items: center; justify-content: center; gap: 13px; flex-wrap: wrap; }
+
+
+/* ═══════════════════════════════════════════
+   RESPONSIVE
+═══════════════════════════════════════════ */
+@media (max-width: 1200px) {
+    .team-card { flex: 0 0 calc(33.33% - 13px); max-width: calc(33.33% - 13px); }
+}
+
+@media (max-width: 1024px) {
+    .pg-inner  { padding: 0 28px; }
+    .hero__inner  { grid-template-columns: 1fr; gap: 0; padding: 64px 28px 52px; text-align: center; }
+    .hero__gallery { display: none; }
+    .hero__sub { margin-left: auto; margin-right: auto; }
+    .hero__eyebrow { justify-content: center; }
+    .hero__cta { justify-content: center; }
+    .hero__stats { justify-content: center; }
+    .talent-grid { grid-template-columns: repeat(2, 1fr); }
+    .trust-grid  { grid-template-columns: 1fr; }
+    .testi-grid  { grid-template-columns: 1fr; }
+    .cats-inner  { overflow-x: auto; padding: 0 20px; }
+    .cat-item    { padding: 16px 18px; }
+    .team-card   { flex: 0 0 calc(50% - 10px); max-width: calc(50% - 10px); }
+}
+
+@media (max-width: 640px) {
+    .pg-section  { padding: 64px 0; }
+    .pg-inner    { padding: 0 18px; }
+    .talent-grid { grid-template-columns: 1fr; }
+    .hero__headline { font-size: 2.7rem; }
+    .pg-section-head { flex-direction: column; align-items: flex-start; gap: 16px; }
+    .cta-banner  { padding: 64px 20px; }
+    .cta-banner__bg-text { font-size: 6rem; }
+    .trust-card  { padding: 36px 24px; }
+    .team-card   { flex: 0 0 100%; max-width: 100%; }
+    .testi-card__body { padding: 28px 22px 22px; }
+    .testi-card__foot { padding: 16px 22px; }
+    .hero__stats { flex-wrap: wrap; gap: 24px; }
+}
+
+</style>
+
+
+{{-- ╔════════════════════════════════════════════
+     SECTION 1 · HERO
+════════════════════════════════════════════╗ --}}
+<section class="hero" aria-label="Hero">
+
+    <div class="hero__deco" aria-hidden="true">
+        <div class="hero__ring hero__ring--a"></div>
+        <div class="hero__ring hero__ring--b"></div>
+        <div class="hero__ring hero__ring--c"></div>
+        <div class="hero__vline"></div>
+        <div class="hero__dots"></div>
+    </div>
+
+    <div class="hero__inner">
+
+        {{-- ── Left Copy ── --}}
+        <div class="anim-fade-up">
+
+            <div class="hero__eyebrow">
+                <span class="hero__eyebrow-line"></span>
+                Bangladesh's Premier Talent Platform
             </div>
 
-            {{-- Right gallery collage --}}
-            <div class="hero-gallery anim-fade-up anim-d2" aria-hidden="true">
+            <h1 class="hero__headline">
+                Discover &amp;<br>
+                <strong>Hire Verified</strong>
+                <em>Creative Talent.</em>
+            </h1>
 
-                @foreach($featuredArtists->take(3) as $artist)
-                    <div class="hero-card hero-card-{{ $loop->iteration }}">
-                        
-                        {{-- Load Avatar, fallback to Portfolio, fallback to placeholder --}}
-                        @if($artist->hasMedia('avatar'))
-                            <img src="{{ $artist->getFirstMediaUrl('avatar') }}" alt="{{ $artist->name }}">
-                        @elseif($artist->hasMedia('portfolio'))
-                            <img src="{{ $artist->getFirstMediaUrl('portfolio') }}" alt="{{ $artist->name }}">
-                        @else
-                            <img src="https://ui-avatars.com/api/?name={{ urlencode($artist->name) }}&background=1a1714&color=fff&size=600" alt="{{ $artist->name }}">
-                        @endif
+            <p class="hero__sub">
+                The most trusted directory for producers, directors, and brands to connect
+                with verified models, actors, photographers, and content creators across Bangladesh.
+            </p>
 
-                        {{-- Original design showed the badge only on the top two cards --}}
-                        @if($loop->iteration <= 2)
-                            <div class="hero-card-badge">
-                                <svg width="10" height="10" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2L3 7v5c0 5.55 3.84 10.74 9 12 5.16-1.26 9-6.45 9-12V7L12 2zm-2 15l-4-4 1.41-1.41L10 14.17l6.59-6.59L18 9l-8 8z"/></svg>
-                                Verified
-                            </div>
-                        @endif
-
-                        <div class="hero-card-label">
-                            <div class="hero-card-cat">
-                                {{-- Dynamically grab their first category or fallback to 'Professional' --}}
-                                {{ !empty($artist->profile?->categories) ? collect($artist->profile->categories)->first() : 'Professional' }}
-                            </div>
-                            <div class="hero-card-name">{{ $artist->name }}</div>
-                        </div>
-                    </div>
-                @endforeach
-
-                <div class="hero-accent-box" aria-label="100% NID Verified">
-                    <div class="hero-accent-box-num">100%</div>
-                    <div class="hero-accent-box-label">NID Verified</div>
-                </div>
-            </div>
-        </div>
-    </section>
-
-    {{-- ══════════════════════════════════════════
-        DYNAMIC CATEGORIES STRIP
-    ══════════════════════════════════════════ --}}
-    @php
-        // Fetch unique active groups using your model's cache key and ordering
-        $categoryGroups = \Illuminate\Support\Facades\Cache::rememberForever('nav_category_groups', function () {
-            return \App\Models\Category::where('is_active', true)
-                ->customOrdered()
-                ->get()
-                ->unique('group')
-                ->pluck('group');
-        });
-    @endphp
-
-    <nav class="categories-strip" aria-label="Browse by category">
-        <div class="categories-inner">
-            @foreach($categoryGroups as $group)
-                @php
-                    // Map the correct SVG icon based on the group name
-                    $icon = match($group) {
-                        'Artist' => '<path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/>', // Star
-                        
-                        // NEW: Glamour / Sparkle for Models
-                        'Model' => '<path d="M12 3l1.9 5.8a2 2 0 0 0 1.3 1.3L21 12l-5.8 1.9a2 2 0 0 0-1.3 1.3L12 21l-1.9-5.8a2 2 0 0 0-1.3-1.3L3 12l5.8-1.9a2 2 0 0 0 1.3-1.3L12 3z"/>', 
-                        
-                        // NEW: Brand Seal / Ribbon Badge for Brand Promoters
-                        'Brand Promoter' => '<circle cx="12" cy="8" r="7"/><polyline points="8.21 13.89 7 23 12 20 17 23 15.79 13.88"/>', 
-                        
-                        'Content Creator' => '<rect x="2" y="2" width="20" height="20" rx="2.18" ry="2.18"/><line x1="7" y1="2" x2="7" y2="22"/><line x1="17" y1="2" x2="17" y2="22"/><line x1="2" y1="12" x2="22" y2="12"/><line x1="2" y1="7" x2="7" y2="7"/><line x1="2" y1="17" x2="7" y2="17"/><line x1="17" y1="17" x2="22" y2="17"/><line x1="17" y1="7" x2="22" y2="7"/>', // Film strip
-                        'Director' => '<rect x="2" y="6" width="20" height="12" rx="2" ry="2"/><line x1="2" y1="10" x2="22" y2="10"/><line x1="7" y1="6" x2="7" y2="10"/><line x1="12" y1="6" x2="12" y2="10"/><line x1="17" y1="6" x2="17" y2="10"/>', // Clapperboard
-                        'Creative Crew' => '<path d="M23 19a2 2 0 01-2 2H3a2 2 0 01-2-2V8a2 2 0 012-2h4l2-3h6l2 3h4a2 2 0 012 2z"/><circle cx="12" cy="13" r="4"/>', // Camera
-                        
-                        default => '<circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/>' // Fallback
-                    };
-
-                    // Intelligently pluralize the label, but skip "Creative Crew"
-                    $label = $group === 'Creative Crew' ? $group : \Illuminate\Support\Str::plural($group);
-                @endphp
-
-                <a href="/artists?group={{ urlencode($group) }}" class="category-item">
-                    <svg class="cat-icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
-                        {!! $icon !!}
+            <div class="hero__cta">
+                <a href="/artists" class="btn-primary">
+                    Browse Talent
+                    <svg width="12" height="12" viewBox="0 0 10 10" fill="none" aria-hidden="true">
+                        <path d="M1 5h8M5 1l4 4-4 4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
                     </svg>
-                    <span class="cat-label">{{ $label }}</span>
                 </a>
-            @endforeach
+                <a href="/register" class="btn-ghost">Apply as Talent</a>
+            </div>
+
+            <div class="hero__stats">
+                <div class="hero__stat">
+                    <div class="hero__stat-num">500<sup>+</sup></div>
+                    <div class="hero__stat-label">Verified Talents</div>
+                </div>
+                <div class="hero__stat">
+                    <div class="hero__stat-num">120<sup>+</sup></div>
+                    <div class="hero__stat-label">Active Brands</div>
+                </div>
+                <div class="hero__stat">
+                    <div class="hero__stat-num">6</div>
+                    <div class="hero__stat-label">Talent Categories</div>
+                </div>
+            </div>
+
         </div>
-    </nav>
 
-    {{-- ══════════════════════════════════════════
-         Featured TALENT
-    ══════════════════════════════════════════ --}}
-    <section class="talent-section" aria-labelledby="talent-heading">
-        <div class="section-inner">
-            <div class="section-header">
-                <div class="section-header-left">
-                    <div class="section-eyebrow">Exclusively Verified</div>
-                    <h2 class="section-title" id="talent-heading">
-                        Featured <strong>Talent</strong>
-                    </h2>
-                </div>
-                <a href="/artists" class="btn-outline">View All Talent</a>
-            </div>
+        {{-- ── Right: Floating Cards ── --}}
+        <div class="hero__gallery anim-fade-up anim-d2" aria-hidden="true">
 
-            <div class="talent-grid">
-                @forelse($featuredArtists as $artist)
-                    <a href="{{ route('artist.show', ['slug' => \Illuminate\Support\Str::slug($artist->name) . '-' . $artist->id]) }}" class="artist-card" aria-label="View {{ $artist->name }}'s profile">
+            @foreach($featuredArtists->take(3) as $artist)
+                <div class="hero__card hero__card--{{ $loop->iteration }}">
 
-                                        {{-- ── White triangle verified badge ── --}}
-                                        <div class="artist-card-verified">
-                                            <div class="artist-card-verified-inner">
-                                                <svg viewBox="0 0 24 24" fill="#2a7d4f">
-                                                    <path d="M12 2L3 7v5c0 5.55 3.84 10.74 9 12 5.16-1.26 9-6.45 9-12V7L12 2zm-2 15l-4-4 1.41-1.41L10 14.17l6.59-6.59L18 9l-8 8z"/>
-                                                </svg>
-                                                <span>Verified</span>
-                                            </div>
-                                        </div>
+                    @if($artist->hasMedia('avatar'))
+                        <img src="{{ $artist->getFirstMediaUrl('avatar') }}" alt="{{ $artist->name }}" loading="eager">
+                    @elseif($artist->hasMedia('portfolio'))
+                        <img src="{{ $artist->getFirstMediaUrl('portfolio') }}" alt="{{ $artist->name }}" loading="eager">
+                    @else
+                        <img src="https://ui-avatars.com/api/?name={{ urlencode($artist->name) }}&background=1a1714&color=fff&size=600" alt="{{ $artist->name }}">
+                    @endif
 
-                                        {{-- ── Photo ── --}}
-                                        <div class="artist-card-media">
-                                            @if($artist->hasMedia('avatar'))
-                                                <img src="{{ $artist->getFirstMediaUrl('avatar') }}" alt="{{ $artist->name }}" loading="lazy">
-                                            @elseif($artist->hasMedia('portfolio'))
-                                                <img src="{{ $artist->getFirstMediaUrl('portfolio') }}" alt="{{ $artist->name }}" loading="lazy">
-                                            @else
-                                                <div class="artist-card-placeholder">
-                                                    <svg width="36" height="36" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1">
-                                                        <circle cx="12" cy="8" r="4"/><path d="M4 20c0-4 3.58-7 8-7s8 3 8 7"/>
-                                                    </svg>
-                                                    <span>No Photo</span>
-                                                </div>
-                                            @endif
-                                        </div>
+                    @if($loop->iteration <= 2)
+                        <div class="hero__badge">Verified</div>
+                    @endif
 
-                                        {{-- ── Always-visible bottom info ── --}}
-                                        <div class="artist-card-info">
-                                            @php
-                                                $artistCats = (array) ($artist->profile?->categories ?? []);
-                                                $displayGroups = [];
-
-                                                if (!empty($artistCats)) {
-                                                    // Look up the matching categories, apply your custom sort order, and get unique groups
-                                                    $displayGroups = \App\Models\Category::whereIn('name', $artistCats)
-                                                        ->customOrdered()
-                                                        ->pluck('group')
-                                                        ->unique()
-                                                        ->toArray();
-                                                }
-                                            @endphp
-
-                                            <div class="artist-card-cat">
-                                                {{ !empty($displayGroups) ? implode(' · ', $displayGroups) : 'Professional' }}
-                                            </div>
-                                            <div class="artist-card-name">{{ $artist->name }}</div>
-                                            <div class="artist-card-meta">
-                                                <div class="artist-card-location">
-                                                    <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
-                                                        <path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7z"/>
-                                                        <circle cx="12" cy="9" r="2.5"/>
-                                                    </svg>
-                                                    {{ implode(', ', array_filter([$artist->profile?->upazila, $artist->profile?->district])) ?: 'Bangladesh' }}
-                                                </div>
-                                                @if($artist->profile?->hourly_rate)
-                                                    <div class="artist-card-rate">
-                                                        {{ number_format($artist->profile->hourly_rate) }} BDT/hr
-                                                    </div>
-                                                @endif
-                                            </div>
-                                        </div>
-
-                                        {{-- ── Hover overlay with full details ── --}}
-                                        <div class="artist-card-hover">
-                                            <div class="artist-hover-name">{{ $artist->name }}</div>
-
-                                            @if(!empty($artist->profile?->categories))
-                                                <div class="artist-hover-cats">
-                                                    @foreach($artist->profile->categories as $cat)
-                                                        <span class="artist-hover-cat-tag">{{ $cat }}</span>
-                                                    @endforeach
-                                                </div>
-                                            @endif
-
-                                            <div class="artist-hover-divider"></div>
-
-                                            <div class="artist-hover-meta">
-                                                {{-- Location --}}
-                                                <div class="artist-hover-row">
-                                                    <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
-                                                        <path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7z"/>
-                                                        <circle cx="12" cy="9" r="2.5"/>
-                                                    </svg>
-                                                    {{ implode(', ', array_filter([$artist->profile?->upazila, $artist->profile?->district, $artist->profile?->country])) ?: 'Location not specified' }}
-                                                </div>
-
-                                                {{-- Gender + Age --}}
-                                                @if($artist->profile?->gender || $artist->profile?->date_of_birth)
-                                                    <div class="artist-hover-row">
-                                                        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
-                                                            <circle cx="12" cy="8" r="4"/><path d="M4 20c0-4 3.58-7 8-7s8 3 8 7"/>
-                                                        </svg>
-                                                        {{ $artist->profile?->gender ?? '' }}
-                                                        @if($artist->profile?->date_of_birth)
-                                                            &nbsp;·&nbsp;
-                                                            <strong>{{ \Carbon\Carbon::parse($artist->profile->date_of_birth)->age }} yrs</strong>
-                                                        @endif
-                                                    </div>
-                                                @endif
-
-                                                {{-- Height --}}
-                                                @if($artist->profile?->height_cm)
-                                                    <div class="artist-hover-row">
-                                                        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
-                                                            <path d="M8 3v18M5 6h3M5 10h3M5 14h3M5 18h3M16 3l4 4-4 4M20 7H8"/>
-                                                        </svg>
-                                                        <strong>{{ $artist->profile->height_cm }} ft</strong>
-                                                    </div>
-                                                @endif
-
-                                                {{-- Rate --}}
-                                                @if($artist->profile?->hourly_rate)
-                                                    <div class="artist-hover-row">
-                                                        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
-                                                            <circle cx="12" cy="12" r="10"/><path d="M9 8h6M9 12h6M9 16h4"/>
-                                                        </svg>
-                                                        Starting from&nbsp;
-                                                        <strong>{{ number_format($artist->profile->hourly_rate) }} BDT/hr</strong>
-                                                    </div>
-                                                @endif
-
-                                                {{-- Languages --}}
-                                                @if(!empty($artist->profile?->languages))
-                                                    <div class="artist-hover-row">
-                                                        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
-                                                            <path d="M2 5h20M2 12h20M2 19h20"/>
-                                                        </svg>
-                                                        {{ implode(', ', (array)$artist->profile->languages) }}
-                                                    </div>
-                                                @endif
-                                            </div>
-
-                                            <div class="artist-hover-cta">
-                                                View Full Profile
-                                                <svg width="10" height="10" viewBox="0 0 10 10" fill="none">
-                                                    <path d="M1 5h8M5 1l4 4-4 4" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/>
-                                                </svg>
-                                            </div>
-                                        </div>
-
-                                    </a>
-                @empty
-                    <div class="talent-empty">
-                        <svg class="talent-empty-icon" width="56" height="56" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1" aria-hidden="true">
-                            <circle cx="12" cy="8" r="4"/><path d="M4 20c0-4 3.58-7 8-7s8 3 8 7"/>
-                        </svg>
-                        <div class="talent-empty-title">Talent Profiles Coming Soon</div>
-                        <div class="talent-empty-sub">Our verified talent directory is growing. Check back shortly.</div>
-                    </div>
-                @endforelse
-            </div>
-
-            @if(isset($featuredArtists) && $featuredArtists->count() > 0)
-                <div class="view-all-wrap">
-                    <a href="/artists" class="btn-fill">
-                        Explore Full Directory
-                        <svg width="10" height="10" viewBox="0 0 10 10" fill="none" aria-hidden="true">
-                            <path d="M1 5h8M5 1l4 4-4 4" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/>
-                        </svg>
-                    </a>
-                </div>
-            @endif
-        </div>
-    </section>
-
-    {{-- ══════════════════════════════════════════
-         LATEST GALLERY SLIDER
-    ══════════════════════════════════════════ --}}
-    @if(isset($galleryPhotos) && $galleryPhotos->count() > 0)
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css" />
-
-    <section class="home-gallery-section anim-fade-up" aria-labelledby="gallery-heading">
-        <div class="section-inner">
-            <div class="section-header">
-                <div class="section-header-left">
-                    <div class="section-eyebrow">Our Portfolio</div>
-                    <h2 class="section-title" id="gallery-heading">
-                        Recent <strong>Shoots</strong>
-                    </h2>
-                </div>
-                <a href="/gallery" class="btn-outline">View Full Gallery</a>
-            </div>
-
-            <div class="swiper gallerySwiper">
-                <div class="swiper-wrapper">
-                    @foreach($galleryPhotos as $photo)
-                        <div class="swiper-slide">
-                            <div class="gallery-slide-card">
-                                <img src="{{ Storage::url($photo->image) }}" class="gallery-slide-img" alt="{{ $photo->caption ?? 'Gallery Image' }}" loading="lazy">
-                                
-                                @if($photo->caption)
-                                    <div class="gallery-slide-caption">
-                                        {{ $photo->caption }}
-                                    </div>
-                                @endif
-                            </div>
+                    <div class="hero__card-label">
+                        <div class="hero__card-cat">
+                            {{ !empty($artist->profile?->categories) ? collect($artist->profile->categories)->first() : 'Professional' }}
                         </div>
-                    @endforeach
-                </div>
-                <div class="swiper-pagination"></div>
-            </div>
-        </div>
-    </section>
+                        <div class="hero__card-name">{{ $artist->name }}</div>
+                    </div>
 
-    <script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>
-    <script>
-        document.addEventListener('DOMContentLoaded', function() {
-            var swiper = new Swiper(".gallerySwiper", {
-                slidesPerView: 2, /* 2 Columns on Mobile */
-                spaceBetween: 12,
-                grabCursor: true,
-                pagination: {
-                    el: ".swiper-pagination",
-                    clickable: true,
-                },
-                breakpoints: {
-                    /* Tablet */
-                    768: {
-                        slidesPerView: 3,
-                        spaceBetween: 20,
-                    },
-                    /* Desktop */
-                    1024: {
-                        slidesPerView: 4, /* 4 Columns on Desktop */
-                        spaceBetween: 24,
-                    },
-                },
-            });
-        });
-    </script>
-    @endif
-   {{-- ══════════════════════════════════════════
-     OUR CLIENTS
-   ══════════════════════════════════════════ --}}
-    @if($clients->count() > 0)
-    <section class="clients-section anim-fade-up" aria-label="Our Clients">
-        <div class="section-inner">
-            <div class="section-eyebrow" style="justify-content:center;">Trusted By</div>
-            <h2 class="section-title">Our <strong>Partners & Clients</strong></h2>
-            
+                </div>
+            @endforeach
+
+            <div class="hero__nid" aria-label="100% NID Verified">
+                <div class="hero__nid-num">100<sup>%</sup></div>
+                <div class="hero__nid-label">Verified</div>
+            </div>
+
+        </div>
+    </div>
+</section>
+
+
+{{-- ╔════════════════════════════════════════════
+     SECTION 2 · CATEGORIES STRIP
+════════════════════════════════════════════╗ --}}
+@php
+    $categoryGroups = \Illuminate\Support\Facades\Cache::rememberForever('nav_category_groups', function () {
+        return \App\Models\Category::where('is_active', true)
+            ->customOrdered()->get()->unique('group')->pluck('group');
+    });
+@endphp
+
+<nav class="cats-strip" aria-label="Browse by category">
+    <div class="cats-inner">
+        @foreach($categoryGroups as $group)
             @php
-                // Shuffle and split the clients into two rows
-                $shuffledClients = $clients->shuffle();
-                $halfCount = ceil($shuffledClients->count() / 2);
-                $row1 = $shuffledClients->take($halfCount);
-                $row2 = $shuffledClients->slice($halfCount);
+                $icon = match($group) {
+                    'Artist'          => '<path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/>',
+                    'Model'           => '<path d="M12 3l1.9 5.8a2 2 0 001.3 1.3L21 12l-5.8 1.9a2 2 0 00-1.3 1.3L12 21l-1.9-5.8a2 2 0 00-1.3-1.3L3 12l5.8-1.9a2 2 0 001.3-1.3L12 3z"/>',
+                    'Brand Promoter'  => '<circle cx="12" cy="8" r="7"/><polyline points="8.21 13.89 7 23 12 20 17 23 15.79 13.88"/>',
+                    'Content Creator' => '<rect x="2" y="2" width="20" height="20" rx="2"/><line x1="7" y1="2" x2="7" y2="22"/><line x1="17" y1="2" x2="17" y2="22"/><line x1="2" y1="12" x2="22" y2="12"/>',
+                    'Director'        => '<rect x="2" y="6" width="20" height="12" rx="2"/><line x1="2" y1="10" x2="22" y2="10"/><line x1="7" y1="6" x2="7" y2="10"/><line x1="12" y1="6" x2="12" y2="10"/>',
+                    'Creative Crew'   => '<path d="M23 19a2 2 0 01-2 2H3a2 2 0 01-2-2V8a2 2 0 012-2h4l2-3h6l2 3h4a2 2 0 012 2z"/><circle cx="12" cy="13" r="4"/>',
+                    default           => '<circle cx="12" cy="12" r="10"/>',
+                };
+                $label = $group === 'Creative Crew' ? $group : \Illuminate\Support\Str::plural($group);
             @endphp
+            <a href="/artists?group={{ urlencode($group) }}" class="cat-item">
+                <svg class="cat-item__icon" width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">{!! $icon !!}</svg>
+                <span class="cat-item__label">{{ $label }}</span>
+            </a>
+        @endforeach
+    </div>
+</nav>
 
-            <div class="marquee-container">
-                {{-- Top Row: Scrolls Right to Left --}}
-                <div class="marquee-track track-left">
-                    {{-- Loop twice to create a seamless infinite scroll --}}
-                    @foreach([1, 2] as $loop)
-                        @foreach($row1 as $client)
-                            <div class="client-item">
-                                @if($client->website_url)
-                                    <a href="{{ $client->website_url }}" target="_blank" rel="noopener">
-                                        <img src="{{ Storage::url($client->logo) }}" alt="{{ $client->name }}" class="client-logo">
-                                    </a>
-                                @else
-                                    <img src="{{ Storage::url($client->logo) }}" alt="{{ $client->name }}" class="client-logo">
-                                @endif
-                            </div>
-                        @endforeach
-                    @endforeach
-                </div>
 
-                {{-- Bottom Row: Scrolls Left to Right --}}
-                <div class="marquee-track track-right">
-                    @foreach([1, 2] as $loop)
-                        @foreach($row2 as $client)
-                            <div class="client-item">
-                                @if($client->website_url)
-                                    <a href="{{ $client->website_url }}" target="_blank" rel="noopener">
-                                        <img src="{{ Storage::url($client->logo) }}" alt="{{ $client->name }}" class="client-logo">
-                                    </a>
-                                @else
-                                    <img src="{{ Storage::url($client->logo) }}" alt="{{ $client->name }}" class="client-logo">
-                                @endif
-                            </div>
-                        @endforeach
-                    @endforeach
-                </div>
+{{-- ╔════════════════════════════════════════════
+     SECTION 3 · FEATURED TALENT
+════════════════════════════════════════════╗ --}}
+<section class="pg-section" aria-labelledby="talent-heading">
+    <div class="pg-inner">
+        <div class="pg-section-head">
+            <div>
+                <div class="pg-eyebrow">Exclusively Verified</div>
+                <h2 class="pg-title" id="talent-heading">Featured <strong>Talent</strong></h2>
             </div>
+            <a href="/artists" class="btn-ghost">View All Talent</a>
         </div>
-    </section>
-    @endif
 
-    {{-- AD SLOT 2: Mid Homepage Banner --}}
-    <x-ad-banner position="homepage_middle" />
+        <div class="talent-grid">
+            @forelse($featuredArtists as $artist)
+                <a href="{{ route('artist.show', ['slug' => \Illuminate\Support\Str::slug($artist->name).'-'.$artist->id]) }}"
+                   class="ac" aria-label="View {{ $artist->name }}">
 
-    {{-- ══════════════════════════════════════════
-         LEADERSHIP TEAM
-    ══════════════════════════════════════════ --}}
-    @if($teamMembers->count() > 0)
-    <section class="team-section anim-fade-up">
-        <div class="section-inner">
-            <div class="section-header">
-                <div class="section-header-left">
-                    <div class="section-eyebrow">Agency Directory</div>
-                    <h2 class="section-title">Leadership <strong>Team</strong></h2>
-                </div>
-            </div>
+                    <div class="ac__verified">
+                        <div class="ac__verified-inner">
+                            <svg viewBox="0 0 24 24" fill="#2a7d4f">
+                                <path d="M12 2L3 7v5c0 5.55 3.84 10.74 9 12 5.16-1.26 9-6.45 9-12V7L12 2zm-2 15l-4-4 1.41-1.41L10 14.17l6.59-6.59L18 9l-8 8z"/>
+                            </svg>
+                            <span>Verified</span>
+                        </div>
+                    </div>
 
-            <div class="team-grid">
-                @foreach($teamMembers as $member)
-                    <div class="team-card">
-                        <div class="team-avatar-wrap">
-                            @if($member->image)
-                                <img src="{{ Storage::url($member->image) }}" alt="{{ $member->name }}" class="team-avatar">
-                            @else
-                                <div class="team-avatar" style="background: var(--bg-secondary); display:flex; align-items:center; justify-content:center; color:var(--text-muted);">
-                                    <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path><circle cx="12" cy="7" r="4"></circle></svg>
+                    <div class="ac__media">
+                        @if($artist->hasMedia('avatar'))
+                            <img src="{{ $artist->getFirstMediaUrl('avatar') }}" alt="{{ $artist->name }}" loading="lazy">
+                        @elseif($artist->hasMedia('portfolio'))
+                            <img src="{{ $artist->getFirstMediaUrl('portfolio') }}" alt="{{ $artist->name }}" loading="lazy">
+                        @else
+                            <div class="ac__placeholder">
+                                <svg width="36" height="36" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1">
+                                    <circle cx="12" cy="8" r="4"/><path d="M4 20c0-4 3.58-7 8-7s8 3 8 7"/>
+                                </svg>
+                                <span>No Photo</span>
+                            </div>
+                        @endif
+                    </div>
+
+                    <div class="ac__info">
+                        @php
+                            $artistCats = (array) ($artist->profile?->categories ?? []);
+                            $dg = [];
+                            if (!empty($artistCats)) {
+                                $dg = \App\Models\Category::whereIn('name', $artistCats)
+                                    ->customOrdered()->pluck('group')->unique()->toArray();
+                            }
+                        @endphp
+                        <div class="ac__cat">{{ !empty($dg) ? implode(' · ', $dg) : 'Professional' }}</div>
+                        <div class="ac__name">{{ $artist->name }}</div>
+                        <div class="ac__loc">
+                            <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                                <path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7z"/>
+                                <circle cx="12" cy="9" r="2.5"/>
+                            </svg>
+                            {{ implode(', ', array_filter([$artist->profile?->upazila, $artist->profile?->district])) ?: 'Bangladesh' }}
+                        </div>
+                    </div>
+
+                    <div class="ac__hover">
+                        <div class="ac__hover-name">{{ $artist->name }}</div>
+                        @if(!empty($artist->profile?->categories))
+                            <div class="ac__hover-tags">
+                                @foreach($artist->profile->categories as $cat)
+                                    <span class="ac__hover-tag">{{ $cat }}</span>
+                                @endforeach
+                            </div>
+                        @endif
+                        <div class="ac__hover-div"></div>
+                        <div class="ac__hover-meta">
+                            <div class="ac__hover-row">
+                                <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                                    <path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7z"/>
+                                    <circle cx="12" cy="9" r="2.5"/>
+                                </svg>
+                                {{ implode(', ', array_filter([$artist->profile?->upazila, $artist->profile?->district, $artist->profile?->country])) ?: 'Location not specified' }}
+                            </div>
+                            @if($artist->profile?->gender || $artist->profile?->date_of_birth)
+                                <div class="ac__hover-row">
+                                    <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                                        <circle cx="12" cy="8" r="4"/><path d="M4 20c0-4 3.58-7 8-7s8 3 8 7"/>
+                                    </svg>
+                                    {{ $artist->profile?->gender ?? '' }}
+                                    @if($artist->profile?->date_of_birth)
+                                        · <strong>{{ \Carbon\Carbon::parse($artist->profile->date_of_birth)->age }} yrs</strong>
+                                    @endif
+                                </div>
+                            @endif
+                            @if($artist->profile?->height_cm)
+                                <div class="ac__hover-row">
+                                    <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                                        <path d="M8 3v18M5 6h3M5 10h3M5 14h3M5 18h3M16 3l4 4-4 4M20 7H8"/>
+                                    </svg>
+                                    <strong>{{ $artist->profile->height_cm }} ft</strong>
+                                </div>
+                            @endif
+                            @if($artist->profile?->hourly_rate)
+                                <div class="ac__hover-row">
+                                    <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                                        <circle cx="12" cy="12" r="10"/><path d="M9 8h6M9 12h6M9 16h4"/>
+                                    </svg>
+                                    From <strong>{{ number_format($artist->profile->hourly_rate) }} BDT/hr</strong>
                                 </div>
                             @endif
                         </div>
-                        <h3 class="team-name">{{ $member->name }}</h3>
-                        <div class="team-role">{{ $member->designation }}</div>
-                        
-                        <div class="team-socials">
-                            @if($member->facebook_url)
-                                <a href="{{ $member->facebook_url }}" target="_blank" class="team-social-link">
-                                    <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M18 2h-3a5 5 0 00-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 011-1h3z"/></svg>
-                                </a>
-                            @endif
-                            @if($member->twitter_url)
-                                <a href="{{ $member->twitter_url }}" target="_blank" class="team-social-link">
-                                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M23 3a10.9 10.9 0 01-3.14 1.53 4.48 4.48 0 00-7.86 3v1A10.66 10.66 0 013 4s-4 9 5 13a11.64 11.64 0 01-7 2c9 5 20 0 20-11.5a4.5 4.5 0 00-.08-.83A7.72 7.72 0 0023 3z"/></svg>
-                                </a>
-                            @endif
-                            @if($member->instagram_url)
-                                <a href="{{ $member->instagram_url }}" target="_blank" class="team-social-link">
-                                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="2" width="20" height="20" rx="5"/><path d="M16 11.37A4 4 0 1112.63 8 4 4 0 0116 11.37z"/><line x1="17.5" y1="6.5" x2="17.51" y2="6.5"/></svg>
-                                </a>
-                            @endif
-                            @if($member->linkedin_url)
-                                <a href="{{ $member->linkedin_url }}" target="_blank" class="team-social-link">
-                                    <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M16 8a6 6 0 016 6v7h-4v-7a2 2 0 00-2-2 2 2 0 00-2 2v7h-4v-7a6 6 0 016-6zM2 9h4v12H2zM4 6a2 2 0 100-4 2 2 0 000 4z"/></svg>
-                                </a>
+                        <div class="ac__hover-cta">
+                            View Full Profile
+                            <svg width="10" height="10" viewBox="0 0 10 10" fill="none">
+                                <path d="M1 5h8M5 1l4 4-4 4" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/>
+                            </svg>
+                        </div>
+                    </div>
+
+                </a>
+            @empty
+                <div class="talent-empty">
+                    <div class="talent-empty__icon">
+                        <svg width="52" height="52" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1">
+                            <circle cx="12" cy="8" r="4"/><path d="M4 20c0-4 3.58-7 8-7s8 3 8 7"/>
+                        </svg>
+                    </div>
+                    <div class="talent-empty__title">Talent Profiles Coming Soon</div>
+                    <div class="talent-empty__sub">Our verified talent directory is growing.</div>
+                </div>
+            @endforelse
+        </div>
+
+        @if(isset($featuredArtists) && $featuredArtists->count() > 0)
+            <div class="view-all">
+                <a href="/artists" class="btn-primary">
+                    Explore Full Directory
+                    <svg width="11" height="11" viewBox="0 0 10 10" fill="none">
+                        <path d="M1 5h8M5 1l4 4-4 4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+                    </svg>
+                </a>
+            </div>
+        @endif
+
+    </div>
+</section>
+
+
+{{-- ╔════════════════════════════════════════════
+     SECTION 4 · GALLERY SLIDER
+════════════════════════════════════════════╗ --}}
+@if(isset($galleryPhotos) && $galleryPhotos->count() > 0)
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css"/>
+
+<section class="pg-section pg-section--alt anim-fade-up" aria-labelledby="gallery-heading">
+    <div class="pg-inner">
+        <div class="pg-section-head">
+            <div>
+                <div class="pg-eyebrow">Our Portfolio</div>
+                <h2 class="pg-title" id="gallery-heading">Recent <strong>Shoots</strong></h2>
+            </div>
+            <a href="/gallery" class="btn-ghost">View Full Gallery</a>
+        </div>
+
+        <div class="swiper gallerySwiper">
+            <div class="swiper-wrapper">
+                @foreach($galleryPhotos as $photo)
+                    <div class="swiper-slide">
+                        <div class="gallery-card">
+                            <img src="{{ Storage::url($photo->image) }}" alt="{{ $photo->caption ?? 'Gallery' }}" loading="lazy">
+                            @if($photo->caption)
+                                <div class="gallery-card__caption">{{ $photo->caption }}</div>
                             @endif
                         </div>
                     </div>
                 @endforeach
             </div>
+            <div class="swiper-pagination"></div>
         </div>
-    </section>
-    @endif
-    {{-- ══════════════════════════════════════════
-     WHY TRUST US / ABOUT SECTION (DYNAMIC)
-══════════════════════════════════════════ --}}
-<section class="trust-section anim-fade-up" aria-labelledby="trust-heading">
-    <div class="section-inner">
-        <div style="text-align:center; max-width:560px; margin:0 auto;">
-            {{-- Site Name Dynamic করা হয়েছে --}}
-            <div class="section-eyebrow" style="justify-content:center;">
+    </div>
+</section>
+
+<script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>
+<script>
+document.addEventListener('DOMContentLoaded', function () {
+    new Swiper('.gallerySwiper', {
+        slidesPerView: 2, spaceBetween: 10, grabCursor: true,
+        pagination: { el: '.swiper-pagination', clickable: true },
+        breakpoints: { 768: { slidesPerView: 3, spaceBetween: 18 }, 1024: { slidesPerView: 4, spaceBetween: 22 } }
+    });
+});
+</script>
+@endif
+
+
+{{-- ╔════════════════════════════════════════════
+     SECTION 5 · CLIENTS MARQUEE
+════════════════════════════════════════════╗ --}}
+@if($clients->count() > 0)
+<section class="clients-section anim-fade-up" aria-label="Our Clients">
+    <div class="pg-inner clients-head">
+        <div class="pg-eyebrow" style="justify-content:center;">Trusted By</div>
+        <h2 class="pg-title" style="text-align:center;">Our <strong>Partners &amp; Clients</strong></h2>
+    </div>
+
+    @php
+        $sc = $clients->shuffle();
+        $half = ceil($sc->count() / 2);
+        $row1 = $sc->take($half);
+        $row2 = $sc->slice($half);
+    @endphp
+
+    <div class="marquee-wrap">
+        <div class="marquee-row marquee-row--ltr">
+            @foreach([1,2] as $__)
+                @foreach($row1 as $cl)
+                    @if($cl->website_url)
+                        <a href="{{ $cl->website_url }}" target="_blank" rel="noopener">
+                            <img src="{{ Storage::url($cl->logo) }}" alt="{{ $cl->name }}" class="client-logo">
+                        </a>
+                    @else
+                        <img src="{{ Storage::url($cl->logo) }}" alt="{{ $cl->name }}" class="client-logo">
+                    @endif
+                @endforeach
+            @endforeach
+        </div>
+        <div class="marquee-row marquee-row--rtl">
+            @foreach([1,2] as $__)
+                @foreach($row2 as $cl)
+                    @if($cl->website_url)
+                        <a href="{{ $cl->website_url }}" target="_blank" rel="noopener">
+                            <img src="{{ Storage::url($cl->logo) }}" alt="{{ $cl->name }}" class="client-logo">
+                        </a>
+                    @else
+                        <img src="{{ Storage::url($cl->logo) }}" alt="{{ $cl->name }}" class="client-logo">
+                    @endif
+                @endforeach
+            @endforeach
+        </div>
+    </div>
+</section>
+@endif
+
+
+{{-- ╔════════════════════════════════════════════
+     AD SLOT · MID PAGE
+════════════════════════════════════════════╗ --}}
+<x-ad-banner position="homepage_middle" />
+
+
+{{-- ╔════════════════════════════════════════════
+     SECTION 6 · LEADERSHIP TEAM
+════════════════════════════════════════════╗ --}}
+@if($teamMembers->count() > 0)
+
+@php
+    $count   = $teamMembers->count();
+    /*
+     * Column logic:
+     *  1–5 members  → exactly $count columns (all fit on one row)
+     *  6+ members   → 5 columns (overflow wraps; orphans centered by flexbox)
+     *  Cap at 5 so cards never become too narrow on desktop.
+     */
+    $tcols = min($count, 5);
+@endphp
+
+<section class="team-section pg-section--surface anim-fade-up"
+         aria-labelledby="team-heading">
+    <div class="pg-inner">
+
+        <div class="pg-section-head">
+            <div>
+                <div class="pg-eyebrow">Agency Directory</div>
+                <h2 class="pg-title" id="team-heading">Leadership <strong>Team</strong></h2>
+            </div>
+        </div>
+
+        {{-- --tcols CSS variable drives card width calculation --}}
+        <div class="team-grid" style="--tcols: {{ $tcols }}">
+
+            @foreach($teamMembers as $member)
+                <div class="team-card">
+
+                    {{-- ── Portrait photo ── --}}
+                    <div class="team-card__photo">
+
+                        @if($member->image)
+                            <img src="{{ Storage::url($member->image) }}"
+                                 alt="{{ $member->name }}"
+                                 loading="lazy">
+                        @else
+                            <div class="team-card__photo-ph" aria-hidden="true">
+                                <svg width="52" height="52" viewBox="0 0 24 24"
+                                     fill="none" stroke="currentColor" stroke-width="0.8">
+                                    <path d="M20 21v-2a4 4 0 00-4-4H8a4 4 0 00-4 4v2"/>
+                                    <circle cx="12" cy="7" r="4"/>
+                                </svg>
+                            </div>
+                        @endif
+
+                        {{-- Social links overlay on photo --}}
+                        <div class="team-card__socials">
+                            @if($member->facebook_url)
+                                <a href="{{ $member->facebook_url }}"
+                                   target="_blank" rel="noopener"
+                                   class="team-card__soc" aria-label="{{ $member->name }} on Facebook">
+                                    <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor">
+                                        <path d="M18 2h-3a5 5 0 00-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 011-1h3z"/>
+                                    </svg>
+                                </a>
+                            @endif
+                            @if($member->instagram_url)
+                                <a href="{{ $member->instagram_url }}"
+                                   target="_blank" rel="noopener"
+                                   class="team-card__soc" aria-label="{{ $member->name }} on Instagram">
+                                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                        <rect x="2" y="2" width="20" height="20" rx="5"/>
+                                        <path d="M16 11.37A4 4 0 1112.63 8 4 4 0 0116 11.37z"/>
+                                        <line x1="17.5" y1="6.5" x2="17.51" y2="6.5"/>
+                                    </svg>
+                                </a>
+                            @endif
+                            @if($member->linkedin_url)
+                                <a href="{{ $member->linkedin_url }}"
+                                   target="_blank" rel="noopener"
+                                   class="team-card__soc" aria-label="{{ $member->name }} on LinkedIn">
+                                    <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor">
+                                        <path d="M16 8a6 6 0 016 6v7h-4v-7a2 2 0 00-2-2 2 2 0 00-2 2v7h-4v-7a6 6 0 016-6zM2 9h4v12H2zM4 6a2 2 0 100-4 2 2 0 000 4z"/>
+                                    </svg>
+                                </a>
+                            @endif
+                            @if($member->twitter_url)
+                                <a href="{{ $member->twitter_url }}"
+                                   target="_blank" rel="noopener"
+                                   class="team-card__soc" aria-label="{{ $member->name }} on Twitter">
+                                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                        <path d="M23 3a10.9 10.9 0 01-3.14 1.53 4.48 4.48 0 00-7.86 3v1A10.66 10.66 0 013 4s-4 9 5 13a11.64 11.64 0 01-7 2c9 5 20 0 20-11.5a4.5 4.5 0 00-.08-.83A7.72 7.72 0 0023 3z"/>
+                                    </svg>
+                                </a>
+                            @endif
+                        </div>
+
+                    </div>{{-- /.team-card__photo --}}
+
+                    {{-- ── Name + role ── --}}
+                    <div class="team-card__body">
+                        <h3 class="team-card__name">{{ $member->name }}</h3>
+                        <div class="team-card__role">{{ $member->designation }}</div>
+                    </div>
+
+                </div>{{-- /.team-card --}}
+            @endforeach
+
+        </div>{{-- /.team-grid --}}
+
+    </div>
+</section>
+
+@endif
+
+
+{{-- ╔════════════════════════════════════════════
+     SECTION 7 · WHY TRUST US
+════════════════════════════════════════════╗ --}}
+<section class="trust-section" aria-labelledby="trust-heading">
+
+    <div class="trust-layout">
+
+        {{-- ── Sticky Left: Intro ── --}}
+        <div class="trust-intro">
+            <div class="trust-intro__label">
                 Why {{ $settings?->site_name ?? 'Our Agency' }}
             </div>
-            
-            <h2 class="section-title" id="trust-heading" style="text-align:center;">
-                Built on <strong>Trust,</strong><br>Powered by Talent.
+            <h2 class="trust-intro__title" id="trust-heading">
+                Built on<br>
+                <strong>Trust.</strong><br>
+                Powered by<br>
+                Talent.
             </h2>
+            <p class="trust-intro__sub">
+                Every model, actor, and creator on our platform is manually reviewed and NID verified by our team.
+            </p>
+            <div class="trust-intro__stat">
+                <div class="trust-intro__stat-num">100%</div>
+                <div class="trust-intro__stat-label">Verified<br>Talent</div>
+            </div>
         </div>
 
-        <div class="trust-grid">
-            
-            {{-- 1. What We Offer --}}
-            <div class="trust-card">
-                <div class="trust-card-num">01</div>
-                <div class="trust-card-icon">
-                    <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
-                        <path d="M12 2L3 7v5c0 5.55 3.84 10.74 9 12 5.16-1.26 9-6.45 9-12V7L12 2z"/>
-                    </svg>
+        {{-- ── Right: Feature Rows ── --}}
+        <div class="trust-rows">
+
+            {{-- Row 01 --}}
+            <div class="trust-row">
+                <div class="trust-row__num-col">
+                    <span class="trust-row__num">01</span>
                 </div>
-                <div class="trust-card-title">What We Offer</div>
-                <div class="trust-card-desc">
-                    {!! $settings?->what_we_offer ?? 'We provide professional photoshoots and verified talent directories.' !!}
+                <div class="trust-row__content">
+                    <div class="trust-row__icon-wrap">
+                        <div class="trust-row__icon" aria-hidden="true">
+                            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6">
+                                <path d="M12 2L3 7v5c0 5.55 3.84 10.74 9 12 5.16-1.26 9-6.45 9-12V7L12 2z"/>
+                            </svg>
+                        </div>
+                        <span class="trust-row__tag">What We Offer</span>
+                    </div>
+                    <h3 class="trust-row__title">Professional Services,<br>End to End</h3>
+                    <div class="trust-row__desc">
+                        {!! $settings?->what_we_offer ?? '<p>We connect Bangladesh\'s finest verified talent with brands, production houses, and casting directors through a curated, professional platform built for the creative industry.</p>' !!}
+                    </div>
                 </div>
             </div>
 
-            {{-- 2. Our Experience --}}
-            <div class="trust-card">
-                <div class="trust-card-num">02</div>
-                <div class="trust-card-icon">
-                    <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
-                        <circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/>
-                    </svg>
+            {{-- Row 02 --}}
+            <div class="trust-row">
+                <div class="trust-row__num-col">
+                    <span class="trust-row__num">02</span>
                 </div>
-                <div class="trust-card-title">Our Experience</div>
-                <div class="trust-card-desc">
-                    {!! $settings?->our_experience ?? 'With years of expertise in the modeling and creative industry.' !!}
+                <div class="trust-row__content">
+                    <div class="trust-row__icon-wrap">
+                        <div class="trust-row__icon" aria-hidden="true">
+                            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6">
+                                <circle cx="12" cy="12" r="10"/>
+                                <path d="M12 6v6l4 2"/>
+                            </svg>
+                        </div>
+                        <span class="trust-row__tag">Our Experience</span>
+                    </div>
+                    <h3 class="trust-row__title">Years of Industry<br>Expertise</h3>
+                    <div class="trust-row__desc">
+                        {!! $settings?->our_experience ?? '<p>With deep roots in the Bangladesh creative scene, our team brings hands-on expertise in model management, casting, and brand partnerships to every collaboration.</p>' !!}
+                    </div>
                 </div>
             </div>
 
-            {{-- 3. Models Advice --}}
-            <div class="trust-card">
-                <div class="trust-card-num">03</div>
-                <div class="trust-card-icon">
-                    <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
-                        <path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 00-3-3.87M16 3.13a4 4 0 010 7.75"/>
-                    </svg>
+            {{-- Row 03 --}}
+            <div class="trust-row">
+                <div class="trust-row__num-col">
+                    <span class="trust-row__num">03</span>
                 </div>
-                <div class="trust-card-title">Advice For Models</div>
-                <div class="trust-card-desc">
-                    {!! $settings?->models_advice ?? 'Becoming a successful model takes more than just good looks.' !!}
+                <div class="trust-row__content">
+                    <div class="trust-row__icon-wrap">
+                        <div class="trust-row__icon" aria-hidden="true">
+                            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6">
+                                <path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/>
+                                <circle cx="9" cy="7" r="4"/>
+                                <path d="M23 21v-2a4 4 0 00-3-3.87M16 3.13a4 4 0 010 7.75"/>
+                            </svg>
+                        </div>
+                        <span class="trust-row__tag">Advice For Models</span>
+                    </div>
+                    <h3 class="trust-row__title">Guidance for Every<br>Step of Your Career</h3>
+                    <div class="trust-row__desc">
+                        {!! $settings?->models_advice ?? '<p>From your first photoshoot to landing major campaigns, our platform provides the mentorship, visibility, and connections that turn aspiring talent into working professionals.</p>' !!}
+                    </div>
                 </div>
             </div>
 
         </div>
     </div>
 </section>
-{{-- ══════════════════════════════════════════
-         TESTIMONIALS
-    ══════════════════════════════════════════ --}}
-    @if($testimonials->count() > 0)
-    <section class="testi-section anim-fade-up">
-        <div class="section-inner">
-            <div class="section-header">
-                <div class="section-header-left">
-                    <div class="section-eyebrow">Success Stories</div>
-                    <h2 class="section-title">What Our <strong>Models Say</strong></h2>
-                </div>
-            </div>
 
-            <div class="testi-grid">
-                @foreach($testimonials as $testi)
-                    <div class="testi-card">
-                        <svg class="testi-quote-icon" viewBox="0 0 24 24" fill="currentColor">
-                            <path d="M14.017 21v-7.391c0-5.704 3.731-9.57 8.983-10.609l.995 2.151c-2.432.917-3.995 3.638-3.995 5.849h4v10h-9.983zm-14.017 0v-7.391c0-5.704 3.748-9.57 9-10.609l.996 2.151c-2.433.917-3.996 3.638-3.996 5.849h3.983v10h-9.983z"/>
-                        </svg>
-                        <p class="testi-text">"{{ $testi->quote }}"</p>
-                        <div class="testi-author">
-                            @if($testi->image)
-                                <img src="{{ Storage::url($testi->image) }}" alt="{{ $testi->name }}" class="testi-avatar">
-                            @else
-                                <div class="testi-avatar" style="background: var(--bg-primary); display: flex; align-items:center; justify-content:center; color: var(--gold);">
-                                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path><circle cx="12" cy="7" r="4"></circle></svg>
-                                </div>
-                            @endif
-                            <div class="testi-author-info">
-                                <div class="testi-name">{{ $testi->name }}</div>
-                                <div class="testi-role">{{ $testi->designation }}</div>
+
+{{-- ╔════════════════════════════════════════════
+     SECTION 8 · TESTIMONIALS — Redesigned
+════════════════════════════════════════════╗ --}}
+@if($testimonials->count() > 0)
+<section class="testi-section anim-fade-up" aria-labelledby="testi-heading">
+    <div class="pg-inner">
+        <div class="pg-section-head">
+            <div class="testi-intro">
+                <div class="pg-eyebrow">Success Stories</div>
+                <h2 class="pg-title" id="testi-heading">What Our <strong>Models Say</strong></h2>
+            </div>
+        </div>
+
+        <div class="testi-grid">
+            @foreach($testimonials as $testi)
+                <div class="testi-card">
+                    <div class="testi-card__body">
+                        <div class="testi-card__q-mark">"</div>
+
+                        {{-- Stars --}}
+                        <div class="testi-card__stars" aria-label="5 out of 5 stars">
+                            @for($s = 0; $s < 5; $s++)
+                                <svg class="testi-card__star" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                                    <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/>
+                                </svg>
+                            @endfor
+                        </div>
+
+                        <p class="testi-card__text">"{{ $testi->quote }}"</p>
+                    </div>
+
+                    <div class="testi-card__foot">
+                        @if($testi->image)
+                            <img src="{{ Storage::url($testi->image) }}" alt="{{ $testi->name }}" class="testi-card__avatar">
+                        @else
+                            <div class="testi-card__avatar-ph" aria-hidden="true">
+                                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <path d="M20 21v-2a4 4 0 00-4-4H8a4 4 0 00-4 4v2"/><circle cx="12" cy="7" r="4"/>
+                                </svg>
                             </div>
+                        @endif
+                        <div>
+                            <div class="testi-card__name">{{ $testi->name }}</div>
+                            <div class="testi-card__role">{{ $testi->designation }}</div>
                         </div>
                     </div>
-                @endforeach
-            </div>
+                </div>
+            @endforeach
         </div>
-    </section>
-    @endif
-    {{-- AD SLOT 3: Bottom Homepage Banner --}}
-    <x-ad-banner position="homepage_bottom" />
-    {{-- ══════════════════════════════════════════
-         CTA BANNER
-    ══════════════════════════════════════════ --}}
-    <section class="cta-banner" aria-labelledby="cta-heading">
-        <div class="cta-banner-deco" aria-hidden="true">
-            <div class="cta-banner-deco-text">TALENT</div>
+    </div>
+</section>
+@endif
+
+
+{{-- ╔════════════════════════════════════════════
+     AD SLOT · BOTTOM PAGE
+════════════════════════════════════════════╗ --}}
+<x-ad-banner position="homepage_bottom" />
+
+
+{{-- ╔════════════════════════════════════════════
+     SECTION 9 · CTA BANNER
+════════════════════════════════════════════╗ --}}
+<section class="cta-banner" aria-labelledby="cta-heading">
+    <div class="cta-banner__bg-text" aria-hidden="true">TALENT</div>
+    <div class="cta-banner__inner">
+        <div class="cta-banner__eyebrow">Join the Platform</div>
+        <h2 class="cta-banner__title" id="cta-heading">
+            Ready to <strong>Get Discovered?</strong>
+        </h2>
+        <p class="cta-banner__sub">
+            Create your verified profile today and connect with leading brands,
+            production houses, and casting directors across Bangladesh.
+        </p>
+        <div class="cta-banner__btns">
+            <a href="/register" class="btn-primary">
+                Create Your Profile
+                <svg width="11" height="11" viewBox="0 0 10 10" fill="none">
+                    <path d="M1 5h8M5 1l4 4-4 4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+                </svg>
+            </a>
+            <a href="/artists" class="btn-ghost">Browse Talent</a>
         </div>
-        <div class="cta-banner-inner">
-            <div class="cta-eyebrow">Join the Platform</div>
-            <h2 class="cta-headline" id="cta-heading">
-                Ready to <strong>Get Discovered?</strong>
-            </h2>
-            <p class="cta-sub">
-                Create your verified profile today and connect with leading brands, production houses, and casting directors across Bangladesh.
-            </p>
-            <div class="cta-row">
-                <a href="/register" class="btn-fill">
-                    Create Your Profile
-                    <svg width="10" height="10" viewBox="0 0 10 10" fill="none" aria-hidden="true">
-                        <path d="M1 5h8M5 1l4 4-4 4" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/>
-                    </svg>
-                </a>
-                <a href="/artists" class="btn-outline">Browse Talent</a>
-            </div>
-        </div>
-    </section>
+    </div>
+</section>
 
 </x-app-layout>

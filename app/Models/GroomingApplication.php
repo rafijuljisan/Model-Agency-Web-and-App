@@ -6,6 +6,7 @@ use Illuminate\Database\Eloquent\Model;
 class GroomingApplication extends Model
 {
     protected $fillable = [
+        'application_number',
         'batch_id',
         'full_name',
         'phone',

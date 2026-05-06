@@ -1,4 +1,4 @@
-<div x-data="{ applyModalOpen: false }">
+<div x-data>
 <style>
     @font-face {
         font-family: 'SolaimanLipi';
@@ -8,6 +8,16 @@
         font-weight: normal;
         font-style: normal;
         font-display: swap;
+    }
+    :root {
+        --gc-text-xs:   0.78rem;   /* badges, labels, hints */
+        --gc-text-sm:   0.875rem;  /* meta rows, seat bar label, filter buttons */
+        --gc-text-base: 0.95rem;   /* body text, notice cards, gallery filters */
+        --gc-text-md:   1rem;      /* batch meta rows, apply btn */
+        --gc-text-lg:   1.1rem;    /* sidebar title, section eyebrow */
+        --gc-text-xl:   1.35rem;   /* section titles, batch name, CTA sub */
+        --gc-text-2xl:  1.6rem;    /* batch fee, stat numbers */
+        --gc-text-3xl:  clamp(1.75rem, 4vw, 3.2rem); /* hero title */
     }
 /* ═══════════════════════════════════════════
    GROOMING CLASS PAGE
@@ -31,7 +41,7 @@
 }
 .gc-sidebar-title {
     font-family: 'SolaimanLipi', 'Jost', sans-serif;
-    font-size: 1.2rem;
+    font-size: var(--gc-text-lg);
     font-weight: 600;
     color: var(--text-primary);
     margin-bottom: 16px;
@@ -59,7 +69,7 @@
 /* Notice Card inside Sidebar */
 .gc-notice-card {
     padding: 16px;
-    font-size: 1.125rem;
+    font-size: var(--gc-text-base);
     font-family: 'SolaimanLipi', 'Jost', sans-serif;
     line-height: 1.5;
     border: 1px solid var(--border);
@@ -70,7 +80,7 @@
 
 /* Update Gallery Grid to 3 Columns */
 .gc-gallery-grid-3x4 {
-    column-count: 3;
+    column-count: 4;
     column-gap: 8px;
     margin-bottom: 32px;
 }
@@ -94,7 +104,7 @@
     border-radius: 4px;
 }
 .gc-stat-number {
-    font-size: 1.6rem;
+    font-size: var(--gc-text-2xl);
     font-weight: 700;
     color: var(--gold);
     font-family: 'SolaimanLipi', 'Jost', sans-serif;
@@ -102,7 +112,7 @@
     margin-bottom: 4px;
 }
 .gc-stat-label {
-    font-size: 0.75rem;
+    font-size: var(--gc-text-xs);
     color: var(--text-muted);
     font-weight: 600;
 }
@@ -112,7 +122,7 @@
     background: var(--gold);
     color: #fff;
     border: none;
-    font-size: 1.1rem;
+    font-size: var(--gc-text-lg);
     font-weight: 600;
     font-family: 'SolaimanLipi', 'Jost', sans-serif;
     cursor: pointer;
@@ -126,13 +136,56 @@
     transform: translateY(-2px);
     box-shadow: 0 8px 24px rgba(197,0,0,0.25);
 }
+/* ── Image Lightbox Modal ── */
+.gc-lightbox-overlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.9);
+    z-index: 10000;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 16px;
+}
+.gc-lightbox-overlay img {
+    max-width: 100%;
+    max-height: 90vh;
+    border-radius: 6px;
+    box-shadow: 0 10px 40px rgba(0,0,0,0.5);
+    object-fit: contain;
+}
+.gc-lightbox-close {
+    position: absolute;
+    top: 20px;
+    right: 20px;
+    background: var(--gold, #ca8a04);
+    color: #fff;
+    border: none;
+    width: 44px;
+    height: 44px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: transform 0.2s, background 0.2s;
+    z-index: 10001;
+}
+.gc-lightbox-close:hover {
+    transform: scale(1.1);
+    background: #fff;
+    color: #000;
+}
 /* Responsive fix for smaller screens */
 @media (max-width: 992px) {
     .gc-content-wrapper { grid-template-columns: 1fr; } /* Stack vertically on mobile */
     .gc-gallery-grid-3x4 { column-count: 2; }
 }
 @media (max-width: 576px) {
-    .gc-gallery-grid-3x4 { column-count: 1; }
+    .gc-gallery-grid-3x4 {
+        column-count: 2;
+        column-gap: 6px; /* Slightly smaller gap for mobile */
+    }
 }
 /* ── Hero ── */
 .gc-hero {
@@ -153,7 +206,7 @@
     pointer-events: none;
 }
 .gc-hero-eyebrow {
-    font-size: 1.25rem;
+    font-size: var(--gc-text-lg);
     font-weight: 600;
     text-transform: uppercase;
     color: var(--gold);
@@ -169,7 +222,7 @@
 }
 .gc-hero-title {
     font-family: 'SolaimanLipi', 'Jost', sans-serif;
-    font-size: clamp(2.2rem, 5vw, 3.8rem);
+    font-size: var(--gc-text-xl);
     font-weight: 300;
     color: var(--text-primary);
     line-height: 1.15;
@@ -179,7 +232,7 @@
 .gc-hero-title strong { font-weight: 600; }
 .gc-hero-sub {
     font-family: 'SolaimanLipi', 'Jost', sans-serif;
-    font-size: 1.3rem;
+    font-size: var(--gc-text-lg);
     color: var(--text-muted);
     max-width: 580px;
     margin: 0 auto 32px;
@@ -194,7 +247,7 @@
     background: var(--gold);
     color: #fff;
     font-family: 'SolaimanLipi', 'Jost', sans-serif;
-    font-size: 1.25rem;
+    font-size: var(--gc-text-md);
     font-weight: 600;
     text-transform: uppercase;
     border: none;
@@ -214,7 +267,7 @@
     align-items: center;
     justify-content: center;
     gap: 12px;
-    font-size: 1rem;
+    font-size: var(--gc-text-md);
     font-weight: 500;
     letter-spacing: 0.04em;
     text-align: center;
@@ -236,7 +289,7 @@
     margin-bottom: 36px;
 }
 .gc-section-eyebrow {
-    font-size: 1.25rem;
+    font-size: var(--gc-text-lg);
     font-weight: 700;
     text-transform: uppercase;
     color: var(--gold);
@@ -244,7 +297,7 @@
 }
 .gc-section-title {
     font-family: 'SolaimanLipi', 'Jost', sans-serif;
-    font-size: 2rem;
+    font-size: var(--gc-text-xl);
     font-weight: 300;
     color: var(--text-primary);
 }
@@ -272,7 +325,7 @@
 .gc-batch-status {
     position: absolute;
     top: 16px; right: 16px;
-    font-size: 0.95rem;
+    font-size: var(--gc-text-xs);
     font-weight: 700;
     text-transform: uppercase;
     padding: 4px 10px;
@@ -284,7 +337,7 @@
 
 .gc-batch-name {
     font-family: 'SolaimanLipi', 'Jost', sans-serif;
-    font-size: 1.4rem;
+    font-size: var(--gc-text-lg);
     font-weight: 600;
     color: var(--text-primary);
     margin-bottom: 16px;
@@ -300,7 +353,7 @@
     display: flex;
     align-items: center;
     gap: 8px;
-    font-size: 1.125rem;
+    font-size: var(--gc-text-md);
     color: var(--text-secondary);
 }
 .gc-batch-meta-row svg { color: var(--gold); flex-shrink: 0; }
@@ -312,7 +365,7 @@
 .gc-seat-bar-label {
     display: flex;
     justify-content: space-between;
-    font-size: 0.95rem;
+    font-size: var(--gc-text-xs);
     font-weight: 600;
     text-transform: uppercase;
     letter-spacing: 0.1em;
@@ -334,12 +387,12 @@
 
 .gc-batch-fee {
     font-family: 'SolaimanLipi', 'Jost', sans-serif;
-    font-size: 1.8rem;
+    font-size: var(--gc-text-2xl);
     font-weight: 600;
     color: var(--text-primary);
     margin-bottom: 16px;
 }
-.gc-batch-fee span { font-size: 1rem; color: var(--text-muted); font-weight: 300; }
+.gc-batch-fee span { font-size: var(--gc-text-sm); color: var(--text-muted); font-weight: 300; }
 
 .gc-apply-btn {
     width: 100%;
@@ -347,7 +400,7 @@
     background: var(--gold);
     color: #fff;
     font-family: 'SolaimanLipi', 'Jost', sans-serif;
-    font-size: 1rem;
+    font-size: var(--gc-text-md);
     font-weight: 600;
     text-transform: uppercase;
     border: none;
@@ -393,8 +446,8 @@
     color: var(--gold);
     flex-shrink: 0;
 }
-.gc-benefit-text { font-size: 1.3rem; font-family: 'SolaimanLipi', 'Jost', sans-serif; color: var(--text-secondary); line-height: 1.6; }
-.gc-benefit-text strong { display: block; color: var(--text-primary); font-family: 'SolaimanLipi', 'Jost', sans-serif; font-weight: 600; font-size: 1.25rem; margin-bottom: 3px; }
+.gc-benefit-text { font-size: var(--gc-text-base); font-family: 'SolaimanLipi', 'Jost', sans-serif; color: var(--text-secondary); line-height: 1.6; }
+.gc-benefit-text strong { display: block; color: var(--text-primary); font-family: 'SolaimanLipi', 'Jost', sans-serif; font-weight: 600; font-size: var(--gc-text-md); margin-bottom: 3px; }
 
 /* ── Gallery ── */
 .gc-gallery-filters {
@@ -410,7 +463,7 @@
     background: transparent;
     color: var(--text-muted);
     font-family: 'SolaimanLipi', 'Jost', sans-serif;
-    font-size: 1rem;
+    font-size: var(--gc-text-sm);
     font-weight: 600;
     text-transform: uppercase;
     cursor: pointer;
@@ -464,14 +517,14 @@
 }
 .gc-cta-banner-title {
     font-family: 'SolaimanLipi', 'Jost', sans-serif;
-    font-size: 2rem;
+    font-size: var(--gc-text-lg);
     font-weight: 600;
     color: var(--text-primary);
     margin-bottom: 12px;
     position: relative;
 }
 .gc-cta-banner-sub {
-    font-size: 1.25rem;
+    font-size: var(--gc-text-md);
     font-family: 'SolaimanLipi', 'Jost', sans-serif;
     color: var(--text-muted);
     margin-bottom: 28px;
@@ -1203,15 +1256,14 @@
         GALLERY & NOTICES SIDEBAR
     ══════════════════════════════════ --}}
     <div class="gc-content-wrapper">
-        
+
         {{-- 🟦 LEFT COLUMN: Batches, Ad, and Gallery --}}
         <div class="gc-main-column" style="display: flex; flex-direction: column; min-width: 0;">
-            
+
             {{-- 1. UPCOMING BATCHES --}}
             <div id="batches-section">
                 <div class="gc-section-head">
                     <div class="gc-section-eyebrow">Upcoming Batches</div>
-                    <h2 class="gc-section-title">Upcoming <strong>Batches</strong></h2>
                 </div>
 
                 @if($batches->isEmpty())
@@ -1229,9 +1281,9 @@
                                 </div>
 
                                 <a href="{{ route('grooming.show', $batch->id) }}" style="text-decoration: none;">
-                                    <div class="gc-batch-name" 
-                                        style="transition: color 0.2s;" 
-                                        onmouseover="this.style.color='var(--gold)'" 
+                                    <div class="gc-batch-name"
+                                        style="transition: color 0.2s;"
+                                        onmouseover="this.style.color='var(--gold)'"
                                         onmouseout="this.style.color='var(--text-primary)'">
                                         {{ $batch->title }}
                                     </div>
@@ -1248,6 +1300,12 @@
                                         Trainer: {{ $batch->trainer }}
                                     </div>
                                     @endif
+                                    @if($batch->venue)
+                                    <div class="gc-batch-meta-row">
+                                        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 10c0 7-9 13-9 13S3 17 3 10a9 9 0 0118 0z"/><circle cx="12" cy="10" r="3"/></svg>
+                                        {{ $batch->venue }}
+                                    </div>
+                                    @endif
                                     @if(!empty($batch->schedule_json))
                                     <div class="gc-batch-meta-row">
                                         <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></svg>
@@ -1257,20 +1315,22 @@
                                 </div>
 
                                 {{-- Seat bar --}}
-                                <div class="gc-seat-bar-wrap">
-                                    <div class="gc-seat-bar-label">
-                                        <span>Seat Availability</span>
-                                        <span>{{ $batch->filled_seats }}/{{ $batch->seat_limit }} Seats</span>
-                                    </div>
-                                    <div class="gc-seat-bar">
-                                        <div class="gc-seat-bar-fill" style="width: {{ $batch->fill_percentage }}%"></div>
-                                    </div>
-                                    @if($batch->remaining_seats <= 5 && $batch->remaining_seats > 0)
-                                        <div style="font-size:0.95rem; color:var(--gold); font-weight:700; margin-top:5px;">
-                                            ⚡ Only {{ $batch->remaining_seats }} seats left!
+                                @if($batch->show_seats_public)
+                                    <div class="gc-seat-bar-wrap">
+                                        <div class="gc-seat-bar-label">
+                                            <span>Seat Availability</span>
+                                            <span>{{ $batch->filled_seats }}/{{ $batch->seat_limit }} Seats</span>
                                         </div>
-                                    @endif
-                                </div>
+                                        <div class="gc-seat-bar">
+                                            <div class="gc-seat-bar-fill" style="width: {{ $batch->fill_percentage }}%"></div>
+                                        </div>
+                                        @if($batch->remaining_seats <= 5 && $batch->remaining_seats > 0)
+                                            <div style="font-size:0.95rem; color:var(--gold); font-weight:700; margin-top:5px;">
+                                                ⚡ Only {{ $batch->remaining_seats }} seats left!
+                                            </div>
+                                        @endif
+                                    </div>
+                                @endif
 
                                 <div class="gc-batch-fee">
                                     ৳{{ number_format($batch->fee) }}
@@ -1289,16 +1349,11 @@
                                     {{-- Quick Apply Button --}}
                                     <button
                                         class="gc-apply-btn"
-                                        style="flex: 1; margin: 0; width: auto;"
-                                        wire:click="$set('batch_id', '{{ $batch->id }}')"
+                                        style="flex:1; margin:0; width:auto;"
                                         @if($batch->status === 'full') disabled @endif
-                                        @click="applyModalOpen = true"
+                                        @click="$dispatch('open-grooming-modal')"
                                     >
-                                        @if($batch->status === 'full')
-                                            Seat Full
-                                        @else
-                                            Apply Now
-                                        @endif
+                                        @if($batch->status === 'full') Seat Full @else Apply Now @endif
                                     </button>
                                 </div>
                             </div>
@@ -1313,7 +1368,7 @@
             </div>
 
             {{-- 2. GALLERY --}}
-            <div class="gc-gallery-side" x-data="{ filter: 'all' }">
+            <div class="gc-gallery-side" x-data="{ filter: 'all', modalOpen: false, currentImage: '' }">
                 <div class="gc-section-head" style="text-align: left;">
                     <div class="gc-section-eyebrow">Gallery</div>
                     <h2 class="gc-section-title">Class <strong>Moments</strong></h2>
@@ -1331,15 +1386,33 @@
                         @foreach($gallery as $photo)
                         <div class="gc-gallery-item"
                             x-show="filter === 'all' || filter === '{{ $photo->category }}'"
-                            x-transition>
+                            x-transition
+                            @click="currentImage = '{{ asset('storage/' . $photo->image) }}'; modalOpen = true">
                             <img src="{{ asset('storage/' . $photo->image) }}" alt="{{ $photo->title }}" loading="lazy">
                         </div>
                         @endforeach
                     </div>
-                    
+
                     {{-- Custom Pagination Link --}}
                     <div>
                         {{ $gallery->links('vendor.pagination.custom-numbered') }}
+                    </div>
+                    <!-- Lightbox Modal -->
+                    <div class="gc-lightbox-overlay"
+                        x-show="modalOpen"
+                        x-transition.opacity.duration.300ms
+                        @click.self="modalOpen = false"
+                        @keydown.escape.window="modalOpen = false"
+                        style="display: none;">
+
+                        <button class="gc-lightbox-close" @click="modalOpen = false">
+                            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <line x1="18" y1="6" x2="6" y2="18"></line>
+                                <line x1="6" y1="6" x2="18" y2="18"></line>
+                            </svg>
+                        </button>
+
+                        <img :src="currentImage" alt="Expanded View" @click.stop>
                     </div>
                 @else
                     <p style="color:var(--text-muted); font-size: 0.9rem;">No images available.</p>
@@ -1371,7 +1444,7 @@
                     <p style="color:var(--text-muted); font-size: 0.95rem;">There are no new notices at the moment.</p>
                 @endif
             </div>
-            
+
             {{-- Registration Stats Box --}}
             <div class="gc-sidebar-stats">
                 <div class="gc-stats-grid">
@@ -1384,8 +1457,8 @@
                         <div class="gc-stat-label">Practical Training</div>
                     </div>
                 </div>
-                
-                <button class="gc-sidebar-apply-btn" @click="applyModalOpen = true">
+
+                <button class="gc-sidebar-apply-btn" @click="$dispatch('open-grooming-modal')">
                     Apply Now
                     <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                         <line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/>
@@ -1407,11 +1480,11 @@
     <div class="gc-cta-banner">
         <div class="gc-cta-banner-title">Get Your Career Started Today</div>
         <p class="gc-cta-banner-sub">Limited Seats Available. Apply Now or Contact Us for More Information.</p>
-        
+
         <div style="position: relative; z-index: 10; display: flex; gap: 16px; justify-content: center; align-items: center; flex-wrap: wrap;">
-            
+
             {{-- আবেদন বাটন --}}
-            <button class="gc-hero-cta" @click="applyModalOpen = true" style="margin: 0;">
+            <button class="gc-hero-cta" @click="$dispatch('open-grooming-modal')" style="margin: 0;">
                 Apply Now
                 <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                     <line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/>
@@ -1425,7 +1498,7 @@
             @endphp
             <a href="https://wa.me/{{ $wa }}?text=আমি%20গ্রুমিং%20ক্লাস%20সম্পর্কে%20বিস্তারিত%20জানতে%20চাই।"
                target="_blank"
-               style="display: inline-flex; align-items: center; gap: 10px; padding: 15px 32px; background: #25D366; color: #fff; font-family: 'SolaimanLipi', 'Jost', sans-serif; font-size: 1.125rem; font-weight: 600; text-transform: uppercase; letter-spacing: 0.12em; border-radius: 2px; text-decoration: none; transition: transform 0.2s, box-shadow 0.2s;"
+               style="display: inline-flex; align-items: center; gap: 10px; padding: 15px 32px; background: #25D366; color: #fff; font-family: 'SolaimanLipi', 'Jost', sans-serif; font-size: var(--gc-text-md); font-weight: 600; text-transform: uppercase; letter-spacing: 0.12em; border-radius: 2px; text-decoration: none; transition: transform 0.2s, box-shadow 0.2s;"
                onmouseover="this.style.transform='translateY(-2px)'; this.style.boxShadow='0 8px 24px rgba(37, 211, 102, 0.25)';"
                onmouseout="this.style.transform='translateY(0)'; this.style.boxShadow='none';">
                 <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
@@ -1437,482 +1510,6 @@
         </div>
     </div>
 
-</div>
-
-{{-- ══════════════════════════════════
-     MULTI-STEP APPLICATION MODAL
-══════════════════════════════════ --}}
-<div id="gc-apply-modal" x-show="applyModalOpen" style="display: none;" class="gc-modal-overlay">
-    <div class="gc-modal">
-
-        {{-- ══════════════════════════════════
-             SUCCESS SCREEN
-        ══════════════════════════════════ --}}
-        @if($submitted)
-            <div class="gc-success">
-                <div class="gc-success-icon">
-                    <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
-                        <path d="M12 2L3 7v5c0 5.55 3.84 10.74 9 12 5.16-1.26 9-6.45 9-12V7L12 2zm-2 15l-4-4 1.41-1.41L10 14.17l6.59-6.59L18 9l-8 8z"/>
-                    </svg>
-                </div>
-                <div class="gc-success-title">Application Submitted! 🎉</div>
-                <p class="gc-success-sub">
-                    Your application number: <strong>#{{ $applicationId }}</strong><br>
-                    Our team will verify your payment and confirm shortly.
-                </p>
-                @if($settings?->contact_phone)
-                    @php $wa = preg_replace('/[^0-9]/', '', $settings->contact_phone); @endphp
-                    <a href="https://wa.me/{{ $wa }}?text=আমি%20গ্রুমিং%20ক্লাসে%20আবেদন%20করেছি।%20আমার%20আবেদন%20নম্বর%20%23{{ $applicationId }}"
-                       target="_blank"
-                       style="display:inline-flex;align-items:center;gap:10px;padding:13px 26px;background:#25D366;color:#fff;font-weight:700;font-size:0.88rem;border-radius:6px;text-decoration:none;margin-bottom:14px;">
-                        <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor">
-                            <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.422-.272.347-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413Z"/>
-                        </svg>
-                        Confirm on WhatsApp
-                    </a>
-                    <br>
-                    <button @click="applyModalOpen = false" class="gc-btn-ghost" style="margin-top:4px;">
-                        Close
-                    </button>
-                @endif
-            </div>
-
-        {{-- ══════════════════════════════════
-             STEP 0: MEMBER LOOKUP
-        ══════════════════════════════════ --}}
-        @elseif($step === 0)
-            <div class="gc-modal-header">
-                <div class="gc-modal-title">Quick Start</div>
-                <button class="gc-modal-close" @click="applyModalOpen = false">
-                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                        <line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/>
-                    </svg>
-                </button>
-            </div>
-
-            <div class="gc-quickstart-body">
-
-                @if(! $isMemberCheck)
-                    {{-- Choice screen --}}
-                    <div class="gc-quickstart-icon">
-                        <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="var(--gold)" stroke-width="2">
-                            <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/>
-                        </svg>
-                    </div>
-                    <div class="gc-quickstart-title">Are you a Verified DMA Member?</div>
-                    <p class="gc-quickstart-sub">
-                        Verified members can skip ahead — we'll auto-fill your personal and physical details instantly, saving you time.
-                    </p>
-                    <div class="gc-quickstart-actions">
-                        <button wire:click="$set('isMemberCheck', true)" class="gc-btn-gold">
-                            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3">
-                                <polyline points="20 6 9 17 4 12"/>
-                            </svg>
-                            Yes, I'm a Member
-                        </button>
-                        <button wire:click="skipMemberLookup" class="gc-btn-ghost">
-                            Continue as Guest →
-                        </button>
-                    </div>
-
-                @else
-                    {{-- Lookup input --}}
-                    <div class="gc-quickstart-icon">
-                        <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="var(--gold)" stroke-width="2">
-                            <circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/>
-                        </svg>
-                    </div>
-                    <div class="gc-quickstart-title">Enter Your Member ID or Phone</div>
-                    <p class="gc-quickstart-sub">
-                        We'll instantly auto-fill Steps 1 & 2 from your profile and take you straight to Step 3.
-                    </p>
-
-                    <div class="gc-field" style="max-width:320px;margin:0 auto 6px;text-align:left;">
-                        <input type="text"
-                            wire:model.defer="memberLookupInput"
-                            wire:keydown.enter="lookupMember"
-                            placeholder="e.g. DMA-261001 or 01XXXXXXXXX"
-                            style="text-align:center;font-size:1rem;letter-spacing:0.04em;">
-                        @error('memberLookupInput')
-                            <div class="gc-field-error">{{ $message }}</div>
-                        @enderror
-                        @if($memberLookupError)
-                            <div class="gc-field-error" style="margin-top:6px;">
-                                {{ $memberLookupError }}
-                            </div>
-                        @endif
-                    </div>
-
-                    <div class="gc-quickstart-actions" style="margin-top:20px;">
-                        <button wire:click="lookupMember" class="gc-btn-gold" style="min-width:160px;justify-content:center;">
-                            <span wire:loading.remove wire:target="lookupMember">Find My Profile →</span>
-                            <span wire:loading wire:target="lookupMember">Searching...</span>
-                        </button>
-                        <button wire:click="skipMemberLookup" class="gc-btn-ghost">
-                            ← Back
-                        </button>
-                    </div>
-                @endif
-
-            </div>
-
-        {{-- ══════════════════════════════════
-             STEPS 1–5: MAIN FORM
-        ══════════════════════════════════ --}}
-        @else
-
-            {{-- ── Header ── --}}
-            <div class="gc-modal-header">
-                <div class="gc-modal-title">
-                    @if($step === 1) Personal Information
-                    @elseif($step === 2) Physical Information
-                    @elseif($step === 3) Career Interest
-                    @elseif($step === 4) Batch Selection
-                    @else Payment
-                    @endif
-                </div>
-                <button class="gc-modal-close" @click="applyModalOpen = false">
-                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                        <line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/>
-                    </svg>
-                </button>
-            </div>
-
-            {{-- ── Progress Bar ── --}}
-            <div class="gc-steps-bar">
-                @for($i = 1; $i <= $totalSteps; $i++)
-                    <div class="gc-step-dot {{ $i < $step ? 'done' : ($i === $step ? 'active' : '') }}">
-                        @if($i < $step)
-                            <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3">
-                                <polyline points="20 6 9 17 4 12"/>
-                            </svg>
-                        @else
-                            {{ $i }}
-                        @endif
-                    </div>
-                    @if($i < $totalSteps)
-                        <div class="gc-step-line {{ $i < $step ? 'done' : '' }}"></div>
-                    @endif
-                @endfor
-            </div>
-
-            {{-- ── Pre-filled Member Badge ── --}}
-            @if($isPreFilled && in_array($step, [3, 4, 5]))
-                <div class="gc-member-badge">
-                    <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3">
-                        <polyline points="20 6 9 17 4 12"/>
-                    </svg>
-                    Member profile auto-filled — Steps 1 & 2 completed.
-                </div>
-            @endif
-
-            {{-- ── Form Body ── --}}
-            <div class="gc-modal-body">
-
-                {{-- ─────────────────────────────
-                     STEP 1: Personal Info
-                ───────────────────────────── --}}
-                @if($step === 1)
-                    <div wire:key="form-step-1">
-                        <div class="gc-field">
-                            <label>Full Name <span style="color:var(--gold)">*</span></label>
-                            <input type="text" wire:model.defer="full_name" placeholder="Your full name">
-                            @error('full_name') <div class="gc-field-error">{{ $message }}</div> @enderror
-                        </div>
-
-                        <div class="gc-grid-2">
-                            <div class="gc-field">
-                                <label>Mobile Number <span style="color:var(--gold)">*</span></label>
-                                <input type="tel" wire:model.defer="phone" placeholder="01XXXXXXXXX">
-                                @error('phone') <div class="gc-field-error">{{ $message }}</div> @enderror
-                            </div>
-                            <div class="gc-field">
-                                <label>WhatsApp</label>
-                                <input type="tel" wire:model.defer="whatsapp" placeholder="01XXXXXXXXX">
-                            </div>
-                        </div>
-
-                        <div class="gc-field" style="margin-bottom:0;">
-                            <label>Email</label>
-                            <input type="email" wire:model.defer="email" placeholder="you@example.com">
-                            @error('email') <div class="gc-field-error">{{ $message }}</div> @enderror
-                        </div>
-
-                    </div>
-                {{-- ─────────────────────────────
-                     STEP 2: Physical Info
-                ───────────────────────────── --}}
-                @elseif($step === 2)
-                    <div wire:key="form-step-2">
-                        <div class="gc-grid-2">
-                            <div class="gc-field">
-                                <label>Age</label>
-                                <input type="number" wire:model.defer="age" placeholder="e.g. 22">
-                                @error('age') <div class="gc-field-error">{{ $message }}</div> @enderror
-                            </div>
-                            <div class="gc-field">
-                                <label>Gender</label>
-                                <select wire:model.defer="gender">
-                                    <option value="">Select</option>
-                                    <option value="Male">Male</option>
-                                    <option value="Female">Female</option>
-                                    <option value="Other">Other</option>
-                                </select>
-                            </div>
-                            <div class="gc-field">
-                                <label>Height</label>
-                                <input type="text" wire:model.defer="height" placeholder="e.g. 5 ft 6 in">
-                            </div>
-                            <div class="gc-field">
-                                <label>Weight</label>
-                                <input type="text" wire:model.defer="weight" placeholder="e.g. 55 kg">
-                            </div>
-                        </div>
-
-                        <div class="gc-field" style="margin-bottom:0;">
-                            <label>Address</label>
-                            <input type="text" wire:model.defer="address" placeholder="Your full address">
-                        </div>
-
-                    </div>
-                {{-- ─────────────────────────────
-                     STEP 3: Career Interest
-                ───────────────────────────── --}}
-                @elseif($step === 3)
-                    <div wire:key="form-step-3">
-                        <div class="gc-field">
-                            <label>Career Interests <span style="color:var(--text-muted);font-weight:400;text-transform:none;font-size:0.75rem;">(Select all that apply)</span></label>
-                            <div class="gc-interest-grid">
-                                @foreach(['Modeling', 'Acting', 'Personality Development', 'Fashion Industry'] as $interest)
-                                    <label class="gc-interest-card {{ in_array($interest, $career_interests) ? 'selected' : '' }}">
-                                        <input type="checkbox"
-                                            wire:model.live="career_interests"
-                                            value="{{ $interest }}">
-                                        <span>{{ $interest }}</span>
-                                        @if(in_array($interest, $career_interests))
-                                            <span class="gc-interest-check">
-                                                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#16a34a" stroke-width="3">
-                                                    <polyline points="20 6 9 17 4 12"/>
-                                                </svg>
-                                            </span>
-                                        @endif
-                                    </label>
-                                @endforeach
-                            </div>
-                        </div>
-
-                        <div class="gc-field" style="margin-bottom:0;">
-                            <label>Experience Level</label>
-                            <div class="gc-exp-grid">
-                                @foreach([
-                                    'Beginner'     => ['label' => 'Beginner',     'sub' => 'নতুন',           'icon' => '🌱'],
-                                    'Intermediate' => ['label' => 'Intermediate', 'sub' => 'কিছুটা অভিজ্ঞ', 'icon' => '⭐'],
-                                    'Experienced'  => ['label' => 'Experienced',  'sub' => 'অভিজ্ঞ',         'icon' => '🏆'],
-                                ] as $val => $info)
-                                    <label class="gc-exp-card {{ $experience_level === $val ? 'selected' : '' }}">
-                                        <input type="radio" wire:model.live="experience_level" value="{{ $val }}">
-                                        <span class="gc-exp-icon">{{ $info['icon'] }}</span>
-                                        <span class="gc-exp-label">{{ $info['label'] }}</span>
-                                        <span class="gc-exp-sub">{{ $info['sub'] }}</span>
-                                        @if($experience_level === $val)
-                                            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="#16a34a" stroke-width="3">
-                                                <polyline points="20 6 9 17 4 12"/>
-                                            </svg>
-                                        @endif
-                                    </label>
-                                @endforeach
-                            </div>
-                        </div>
-
-                    </div>
-                {{-- ─────────────────────────────
-                     STEP 4: Batch Selection
-                ───────────────────────────── --}}
-                @elseif($step === 4)
-                    <div wire:key="form-step-4">
-                        <div class="gc-batch-select-grid">
-                            @forelse($batches as $batch)
-                                <div class="gc-batch-select-card {{ $batch_id == $batch->id ? 'selected' : '' }}"
-                                    wire:click="$set('batch_id', '{{ $batch->id }}')">
-                                    <div style="flex:1;min-width:0;">
-                                        <div class="gc-batch-select-name">{{ $batch->title }}</div>
-                                        <div class="gc-batch-select-meta">
-                                            Start: {{ $batch->start_date->format('d M Y') }}
-                                            &nbsp;·&nbsp; Seats: {{ $batch->remaining_seats }}
-                                        </div>
-                                    </div>
-                                    <div class="gc-batch-select-fee">৳{{ number_format($batch->fee) }}</div>
-                                </div>
-                            @empty
-                                <p style="color:var(--text-muted);font-size:0.9rem;">No batches currently available.</p>
-                            @endforelse
-                        </div>
-                        @error('batch_id')
-                            <div class="gc-field-error" style="margin-top:10px;">{{ $message }}</div>
-                        @enderror
-                    </div>
-                {{-- ─────────────────────────────
-                     STEP 5: Payment
-                ───────────────────────────── --}}
-                @elseif($step === 5)
-                <div wire:key="form-step-5">
-
-                    {{-- Selected batch summary --}}
-                    @if($selectedBatch)
-                        <div class="gc-batch-summary">
-                            <div>
-                                <div class="gc-batch-summary-label">Selected Batch</div>
-                                <div class="gc-batch-summary-name">{{ $selectedBatch->title }}</div>
-                            </div>
-                            <div class="gc-batch-summary-fee">৳{{ number_format($selectedBatch->fee) }}</div>
-                        </div>
-                    @endif
-
-                    {{-- Payment method with brand icons --}}
-                    <div class="gc-field">
-                        <label>Payment Method <span style="color:var(--gold)">*</span></label>
-                        <div class="payment-methods">
-
-                            @if($settings?->bkash_number)
-                            <label class="payment-method-label">
-                                <input type="radio"
-                                    wire:model.live="payment_method"
-                                    value="bKash">
-                                <div class="payment-method-tab">
-                                    <div class="pm-icon-wrap">
-                                        <img src="https://play-lh.googleusercontent.com/1CRcUfmtwvWxT2g-xJF8s9_btha42TLi6Lo-qVkVomXBb_citzakZX9BbeY51iholWs"
-                                            alt="bKash" class="pm-brand-img">
-                                    </div>
-                                    <span class="pm-label">বিকাশ</span>
-                                </div>
-                            </label>
-                            @endif
-
-                            @if($settings?->nagad_number)
-                            <label class="payment-method-label">
-                                <input type="radio"
-                                    wire:model.live="payment_method"
-                                    value="Nagad">
-                                <div class="payment-method-tab">
-                                    <div class="pm-icon-wrap">
-                                        <img src="https://play-lh.googleusercontent.com/9ps_d6nGKQzfbsJfMaFR0RkdwzEdbZV53ReYCS09Eo5MV-GtVylFD-7IHcVktlnz9Mo"
-                                            alt="Nagad" class="pm-brand-img">
-                                    </div>
-                                    <span class="pm-label">নগদ</span>
-                                </div>
-                            </label>
-                            @endif
-
-                            @if($settings?->rocket_number)
-                            <label class="payment-method-label">
-                                <input type="radio"
-                                    wire:model.live="payment_method"
-                                    value="Rocket">
-                                <div class="payment-method-tab">
-                                    <div class="pm-icon-wrap">
-                                        <img src="https://play-lh.googleusercontent.com/sDY6YSDobbm_rX-aozinIX5tVYBSea1nAyXYI4TJlije2_AF5_5aG3iAS7nlrgo0lk8"
-                                            alt="Rocket" class="pm-brand-img">
-                                    </div>
-                                    <span class="pm-label">রকেট</span>
-                                </div>
-                            </label>
-                            @endif
-
-                        </div>
-                        @error('payment_method') <div class="gc-field-error" style="margin-top:-12px;margin-bottom:12px;">{{ $message }}</div> @enderror
-                    </div>
-
-                    {{-- Send money to box --}}
-                    @if($payment_method && $settings)
-                        @php
-                            $payNumber = match($payment_method) {
-                                'bKash'  => $settings->bkash_number,
-                                'Nagad'  => $settings->nagad_number,
-                                'Rocket' => $settings->rocket_number,
-                                default  => null,
-                            };
-
-                            $payAccountType = match($payment_method) {
-                                'bKash'  => $settings->bkash_type,
-                                'Nagad'  => $settings->nagad_type,
-                                'Rocket' => $settings->rocket_type,
-                                default  => null,
-                            };
-                        @endphp
-                        @if($payNumber)
-                            <div class="gc-pay-info-box">
-                                <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="var(--gold)" stroke-width="2" style="flex-shrink:0;">
-                                    <rect x="1" y="4" width="22" height="16" rx="2"/>
-                                    <line x1="1" y1="10" x2="23" y2="10"/>
-                                </svg>
-                                <div>
-                                    <div class="gc-pay-info-label">
-                                        এই নম্বরে <span style="color:red; font-weight:700;">{{ $payAccountType }}</span> করুন
-                                    </div>
-                                    <div class="gc-pay-info-number">{{ $payNumber }}</div>
-                                </div>
-                            </div>
-                        @endif
-                    @endif
-
-                    {{-- Sender + TrxID --}}
-                    <div class="gc-grid-2">
-                        <div class="gc-field">
-                            <label>Sender Number <span style="color:var(--gold)">*</span></label>
-                            <input type="tel" wire:model.defer="sender_number" placeholder="01XXXXXXXXX">
-                            @error('sender_number') <div class="gc-field-error">{{ $message }}</div> @enderror
-                        </div>
-                        <div class="gc-field">
-                            <label>Transaction ID <span style="color:var(--gold)">*</span></label>
-                            <input type="text" wire:model.defer="transaction_id" placeholder="e.g. 9J5A6B8C" style="letter-spacing:0.08em;">
-                            @error('transaction_id') <div class="gc-field-error">{{ $message }}</div> @enderror
-                        </div>
-                    </div>
-
-                    <div class="gc-field" style="margin-bottom:0;">
-                        <label>Payment Screenshot <span style="color:var(--text-muted);font-weight:400;text-transform:none;font-size:0.75rem;">(Optional)</span></label>
-                        <input type="file" wire:model="payment_screenshot" accept="image/*">
-                        <div class="gc-field-hint">JPG, PNG — Maximum 3MB</div>
-                        @error('payment_screenshot') <div class="gc-field-error">{{ $message }}</div> @enderror
-                        <div wire:loading wire:target="payment_screenshot" style="font-size:0.78rem;color:var(--gold);margin-top:4px;">
-                            Uploading...
-                        </div>
-                    </div>
-
-                @endif
-            </div>
-
-            {{-- ── Modal Footer ── --}}
-            <div class="gc-modal-footer">
-                <button class="gc-btn-prev" wire:click="prevStep">
-                    ← Previous
-                </button>
-
-                <span style="font-size:0.72rem;color:var(--text-muted);">
-                    Step {{ $step }} / {{ $totalSteps }}
-                </span>
-
-                @if($step < $totalSteps)
-                    <button class="gc-btn-next" wire:click="nextStep">
-                        <span wire:loading.remove wire:target="nextStep">Next →</span>
-                        <span wire:loading.flex wire:target="nextStep" style="align-items:center;gap:6px;">
-                            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="animation:spin 0.8s linear infinite;">
-                                <circle cx="12" cy="12" r="10" opacity="0.25"/>
-                                <path d="M12 2a10 10 0 0110 10" stroke-linecap="round"/>
-                            </svg>
-                            Loading
-                        </span>
-                    </button>
-                @else
-                    <button class="gc-btn-next" wire:click="submit">
-                        <span wire:loading.remove wire:target="submit">Submit ✓</span>
-                        <span wire:loading wire:target="submit">Submitting...</span>
-                    </button>
-                @endif
-            </div>
-
-        @endif
-    </div>
 </div>
 
 </div>

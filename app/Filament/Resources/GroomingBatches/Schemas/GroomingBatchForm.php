@@ -54,6 +54,9 @@ class GroomingBatchForm
             TextInput::make('trainer')
                 ->placeholder('e.g. Nusrat Jahan')
                 ->nullable(),
+            TextInput::make('venue')
+                ->placeholder('e.g. House 12, Road 5, Dhanmondi, Dhaka')
+                ->nullable(),
 
             TextInput::make('fee')
                 ->numeric()
@@ -66,6 +69,10 @@ class GroomingBatchForm
                 ->required()
                 ->default(20)
                 ->label('Total Seats'),
+                
+            Toggle::make('show_seats_public')
+                ->label('Show seat availability to public')
+                ->default(true),
 
             TextInput::make('filled_seats')
                 ->numeric()

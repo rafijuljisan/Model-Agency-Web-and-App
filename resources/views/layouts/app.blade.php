@@ -148,7 +148,7 @@
         ═══════════════════════════════════════════ */
         :root,
         [data-theme="light"] {
-            --bg-primary: #faf5f5;
+            --bg-primary: #ffffff;
             --bg-secondary: #f2e6e6;
             --bg-surface: #ffffff;
             --bg-nav: rgba(250, 245, 245, 0.94);
@@ -352,7 +352,7 @@
 
         @media (max-width: 768px) {
             .topbar-inner {
-                padding: 0 20px;
+                padding: 0 15px; /* Slightly reduced padding to ensure 3 items fit */
             }
 
             .topbar-right {
@@ -363,11 +363,14 @@
             .topbar-left {
                 width: 100%;
                 justify-content: space-between;
-                font-size: 0.75rem;
-                gap: 10px;
+                font-size: 0.70rem; /* Slightly reduced so ESTD, Phone, and Lic fit on small screens */
+                gap: 5px;
             }
 
-            /* Increased from 0.55rem */
+            /* Hide 'Call Us:' text on mobile */
+            .topbar-call-text {
+                display: none;
+            }
         }
 
         /* ═══════════════════════════════════════════
@@ -482,7 +485,7 @@
             padding: 6px 10px;
 
             /* --- UPDATED FONT SIZE --- */
-            font-size: 0.95rem;
+            font-size: 0.90rem;
             /* Increased from 0.68rem */
 
             font-weight: 600;
@@ -582,7 +585,7 @@
             gap: 10px;
             padding: 10px 18px;
             font-family: 'Jost', sans-serif;
-            font-size: 0.95rem; /* Matches the top level */
+            font-size: 0.85rem; /* Matches the top level */
             font-weight: 500; /* Better readability inside dropdowns */
             letter-spacing: 0.02em;
             color: var(--text-secondary);
@@ -1135,7 +1138,9 @@
 
         .mega-menu-card-title {
             font-family: 'Jost', sans-serif;
-            font-size: 1.35rem;
+            font-size: 0.90rem;
+            letter-spacing: 0.05rem;
+            text-transform: uppercase;
             font-weight: 600;
             color: var(--text-primary);
             margin-bottom: 6px;
@@ -1266,15 +1271,19 @@
     <div class="site-topbar" aria-label="Top contact bar">
         <div class="topbar-inner">
             <div class="topbar-left">
+                {{-- Hardcoded ESTD --}}
+                <span>ESTD-2012</span>
+
                 @if($settings->contact_phone)
                     <a href="tel:{{ $settings->contact_phone }}" aria-label="Call us">
                         <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                             <path
                                 d="M22 16.92v3a2 2 0 01-2.18 2 19.79 19.79 0 01-8.63-3.07A19.5 19.5 0 013.07 9.81 19.79 19.79 0 01.05 2.18 2 2 0 012 0h3a2 2 0 012 1.72c.127.96.361 1.903.7 2.81a2 2 0 01-.45 2.11L6.09 7.91a16 16 0 006 6l1.27-1.27a2 2 0 012.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0122 14.92z" />
                         </svg>
-                        Call Us: {{ $settings->contact_phone }}
+                        <span class="topbar-call-text">Call Us:&nbsp;</span>{{ $settings->contact_phone }}
                     </a>
                 @endif
+
                 @if($settings->license_number)
                     <span>Lic. No: {{ $settings->license_number }}</span>
                 @endif
@@ -1704,6 +1713,9 @@
             </ul>
         </div>
     </footer>
+
+    {{-- ── Universal Grooming Apply Modal ── --}}
+    @livewire('grooming-apply-modal')
 
     @livewireScripts
 
