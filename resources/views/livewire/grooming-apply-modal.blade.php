@@ -567,6 +567,35 @@
     border-radius: 99px;
     transition: width 0.4s ease;
 }
+/* ── Batch Card Checkbox ── */
+/* ── Batch Card Checkbox ── */
+.gam-batch-checkbox {
+    width: 24px;
+    height: 24px;
+    border-radius: 5px;
+    border: 2px solid var(--border-strong, #aaa);
+    background: transparent;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    transition: all 0.18s;
+    /* NO position absolute */
+}
+.gam-batch-card.selected .gam-batch-checkbox {
+    background: #16a34a;
+    border-color: #16a34a;
+}
+.gam-batch-card.selected .gam-batch-checkbox svg { display: block; }
+.gam-batch-checkbox svg { display: none; }
+
+/* ── Responsiveness ── */
+@media (max-width: 480px) {
+    .gam-batch-card { flex-wrap: wrap; gap: 8px; padding: 12px; }
+    .gam-batch-card-fee { font-size: 1rem; }
+    .gam-batch-card-meta { font-size: 0.75rem; }
+    .gam-batch-card-name { font-size: 0.9rem; }
+}
 
 /* ── Step 5: Payment ── */
 .gam-batch-summary {
@@ -902,7 +931,7 @@
                         Yes, I'm a Member
                     </button>
                     <button wire:click="skipMemberLookup" class="gam-btn-ghost">
-                        Continue as Guest →
+                        I'm a New Member →
                     </button>
                 </div>
 
@@ -1182,10 +1211,9 @@
                             $pct = $batch->fill_percentage ?? 0;
                             $statusCls = $batch->status ?? 'open';
                         @endphp
-                        <div
-                            class="gam-batch-card {{ $batch_id == $batch->id ? 'selected' : '' }}"
-                            wire:click="$set('batch_id', '{{ $batch->id }}')"
-                        >
+                        <div class="gam-batch-card {{ $batch_id == $batch->id ? 'selected' : '' }}"
+                            wire:click="$set('batch_id', '{{ $batch->id }}')">
+
                             <div class="gam-batch-card-body">
                                 <div class="gam-batch-card-name">{{ $batch->title }}</div>
                                 <div class="gam-batch-card-meta">
@@ -1193,10 +1221,16 @@
                                         <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
                                         {{ $batch->start_date->format('d M Y') }}
                                     </span>
-                                    @if($batch->venue)
+                                    @if($batch->trainer)
                                     <span>
-                                        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 10c0 7-9 13-9 13S3 17 3 10a9 9 0 0118 0z"/><circle cx="12" cy="10" r="3"/></svg>
-                                        {{ $batch->venue }}
+                                        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+                                        {{ $batch->trainer }}
+                                    </span>
+                                    @endif
+                                    @if($batch->schedule_json)
+                                    <span>
+                                        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+                                        {{ collect($batch->schedule_json)->map(fn($s) => $s['day'] . ' ' . $s['time'])->implode(' | ') }}
                                     </span>
                                     @endif
                                     @if($batch->show_seats_public)
@@ -1209,21 +1243,27 @@
                                 </div>
                                 @endif
                             </div>
-                            <div style="display:flex; flex-direction:column; align-items:flex-end; gap:6px; flex-shrink:0;">
-                                <div class="gam-batch-card-fee">৳{{ number_format($batch->fee) }}</div>
-                                <div class="gam-batch-card-seats {{ $statusCls }}">
-                                    @if($statusCls === 'open') Open
-                                    @elseif($statusCls === 'filling_fast') Filling Fast
-                                    @else Full
-                                    @endif
+                            <div style="display:flex; flex-direction:column; align-items:flex-end; gap:6px; flex-shrink:0; align-self:stretch; justify-content:space-between;">
+
+                                {{-- Top: checkbox --}}
+                                <div class="gam-batch-checkbox">
+                                    <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="3">
+                                        <polyline points="20 6 9 17 4 12"/>
+                                    </svg>
                                 </div>
+
+                                {{-- Bottom: fee + status --}}
+                                <div style="display:flex; flex-direction:column; align-items:flex-end; gap:6px;">
+                                    <div class="gam-batch-card-fee">৳{{ number_format($batch->fee) }}</div>
+                                    <div class="gam-batch-card-seats {{ $statusCls }}">
+                                        @if($statusCls === 'open') Open
+                                        @elseif($statusCls === 'filling_fast') Filling Fast
+                                        @else Full
+                                        @endif
+                                    </div>
+                                </div>
+
                             </div>
-                            {{-- Selected check --}}
-                            @if($batch_id == $batch->id)
-                            <div style="position:absolute;top:10px;left:10px;width:18px;height:18px;background:#16a34a;border-radius:50%;display:flex;align-items:center;justify-content:center;">
-                                <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg>
-                            </div>
-                            @endif
                         </div>
                     @empty
                         <div style="text-align:center; padding:32px; color:var(--text-muted); font-size:0.9rem; border:1px dashed var(--border-strong); border-radius:8px;">

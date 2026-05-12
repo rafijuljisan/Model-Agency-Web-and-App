@@ -835,6 +835,67 @@
             font-size: 0.85rem;
             color: var(--text-primary);
         }
+        /* ── Skeleton shimmer for lazy-loaded cards ── */
+.sk-bone {
+    display: block;
+    position: relative;
+    overflow: hidden;
+    background: rgba(255, 255, 255, 0.08); /* dark overlay base, works on your dark cards */
+    border-radius: 4px;
+}
+
+.sk-bone::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(
+        135deg,
+        transparent 0%,
+        transparent 30%,
+        rgba(255, 255, 255, 0.12) 50%,
+        transparent 70%,
+        transparent 100%
+    );
+    background-size: 300% 300%;
+    animation: skDiag 2s ease-in-out infinite;
+}
+
+@keyframes skDiag {
+    0%   { background-position: 0% 0%; }
+    100% { background-position: 100% 100%; }
+}
+
+/* Applied to the media wrapper while image is loading */
+.artist-card-media.is-loading {
+    background: rgba(255,255,255,0.06);
+}
+
+.artist-card-media.is-loading::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    z-index: 1;
+    background: linear-gradient(
+        135deg,
+        transparent 0%,
+        transparent 30%,
+        rgba(255, 255, 255, 0.1) 50%,
+        transparent 70%,
+        transparent 100%
+    );
+    background-size: 300% 300%;
+    animation: skDiag 2s ease-in-out infinite;
+}
+
+.artist-card-media img {
+    /* already exists — just add: */
+    opacity: 0;
+    transition: opacity 0.4s ease, transform 0.55s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+}
+
+.artist-card-media img.is-loaded {
+    opacity: 1;
+}
     </style>
 
     
@@ -1115,10 +1176,16 @@
                         <div class="artist-card-media">
                             <?php if(\Livewire\Mechanisms\ExtendBlade\ExtendBlade::isRenderingLivewireComponent()): ?><!--[if BLOCK]><![endif]--><?php endif; ?><?php if($artist->hasMedia('avatar')): ?>
                                 <img src="<?php echo e($artist->getFirstMediaUrl('avatar')); ?>"
-                                    alt="<?php echo e($artist->name); ?>" loading="lazy">
+                                    alt="<?php echo e($artist->name); ?>"
+                                    loading="lazy"
+                                    class="artist-img"
+                                    onload="this.classList.add('is-loaded'); this.closest('.artist-card-media').classList.remove('is-loading');">
                             <?php elseif($artist->hasMedia('portfolio')): ?>
                                 <img src="<?php echo e($artist->getFirstMediaUrl('portfolio')); ?>"
-                                    alt="<?php echo e($artist->name); ?>" loading="lazy">
+                                    alt="<?php echo e($artist->name); ?>"
+                                    loading="lazy"
+                                    class="artist-img"
+                                    onload="this.classList.add('is-loaded'); this.closest('.artist-card-media').classList.remove('is-loading');">
                             <?php else: ?>
                                 <div class="artist-card-placeholder">
                                     <svg width="36" height="36" viewBox="0 0 24 24" fill="none"

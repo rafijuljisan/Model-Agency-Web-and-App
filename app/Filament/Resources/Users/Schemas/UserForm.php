@@ -92,7 +92,7 @@ class UserForm
 
                                     if ($currentCount >= 8) {
                                         $set('is_featured', false); // revert the toggle
-                    
+
                                         \Filament\Notifications\Notification::make()
                                             ->title('Featured Slots Full')
                                             ->body('All 8 featured slots are taken. Please unfeature another artist first.')
@@ -464,7 +464,7 @@ class UserForm
                                             \Illuminate\Support\Facades\Storage::disk('private')->delete($record->nid_path);
                                         }
 
-                                        $filename = 'nid_' . $record->id . '_' . time() . '.' . $file->getClientOriginalExtension();
+                                        $filename = 'nid_' . ($record?->id ?? 'new') . '_' . time() . '.' . $file->getClientOriginalExtension();
                                         $path = $file->storeAs('verification/nid', $filename, 'private');
 
                                         $record->update(['nid_path' => $path]);

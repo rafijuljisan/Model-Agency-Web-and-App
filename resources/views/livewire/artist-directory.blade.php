@@ -335,7 +335,12 @@
             width: 100%;
             height: 100%;
             object-fit: cover;
-            transition: transform 0.55s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+            opacity: 0;
+            transition: opacity 0.4s ease, transform 0.55s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+        }
+
+        .artist-card-media img.is-loaded {
+            opacity: 1;
         }
 
         .artist-card:hover .artist-card-media img {
@@ -835,6 +840,72 @@
             font-size: 0.85rem;
             color: var(--text-primary);
         }
+        /* ── Skeleton shimmer for lazy-loaded cards ── */
+.sk-bone {
+    display: block;
+    position: relative;
+    overflow: hidden;
+    background: rgba(255, 255, 255, 0.08); /* dark overlay base, works on your dark cards */
+    border-radius: 4px;
+}
+
+.sk-bone::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(
+        135deg,
+        transparent 0%,
+        transparent 30%,
+        rgba(255, 255, 255, 0.12) 50%,
+        transparent 70%,
+        transparent 100%
+    );
+    background-size: 300% 300%;
+    animation: skDiag 2s ease-in-out infinite;
+}
+
+/* ── Skeleton shimmer ── */
+@keyframes skDiag {
+    0%   { transform: translateX(-100%) translateY(-100%); }
+    100% { transform: translateX(100%) translateY(100%); }
+}
+
+.artist-card-media.is-loading {
+    background: #e8e4de;
+}
+
+[data-theme="dark"] .artist-card-media.is-loading,
+.dark .artist-card-media.is-loading {
+    background: #2a2620;
+}
+
+.artist-card-media.is-loading::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    z-index: 1;
+    /* Use transform instead of background-position — far more reliable */
+    background: linear-gradient(
+        135deg,
+        transparent 25%,
+        rgba(255, 220, 220, 0.55) 50%,   /* warm gold-white streak */
+        transparent 75%
+    );
+    background-size: 200% 200%;
+    animation: skDiag 1.6s ease-in-out infinite;
+    pointer-events: none;
+}
+
+.artist-card-media img {
+    /* already exists — just add: */
+    opacity: 0;
+    transition: opacity 0.4s ease, transform 0.55s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+}
+
+.artist-card-media img.is-loaded {
+    opacity: 1;
+}
     </style>
 
     {{-- ══════════════════════════════════
@@ -1115,13 +1186,21 @@
                         </div>
 
                         {{-- ── Photo ── --}}
-                        <div class="artist-card-media">
+                        <div class="artist-card-media {{ ($artist->hasMedia('avatar') || $artist->hasMedia('portfolio')) ? 'is-loading' : '' }}">
                             @if($artist->hasMedia('avatar'))
                                 <img src="{{ $artist->getFirstMediaUrl('avatar') }}"
-                                    alt="{{ $artist->name }}" loading="lazy">
+                                    alt="{{ $artist->name }}"
+                                    loading="lazy"
+                                    class="artist-img"
+                                    onload="this.classList.add('is-loaded'); this.closest('.artist-card-media').classList.remove('is-loading');"
+                                    onerror="this.closest('.artist-card-media').classList.remove('is-loading');">
                             @elseif($artist->hasMedia('portfolio'))
                                 <img src="{{ $artist->getFirstMediaUrl('portfolio') }}"
-                                    alt="{{ $artist->name }}" loading="lazy">
+                                    alt="{{ $artist->name }}"
+                                    loading="lazy"
+                                    class="artist-img"
+                                    onload="this.classList.add('is-loaded'); this.closest('.artist-card-media').classList.remove('is-loading');"
+                                    onerror="this.closest('.artist-card-media').classList.remove('is-loading');">
                             @else
                                 <div class="artist-card-placeholder">
                                     <svg width="36" height="36" viewBox="0 0 24 24" fill="none"
@@ -1295,4 +1374,12 @@
         </div>
     </div>
 
+    <script>
+        document.querySelectorAll('.artist-card-media.is-loading img').forEach(img => {
+            if (img.complete && img.naturalWidth > 0) {
+                img.classList.add('is-loaded');
+                img.closest('.artist-card-media').classList.remove('is-loading');
+            }
+        });
+    </script>
 </div>
