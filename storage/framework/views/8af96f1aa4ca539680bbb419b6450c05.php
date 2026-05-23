@@ -1532,8 +1532,8 @@
                     </button>
                 </form>
             <?php else: ?>
-                <a href="/login" class="btn-outline" style="width: 100%; justify-content: center; margin-bottom: 10px;">Sign In</a>
-                <a href="/register" class="btn-fill" style="width: 100%; justify-content: center;">Join as Talent</a>
+                <a href="/login" class="btn-outline" style="width: 100%; justify-content: center; text-align: center; padding: 12px 22px;">Sign In</a>
+                <a href="/register" class="btn-fill" style="width: 100%; justify-content: center; text-align: center; padding: 12px 22px;">Join as Talent</a>
             <?php endif; ?><?php if(\Livewire\Mechanisms\ExtendBlade\ExtendBlade::isRenderingLivewireComponent()): ?><!--[if ENDBLOCK]><![endif]--><?php endif; ?>
         </div>
     </div>

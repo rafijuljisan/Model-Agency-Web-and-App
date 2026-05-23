@@ -18,6 +18,7 @@ use Filament\Tables\Filters\SelectFilter;
 use Filament\Tables\Filters\TernaryFilter;
 use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
+use App\Exports\UserExport;
 
 class UsersTable
 {
@@ -351,6 +352,20 @@ class UsersTable
                         ->requiresConfirmation()
                         ->deselectRecordsAfterCompletion(),
                 ]),
+            ])
+            ->toolbarActions([
+                Action::make('export_users')
+                    ->label('Export Users')
+                    ->icon('heroicon-o-arrow-down-tray')
+                    ->color('success')
+                    ->action(function (Action $action) {
+                        $users = $action->getLivewire()
+                            ->getFilteredTableQuery()
+                            ->with('profile')
+                            ->get();
+
+                        return (new UserExport($users))->download();
+                    }),
             ]);
     }
 }

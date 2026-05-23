@@ -112,12 +112,9 @@ class User extends Authenticatable implements HasMedia, FilamentUser
     }
     public function registerMediaConversions(?Media $media = null): void
     {
-        $this->addMediaConversion('og')
-            ->performOnCollections('avatar', 'portfolio')
-            ->width(1200)
-            ->height(630)
-            ->keepOriginalImageFormat() // keeps jpg as jpg, png as png
-            ->optimize()
+        $this->addMediaConversion('thumb')
+            ->performOnCollections('avatar')
+            ->fit(\Spatie\Image\Enums\Fit::Crop, 400, 400)
             ->quality(85)
             ->nonQueued();
     }

@@ -906,7 +906,44 @@
 .artist-card-media img.is-loaded {
     opacity: 1;
 }
+/* ── Pagination overlay ring ── */
+#page-loading-ring {
+    width: 52px;
+    height: 52px;
+    border-radius: 50%;
+    border: 2.5px solid transparent;
+    border-top-color: var(--gold);
+    border-bottom-color: var(--gold);
+    animation: ringSpinGlow 1.4s cubic-bezier(0.68, -0.55, 0.265, 1.55) infinite;
+    box-shadow:
+        0 0 18px rgba(180, 140, 60, 0.35),
+        inset 0 0 18px rgba(180, 140, 60, 0.15);
+}
+
+@keyframes ringSpinGlow {
+    0%   { transform: rotate(0deg)   scale(0.92); box-shadow: 0 0 10px rgba(180,140,60,0.2),  inset 0 0 10px rgba(180,140,60,0.1); }
+    50%  { transform: rotate(180deg) scale(1.08); box-shadow: 0 0 28px rgba(180,140,60,0.55), inset 0 0 28px rgba(180,140,60,0.3); }
+    100% { transform: rotate(360deg) scale(0.92); box-shadow: 0 0 10px rgba(180,140,60,0.2),  inset 0 0 10px rgba(180,140,60,0.1); }
+}
     </style>
+    {{-- ── Pagination loading overlay ── --}}
+    <div id="page-loading-overlay" style="
+        position: fixed;
+        inset: 0;
+        z-index: 9998;
+        background: radial-gradient(circle at center, rgba(252,248,240,0.6) 0%, rgba(252,248,240,0.92) 80%);
+        backdrop-filter: blur(3px);
+        -webkit-backdrop-filter: blur(3px);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        flex-direction: column;
+        opacity: 0;
+        pointer-events: none;
+        transition: opacity 0.25s ease;
+    ">
+        <div id="page-loading-ring"></div>
+    </div>
 
     {{-- ══════════════════════════════════
     PAGE HERO
@@ -1381,5 +1418,40 @@
                 img.closest('.artist-card-media').classList.remove('is-loading');
             }
         });
+    </script>
+    <script>
+        (function () {
+            const overlay = document.getElementById('page-loading-overlay');
+
+            function showOverlay() {
+                overlay.style.opacity = '1';
+                overlay.style.pointerEvents = 'all';
+                const grid = document.querySelector('.artist-grid');
+                if (grid) grid.scrollIntoView({ behavior: 'smooth', block: 'start' });
+            }
+
+            function hideOverlay() {
+                overlay.style.opacity = '0';
+                overlay.style.pointerEvents = 'none';
+            }
+
+            if (window.Livewire) {
+                Livewire.hook('commit', ({ component, commit, respond, succeed, fail }) => {
+                    if (
+                        commit.calls?.some(c =>
+                            ['nextPage', 'previousPage', 'gotoPage'].includes(c.method)
+                        )
+                    ) {
+                        showOverlay();
+                        succeed(({ snapshot, effect }) => {
+                            setTimeout(hideOverlay, 350);
+                        });
+                    }
+                });
+            }
+
+            document.addEventListener('livewire:navigated', hideOverlay);
+            document.addEventListener('livewire:load', hideOverlay);
+        })();
     </script>
 </div>

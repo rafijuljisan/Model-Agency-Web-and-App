@@ -71,15 +71,9 @@ class ArtistProfile extends Component
         $ogImage = null;
 
         if ($this->artist->hasMedia('avatar')) {
-            $media = $this->artist->getFirstMedia('avatar');
-            $ogImage = $media->hasGeneratedConversion('og')
-                ? $media->getUrl('og')
-                : $media->getFullUrl();
+            $ogImage = $this->artist->getFirstMedia('avatar')->getFullUrl();
         } elseif ($this->artist->hasMedia('portfolio')) {
-            $media = $this->artist->getFirstMedia('portfolio');
-            $ogImage = $media->hasGeneratedConversion('og')
-                ? $media->getUrl('og')
-                : $media->getFullUrl();
+            $ogImage = $this->artist->getFirstMedia('portfolio')->getFullUrl();
         }
 
         // Force HTTPS and ensure absolute URL

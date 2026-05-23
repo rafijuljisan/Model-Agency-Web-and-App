@@ -335,7 +335,12 @@
             width: 100%;
             height: 100%;
             object-fit: cover;
-            transition: transform 0.55s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+            opacity: 0;
+            transition: opacity 0.4s ease, transform 0.55s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+        }
+
+        .artist-card-media img.is-loaded {
+            opacity: 1;
         }
 
         .artist-card:hover .artist-card-media img {
@@ -860,14 +865,19 @@
     animation: skDiag 2s ease-in-out infinite;
 }
 
+/* ── Skeleton shimmer ── */
 @keyframes skDiag {
-    0%   { background-position: 0% 0%; }
-    100% { background-position: 100% 100%; }
+    0%   { transform: translateX(-100%) translateY(-100%); }
+    100% { transform: translateX(100%) translateY(100%); }
 }
 
-/* Applied to the media wrapper while image is loading */
 .artist-card-media.is-loading {
-    background: rgba(255,255,255,0.06);
+    background: #e8e4de;
+}
+
+[data-theme="dark"] .artist-card-media.is-loading,
+.dark .artist-card-media.is-loading {
+    background: #2a2620;
 }
 
 .artist-card-media.is-loading::after {
@@ -875,16 +885,16 @@
     position: absolute;
     inset: 0;
     z-index: 1;
+    /* Use transform instead of background-position — far more reliable */
     background: linear-gradient(
         135deg,
-        transparent 0%,
-        transparent 30%,
-        rgba(255, 255, 255, 0.1) 50%,
-        transparent 70%,
-        transparent 100%
+        transparent 25%,
+        rgba(255, 220, 220, 0.55) 50%,   /* warm gold-white streak */
+        transparent 75%
     );
-    background-size: 300% 300%;
-    animation: skDiag 2s ease-in-out infinite;
+    background-size: 200% 200%;
+    animation: skDiag 1.6s ease-in-out infinite;
+    pointer-events: none;
 }
 
 .artist-card-media img {
@@ -896,7 +906,44 @@
 .artist-card-media img.is-loaded {
     opacity: 1;
 }
+/* ── Pagination overlay ring ── */
+#page-loading-ring {
+    width: 52px;
+    height: 52px;
+    border-radius: 50%;
+    border: 2.5px solid transparent;
+    border-top-color: var(--gold);
+    border-bottom-color: var(--gold);
+    animation: ringSpinGlow 1.4s cubic-bezier(0.68, -0.55, 0.265, 1.55) infinite;
+    box-shadow:
+        0 0 18px rgba(180, 140, 60, 0.35),
+        inset 0 0 18px rgba(180, 140, 60, 0.15);
+}
+
+@keyframes ringSpinGlow {
+    0%   { transform: rotate(0deg)   scale(0.92); box-shadow: 0 0 10px rgba(180,140,60,0.2),  inset 0 0 10px rgba(180,140,60,0.1); }
+    50%  { transform: rotate(180deg) scale(1.08); box-shadow: 0 0 28px rgba(180,140,60,0.55), inset 0 0 28px rgba(180,140,60,0.3); }
+    100% { transform: rotate(360deg) scale(0.92); box-shadow: 0 0 10px rgba(180,140,60,0.2),  inset 0 0 10px rgba(180,140,60,0.1); }
+}
     </style>
+    
+    <div id="page-loading-overlay" style="
+        position: fixed;
+        inset: 0;
+        z-index: 9998;
+        background: radial-gradient(circle at center, rgba(252,248,240,0.6) 0%, rgba(252,248,240,0.92) 80%);
+        backdrop-filter: blur(3px);
+        -webkit-backdrop-filter: blur(3px);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        flex-direction: column;
+        opacity: 0;
+        pointer-events: none;
+        transition: opacity 0.25s ease;
+    ">
+        <div id="page-loading-ring"></div>
+    </div>
 
     
     <div class="directory-hero">
@@ -1173,19 +1220,21 @@
                         </div>
 
                         
-                        <div class="artist-card-media">
+                        <div class="artist-card-media <?php echo e(($artist->hasMedia('avatar') || $artist->hasMedia('portfolio')) ? 'is-loading' : ''); ?>">
                             <?php if(\Livewire\Mechanisms\ExtendBlade\ExtendBlade::isRenderingLivewireComponent()): ?><!--[if BLOCK]><![endif]--><?php endif; ?><?php if($artist->hasMedia('avatar')): ?>
                                 <img src="<?php echo e($artist->getFirstMediaUrl('avatar')); ?>"
                                     alt="<?php echo e($artist->name); ?>"
                                     loading="lazy"
                                     class="artist-img"
-                                    onload="this.classList.add('is-loaded'); this.closest('.artist-card-media').classList.remove('is-loading');">
+                                    onload="this.classList.add('is-loaded'); this.closest('.artist-card-media').classList.remove('is-loading');"
+                                    onerror="this.closest('.artist-card-media').classList.remove('is-loading');">
                             <?php elseif($artist->hasMedia('portfolio')): ?>
                                 <img src="<?php echo e($artist->getFirstMediaUrl('portfolio')); ?>"
                                     alt="<?php echo e($artist->name); ?>"
                                     loading="lazy"
                                     class="artist-img"
-                                    onload="this.classList.add('is-loaded'); this.closest('.artist-card-media').classList.remove('is-loading');">
+                                    onload="this.classList.add('is-loaded'); this.closest('.artist-card-media').classList.remove('is-loading');"
+                                    onerror="this.closest('.artist-card-media').classList.remove('is-loading');">
                             <?php else: ?>
                                 <div class="artist-card-placeholder">
                                     <svg width="36" height="36" viewBox="0 0 24 24" fill="none"
@@ -1365,5 +1414,48 @@
         </div>
     </div>
 
+    <script>
+        document.querySelectorAll('.artist-card-media.is-loading img').forEach(img => {
+            if (img.complete && img.naturalWidth > 0) {
+                img.classList.add('is-loaded');
+                img.closest('.artist-card-media').classList.remove('is-loading');
+            }
+        });
+    </script>
+    <script>
+        (function () {
+            const overlay = document.getElementById('page-loading-overlay');
+
+            function showOverlay() {
+                overlay.style.opacity = '1';
+                overlay.style.pointerEvents = 'all';
+                const grid = document.querySelector('.artist-grid');
+                if (grid) grid.scrollIntoView({ behavior: 'smooth', block: 'start' });
+            }
+
+            function hideOverlay() {
+                overlay.style.opacity = '0';
+                overlay.style.pointerEvents = 'none';
+            }
+
+            if (window.Livewire) {
+                Livewire.hook('commit', ({ component, commit, respond, succeed, fail }) => {
+                    if (
+                        commit.calls?.some(c =>
+                            ['nextPage', 'previousPage', 'gotoPage'].includes(c.method)
+                        )
+                    ) {
+                        showOverlay();
+                        succeed(({ snapshot, effect }) => {
+                            setTimeout(hideOverlay, 350);
+                        });
+                    }
+                });
+            }
+
+            document.addEventListener('livewire:navigated', hideOverlay);
+            document.addEventListener('livewire:load', hideOverlay);
+        })();
+    </script>
 </div>
 <?php /**PATH /var/www/html/resources/views/livewire/artist-directory.blade.php ENDPATH**/ ?>

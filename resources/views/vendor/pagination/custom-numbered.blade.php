@@ -1,13 +1,13 @@
 @if ($paginator->hasPages())
     <nav style="display: flex; align-items: center; justify-content: center; gap: 6px; flex-wrap: wrap;">
-        
+
         {{-- Previous Page Link --}}
         @if ($paginator->onFirstPage())
             <span style="padding: 8px 16px; border: 1px solid var(--border); color: var(--text-muted); font-family: 'Jost', sans-serif; font-size: 0.8rem; opacity: 0.4; cursor: not-allowed;">
                 ←
             </span>
         @else
-            <button wire:click="previousPage" wire:loading.attr="disabled" style="padding: 8px 16px; border: 1px solid var(--border-strong); color: var(--text-primary); background: var(--bg-surface); font-family: 'Jost', sans-serif; font-size: 0.8rem; cursor: pointer; transition: all 0.2s;" onmouseover="this.style.borderColor='var(--gold)';this.style.color='var(--gold)'" onmouseout="this.style.borderColor='var(--border-strong)';this.style.color='var(--text-primary)'">
+            <button wire:click="previousPage" wire:loading.attr="disabled" onclick="document.querySelector('.directory-page').scrollIntoView({behavior:'smooth'})" style="padding: 8px 16px; border: 1px solid var(--border-strong); color: var(--text-primary); background: var(--bg-surface); font-family: 'Jost', sans-serif; font-size: 0.8rem; cursor: pointer; transition: all 0.2s;" onmouseover="this.style.borderColor='var(--gold)';this.style.color='var(--gold)'" onmouseout="this.style.borderColor='var(--border-strong)';this.style.color='var(--text-primary)'">
                 ←
             </button>
         @endif
@@ -27,7 +27,7 @@
                             {{ $page }}
                         </span>
                     @else
-                        <button wire:click="gotoPage({{ $page }})" style="padding: 8px 16px; border: 1px solid var(--border-strong); color: var(--text-primary); background: var(--bg-surface); font-family: 'Jost', sans-serif; font-size: 0.8rem; cursor: pointer; transition: all 0.2s;" onmouseover="this.style.borderColor='var(--gold)';this.style.color='var(--gold)'" onmouseout="this.style.borderColor='var(--border-strong)';this.style.color='var(--text-primary)'">
+                        <button wire:click="gotoPage({{ $page }})" onclick="document.querySelector('.directory-page').scrollIntoView({behavior:'smooth'})" style="padding: 8px 16px; border: 1px solid var(--border-strong); color: var(--text-primary); background: var(--bg-surface); font-family: 'Jost', sans-serif; font-size: 0.8rem; cursor: pointer; transition: all 0.2s;" onmouseover="this.style.borderColor='var(--gold)';this.style.color='var(--gold)'" onmouseout="this.style.borderColor='var(--border-strong)';this.style.color='var(--text-primary)'">
                             {{ $page }}
                         </button>
                     @endif
@@ -37,7 +37,7 @@
 
         {{-- Next Page Link --}}
         @if ($paginator->hasMorePages())
-            <button wire:click="nextPage" wire:loading.attr="disabled" style="padding: 8px 16px; border: 1px solid var(--border-strong); color: var(--text-primary); background: var(--bg-surface); font-family: 'Jost', sans-serif; font-size: 0.8rem; cursor: pointer; transition: all 0.2s;" onmouseover="this.style.borderColor='var(--gold)';this.style.color='var(--gold)'" onmouseout="this.style.borderColor='var(--border-strong)';this.style.color='var(--text-primary)'">
+            <button wire:click="nextPage" wire:loading.attr="disabled" onclick="document.querySelector('.directory-page').scrollIntoView({behavior:'smooth'})" style="padding: 8px 16px; border: 1px solid var(--border-strong); color: var(--text-primary); background: var(--bg-surface); font-family: 'Jost', sans-serif; font-size: 0.8rem; cursor: pointer; transition: all 0.2s;" onmouseover="this.style.borderColor='var(--gold)';this.style.color='var(--gold)'" onmouseout="this.style.borderColor='var(--border-strong)';this.style.color='var(--text-primary)'">
                 →
             </button>
         @else

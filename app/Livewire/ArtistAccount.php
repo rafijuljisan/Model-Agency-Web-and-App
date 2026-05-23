@@ -168,6 +168,7 @@ class ArtistAccount extends Component
     public string $newExpPlatform = '';
 
     public string $newExpAwardOrganizer = '';
+    public string $special_skills_input = '';
 
     public function mount()
     {
@@ -265,18 +266,19 @@ class ArtistAccount extends Component
         }
 
         $this->validate([
-            'singlePortfolioPhoto' => 'required|image|mimes:jpg,jpeg,png,webp|max:8192',
+            'singlePortfolioPhoto' => 'required|image|mimes:jpg,jpeg,png,webp|max:5120',
         ]);
 
         try {
             $photo = $this->singlePortfolioPhoto;
 
-            $user->addMedia($photo->getRealPath())
+            $user->addMedia($photo->getRealPath() ?: $photo->path())
                 ->usingFileName(
-                    pathinfo($photo->getClientOriginalName(), PATHINFO_FILENAME)
-                    .'_'.time().rand(100, 999)
+                    \pathinfo($photo->getClientOriginalName(), PATHINFO_FILENAME)
+                    .'_'.now()->format('YmdHis')
                     .'.'.$photo->getClientOriginalExtension()
                 )
+                ->withCustomProperties(['uploaded_at' => now()->toIso8601String()])
                 ->toMediaCollection('portfolio', 'public');
 
             $this->reset('singlePortfolioPhoto');
@@ -288,7 +290,10 @@ class ArtistAccount extends Component
             $this->dispatch('portfolio-photo-saved');
 
         } catch (\Exception $e) {
-            Log::error('saveSinglePortfolioPhoto failed for user '.Auth::id().': '.$e->getMessage());
+            Log::error('saveSinglePortfolioPhoto: '.$e->getMessage(), [
+                'user' => Auth::id(),
+                'file_size' => $this->singlePortfolioPhoto?->getSize(),
+            ]);
             $this->reset('singlePortfolioPhoto');
             $this->dispatch('portfolio-upload-error', message: 'Upload failed. Please try again.');
         }
@@ -342,9 +347,14 @@ class ArtistAccount extends Component
 
         if ($this->profilePhotoUpload) {
             $user->getMedia('avatar')->each->delete();
-            $user->addMedia($this->profilePhotoUpload->getRealPath())
-                ->usingFileName('avatar_'.$user->id.'.'.$this->profilePhotoUpload->getClientOriginalExtension())
-                ->toMediaCollection('avatar', 'public');
+            try {
+                $user->addMedia($this->profilePhotoUpload->getRealPath() ?: $this->profilePhotoUpload->path())
+                    ->usingFileName('avatar_'.$user->id.'.'.$this->profilePhotoUpload->getClientOriginalExtension())
+                    ->toMediaCollection('avatar', 'public');
+            } catch (\Exception $e) {
+                Log::error('Avatar upload in submitDocuments failed: '.$e->getMessage());
+                // Don't block document submission if avatar fails
+            }
         }
 
         $admins = User::role('Super-Admin')->get();
@@ -360,11 +370,16 @@ class ArtistAccount extends Component
             Log::error('Admin document notification failed: '.$e->getMessage());
         }
 
-        FilamentNotification::make()
-            ->title('New Documents Uploaded 📄')
-            ->body("{$user->name} just uploaded their NID/Academic certificates for review.")
-            ->warning()
-            ->sendToDatabase($admins);
+        // Find this block and wrap it:
+        try {
+            FilamentNotification::make()
+                ->title('New Documents Uploaded 📄')
+                ->body("{$user->name} just uploaded their NID/Academic certificates for review.")
+                ->warning()
+                ->sendToDatabase($admins);
+        } catch (\Exception $e) {
+            Log::error('Filament DB notification failed: ' . $e->getMessage());
+        }
 
         $subscription = $user->subscriptions()->latest()->first();
 
@@ -426,7 +441,7 @@ class ArtistAccount extends Component
 
     public function updateAvatar()
     {
-        $this->validate(['newAvatar' => 'image|max:3072']);
+         $this->validate(['newAvatar' => 'required|image|mimes:jpg,jpeg,png,webp|max:3072']);
 
         /** @var User $user */
         $user = Auth::user();
@@ -438,6 +453,7 @@ class ArtistAccount extends Component
             ->toMediaCollection('avatar', 'public');
 
         $this->reset('newAvatar');
+        $this->portfolioImages = $user->fresh()->getMedia('portfolio'); // keep UI in sync
         session()->flash('success', 'Profile picture updated!');
     }
 
@@ -489,6 +505,9 @@ class ArtistAccount extends Component
             $this->hair_length = $profile->hair_length ?? '';
             $this->experience_level = $profile->experience_level ?? '';
             $this->special_skills = $profile->special_skills ?? [];
+            $this->special_skills_input = $profile->special_skills
+                ? implode(', ', $profile->special_skills)
+                : '';
             $this->showreel_url = $profile->showreel_url ?? '';
             $this->willing_to_travel = $profile->willing_to_travel ?? false;
             $this->availability = $profile->availability ?? '';
@@ -510,6 +529,10 @@ class ArtistAccount extends Component
         try {
             // NOTE: newPhotos is no longer validated here.
             // Portfolio uploads happen independently via saveSinglePortfolioPhoto().
+            $this->special_skills = $this->special_skills_input
+                ? array_values(array_filter(array_map('trim', explode(',', $this->special_skills_input))))
+                : [];
+
             $this->validate();
 
             $user->update([
@@ -776,7 +799,7 @@ class ArtistAccount extends Component
             'shoe_size' => 'nullable|string|max:20',
             'dress_size' => 'nullable|in:XS,S,M,L,XL,XXL',
 
-            'skin_tone' => 'nullable|in:Fair,Medium,Dusky,Deep',
+            'skin_tone' => 'nullable|in:Fair,Light,Wheatish,Medium,Dusky,Deep',
             'eye_color' => 'nullable|string|max:50',
             'hair_color' => 'nullable|string|max:50',
             'hair_length' => 'nullable|in:Bald,Short,Medium,Long',
